@@ -15,7 +15,7 @@ jobs:
       - run: flutter pub get      # 3️⃣ 获取项目依赖
       #- run: flutter test         # (可选)运行测试，确保提交没问题[reference:0]
       - run: flutter build apk --release  # 4️⃣ 正式打包 APK
-      - uses: actions/upload-artifact@v3  # 5️⃣ 上传产物
+      - uses: actions/upload-artifact@v4  # 5️⃣ 上传产物
         with:
           name: release-apk
           path: build/app/outputs/flutter-apk/app-release.apk
