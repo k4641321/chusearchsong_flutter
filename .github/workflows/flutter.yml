@@ -10,7 +10,7 @@ jobs:
       - uses: actions/checkout@v3  # 1️⃣ 拉取你的代码
       - uses: subosito/flutter-action@v2  # 2️⃣ 配置 Flutter 环境
         with:
-          flutter-version: '3.24.0'  # 指定版本，'stable' 指最新稳定版
+          flutter-version: '3.41.9'  # 指定版本，'stable' 指最新稳定版
           channel: 'stable'
       - run: flutter pub get      # 3️⃣ 获取项目依赖
       #- run: flutter test         # (可选)运行测试，确保提交没问题[reference:0]
