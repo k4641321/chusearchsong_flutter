@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'list.dart';
+import 'search.dart';
 
 class SearchPage extends StatefulWidget {
   const SearchPage({super.key});
@@ -8,6 +10,54 @@ class SearchPage extends StatefulWidget {
 }
 
 class _SearchPageState extends State<SearchPage> {
+  String? selectedGenre = '-1';
+  String? selectedVersion = '-1';
+  String? selectedDifficultyDown = '-1';
+  String? selectedDifficultyUp = '-1';
+
+  List<Widget> searchResults = [];
+  // Future result;
+  final TextEditingController _searchController = TextEditingController();
+
+  // void addSearchResult(Widget result) {
+  //   setState(() {
+  //     searchResults.add(result);
+  //   });
+  // }
+
+  // void clearSearchResults() {
+  //   setState(() {
+  //     searchResults.clear();
+  //   });
+  // }
+
+  Future<void> _performSearch() async {
+    String searchTitle = _searchController.text;
+    String genre = selectedGenre ?? '-1';
+    String version = selectedVersion ?? '-1';
+    String difficultyDown = selectedDifficultyDown ?? '-1';
+    String difficultyUp = selectedDifficultyUp ?? '-1';
+
+    try {
+      // 使用 await 调用异步函数
+      List<Widget> results = await search(
+        searchTitle,
+        genre,
+        version,
+        difficultyDown,
+        difficultyUp,
+      );
+
+      // 更新状态
+      setState(() {
+        searchResults = results;
+      });
+    } catch (e) {
+      print('搜索错误: $e');
+      // 可以显示错误信息给用户
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Center(
@@ -17,18 +67,59 @@ class _SearchPageState extends State<SearchPage> {
             children: [
               Expanded(
                 child: TextField(
+                  controller: _searchController,
                   decoration: InputDecoration(hintText: 'Search...'),
                 ),
               ),
 
-              IconButton(
-                onPressed: () => print('test'),
-                icon: Icon(Icons.search),
+              IconButton(onPressed: _performSearch, icon: Icon(Icons.search)),
+            ],
+          ),
+          Row(
+            children: [
+              Expanded(
+                child: buildGenreDropdownMenu(
+                  initialSelection: selectedGenre,
+                  onSelected: (String? value) {
+                    setState(() {
+                      selectedGenre = value;
+                    });
+                  },
+                ),
+              ),
+              Expanded(
+                child: buildVersionDropdownMenu(
+                  initialSelection: selectedVersion,
+                  onSelected: (String? value) {
+                    setState(() {
+                      selectedVersion = value;
+                    });
+                  },
+                ),
+              ),
+              Expanded(
+                child: buildDifficultyDownDropdownMenu(
+                  initialSelection: selectedDifficultyDown,
+                  onSelected: (String? value) {
+                    setState(() {
+                      selectedDifficultyDown = value;
+                    });
+                  },
+                ),
+              ),
+              Expanded(
+                child: buildDifficultyUpDropdownMenu(
+                  initialSelection: selectedDifficultyUp,
+                  onSelected: (String? value) {
+                    setState(() {
+                      selectedDifficultyUp = value;
+                    });
+                  },
+                ),
               ),
             ],
           ),
-          // DropdownMenu<String>(dropdownMenuEntries: const Map(('title', 'Title'){'genre', 'Genre'}),
-          // )
+          Column(children: searchResults),
         ],
       ),
     );
