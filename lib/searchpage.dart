@@ -119,7 +119,7 @@ class _SearchPageState extends State<SearchPage> {
               ),
             ],
           ),
-          Column(children: searchResults),
+          Expanded(child: ListView(children: searchResults)),
         ],
       ),
     );

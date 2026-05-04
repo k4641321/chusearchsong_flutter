@@ -1,0 +1,4400 @@
+{
+  "aliases": [
+    {
+      "song_id": 3,
+      "aliases": [
+        "bbkkbkk",
+        "bk"
+      ]
+    },
+    {
+      "song_id": 6,
+      "aliases": [
+        "追星",
+        "索尼克色彩"
+      ]
+    },
+    {
+      "song_id": 7,
+      "aliases": [
+        "初音未来的消失",
+        "消失"
+      ]
+    },
+    {
+      "song_id": 19,
+      "aliases": [
+        "龙女士"
+      ]
+    },
+    {
+      "song_id": 20,
+      "aliases": [
+        "淘宝"
+      ]
+    },
+    {
+      "song_id": 21,
+      "aliases": [
+        "夜骑",
+        "night of knights",
+        "骑士之夜",
+        "咲夜"
+      ]
+    },
+    {
+      "song_id": 24,
+      "aliases": [
+        "甜甜圈洞"
+      ]
+    },
+    {
+      "song_id": 33,
+      "aliases": [
+        "蓝噪音",
+        "蓝的盆",
+        "你已急哭"
+      ]
+    },
+    {
+      "song_id": 35,
+      "aliases": [
+        "青金石",
+        "苍星石"
+      ]
+    },
+    {
+      "song_id": 38,
+      "aliases": [
+        "天之弱"
+      ]
+    },
+    {
+      "song_id": 41,
+      "aliases": [
+        "小甜妹"
+      ]
+    },
+    {
+      "song_id": 46,
+      "aliases": [
+        "坏苹果"
+      ]
+    },
+    {
+      "song_id": 47,
+      "aliases": [
+        "六兆年"
+      ]
+    },
+    {
+      "song_id": 49,
+      "aliases": [
+        "虹见"
+      ]
+    },
+    {
+      "song_id": 50,
+      "aliases": [
+        "欢乐颂"
+      ]
+    },
+    {
+      "song_id": 51,
+      "aliases": [
+        "小灵通"
+      ]
+    },
+    {
+      "song_id": 52,
+      "aliases": [
+        "赛博牛杂",
+        "小陨石"
+      ]
+    },
+    {
+      "song_id": 59,
+      "aliases": [
+        "无印主题曲"
+      ]
+    },
+    {
+      "song_id": 61,
+      "aliases": [
+        "黄金法则",
+        "黄金律"
+      ]
+    },
+    {
+      "song_id": 63,
+      "aliases": [
+        "螃蟹"
+      ]
+    },
+    {
+      "song_id": 65,
+      "aliases": [
+        "银莲"
+      ]
+    },
+    {
+      "song_id": 69,
+      "aliases": [
+        "印度人",
+        "电锯人",
+        "右轮"
+      ]
+    },
+    {
+      "song_id": 72,
+      "aliases": [
+        "原神"
+      ]
+    },
+    {
+      "song_id": 73,
+      "aliases": [
+        "音乐祈祷者"
+      ]
+    },
+    {
+      "song_id": 76,
+      "aliases": [
+        "蓝月亮",
+        "洗衣液",
+        "死神1",
+        "labubu"
+      ]
+    },
+    {
+      "song_id": 82,
+      "aliases": [
+        "日月记忆",
+        "日月之忆"
+      ]
+    },
+    {
+      "song_id": 83,
+      "aliases": [
+        "lastone的号哭",
+        "号哭"
+      ]
+    },
+    {
+      "song_id": 89,
+      "aliases": [
+        "nothingbeatsajet2holidays",
+        "大导弹"
+      ]
+    },
+    {
+      "song_id": 90,
+      "aliases": [
+        "大琴师",
+        "钟离"
+      ]
+    },
+    {
+      "song_id": 94,
+      "aliases": [
+        "刹那旅程"
+      ]
+    },
+    {
+      "song_id": 96,
+      "aliases": [
+        "琪露诺的完美算术教室",
+        "⑨分数学",
+        "⑨",
+        "baka"
+      ]
+    },
+    {
+      "song_id": 97,
+      "aliases": [
+        "帮帮我永琳"
+      ]
+    },
+    {
+      "song_id": 98,
+      "aliases": [
+        "魔理沙",
+        "魔理沙大盗",
+        "大变"
+      ]
+    },
+    {
+      "song_id": 101,
+      "aliases": [
+        "谈个肉鸽",
+        "红探戈"
+      ]
+    },
+    {
+      "song_id": 103,
+      "aliases": [
+        "希望泪",
+        "肌肉女神"
+      ]
+    },
+    {
+      "song_id": 106,
+      "aliases": [
+        "典韦",
+        "炎上"
+      ]
+    },
+    {
+      "song_id": 107,
+      "aliases": [
+        "wgj",
+        "我们去旅行"
+      ]
+    },
+    {
+      "song_id": 108,
+      "aliases": [
+        "以太",
+        "广州塔"
+      ]
+    },
+    {
+      "song_id": 113,
+      "aliases": [
+        "流心"
+      ]
+    },
+    {
+      "song_id": 117,
+      "aliases": [
+        "妈杀杀星球",
+        "我是地球"
+      ]
+    },
+    {
+      "song_id": 118,
+      "aliases": [
+        "腐外道"
+      ]
+    },
+    {
+      "song_id": 119,
+      "aliases": [
+        "界外科学"
+      ]
+    },
+    {
+      "song_id": 121,
+      "aliases": [
+        "东方妖妖梦"
+      ]
+    },
+    {
+      "song_id": 131,
+      "aliases": [
+        "孩童记录"
+      ]
+    },
+    {
+      "song_id": 133,
+      "aliases": [
+        "测视力",
+        "视力检查"
+      ]
+    },
+    {
+      "song_id": 135,
+      "aliases": [
+        "瓦利斯塔"
+      ]
+    },
+    {
+      "song_id": 136,
+      "aliases": [
+        "冒险"
+      ]
+    },
+    {
+      "song_id": 137,
+      "aliases": [
+        "天使尘"
+      ]
+    },
+    {
+      "song_id": 138,
+      "aliases": [
+        "公交车"
+      ]
+    },
+    {
+      "song_id": 141,
+      "aliases": [
+        "闪钢"
+      ]
+    },
+    {
+      "song_id": 144,
+      "aliases": [
+        "荒神"
+      ]
+    },
+    {
+      "song_id": 145,
+      "aliases": [
+        "不含月铃姐妹"
+      ]
+    },
+    {
+      "song_id": 150,
+      "aliases": [
+        "摇滚淑女莉莉纱"
+      ]
+    },
+    {
+      "song_id": 152,
+      "aliases": [
+        "古斯塔夫"
+      ]
+    },
+    {
+      "song_id": 157,
+      "aliases": [
+        "otn"
+      ]
+    },
+    {
+      "song_id": 159,
+      "aliases": [
+        "圣诞歌",
+        "鸡公煲"
+      ]
+    },
+    {
+      "song_id": 160,
+      "aliases": [
+        "言叶游戏"
+      ]
+    },
+    {
+      "song_id": 163,
+      "aliases": [
+        "几四音"
+      ]
+    },
+    {
+      "song_id": 165,
+      "aliases": [
+        "我们的16bit战争"
+      ]
+    },
+    {
+      "song_id": 166,
+      "aliases": [
+        "里表情人"
+      ]
+    },
+    {
+      "song_id": 167,
+      "aliases": [
+        "脑浆炸裂女孩",
+        "脑浆"
+      ]
+    },
+    {
+      "song_id": 168,
+      "aliases": [
+        "网游废人的呐喊"
+      ]
+    },
+    {
+      "song_id": 171,
+      "aliases": [
+        "特小"
+      ]
+    },
+    {
+      "song_id": 173,
+      "aliases": [
+        "翡翠鸡",
+        "翡翠鸟"
+      ]
+    },
+    {
+      "song_id": 179,
+      "aliases": [
+        "慢动作",
+        "slow motion"
+      ]
+    },
+    {
+      "song_id": 180,
+      "aliases": [
+        "怒锤",
+        "让我砸一下"
+      ]
+    },
+    {
+      "song_id": 187,
+      "aliases": [
+        "患部"
+      ]
+    },
+    {
+      "song_id": 192,
+      "aliases": [
+        "星光视界"
+      ]
+    },
+    {
+      "song_id": 196,
+      "aliases": [
+        "fd",
+        "自由落体"
+      ]
+    },
+    {
+      "song_id": 197,
+      "aliases": [
+        "开膛手杰克"
+      ]
+    },
+    {
+      "song_id": 198,
+      "aliases": [
+        "阿瓦隆"
+      ]
+    },
+    {
+      "song_id": 201,
+      "aliases": [
+        "齿轮",
+        "齿轮地狱"
+      ]
+    },
+    {
+      "song_id": 202,
+      "aliases": [
+        "双子星"
+      ]
+    },
+    {
+      "song_id": 203,
+      "aliases": [
+        "花",
+        "扶老二"
+      ]
+    },
+    {
+      "song_id": 204,
+      "aliases": [
+        "ckp"
+      ]
+    },
+    {
+      "song_id": 208,
+      "aliases": [
+        "绿皮眼镜男"
+      ]
+    },
+    {
+      "song_id": 219,
+      "aliases": [
+        "玩具"
+      ]
+    },
+    {
+      "song_id": 220,
+      "aliases": [
+        "如月注意"
+      ]
+    },
+    {
+      "song_id": 223,
+      "aliases": [
+        "神明发条"
+      ]
+    },
+    {
+      "song_id": 224,
+      "aliases": [
+        "恋爱审判"
+      ]
+    },
+    {
+      "song_id": 225,
+      "aliases": [
+        "海百合海底谭",
+        "海底谭"
+      ]
+    },
+    {
+      "song_id": 226,
+      "aliases": [
+        "gdp",
+        "国内生产总值"
+      ]
+    },
+    {
+      "song_id": 229,
+      "aliases": [
+        "红华刑"
+      ]
+    },
+    {
+      "song_id": 232,
+      "aliases": [
+        "读书",
+        "少打音游多读书",
+        "元素创造",
+        "读书郎"
+      ]
+    },
+    {
+      "song_id": 233,
+      "aliases": [
+        "六出花",
+        "百合水仙",
+        "水仙百合"
+      ]
+    },
+    {
+      "song_id": 234,
+      "aliases": [
+        "机器头",
+        "机械头"
+      ]
+    },
+    {
+      "song_id": 245,
+      "aliases": [
+        "彩绿永琳"
+      ]
+    },
+    {
+      "song_id": 246,
+      "aliases": [
+        "彩绿算数教室"
+      ]
+    },
+    {
+      "song_id": 248,
+      "aliases": [
+        "德国人"
+      ]
+    },
+    {
+      "song_id": 250,
+      "aliases": [
+        "哲学家"
+      ]
+    },
+    {
+      "song_id": 258,
+      "aliases": [
+        "提",
+        "提亚马特",
+        "🦍",
+        "转生成猩猩又怎样？",
+        "提暗示"
+      ]
+    },
+    {
+      "song_id": 272,
+      "aliases": [
+        "有顶天"
+      ]
+    },
+    {
+      "song_id": 277,
+      "aliases": [
+        "玉足"
+      ]
+    },
+    {
+      "song_id": 278,
+      "aliases": [
+        "活动小丑"
+      ]
+    },
+    {
+      "song_id": 280,
+      "aliases": [
+        "遥控器"
+      ]
+    },
+    {
+      "song_id": 284,
+      "aliases": [
+        "幸隐"
+      ]
+    },
+    {
+      "song_id": 287,
+      "aliases": [
+        "罗密欧与辛德瑞拉"
+      ]
+    },
+    {
+      "song_id": 293,
+      "aliases": [
+        "透明人"
+      ]
+    },
+    {
+      "song_id": 294,
+      "aliases": [
+        "人生重启按钮"
+      ]
+    },
+    {
+      "song_id": 295,
+      "aliases": [
+        "响",
+        "hibiki"
+      ]
+    },
+    {
+      "song_id": 297,
+      "aliases": [
+        "风仁雷仁"
+      ]
+    },
+    {
+      "song_id": 298,
+      "aliases": [
+        "私人服务"
+      ]
+    },
+    {
+      "song_id": 305,
+      "aliases": [
+        "幻想卫星"
+      ]
+    },
+    {
+      "song_id": 306,
+      "aliases": [
+        "凛花",
+        "凛咲花如"
+      ]
+    },
+    {
+      "song_id": 317,
+      "aliases": [
+        "葡萄",
+        "棍母"
+      ]
+    },
+    {
+      "song_id": 318,
+      "aliases": [
+        "数据错误"
+      ]
+    },
+    {
+      "song_id": 322,
+      "aliases": [
+        "2006"
+      ]
+    },
+    {
+      "song_id": 323,
+      "aliases": [
+        "无畏舰",
+        "手电筒"
+      ]
+    },
+    {
+      "song_id": 328,
+      "aliases": [
+        "小心心",
+        "kkr"
+      ]
+    },
+    {
+      "song_id": 331,
+      "aliases": [
+        "猛进"
+      ]
+    },
+    {
+      "song_id": 333,
+      "aliases": [
+        "牛奶"
+      ]
+    },
+    {
+      "song_id": 335,
+      "aliases": [
+        "轩辕十四"
+      ]
+    },
+    {
+      "song_id": 375,
+      "aliases": [
+        "末白",
+        "逐渐加快",
+        "逐渐变快"
+      ]
+    },
+    {
+      "song_id": 376,
+      "aliases": [
+        "回响"
+      ]
+    },
+    {
+      "song_id": 388,
+      "aliases": [
+        "良锤"
+      ]
+    },
+    {
+      "song_id": 389,
+      "aliases": [
+        "誓约之名"
+      ]
+    },
+    {
+      "song_id": 391,
+      "aliases": [
+        "恋咏樱"
+      ]
+    },
+    {
+      "song_id": 393,
+      "aliases": [
+        "电管",
+        "电棍"
+      ]
+    },
+    {
+      "song_id": 394,
+      "aliases": [
+        "世嘉硬件女孩ed"
+      ]
+    },
+    {
+      "song_id": 397,
+      "aliases": [
+        "一块钱"
+      ]
+    },
+    {
+      "song_id": 402,
+      "aliases": [
+        "恶戏"
+      ]
+    },
+    {
+      "song_id": 405,
+      "aliases": [
+        "我不知道"
+      ]
+    },
+    {
+      "song_id": 407,
+      "aliases": [
+        "混沌",
+        "飞天大蟑螂",
+        "调律主",
+        "大蟑螂",
+        "混沌调律主"
+      ]
+    },
+    {
+      "song_id": 409,
+      "aliases": [
+        "双色球"
+      ]
+    },
+    {
+      "song_id": 413,
+      "aliases": [
+        "彩绿印度人"
+      ]
+    },
+    {
+      "song_id": 428,
+      "aliases": [
+        "a0",
+        "草先生的数学课堂"
+      ]
+    },
+    {
+      "song_id": 429,
+      "aliases": [
+        "黑莲"
+      ]
+    },
+    {
+      "song_id": 432,
+      "aliases": [
+        "光线",
+        "光线调谐"
+      ]
+    },
+    {
+      "song_id": 434,
+      "aliases": [
+        "无眠思君"
+      ]
+    },
+    {
+      "song_id": 437,
+      "aliases": [
+        "水晶男人"
+      ]
+    },
+    {
+      "song_id": 441,
+      "aliases": [
+        "叮叮车",
+        "叮叮电车",
+        "🚋"
+      ]
+    },
+    {
+      "song_id": 442,
+      "aliases": [
+        "皇冠"
+      ]
+    },
+    {
+      "song_id": 447,
+      "aliases": [
+        "完美生命"
+      ]
+    },
+    {
+      "song_id": 448,
+      "aliases": [
+        "高塔"
+      ]
+    },
+    {
+      "song_id": 455,
+      "aliases": [
+        "吸血鬼"
+      ]
+    },
+    {
+      "song_id": 459,
+      "aliases": [
+        "天狗的匿名信"
+      ]
+    },
+    {
+      "song_id": 464,
+      "aliases": [
+        "世征",
+        "噔噔噔噔噔",
+        "wv",
+        "利希德修茨"
+      ]
+    },
+    {
+      "song_id": 465,
+      "aliases": [
+        "宏宇宙",
+        "wiseman",
+        "宏"
+      ]
+    },
+    {
+      "song_id": 466,
+      "aliases": [
+        "iud",
+        "拉丁人",
+        "潘多拉涅墨西斯"
+      ]
+    },
+    {
+      "song_id": 467,
+      "aliases": [
+        "远古之蓝"
+      ]
+    },
+    {
+      "song_id": 468,
+      "aliases": [
+        "奏者"
+      ]
+    },
+    {
+      "song_id": 470,
+      "aliases": [
+        "圣墟"
+      ]
+    },
+    {
+      "song_id": 471,
+      "aliases": [
+        "极圈"
+      ]
+    },
+    {
+      "song_id": 472,
+      "aliases": [
+        "红枪"
+      ]
+    },
+    {
+      "song_id": 478,
+      "aliases": [
+        "火花"
+      ]
+    },
+    {
+      "song_id": 482,
+      "aliases": [
+        "世嘉硬件女孩op"
+      ]
+    },
+    {
+      "song_id": 486,
+      "aliases": [
+        "水神"
+      ]
+    },
+    {
+      "song_id": 496,
+      "aliases": [
+        "泥头车"
+      ]
+    },
+    {
+      "song_id": 497,
+      "aliases": [
+        "法文歌"
+      ]
+    },
+    {
+      "song_id": 498,
+      "aliases": [
+        "小机器人"
+      ]
+    },
+    {
+      "song_id": 499,
+      "aliases": [
+        "圣剑1"
+      ]
+    },
+    {
+      "song_id": 504,
+      "aliases": [
+        "cf"
+      ]
+    },
+    {
+      "song_id": 506,
+      "aliases": [
+        "跟哥走",
+        "跟高走"
+      ]
+    },
+    {
+      "song_id": 515,
+      "aliases": [
+        "让其响彻"
+      ]
+    },
+    {
+      "song_id": 528,
+      "aliases": [
+        "琪露诺的完美数学教室",
+        "⑨周年⑨",
+        "9周年"
+      ]
+    },
+    {
+      "song_id": 534,
+      "aliases": [
+        "中杯",
+        "提丰",
+        "热空气"
+      ]
+    },
+    {
+      "song_id": 538,
+      "aliases": [
+        "太神奇了太强大了",
+        "am"
+      ]
+    },
+    {
+      "song_id": 540,
+      "aliases": [
+        "砂之惑星"
+      ]
+    },
+    {
+      "song_id": 547,
+      "aliases": [
+        "敬启我的分身",
+        "两个椎名立希"
+      ]
+    },
+    {
+      "song_id": 548,
+      "aliases": [
+        "二重身"
+      ]
+    },
+    {
+      "song_id": 549,
+      "aliases": [
+        "色散"
+      ]
+    },
+    {
+      "song_id": 551,
+      "aliases": [
+        "闪光左轮",
+        "钢琴冒火",
+        "左轮"
+      ]
+    },
+    {
+      "song_id": 552,
+      "aliases": [
+        "god",
+        "大闸蟹",
+        "螃蟹2"
+      ]
+    },
+    {
+      "song_id": 558,
+      "aliases": [
+        "彩绿兔子跑"
+      ]
+    },
+    {
+      "song_id": 559,
+      "aliases": [
+        "大鸟居",
+        "电你前列腺",
+        "电所有人前列腺",
+        "小薇赢取冰箱"
+      ]
+    },
+    {
+      "song_id": 566,
+      "aliases": [
+        "鸟屎"
+      ]
+    },
+    {
+      "song_id": 567,
+      "aliases": [
+        "哈基米"
+      ]
+    },
+    {
+      "song_id": 568,
+      "aliases": [
+        "巧克力爆炸"
+      ]
+    },
+    {
+      "song_id": 570,
+      "aliases": [
+        "坏人偶",
+        "坏人形"
+      ]
+    },
+    {
+      "song_id": 574,
+      "aliases": [
+        "1！5！"
+      ]
+    },
+    {
+      "song_id": 594,
+      "aliases": [
+        "幽灵法则"
+      ]
+    },
+    {
+      "song_id": 600,
+      "aliases": [
+        "管弦乐组曲",
+        "g弦"
+      ]
+    },
+    {
+      "song_id": 601,
+      "aliases": [
+        "彩绿牛奶猫"
+      ]
+    },
+    {
+      "song_id": 605,
+      "aliases": [
+        "赞不绝口"
+      ]
+    },
+    {
+      "song_id": 614,
+      "aliases": [
+        "含有月铃姐妹"
+      ]
+    },
+    {
+      "song_id": 615,
+      "aliases": [
+        "雪莉露",
+        "二重分形"
+      ]
+    },
+    {
+      "song_id": 617,
+      "aliases": [
+        "法国人"
+      ]
+    },
+    {
+      "song_id": 618,
+      "aliases": [
+        "业",
+        "业善",
+        "四眼仔"
+      ]
+    },
+    {
+      "song_id": 619,
+      "aliases": [
+        "结时",
+        "et"
+      ]
+    },
+    {
+      "song_id": 625,
+      "aliases": [
+        "火山",
+        "大喷火"
+      ]
+    },
+    {
+      "song_id": 626,
+      "aliases": [
+        "鹅妈妈"
+      ]
+    },
+    {
+      "song_id": 628,
+      "aliases": [
+        "灵梦撒币"
+      ]
+    },
+    {
+      "song_id": 631,
+      "aliases": [
+        "初音未来的激唱",
+        "激唱"
+      ]
+    },
+    {
+      "song_id": 632,
+      "aliases": [
+        "醋溜便当"
+      ]
+    },
+    {
+      "song_id": 637,
+      "aliases": [
+        "黄瓜"
+      ]
+    },
+    {
+      "song_id": 656,
+      "aliases": [
+        "黎明前线"
+      ]
+    },
+    {
+      "song_id": 667,
+      "aliases": [
+        "cranky夜骑"
+      ]
+    },
+    {
+      "song_id": 668,
+      "aliases": [
+        "脑力"
+      ]
+    },
+    {
+      "song_id": 669,
+      "aliases": [
+        "衔尾蛇"
+      ]
+    },
+    {
+      "song_id": 670,
+      "aliases": [
+        "非洲菊"
+      ]
+    },
+    {
+      "song_id": 671,
+      "aliases": [
+        "太鼓怪兽"
+      ]
+    },
+    {
+      "song_id": 676,
+      "aliases": [
+        "你和驴"
+      ]
+    },
+    {
+      "song_id": 677,
+      "aliases": [
+        "蛹"
+      ]
+    },
+    {
+      "song_id": 678,
+      "aliases": [
+        "拍肉丝"
+      ]
+    },
+    {
+      "song_id": 681,
+      "aliases": [
+        "黑巢"
+      ]
+    },
+    {
+      "song_id": 695,
+      "aliases": [
+        "心攻击",
+        "心脏病",
+        "心状攻击"
+      ]
+    },
+    {
+      "song_id": 697,
+      "aliases": [
+        "佛冷"
+      ]
+    },
+    {
+      "song_id": 699,
+      "aliases": [
+        "升天镇魂歌"
+      ]
+    },
+    {
+      "song_id": 700,
+      "aliases": [
+        "夕烧"
+      ]
+    },
+    {
+      "song_id": 702,
+      "aliases": [
+        "天秤"
+      ]
+    },
+    {
+      "song_id": 705,
+      "aliases": [
+        "发疯男娘"
+      ]
+    },
+    {
+      "song_id": 707,
+      "aliases": [
+        "中学二年生"
+      ]
+    },
+    {
+      "song_id": 711,
+      "aliases": [
+        "sqlmap",
+        "色情撸屁屁"
+      ]
+    },
+    {
+      "song_id": 712,
+      "aliases": [
+        "高潮",
+        "妖艳魔男"
+      ]
+    },
+    {
+      "song_id": 713,
+      "aliases": [
+        "拉瓦",
+        "爆笑虫子"
+      ]
+    },
+    {
+      "song_id": 715,
+      "aliases": [
+        "马挖路"
+      ]
+    },
+    {
+      "song_id": 716,
+      "aliases": [
+        "梦花火"
+      ]
+    },
+    {
+      "song_id": 722,
+      "aliases": [
+        "橘子怪兽"
+      ]
+    },
+    {
+      "song_id": 731,
+      "aliases": [
+        "大猩猩"
+      ]
+    },
+    {
+      "song_id": 733,
+      "aliases": [
+        "暗黑魔导士"
+      ]
+    },
+    {
+      "song_id": 734,
+      "aliases": [
+        "电光石火",
+        "捷夫提"
+      ]
+    },
+    {
+      "song_id": 749,
+      "aliases": [
+        "骨折光"
+      ]
+    },
+    {
+      "song_id": 750,
+      "aliases": [
+        "ac",
+        "花对立"
+      ]
+    },
+    {
+      "song_id": 751,
+      "aliases": [
+        "病女",
+        "对立拉窗帘"
+      ]
+    },
+    {
+      "song_id": 752,
+      "aliases": [
+        "小杯",
+        "星穹铁道",
+        "5140"
+      ]
+    },
+    {
+      "song_id": 753,
+      "aliases": [
+        "红宝石",
+        "真红"
+      ]
+    },
+    {
+      "song_id": 760,
+      "aliases": [
+        "阳炎眩乱",
+        "车祸曲"
+      ]
+    },
+    {
+      "song_id": 762,
+      "aliases": [
+        "永今"
+      ]
+    },
+    {
+      "song_id": 764,
+      "aliases": [
+        "如龙"
+      ]
+    },
+    {
+      "song_id": 766,
+      "aliases": [
+        "彩绿光线"
+      ]
+    },
+    {
+      "song_id": 773,
+      "aliases": [
+        "宙斯"
+      ]
+    },
+    {
+      "song_id": 775,
+      "aliases": [
+        "暗晦"
+      ]
+    },
+    {
+      "song_id": 776,
+      "aliases": [
+        "atm",
+        "8em"
+      ]
+    },
+    {
+      "song_id": 777,
+      "aliases": [
+        "杀节奏"
+      ]
+    },
+    {
+      "song_id": 781,
+      "aliases": [
+        "世末舞厅"
+      ]
+    },
+    {
+      "song_id": 784,
+      "aliases": [
+        "犹如史",
+        "叮咚鸡",
+        "犹如屎"
+      ]
+    },
+    {
+      "song_id": 785,
+      "aliases": [
+        "梦桔梗"
+      ]
+    },
+    {
+      "song_id": 786,
+      "aliases": [
+        "黑天鹅湖"
+      ]
+    },
+    {
+      "song_id": 787,
+      "aliases": [
+        "千兆硬盘",
+        "李咏"
+      ]
+    },
+    {
+      "song_id": 788,
+      "aliases": [
+        "反叛"
+      ]
+    },
+    {
+      "song_id": 791,
+      "aliases": [
+        "人形裁判"
+      ]
+    },
+    {
+      "song_id": 796,
+      "aliases": [
+        "将手"
+      ]
+    },
+    {
+      "song_id": 797,
+      "aliases": [
+        "黑白初音"
+      ]
+    },
+    {
+      "song_id": 798,
+      "aliases": [
+        "电波范式"
+      ]
+    },
+    {
+      "song_id": 799,
+      "aliases": [
+        "星器",
+        "星之器"
+      ]
+    },
+    {
+      "song_id": 803,
+      "aliases": [
+        "充满活力的塞拉菲塔"
+      ]
+    },
+    {
+      "song_id": 804,
+      "aliases": [
+        "彩绿炎上",
+        "小炎上",
+        "彩绿大炎上",
+        "萝莉炎上"
+      ]
+    },
+    {
+      "song_id": 806,
+      "aliases": [
+        "水晶世界"
+      ]
+    },
+    {
+      "song_id": 807,
+      "aliases": [
+        "披萨",
+        "呼吸"
+      ]
+    },
+    {
+      "song_id": 815,
+      "aliases": [
+        "君晴",
+        "只为你拨云放晴"
+      ]
+    },
+    {
+      "song_id": 816,
+      "aliases": [
+        "无意义文学"
+      ]
+    },
+    {
+      "song_id": 817,
+      "aliases": [
+        "回忆补时"
+      ]
+    },
+    {
+      "song_id": 822,
+      "aliases": [
+        "圣剑2"
+      ]
+    },
+    {
+      "song_id": 824,
+      "aliases": [
+        "小神威",
+        "神威remix"
+      ]
+    },
+    {
+      "song_id": 826,
+      "aliases": [
+        "水枪",
+        "月读舞步"
+      ]
+    },
+    {
+      "song_id": 828,
+      "aliases": [
+        "最初的钢琴"
+      ]
+    },
+    {
+      "song_id": 830,
+      "aliases": [
+        "狗头人",
+        "福瑞唱歌"
+      ]
+    },
+    {
+      "song_id": 831,
+      "aliases": [
+        "三铳士"
+      ]
+    },
+    {
+      "song_id": 832,
+      "aliases": [
+        "d0",
+        "削除射线"
+      ]
+    },
+    {
+      "song_id": 833,
+      "aliases": [
+        "rip"
+      ]
+    },
+    {
+      "song_id": 835,
+      "aliases": [
+        "tw"
+      ]
+    },
+    {
+      "song_id": 836,
+      "aliases": [
+        "绝对正义"
+      ]
+    },
+    {
+      "song_id": 837,
+      "aliases": [
+        "德国人2"
+      ]
+    },
+    {
+      "song_id": 840,
+      "aliases": [
+        "几望之月"
+      ]
+    },
+    {
+      "song_id": 843,
+      "aliases": [
+        "灵魂转生"
+      ]
+    },
+    {
+      "song_id": 844,
+      "aliases": [
+        "太阳系disco"
+      ]
+    },
+    {
+      "song_id": 845,
+      "aliases": [
+        "nekopara"
+      ]
+    },
+    {
+      "song_id": 850,
+      "aliases": [
+        "混乱"
+      ]
+    },
+    {
+      "song_id": 853,
+      "aliases": [
+        "最爱"
+      ]
+    },
+    {
+      "song_id": 854,
+      "aliases": [
+        "运命"
+      ]
+    },
+    {
+      "song_id": 860,
+      "aliases": [
+        "东京全域秋叶原"
+      ]
+    },
+    {
+      "song_id": 865,
+      "aliases": [
+        "百万吨爆炸",
+        "体操服优香",
+        "体操服梨绪"
+      ]
+    },
+    {
+      "song_id": 868,
+      "aliases": [
+        "巡音转圈"
+      ]
+    },
+    {
+      "song_id": 877,
+      "aliases": [
+        "塞蕾",
+        "wunderkammer"
+      ]
+    },
+    {
+      "song_id": 878,
+      "aliases": [
+        "雪儿"
+      ]
+    },
+    {
+      "song_id": 880,
+      "aliases": [
+        "大陨石",
+        "迪安",
+        "白色大蟑螂"
+      ]
+    },
+    {
+      "song_id": 881,
+      "aliases": [
+        "trrr",
+        "涅加尔"
+      ]
+    },
+    {
+      "song_id": 887,
+      "aliases": [
+        "日儿子",
+        "周杰伦"
+      ]
+    },
+    {
+      "song_id": 891,
+      "aliases": [
+        "音弹超人"
+      ]
+    },
+    {
+      "song_id": 893,
+      "aliases": [
+        "鸡饲料",
+        "吉赛尔",
+        "小奔周"
+      ]
+    },
+    {
+      "song_id": 894,
+      "aliases": [
+        "七色"
+      ]
+    },
+    {
+      "song_id": 895,
+      "aliases": [
+        "生活是钢琴"
+      ]
+    },
+    {
+      "song_id": 899,
+      "aliases": [
+        "彩绿公交车"
+      ]
+    },
+    {
+      "song_id": 900,
+      "aliases": [
+        "蝴蝶标本"
+      ]
+    },
+    {
+      "song_id": 911,
+      "aliases": [
+        "奇美拉"
+      ]
+    },
+    {
+      "song_id": 913,
+      "aliases": [
+        "彩绿希望泪"
+      ]
+    },
+    {
+      "song_id": 918,
+      "aliases": [
+        "猛料大杯",
+        "破灭"
+      ]
+    },
+    {
+      "song_id": 923,
+      "aliases": [
+        "心脏"
+      ]
+    },
+    {
+      "song_id": 927,
+      "aliases": [
+        "骂人ol",
+        "噩梦醇"
+      ]
+    },
+    {
+      "song_id": 934,
+      "aliases": [
+        "红魔汁"
+      ]
+    },
+    {
+      "song_id": 938,
+      "aliases": [
+        "精神病医生"
+      ]
+    },
+    {
+      "song_id": 944,
+      "aliases": [
+        "凤梨酥",
+        "核艺味"
+      ]
+    },
+    {
+      "song_id": 946,
+      "aliases": [
+        "jorqer"
+      ]
+    },
+    {
+      "song_id": 950,
+      "aliases": [
+        "大天使"
+      ]
+    },
+    {
+      "song_id": 953,
+      "aliases": [
+        "绿灯小夜曲",
+        "绿光小夜曲"
+      ]
+    },
+    {
+      "song_id": 958,
+      "aliases": [
+        "室内系",
+        "室内系的truckmaker",
+        "内向都是作曲家"
+      ]
+    },
+    {
+      "song_id": 959,
+      "aliases": [
+        "黑魔法"
+      ]
+    },
+    {
+      "song_id": 966,
+      "aliases": [
+        "翠星石",
+        "玉星"
+      ]
+    },
+    {
+      "song_id": 970,
+      "aliases": [
+        "硬核综合症",
+        "梅西歌"
+      ]
+    },
+    {
+      "song_id": 971,
+      "aliases": [
+        "华为完了",
+        "华为"
+      ]
+    },
+    {
+      "song_id": 972,
+      "aliases": [
+        "宿",
+        "宿暗示",
+        "宿星审判"
+      ]
+    },
+    {
+      "song_id": 975,
+      "aliases": [
+        "跟姐走"
+      ]
+    },
+    {
+      "song_id": 978,
+      "aliases": [
+        "飞升天堂",
+        "升天"
+      ]
+    },
+    {
+      "song_id": 979,
+      "aliases": [
+        "甜蜜镇魂曲"
+      ]
+    },
+    {
+      "song_id": 981,
+      "aliases": [
+        "小恶魔",
+        "光吉猛修他弟"
+      ]
+    },
+    {
+      "song_id": 982,
+      "aliases": [
+        "元宇宙",
+        "the",
+        "让我砸一下"
+      ]
+    },
+    {
+      "song_id": 983,
+      "aliases": [
+        "嫌命长",
+        "被生命所厌恶"
+      ]
+    },
+    {
+      "song_id": 988,
+      "aliases": [
+        "领土战争"
+      ]
+    },
+    {
+      "song_id": 989,
+      "aliases": [
+        "梦之路"
+      ]
+    },
+    {
+      "song_id": 991,
+      "aliases": [
+        "夢の始まり"
+      ]
+    },
+    {
+      "song_id": 993,
+      "aliases": [
+        "血猎"
+      ]
+    },
+    {
+      "song_id": 994,
+      "aliases": [
+        "lc"
+      ]
+    },
+    {
+      "song_id": 997,
+      "aliases": [
+        "绿魔王",
+        "完形填空"
+      ]
+    },
+    {
+      "song_id": 999,
+      "aliases": [
+        "大杯",
+        "attr"
+      ]
+    },
+    {
+      "song_id": 1002,
+      "aliases": [
+        "所以我放弃了音乐"
+      ]
+    },
+    {
+      "song_id": 1005,
+      "aliases": [
+        "彗星蜜月"
+      ]
+    },
+    {
+      "song_id": 1007,
+      "aliases": [
+        "猛毒",
+        "venom"
+      ]
+    },
+    {
+      "song_id": 1008,
+      "aliases": [
+        "usao夜骑",
+        "兔骑",
+        "兔子夜骑"
+      ]
+    },
+    {
+      "song_id": 1009,
+      "aliases": [
+        "黑人打架",
+        "种植园纠纷",
+        "孤注一掷"
+      ]
+    },
+    {
+      "song_id": 1010,
+      "aliases": [
+        "小圆射箭",
+        "维也纳之泪",
+        "丸山彩射箭",
+        "眼泪"
+      ]
+    },
+    {
+      "song_id": 1013,
+      "aliases": [
+        "宙之隣"
+      ]
+    },
+    {
+      "song_id": 1015,
+      "aliases": [
+        "ig",
+        "疯狂游戏模式"
+      ]
+    },
+    {
+      "song_id": 1016,
+      "aliases": [
+        "悖论"
+      ]
+    },
+    {
+      "song_id": 1017,
+      "aliases": [
+        "澳大利亚国立大学",
+        "澳国立",
+        "auv"
+      ]
+    },
+    {
+      "song_id": 1022,
+      "aliases": [
+        "白雪"
+      ]
+    },
+    {
+      "song_id": 1032,
+      "aliases": [
+        "refuge",
+        "选别"
+      ]
+    },
+    {
+      "song_id": 1033,
+      "aliases": [
+        "本能"
+      ]
+    },
+    {
+      "song_id": 1035,
+      "aliases": [
+        "刘备",
+        "大炎上",
+        "中二笑传之赤赤壁",
+        "赤大壁"
+      ]
+    },
+    {
+      "song_id": 1041,
+      "aliases": [
+        "dx少女",
+        "dx超性能少女"
+      ]
+    },
+    {
+      "song_id": 1043,
+      "aliases": [
+        "所罗门",
+        "雷蒙盖顿"
+      ]
+    },
+    {
+      "song_id": 1044,
+      "aliases": [
+        "狂战士"
+      ]
+    },
+    {
+      "song_id": 1048,
+      "aliases": [
+        "噗哟噗哟"
+      ]
+    },
+    {
+      "song_id": 1055,
+      "aliases": [
+        "wiz",
+        "帕露西",
+        "巫师"
+      ]
+    },
+    {
+      "song_id": 1058,
+      "aliases": [
+        "皇帝"
+      ]
+    },
+    {
+      "song_id": 1059,
+      "aliases": [
+        "旋转木马"
+      ]
+    },
+    {
+      "song_id": 1063,
+      "aliases": [
+        "萌豚功夫大乱舞"
+      ]
+    },
+    {
+      "song_id": 1065,
+      "aliases": [
+        "鬼叫歌"
+      ]
+    },
+    {
+      "song_id": 1066,
+      "aliases": [
+        "火男"
+      ]
+    },
+    {
+      "song_id": 1067,
+      "aliases": [
+        "安卓少女"
+      ]
+    },
+    {
+      "song_id": 1068,
+      "aliases": [
+        "幸福安心委员会"
+      ]
+    },
+    {
+      "song_id": 1073,
+      "aliases": [
+        "扑克脸"
+      ]
+    },
+    {
+      "song_id": 1075,
+      "aliases": [
+        "ccb",
+        "搓背"
+      ]
+    },
+    {
+      "song_id": 1076,
+      "aliases": [
+        "月咏"
+      ]
+    },
+    {
+      "song_id": 1077,
+      "aliases": [
+        "祝福雨"
+      ]
+    },
+    {
+      "song_id": 1078,
+      "aliases": [
+        "狗叫机关枪",
+        "赤发机关枪"
+      ]
+    },
+    {
+      "song_id": 1079,
+      "aliases": [
+        "x7"
+      ]
+    },
+    {
+      "song_id": 1084,
+      "aliases": [
+        "黑蔷薇"
+      ]
+    },
+    {
+      "song_id": 1085,
+      "aliases": [
+        "打架第一名",
+        "男人打架"
+      ]
+    },
+    {
+      "song_id": 1086,
+      "aliases": [
+        "祈",
+        "神祖",
+        "憋笑",
+        "老头",
+        "祈老登",
+        "创始者该隐"
+      ]
+    },
+    {
+      "song_id": 1091,
+      "aliases": [
+        "星之观测者"
+      ]
+    },
+    {
+      "song_id": 1092,
+      "aliases": [
+        "真千年"
+      ]
+    },
+    {
+      "song_id": 1094,
+      "aliases": [
+        "水晶通道",
+        "胜利の键"
+      ]
+    },
+    {
+      "song_id": 1096,
+      "aliases": [
+        "bassline yatteru? lol"
+      ]
+    },
+    {
+      "song_id": 1098,
+      "aliases": [
+        "董卓",
+        "350234",
+        "苦命鸳鸯"
+      ]
+    },
+    {
+      "song_id": 1100,
+      "aliases": [
+        "2085",
+        "85"
+      ]
+    },
+    {
+      "song_id": 1104,
+      "aliases": [
+        "咒歌"
+      ]
+    },
+    {
+      "song_id": 1106,
+      "aliases": [
+        "反逆",
+        "反逆焰"
+      ]
+    },
+    {
+      "song_id": 1107,
+      "aliases": [
+        "astronotes",
+        "天文笔记"
+      ]
+    },
+    {
+      "song_id": 2010,
+      "aliases": [
+        "夜驱"
+      ]
+    },
+    {
+      "song_id": 2023,
+      "aliases": [
+        "翻滚少女"
+      ]
+    },
+    {
+      "song_id": 2024,
+      "aliases": [
+        "骸骨乐团与莉莉娅"
+      ]
+    },
+    {
+      "song_id": 2028,
+      "aliases": [
+        "山茶花夜骑",
+        "花骑"
+      ]
+    },
+    {
+      "song_id": 2034,
+      "aliases": [
+        "狗叫",
+        "狗叫歌",
+        "汪汪汪",
+        "大狗叫"
+      ]
+    },
+    {
+      "song_id": 2035,
+      "aliases": [
+        "特大",
+        "特大男人",
+        "特大科技",
+        "黄红蓝绿",
+        "红黄蓝绿"
+      ]
+    },
+    {
+      "song_id": 2036,
+      "aliases": [
+        "超市"
+      ]
+    },
+    {
+      "song_id": 2038,
+      "aliases": [
+        "sin",
+        "正弦",
+        "三角函数"
+      ]
+    },
+    {
+      "song_id": 2039,
+      "aliases": [
+        "绯蜂"
+      ]
+    },
+    {
+      "song_id": 2040,
+      "aliases": [
+        "凤凰"
+      ]
+    },
+    {
+      "song_id": 2041,
+      "aliases": [
+        "八歧大蛇",
+        "八岐大蛇",
+        "进藤天音"
+      ]
+    },
+    {
+      "song_id": 2042,
+      "aliases": [
+        "卫星系统"
+      ]
+    },
+    {
+      "song_id": 2044,
+      "aliases": [
+        "音乐左轮",
+        "白左轮"
+      ]
+    },
+    {
+      "song_id": 2046,
+      "aliases": [
+        "蓝界",
+        "蓝的车",
+        "蓝的区"
+      ]
+    },
+    {
+      "song_id": 2047,
+      "aliases": [
+        "花希望",
+        "希望之花"
+      ]
+    },
+    {
+      "song_id": 2049,
+      "aliases": [
+        "脑天",
+        "脑天直击"
+      ]
+    },
+    {
+      "song_id": 2050,
+      "aliases": [
+        "135秒",
+        "封焰",
+        "16.11"
+      ]
+    },
+    {
+      "song_id": 2053,
+      "aliases": [
+        "蜜雪冰城",
+        "芬兰人"
+      ]
+    },
+    {
+      "song_id": 2060,
+      "aliases": [
+        "蜘蛛丝",
+        "蜘蛛系"
+      ]
+    },
+    {
+      "song_id": 2061,
+      "aliases": [
+        "cosmo fun popclub"
+      ]
+    },
+    {
+      "song_id": 2062,
+      "aliases": [
+        "日本鬼子"
+      ]
+    },
+    {
+      "song_id": 2064,
+      "aliases": [
+        "咒文",
+        "巫女"
+      ]
+    },
+    {
+      "song_id": 2069,
+      "aliases": [
+        "ppppp"
+      ]
+    },
+    {
+      "song_id": 2079,
+      "aliases": [
+        "决死行进"
+      ]
+    },
+    {
+      "song_id": 2083,
+      "aliases": [
+        "归言录编年史",
+        "东方归言录"
+      ]
+    },
+    {
+      "song_id": 2084,
+      "aliases": [
+        "八云紫",
+        "紫妈"
+      ]
+    },
+    {
+      "song_id": 2087,
+      "aliases": [
+        "众神眷恋的幻想乡",
+        "神恋幻想乡"
+      ]
+    },
+    {
+      "song_id": 2089,
+      "aliases": [
+        "癌症一",
+        "白雪乃爱",
+        "爱正义"
+      ]
+    },
+    {
+      "song_id": 2091,
+      "aliases": [
+        "纪律"
+      ]
+    },
+    {
+      "song_id": 2092,
+      "aliases": [
+        "种子"
+      ]
+    },
+    {
+      "song_id": 2093,
+      "aliases": [
+        "偏爱",
+        "镜女"
+      ]
+    },
+    {
+      "song_id": 2096,
+      "aliases": [
+        "姬雏鸟"
+      ]
+    },
+    {
+      "song_id": 2099,
+      "aliases": [
+        "别打歌",
+        "宵崎奏赢取冰箱",
+        "小气走",
+        "宵崎奏"
+      ]
+    },
+    {
+      "song_id": 2101,
+      "aliases": [
+        "延误列车"
+      ]
+    },
+    {
+      "song_id": 2102,
+      "aliases": [
+        "幽灵东京"
+      ]
+    },
+    {
+      "song_id": 2106,
+      "aliases": [
+        "彩绿电车"
+      ]
+    },
+    {
+      "song_id": 2111,
+      "aliases": [
+        "江江比耶"
+      ]
+    },
+    {
+      "song_id": 2117,
+      "aliases": [
+        "远牙",
+        "泽法"
+      ]
+    },
+    {
+      "song_id": 2118,
+      "aliases": [
+        "丝瓜饭桶",
+        "幻影小队"
+      ]
+    },
+    {
+      "song_id": 2119,
+      "aliases": [
+        "parv"
+      ]
+    },
+    {
+      "song_id": 2121,
+      "aliases": [
+        "奇怪爱",
+        "荣光の键"
+      ]
+    },
+    {
+      "song_id": 2122,
+      "aliases": [
+        "虚空藏菩萨"
+      ]
+    },
+    {
+      "song_id": 2126,
+      "aliases": [
+        "土块博士",
+        "小孩亲嘴",
+        "ttb"
+      ]
+    },
+    {
+      "song_id": 2127,
+      "aliases": [
+        "噗奶"
+      ]
+    },
+    {
+      "song_id": 2132,
+      "aliases": [
+        "蔬菜汁"
+      ]
+    },
+    {
+      "song_id": 2134,
+      "aliases": [
+        "音击拉丁人"
+      ]
+    },
+    {
+      "song_id": 2135,
+      "aliases": [
+        "银趴"
+      ]
+    },
+    {
+      "song_id": 2137,
+      "aliases": [
+        "传说之下",
+        "狂妄之人",
+        "sans"
+      ]
+    },
+    {
+      "song_id": 2138,
+      "aliases": [
+        "夜剧院"
+      ]
+    },
+    {
+      "song_id": 2140,
+      "aliases": [
+        "蝎火"
+      ]
+    },
+    {
+      "song_id": 2145,
+      "aliases": [
+        "吹爆",
+        "全爆"
+      ]
+    },
+    {
+      "song_id": 2147,
+      "aliases": [
+        "花一轮",
+        "花雪"
+      ]
+    },
+    {
+      "song_id": 2148,
+      "aliases": [
+        "再见宣言"
+      ]
+    },
+    {
+      "song_id": 2151,
+      "aliases": [
+        "吸血鬼"
+      ]
+    },
+    {
+      "song_id": 2161,
+      "aliases": [
+        "ptt",
+        "潜力值"
+      ]
+    },
+    {
+      "song_id": 2165,
+      "aliases": [
+        "黄金迪拉熊",
+        "金熊"
+      ]
+    },
+    {
+      "song_id": 2171,
+      "aliases": [
+        "江江比耶",
+        "泰坦尼亚"
+      ]
+    },
+    {
+      "song_id": 2175,
+      "aliases": [
+        "大统领"
+      ]
+    },
+    {
+      "song_id": 2178,
+      "aliases": [
+        "打卡啦摩托",
+        "more！jump！more！"
+      ]
+    },
+    {
+      "song_id": 2179,
+      "aliases": [
+        "移动恋话"
+      ]
+    },
+    {
+      "song_id": 2181,
+      "aliases": [
+        "darling dance"
+      ]
+    },
+    {
+      "song_id": 2182,
+      "aliases": [
+        "天地开辟",
+        "盘古"
+      ]
+    },
+    {
+      "song_id": 2184,
+      "aliases": [
+        "安狄明",
+        "恩底弥翁",
+        "edm",
+        "神奇女侠",
+        "女武神"
+      ]
+    },
+    {
+      "song_id": 2190,
+      "aliases": [
+        "el"
+      ]
+    },
+    {
+      "song_id": 2193,
+      "aliases": [
+        "毛儿毛儿"
+      ]
+    },
+    {
+      "song_id": 2194,
+      "aliases": [
+        "苍穹舞乐"
+      ]
+    },
+    {
+      "song_id": 2199,
+      "aliases": [
+        "镜男",
+        "镜中人",
+        "镜反射",
+        "小键盘歌"
+      ]
+    },
+    {
+      "song_id": 2206,
+      "aliases": [
+        "赫拉",
+        "狐狸叫"
+      ]
+    },
+    {
+      "song_id": 2207,
+      "aliases": [
+        "妖王",
+        "大明星",
+        "摇滚巨星"
+      ]
+    },
+    {
+      "song_id": 2208,
+      "aliases": [
+        "灯泡头",
+        "回响",
+        "高松灯"
+      ]
+    },
+    {
+      "song_id": 2210,
+      "aliases": [
+        "死镰"
+      ]
+    },
+    {
+      "song_id": 2215,
+      "aliases": [
+        "伪物"
+      ]
+    },
+    {
+      "song_id": 2218,
+      "aliases": [
+        "终梦"
+      ]
+    },
+    {
+      "song_id": 2219,
+      "aliases": [
+        "小fd",
+        "彩绿fd"
+      ]
+    },
+    {
+      "song_id": 2220,
+      "aliases": [
+        "彩绿色彩过剩",
+        "色彩过剩"
+      ]
+    },
+    {
+      "song_id": 2221,
+      "aliases": [
+        "失落王国",
+        "音击lk",
+        "终末帝"
+      ]
+    },
+    {
+      "song_id": 2225,
+      "aliases": [
+        "侵蚀过去",
+        "吞噬过去"
+      ]
+    },
+    {
+      "song_id": 2229,
+      "aliases": [
+        "茄子",
+        "茄子卡狗",
+        "羊村守护者11",
+        "毒牛奶"
+      ]
+    },
+    {
+      "song_id": 2230,
+      "aliases": [
+        "龙脸"
+      ]
+    },
+    {
+      "song_id": 2231,
+      "aliases": [
+        "我们回来了",
+        "我们是背",
+        "我们回来",
+        "我们是背!!",
+        "洛特十二"
+      ]
+    },
+    {
+      "song_id": 2232,
+      "aliases": [
+        "高文",
+        "陈赫",
+        "山东兄弟",
+        "马尔杜克"
+      ]
+    },
+    {
+      "song_id": 2233,
+      "aliases": [
+        "azure vixen",
+        "av",
+        "凯南",
+        "我独自升级"
+      ]
+    },
+    {
+      "song_id": 2239,
+      "aliases": [
+        "白桑巴",
+        "桑巴"
+      ]
+    },
+    {
+      "song_id": 2240,
+      "aliases": [
+        "马尔库斯",
+        "王国"
+      ]
+    },
+    {
+      "song_id": 2241,
+      "aliases": [
+        "daat",
+        "大特",
+        "神秘特大",
+        "巴西安",
+        "特雷西斯"
+      ]
+    },
+    {
+      "song_id": 2244,
+      "aliases": [
+        "非实在系"
+      ]
+    },
+    {
+      "song_id": 2245,
+      "aliases": [
+        "千恋万花",
+        "以恋结缘",
+        "柚子厨",
+        "柚子厨蒸鹅心"
+      ]
+    },
+    {
+      "song_id": 2246,
+      "aliases": [
+        "超越光"
+      ]
+    },
+    {
+      "song_id": 2249,
+      "aliases": [
+        "咆哮",
+        "howling"
+      ]
+    },
+    {
+      "song_id": 2251,
+      "aliases": [
+        "多多良小伞",
+        "小伞"
+      ]
+    },
+    {
+      "song_id": 2263,
+      "aliases": [
+        "像神一样呐"
+      ]
+    },
+    {
+      "song_id": 2264,
+      "aliases": [
+        "不可思议的wonders"
+      ]
+    },
+    {
+      "song_id": 2266,
+      "aliases": [
+        "我巨爽"
+      ]
+    },
+    {
+      "song_id": 2269,
+      "aliases": [
+        "矛盾心理"
+      ]
+    },
+    {
+      "song_id": 2270,
+      "aliases": [
+        "百合咲",
+        "temp"
+      ]
+    },
+    {
+      "song_id": 2271,
+      "aliases": [
+        "亚特兰蒂斯"
+      ]
+    },
+    {
+      "song_id": 2273,
+      "aliases": [
+        "不完美白色女孩",
+        "霸道总裁爱上我",
+        "imperfect white girl"
+      ]
+    },
+    {
+      "song_id": 2279,
+      "aliases": [
+        "风呗",
+        "傻呗"
+      ]
+    },
+    {
+      "song_id": 2285,
+      "aliases": [
+        "重生"
+      ]
+    },
+    {
+      "song_id": 2288,
+      "aliases": [
+        "灵乌路空",
+        "世界末日",
+        "核弹"
+      ]
+    },
+    {
+      "song_id": 2295,
+      "aliases": [
+        "尖叫",
+        "维也纳尖叫",
+        "小圆尖叫"
+      ]
+    },
+    {
+      "song_id": 2296,
+      "aliases": [
+        "华尔兹"
+      ]
+    },
+    {
+      "song_id": 2300,
+      "aliases": [
+        "奥丁",
+        "费大"
+      ]
+    },
+    {
+      "song_id": 2301,
+      "aliases": [
+        "野火",
+        "桌球"
+      ]
+    },
+    {
+      "song_id": 2304,
+      "aliases": [
+        "群青赞歌"
+      ]
+    },
+    {
+      "song_id": 2306,
+      "aliases": [
+        "马歇尔最大化者"
+      ]
+    },
+    {
+      "song_id": 2311,
+      "aliases": [
+        "大斗士"
+      ]
+    },
+    {
+      "song_id": 2312,
+      "aliases": [
+        "兔女郎",
+        "神开司",
+        "fdr"
+      ]
+    },
+    {
+      "song_id": 2314,
+      "aliases": [
+        "辛德瑞拉",
+        "灰姑娘"
+      ]
+    },
+    {
+      "song_id": 2315,
+      "aliases": [
+        "动物"
+      ]
+    },
+    {
+      "song_id": 2317,
+      "aliases": [
+        "心跳不止"
+      ]
+    },
+    {
+      "song_id": 2318,
+      "aliases": [
+        "可不弹钢琴"
+      ]
+    },
+    {
+      "song_id": 2320,
+      "aliases": [
+        "hera2",
+        "咱家那超级大串",
+        "赫拉2",
+        "工一夕",
+        "蓝的椿"
+      ]
+    },
+    {
+      "song_id": 2326,
+      "aliases": [
+        "银河翱翔"
+      ]
+    },
+    {
+      "song_id": 2333,
+      "aliases": [
+        "彩绿bk"
+      ]
+    },
+    {
+      "song_id": 2334,
+      "aliases": [
+        "超级救护车",
+        "救护车"
+      ]
+    },
+    {
+      "song_id": 2338,
+      "aliases": [
+        "矩阵",
+        "阵列",
+        "孩子别怕"
+      ]
+    },
+    {
+      "song_id": 2339,
+      "aliases": [
+        "大奔周",
+        "大扣西",
+        "长崎素世",
+        "全网呼叫山东人",
+        "山东人",
+        "山东男人",
+        "海豚",
+        "安夏尔"
+      ]
+    },
+    {
+      "song_id": 2340,
+      "aliases": [
+        "tbc",
+        "未完待续",
+        "终梦2"
+      ]
+    },
+    {
+      "song_id": 2343,
+      "aliases": [
+        "世界第一的公主殿下"
+      ]
+    },
+    {
+      "song_id": 2344,
+      "aliases": [
+        "未来•前夕",
+        "future eve",
+        "未来前夕"
+      ]
+    },
+    {
+      "song_id": 2346,
+      "aliases": [
+        "ff"
+      ]
+    },
+    {
+      "song_id": 2347,
+      "aliases": [
+        "变石"
+      ]
+    },
+    {
+      "song_id": 2348,
+      "aliases": [
+        "白复生"
+      ]
+    },
+    {
+      "song_id": 2349,
+      "aliases": [
+        "爱丽丝的手提箱"
+      ]
+    },
+    {
+      "song_id": 2350,
+      "aliases": [
+        "恋歌"
+      ]
+    },
+    {
+      "song_id": 2351,
+      "aliases": [
+        "黑魔王",
+        "射日"
+      ]
+    },
+    {
+      "song_id": 2353,
+      "aliases": [
+        "即兴曲",
+        "肖邦",
+        "幻想即兴曲",
+        "钢琴十级",
+        "不要装作看不见"
+      ]
+    },
+    {
+      "song_id": 2354,
+      "aliases": [
+        "月光",
+        "德彪西",
+        "月之光",
+        "大钢琴家"
+      ]
+    },
+    {
+      "song_id": 2355,
+      "aliases": [
+        "维瓦尔第",
+        "四季冬"
+      ]
+    },
+    {
+      "song_id": 2356,
+      "aliases": [
+        "月儿子"
+      ]
+    },
+    {
+      "song_id": 2360,
+      "aliases": [
+        "魔法少女和巧克力"
+      ]
+    },
+    {
+      "song_id": 2361,
+      "aliases": [
+        "少女ray"
+      ]
+    },
+    {
+      "song_id": 2362,
+      "aliases": [
+        "超常maimai"
+      ]
+    },
+    {
+      "song_id": 2363,
+      "aliases": [
+        "八比特"
+      ]
+    },
+    {
+      "song_id": 2364,
+      "aliases": [
+        "极怒",
+        "续标识"
+      ]
+    },
+    {
+      "song_id": 2365,
+      "aliases": [
+        "江江报菜名",
+        "7475格"
+      ]
+    },
+    {
+      "song_id": 2370,
+      "aliases": [
+        "天津神"
+      ]
+    },
+    {
+      "song_id": 2371,
+      "aliases": [
+        "无限红力"
+      ]
+    },
+    {
+      "song_id": 2373,
+      "aliases": [
+        "烧"
+      ]
+    },
+    {
+      "song_id": 2383,
+      "aliases": [
+        "亚当"
+      ]
+    },
+    {
+      "song_id": 2384,
+      "aliases": [
+        "破坏王"
+      ]
+    },
+    {
+      "song_id": 2385,
+      "aliases": [
+        "牢大",
+        "伊甸",
+        "艾伦沃克"
+      ]
+    },
+    {
+      "song_id": 2388,
+      "aliases": [
+        "地雷女",
+        "主播女孩重度依赖"
+      ]
+    },
+    {
+      "song_id": 2391,
+      "aliases": [
+        "两亿"
+      ]
+    },
+    {
+      "song_id": 2394,
+      "aliases": [
+        "火蜥蜴"
+      ]
+    },
+    {
+      "song_id": 2395,
+      "aliases": [
+        "不知醉"
+      ]
+    },
+    {
+      "song_id": 2397,
+      "aliases": [
+        "mopemope",
+        "小蓝花",
+        "邪恶小花"
+      ]
+    },
+    {
+      "song_id": 2399,
+      "aliases": [
+        "雷切"
+      ]
+    },
+    {
+      "song_id": 2400,
+      "aliases": [
+        "拉面",
+        "拉米亚"
+      ]
+    },
+    {
+      "song_id": 2401,
+      "aliases": [
+        "音速天",
+        "三小只"
+      ]
+    },
+    {
+      "song_id": 2403,
+      "aliases": [
+        "狼人"
+      ]
+    },
+    {
+      "song_id": 2409,
+      "aliases": [
+        "freefall"
+      ]
+    },
+    {
+      "song_id": 2410,
+      "aliases": [
+        "隐狂"
+      ]
+    },
+    {
+      "song_id": 2416,
+      "aliases": [
+        "雪色乐章"
+      ]
+    },
+    {
+      "song_id": 2418,
+      "aliases": [
+        "虾"
+      ]
+    },
+    {
+      "song_id": 2422,
+      "aliases": [
+        "九头蛇"
+      ]
+    },
+    {
+      "song_id": 2427,
+      "aliases": [
+        "导师唱歌",
+        "泡沫世界"
+      ]
+    },
+    {
+      "song_id": 2428,
+      "aliases": [
+        "玩具箱",
+        "永爱的玩具箱"
+      ]
+    },
+    {
+      "song_id": 2431,
+      "aliases": [
+        "死眼"
+      ]
+    },
+    {
+      "song_id": 2433,
+      "aliases": [
+        "幻化成花"
+      ]
+    },
+    {
+      "song_id": 2435,
+      "aliases": [
+        "去外星"
+      ]
+    },
+    {
+      "song_id": 2439,
+      "aliases": [
+        "梦与幻想的终点"
+      ]
+    },
+    {
+      "song_id": 2440,
+      "aliases": [
+        "沃特",
+        "傲慢",
+        "超b啊"
+      ]
+    },
+    {
+      "song_id": 2441,
+      "aliases": [
+        "空间创造理论",
+        "小跟哥走"
+      ]
+    },
+    {
+      "song_id": 2442,
+      "aliases": [
+        "blanoir",
+        "ba",
+        "黑白",
+        "基础の键",
+        "blanior"
+      ]
+    },
+    {
+      "song_id": 2444,
+      "aliases": [
+        "天使尘2",
+        "奇趣蛋",
+        "汉堡"
+      ]
+    },
+    {
+      "song_id": 2450,
+      "aliases": [
+        "世嘉土星启动音"
+      ]
+    },
+    {
+      "song_id": 2452,
+      "aliases": [
+        "食终孤独",
+        "世终俊达"
+      ]
+    },
+    {
+      "song_id": 2457,
+      "aliases": [
+        "真红"
+      ]
+    },
+    {
+      "song_id": 2458,
+      "aliases": [
+        "乐土"
+      ]
+    },
+    {
+      "song_id": 2459,
+      "aliases": [
+        "散华"
+      ]
+    },
+    {
+      "song_id": 2461,
+      "aliases": [
+        "创造",
+        "gamemode1",
+        "拜谢"
+      ]
+    },
+    {
+      "song_id": 2466,
+      "aliases": [
+        "alteration"
+      ]
+    },
+    {
+      "song_id": 2467,
+      "aliases": [
+        "轩辕十四",
+        "热咕噜"
+      ]
+    },
+    {
+      "song_id": 2475,
+      "aliases": [
+        "超市点单"
+      ]
+    },
+    {
+      "song_id": 2477,
+      "aliases": [
+        "solips",
+        "嗦"
+      ]
+    },
+    {
+      "song_id": 2479,
+      "aliases": [
+        "丛雨"
+      ]
+    },
+    {
+      "song_id": 2480,
+      "aliases": [
+        "几何舞"
+      ]
+    },
+    {
+      "song_id": 2485,
+      "aliases": [
+        "奇点"
+      ]
+    },
+    {
+      "song_id": 2486,
+      "aliases": [
+        "法则"
+      ]
+    },
+    {
+      "song_id": 2488,
+      "aliases": [
+        "犹如高"
+      ]
+    },
+    {
+      "song_id": 2490,
+      "aliases": [
+        "莉可莉丝op"
+      ]
+    },
+    {
+      "song_id": 2491,
+      "aliases": [
+        "这么可爱真是抱歉"
+      ]
+    },
+    {
+      "song_id": 2494,
+      "aliases": [
+        "偶像"
+      ]
+    },
+    {
+      "song_id": 2496,
+      "aliases": [
+        "咲唯体操"
+      ]
+    },
+    {
+      "song_id": 2497,
+      "aliases": [
+        "别当欧尼酱了op",
+        "阿里纳西"
+      ]
+    },
+    {
+      "song_id": 2498,
+      "aliases": [
+        "别当欧尼酱了ed"
+      ]
+    },
+    {
+      "song_id": 2501,
+      "aliases": [
+        "化身为海"
+      ]
+    },
+    {
+      "song_id": 2503,
+      "aliases": [
+        "快远离互联网"
+      ]
+    },
+    {
+      "song_id": 2506,
+      "aliases": [
+        "强风大背头"
+      ]
+    },
+    {
+      "song_id": 2508,
+      "aliases": [
+        "中继输出者"
+      ]
+    },
+    {
+      "song_id": 2509,
+      "aliases": [
+        "舞蹈机器人"
+      ]
+    },
+    {
+      "song_id": 2512,
+      "aliases": [
+        "lower"
+      ]
+    },
+    {
+      "song_id": 2514,
+      "aliases": [
+        "天使的幸运草"
+      ]
+    },
+    {
+      "song_id": 2515,
+      "aliases": [
+        "捉迷藏依赖症"
+      ]
+    },
+    {
+      "song_id": 2517,
+      "aliases": [
+        "bug",
+        "故障"
+      ]
+    },
+    {
+      "song_id": 2518,
+      "aliases": [
+        "魔法笔刷"
+      ]
+    },
+    {
+      "song_id": 2522,
+      "aliases": [
+        "玩火"
+      ]
+    },
+    {
+      "song_id": 2523,
+      "aliases": [
+        "互联网幸存者",
+        "芙兰朵露重度依赖"
+      ]
+    },
+    {
+      "song_id": 2525,
+      "aliases": [
+        "决心鱼",
+        "小蜘蛛丝",
+        "与一位真正的英雄决斗",
+        "battle against a true hero",
+        "鱼姐"
+      ]
+    },
+    {
+      "song_id": 2526,
+      "aliases": [
+        "镁塔顿",
+        "mtt",
+        "death by glamour"
+      ]
+    },
+    {
+      "song_id": 2530,
+      "aliases": [
+        "苦草"
+      ]
+    },
+    {
+      "song_id": 2531,
+      "aliases": [
+        "大爆炸"
+      ]
+    },
+    {
+      "song_id": 2532,
+      "aliases": [
+        "痉挛",
+        "成主角了"
+      ]
+    },
+    {
+      "song_id": 2533,
+      "aliases": [
+        "oop",
+        "零件",
+        "ooparts"
+      ]
+    },
+    {
+      "song_id": 2534,
+      "aliases": [
+        "esm跑"
+      ]
+    },
+    {
+      "song_id": 2535,
+      "aliases": [
+        "纽约赌场",
+        "皇家同花顺"
+      ]
+    },
+    {
+      "song_id": 2537,
+      "aliases": [
+        "巨爆",
+        "gg爆",
+        "喜抬乐"
+      ]
+    },
+    {
+      "song_id": 2538,
+      "aliases": [
+        "朗基努斯"
+      ]
+    },
+    {
+      "song_id": 2539,
+      "aliases": [
+        "海神"
+      ]
+    },
+    {
+      "song_id": 2540,
+      "aliases": [
+        "拔大蒜",
+        "badass"
+      ]
+    },
+    {
+      "song_id": 2542,
+      "aliases": [
+        "燃尽了",
+        "全烧了"
+      ]
+    },
+    {
+      "song_id": 2547,
+      "aliases": [
+        "火球",
+        "火神",
+        "克图格亚"
+      ]
+    },
+    {
+      "song_id": 2548,
+      "aliases": [
+        "行",
+        "彳亍"
+      ]
+    },
+    {
+      "song_id": 2549,
+      "aliases": [
+        "哪里也不去"
+      ]
+    },
+    {
+      "song_id": 2554,
+      "aliases": [
+        "妈宝蓝"
+      ]
+    },
+    {
+      "song_id": 2556,
+      "aliases": [
+        "木糖醇"
+      ]
+    },
+    {
+      "song_id": 2557,
+      "aliases": [
+        "机械头2",
+        "姬械头"
+      ]
+    },
+    {
+      "song_id": 2559,
+      "aliases": [
+        "你抓不住我"
+      ]
+    },
+    {
+      "song_id": 2560,
+      "aliases": [
+        "april showers",
+        "四月的雨"
+      ]
+    },
+    {
+      "song_id": 2563,
+      "aliases": [
+        "蓝江江"
+      ]
+    },
+    {
+      "song_id": 2564,
+      "aliases": [
+        "美丽未来"
+      ]
+    },
+    {
+      "song_id": 2567,
+      "aliases": [
+        "大狗"
+      ]
+    },
+    {
+      "song_id": 2570,
+      "aliases": [
+        "lga2",
+        "zega"
+      ]
+    },
+    {
+      "song_id": 2571,
+      "aliases": [
+        "中二之歌",
+        "污泥之歌"
+      ]
+    },
+    {
+      "song_id": 2579,
+      "aliases": [
+        "祝福荣光",
+        "红豆泥私密马赛",
+        "红豆泥"
+      ]
+    },
+    {
+      "song_id": 2581,
+      "aliases": [
+        "defandour",
+        "宝宝你好萌"
+      ]
+    },
+    {
+      "song_id": 2582,
+      "aliases": [
+        "uf",
+        "终极力量"
+      ]
+    },
+    {
+      "song_id": 2583,
+      "aliases": [
+        "静蓝"
+      ]
+    },
+    {
+      "song_id": 2589,
+      "aliases": [
+        "大未来电脑"
+      ]
+    },
+    {
+      "song_id": 2591,
+      "aliases": [
+        "早起椰树头"
+      ]
+    },
+    {
+      "song_id": 2592,
+      "aliases": [
+        "待宵萤火",
+        "待宵的萤火虫"
+      ]
+    },
+    {
+      "song_id": 2593,
+      "aliases": [
+        "rr",
+        "老师我的作业会发光"
+      ]
+    },
+    {
+      "song_id": 2594,
+      "aliases": [
+        "顶耸",
+        "hybris"
+      ]
+    },
+    {
+      "song_id": 2597,
+      "aliases": [
+        "星辰光",
+        "星尘光"
+      ]
+    },
+    {
+      "song_id": 2598,
+      "aliases": [
+        "百臂巨人"
+      ]
+    },
+    {
+      "song_id": 2600,
+      "aliases": [
+        "三大只",
+        "其见",
+        "emerald"
+      ]
+    },
+    {
+      "song_id": 2602,
+      "aliases": [
+        "将棋",
+        "围棋姐姐"
+      ]
+    },
+    {
+      "song_id": 2606,
+      "aliases": [
+        "铁锭",
+        "re fiction o",
+        "虚构"
+      ]
+    },
+    {
+      "song_id": 2610,
+      "aliases": [
+        "吃了药就去睡觉吧"
+      ]
+    },
+    {
+      "song_id": 2614,
+      "aliases": [
+        "女巫之锤",
+        "女巫之槌"
+      ]
+    },
+    {
+      "song_id": 2616,
+      "aliases": [
+        "黎命"
+      ]
+    },
+    {
+      "song_id": 2620,
+      "aliases": [
+        "图灵之迹",
+        "图灵"
+      ]
+    },
+    {
+      "song_id": 2621,
+      "aliases": [
+        "夜波碎片"
+      ]
+    },
+    {
+      "song_id": 2622,
+      "aliases": [
+        "乔打架",
+        "乔战斗",
+        "孙笑川"
+      ]
+    },
+    {
+      "song_id": 2631,
+      "aliases": [
+        "贵重捕食"
+      ]
+    },
+    {
+      "song_id": 2632,
+      "aliases": [
+        "俊达萌派对"
+      ]
+    },
+    {
+      "song_id": 2636,
+      "aliases": [
+        "米饭"
+      ]
+    },
+    {
+      "song_id": 2637,
+      "aliases": [
+        "乙女战士"
+      ]
+    },
+    {
+      "song_id": 2638,
+      "aliases": [
+        "早熟公主"
+      ]
+    },
+    {
+      "song_id": 2639,
+      "aliases": [
+        "social wonderland",
+        "社交仙境"
+      ]
+    },
+    {
+      "song_id": 2641,
+      "aliases": [
+        "机关枪",
+        "柠檬的史"
+      ]
+    },
+    {
+      "song_id": 2644,
+      "aliases": [
+        "死人偶"
+      ]
+    },
+    {
+      "song_id": 2647,
+      "aliases": [
+        "hera3",
+        "图书馆",
+        "赫拉3"
+      ]
+    },
+    {
+      "song_id": 2648,
+      "aliases": [
+        "tdd",
+        "丹努之子",
+        "eden2"
+      ]
+    },
+    {
+      "song_id": 2650,
+      "aliases": [
+        "陨石雪",
+        "流星雪"
+      ]
+    },
+    {
+      "song_id": 2651,
+      "aliases": [
+        "酸神",
+        "广东人吃微辣",
+        "啊西噶",
+        "缺牙齿",
+        "红温魔男",
+        "谁把我空调关了"
+      ]
+    },
+    {
+      "song_id": 2652,
+      "aliases": [
+        "奶龙",
+        "藤田琴音",
+        "奶龙唱歌",
+        "ft",
+        "仁王盾"
+      ]
+    },
+    {
+      "song_id": 2657,
+      "aliases": [
+        "存活千年"
+      ]
+    },
+    {
+      "song_id": 2658,
+      "aliases": [
+        "热异常"
+      ]
+    },
+    {
+      "song_id": 2659,
+      "aliases": [
+        "杏子"
+      ]
+    },
+    {
+      "song_id": 2660,
+      "aliases": [
+        "我擦跑",
+        "wup",
+        "wassup bro",
+        "卧操pop"
+      ]
+    },
+    {
+      "song_id": 2661,
+      "aliases": [
+        "随之任之"
+      ]
+    },
+    {
+      "song_id": 2665,
+      "aliases": [
+        "超熊猫"
+      ]
+    },
+    {
+      "song_id": 2675,
+      "aliases": [
+        "tutti"
+      ]
+    },
+    {
+      "song_id": 2677,
+      "aliases": [
+        "名取纱那",
+        "没问题tripper！",
+        "萌呆奶"
+      ]
+    },
+    {
+      "song_id": 2680,
+      "aliases": [
+        "福瑞火箭"
+      ]
+    },
+    {
+      "song_id": 2681,
+      "aliases": [
+        "群青信号"
+      ]
+    },
+    {
+      "song_id": 2684,
+      "aliases": [
+        "放晴"
+      ]
+    },
+    {
+      "song_id": 2687,
+      "aliases": [
+        "爱派dancehall"
+      ]
+    },
+    {
+      "song_id": 2689,
+      "aliases": [
+        "催眠术",
+        "mesmerizer"
+      ]
+    },
+    {
+      "song_id": 2690,
+      "aliases": [
+        "绝对敌对超级讨厌"
+      ]
+    },
+    {
+      "song_id": 2692,
+      "aliases": [
+        "有顶天梦想家"
+      ]
+    },
+    {
+      "song_id": 2693,
+      "aliases": [
+        "凝眸之地",
+        "光光泡水"
+      ]
+    },
+    {
+      "song_id": 2694,
+      "aliases": [
+        "捆绑女王"
+      ]
+    },
+    {
+      "song_id": 2695,
+      "aliases": [
+        "砖魔王",
+        "rg"
+      ]
+    },
+    {
+      "song_id": 2696,
+      "aliases": [
+        "风暴",
+        "我要杀光光"
+      ]
+    },
+    {
+      "song_id": 2697,
+      "aliases": [
+        "姐姐砍我"
+      ]
+    },
+    {
+      "song_id": 2698,
+      "aliases": [
+        "感性合成法"
+      ]
+    },
+    {
+      "song_id": 2699,
+      "aliases": [
+        "天文钟"
+      ]
+    },
+    {
+      "song_id": 2703,
+      "aliases": [
+        "艾草"
+      ]
+    },
+    {
+      "song_id": 2704,
+      "aliases": [
+        "太空熊",
+        "你爹来咯"
+      ]
+    },
+    {
+      "song_id": 2705,
+      "aliases": [
+        "青蛙地雷女"
+      ]
+    },
+    {
+      "song_id": 2708,
+      "aliases": [
+        "房总"
+      ]
+    },
+    {
+      "song_id": 2710,
+      "aliases": [
+        "神谕",
+        "甲骨文"
+      ]
+    },
+    {
+      "song_id": 2711,
+      "aliases": [
+        "下界之星",
+        "tdi"
+      ]
+    },
+    {
+      "song_id": 2712,
+      "aliases": [
+        "tc",
+        "剧场",
+        "剧院",
+        "天旋地转"
+      ]
+    },
+    {
+      "song_id": 2728,
+      "aliases": [
+        "隔绝"
+      ]
+    },
+    {
+      "song_id": 2729,
+      "aliases": [
+        "献身"
+      ]
+    },
+    {
+      "song_id": 2730,
+      "aliases": [
+        "盲从"
+      ]
+    },
+    {
+      "song_id": 2739,
+      "aliases": [
+        "acc",
+        "光光看大雷"
+      ]
+    },
+    {
+      "song_id": 2744,
+      "aliases": [
+        "反乌托邦",
+        "反反乌托邦"
+      ]
+    },
+    {
+      "song_id": 2750,
+      "aliases": [
+        "ieo"
+      ]
+    },
+    {
+      "song_id": 2751,
+      "aliases": [
+        "彩虹猫"
+      ]
+    },
+    {
+      "song_id": 2799,
+      "aliases": [
+        "葬送歌"
+      ]
+    },
+    {
+      "song_id": 2807,
+      "aliases": [
+        "战我路",
+        "战斗我的路",
+        "fmw"
+      ]
+    },
+    {
+      "song_id": 2810,
+      "aliases": [
+        "司空见惯的世界征服"
+      ]
+    },
+    {
+      "song_id": 2811,
+      "aliases": [
+        "无呼吸义务",
+        "non-breath oblige"
+      ]
+    },
+    {
+      "song_id": 2812,
+      "aliases": [
+        "桃色钥匙"
+      ]
+    },
+    {
+      "song_id": 2813,
+      "aliases": [
+        "新人类"
+      ]
+    },
+    {
+      "song_id": 2814,
+      "aliases": [
+        "realize"
+      ]
+    },
+    {
+      "song_id": 8026,
+      "aliases": [
+        "狂fd"
+      ]
+    },
+    {
+      "song_id": 8084,
+      "aliases": [
+        "逐渐加快"
+      ]
+    },
+    {
+      "song_id": 8091,
+      "aliases": [
+        "头元"
+      ]
+    },
+    {
+      "song_id": 8098,
+      "aliases": [
+        "特大前传"
+      ]
+    },
+    {
+      "song_id": 8124,
+      "aliases": [
+        "火山"
+      ]
+    },
+    {
+      "song_id": 8129,
+      "aliases": [
+        "星光迪斯科"
+      ]
+    },
+    {
+      "song_id": 8136,
+      "aliases": [
+        "天使尘"
+      ]
+    },
+    {
+      "song_id": 8180,
+      "aliases": [
+        "海边打西瓜"
+      ]
+    },
+    {
+      "song_id": 8252,
+      "aliases": [
+        "千夏打交"
+      ]
+    },
+    {
+      "song_id": 8256,
+      "aliases": [
+        "小  伸过来让我砸一下"
+      ]
+    },
+    {
+      "song_id": 8263,
+      "aliases": [
+        "跨栏",
+        "阿列夫0"
+      ]
+    },
+    {
+      "song_id": 8267,
+      "aliases": [
+        "狂高达"
+      ]
+    },
+    {
+      "song_id": 8272,
+      "aliases": [
+        "专项训练"
+      ]
+    },
+    {
+      "song_id": 8292,
+      "aliases": [
+        "鸡公煲"
+      ]
+    }
+  ]
+}

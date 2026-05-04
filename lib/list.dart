@@ -6,7 +6,7 @@ Widget buildGenreDropdownMenu({
   ValueChanged<String?>? onSelected,
 }) {
   return DropdownMenu<String>(
-    initialSelection: initialSelection ?? '分类',
+    initialSelection: initialSelection ?? '-1',
     selectOnly: true,
     onSelected: onSelected,
     dropdownMenuEntries: const [
