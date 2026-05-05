@@ -6,7 +6,7 @@ plugins {
 }
 
 android {
-    namespace = "com.example.chusearchsong_flutter"
+    namespace = "com.k4641321.chusearchsongflutter"
     compileSdk = flutter.compileSdkVersion
     ndkVersion = flutter.ndkVersion
 

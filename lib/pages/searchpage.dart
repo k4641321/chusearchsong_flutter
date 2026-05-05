@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'list.dart';
-import 'search.dart';
+import '../tools/list.dart';
+import '../tools/search.dart';
 
 class SearchPage extends StatefulWidget {
   const SearchPage({super.key});
@@ -46,6 +46,7 @@ class _SearchPageState extends State<SearchPage> {
         version,
         difficultyDown,
         difficultyUp,
+        context,
       );
 
       // 更新状态

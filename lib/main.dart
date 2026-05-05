@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'infopage.dart';
-import 'searchpage.dart';
+import 'pages/infopage.dart';
+import 'pages/searchpage.dart';
 
 void main() {
   runApp(const MyApp());
@@ -33,7 +33,7 @@ class _MyHomePageState extends State<MyHomePage> {
     return Scaffold(
       appBar: AppBar(
         title: Text(title),
-        backgroundColor: const Color.fromARGB(255, 106, 186, 252),
+        backgroundColor: const Color.fromARGB(255, 255, 229, 84),
       ),
       body: _pages[_currentIndex],
       bottomNavigationBar: BottomNavigationBar(
@@ -48,7 +48,7 @@ class _MyHomePageState extends State<MyHomePage> {
             }
           });
         },
-        fixedColor: const Color.fromARGB(255, 106, 186, 252),
+        fixedColor: const Color.fromARGB(255, 255, 229, 84),
         items: [
           BottomNavigationBarItem(icon: Icon(Icons.search), label: '搜索'),
           BottomNavigationBarItem(icon: Icon(Icons.info), label: '关于'),

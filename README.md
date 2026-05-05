@@ -2,7 +2,7 @@
 
 ## 是的是的，又是一个新框架，kivy貌似因为库的问题本地构建不成功，转为flutter了，气笑了
 
-# 此项目为[chusearchsong](https://github.com/k4641321/chusearchsong)flutter的重构版
+# 此项目为[chusearchsong](https://github.com/k4641321/chusearchsong) flutter的重构版
 
 # 中二查歌
 
@@ -14,8 +14,9 @@
 - [x] 版本查歌
 - [x] 别名查歌
 - [x] 定数筛选
-- [ ] 歌曲详情
-- [ ] 曲绘预览
+- [ ] id查歌(但落雪的id好像不是官方曲目id,考虑一下)
+- [x] 歌曲详情
+- [x] 曲绘预览
 - [ ] 收藏夹
 - [ ] 歌曲试听
 - [ ] 多个收藏夹
@@ -26,7 +27,7 @@
 | Windows| | |
 | macOS | | |
 | Linux | | |
-| Android | | |
+| Android | 支持 | Android 7.0+ |
 | Web | | |
 | iOS | | |
 
@@ -44,4 +45,11 @@ flutter目前是边学边写的，**有答辩代码是超级非常正常的**，
 ![zsm](zsm.png)
 
 # 更新日志
+### 2026-05-06
+- 添加了歌曲详情
+- 添加了曲绘预览
+- 修正了包名为`com.example.chusearchsong_flutter`的错误
+- 更新了关于界面
 
+### 2026-05-05
+- 完成了基本的曲目搜索

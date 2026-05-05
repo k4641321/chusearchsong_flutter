@@ -2,6 +2,8 @@ import 'dart:convert';
 import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import '../pages/songinfopage.dart';
+import '../tools/request.dart';
 
 Future<List<Widget>> search(
   String title,
@@ -9,6 +11,7 @@ Future<List<Widget>> search(
   String version,
   String difficultydown,
   String difficultyup,
+  BuildContext context,
 ) async {
   // 加载曲目数据
   String jsonString = await rootBundle.loadString('res/list.json');
@@ -51,7 +54,7 @@ Future<List<Widget>> search(
       }
     }
   }
-  print(aliasresult);
+  // print(aliasresult);
   List aliasresult2 = [];
   for (var i in aliasresult) {
     if (!songresultids.contains(i)) {
@@ -62,9 +65,9 @@ Future<List<Widget>> search(
       }
     }
   }
-  print(aliasresult2);
+  // print(aliasresult2);
   songresult.addAll(aliasresult2);
-  print(songresult);
+  // print(songresult);
 
   //筛选流派
   if (genre == '-1') {
@@ -77,7 +80,7 @@ Future<List<Widget>> search(
         for (var j in songData['genres']) {
           if (j['id'] == genreId) {
             genre = j['genre'];
-            print(genre);
+            // print(genre);
             break; // 找到后就跳出循环
           }
         }
@@ -90,7 +93,7 @@ Future<List<Widget>> search(
         }
       }
     } catch (e) {
-      print('error $e');
+      log('error $e', name: 'search.dart', level: 1000);
     }
     songresult = songresult2;
   }
@@ -116,10 +119,10 @@ Future<List<Widget>> search(
       for (var j in i['difficulties']) {
         if (double.parse(difficultydown) <= j['level_value'] &&
             j['level_value'] <= double.parse(difficultyup)) {
+          songresult4.add(i);
           break;
         }
       }
-      songresult4.add(i);
     }
     songresult = songresult4;
   }
@@ -133,14 +136,41 @@ Future<List<Widget>> search(
         versionname = j['title'];
       }
     }
-    songresultWidget.add(const Divider());
+    // songresultWidget.add(const Divider());
     songresultWidget.add(
-      Text(
-        '${i['id']} - ${i['title']}      ${i['genre']} - $versionname',
-        textAlign: TextAlign.center,
+      InkWell(
+        key: ValueKey(i['id']),
+        onTap: () async {
+          List<DataRow> songData = await returnSongInfo(i['id']);
+          if (!context.mounted) return;
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => SongInfoPage(
+                song: i,
+                versionname: versionname,
+                rowsData: songData,
+              ),
+            ),
+          );
+          // log('未完成 ${i['id']}');
+        },
+        child: Card(
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(0.0),
+          ),
+          child: Padding(
+            padding: EdgeInsetsGeometry.all(10.0),
+            child: Text(
+              '${i['id']} - ${i['title']}      ${i['genre']} - $versionname',
+              textAlign: TextAlign.center,
+            ),
+          ),
+        ),
       ),
     );
   }
-  print(songresult);
+  // print(songresult);
+  log('完成');
   return songresultWidget;
 }
