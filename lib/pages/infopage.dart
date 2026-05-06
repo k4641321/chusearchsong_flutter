@@ -24,6 +24,7 @@ class Info extends StatelessWidget {
               Text(
                 '一个由史山代码构成的答辩查歌软件，更多功能低赞开发中',
                 style: TextStyle(fontSize: 15),
+                textAlign: TextAlign.center,
               ),
               const Divider(),
               SizedBox(

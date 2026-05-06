@@ -18,6 +18,7 @@ Future<List<DataRow>> returnSongInfo(int id) async {
   List<DataCell> diff2 = [];
   List<DataCell> diff3 = [];
   List<DataCell> diff4 = [];
+  List<DataCell> diff5 = [];
   List<DataRow> rowsData = [];
   try {
     Map<String, dynamic> songInfo = await getSongInfo(id);
@@ -74,16 +75,26 @@ Future<List<DataRow>> returnSongInfo(int id) async {
           diff4.add(DataCell(Text('${i['notes']['total']}')));
           diff4.add(DataCell(Text('${i['note_designer']}')));
           rowsData.add(DataRow(cells: diff4));
+        case 5:
+          diff5.add(DataCell(Text('${i['level_value']}')));
+          diff5.add(DataCell(Text('${i['notes']['tap']}')));
+          diff5.add(DataCell(Text('${i['notes']['hold']}')));
+          diff5.add(DataCell(Text('${i['notes']['slide']}')));
+          diff5.add(DataCell(Text('${i['notes']['air']}')));
+          diff5.add(DataCell(Text('${i['notes']['flick']}')));
+          diff5.add(DataCell(Text('${i['notes']['total']}')));
+          diff5.add(DataCell(Text('${i['note_designer']}')));
+          rowsData.add(DataRow(cells: diff5));
         default:
           List<DataCell> nodata = [
             DataCell(Text('无数据')),
             DataCell(Text('或者')),
             DataCell(Text('网络')),
             DataCell(Text('错误')),
-            DataCell(Text('error')),
-            DataCell(Text('error')),
-            DataCell(Text('error')),
-            DataCell(Text('error')),
+            DataCell(Text('又或者')),
+            DataCell(Text('请求')),
+            DataCell(Text('过于')),
+            DataCell(Text('频繁')),
           ];
           rowsData.add(DataRow(cells: nodata));
       }
@@ -94,10 +105,10 @@ Future<List<DataRow>> returnSongInfo(int id) async {
       DataCell(Text('或者')),
       DataCell(Text('网络')),
       DataCell(Text('错误')),
-      DataCell(Text('error')),
-      DataCell(Text('error')),
-      DataCell(Text('error')),
-      DataCell(Text('error')),
+      DataCell(Text('又或者')),
+      DataCell(Text('请求')),
+      DataCell(Text('过于')),
+      DataCell(Text('频繁')),
     ];
     rowsData.add(DataRow(cells: nodata));
     log('error $e', name: 'songinfopage.dart', level: 1000);

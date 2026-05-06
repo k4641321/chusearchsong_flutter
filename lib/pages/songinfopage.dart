@@ -5,12 +5,15 @@ class SongInfoPage extends StatelessWidget {
   final Map<String, dynamic> song;
   final String versionname;
   final List<DataRow> rowsData;
-
+  final List<Widget> information;
+  final int songid;
   const SongInfoPage({
     super.key,
     required this.song,
     required this.versionname,
     required this.rowsData,
+    required this.information,
+    required this.songid,
   });
 
   @override
@@ -40,7 +43,7 @@ class SongInfoPage extends StatelessWidget {
             children: [
               Center(
                 child: Image.network(
-                  'https://assets2.lxns.net/chunithm/jacket/${song['id']}.png',
+                  'https://assets2.lxns.net/chunithm/jacket/$songid.png',
                   errorBuilder: (context, error, stackTrace) {
                     return const Text('图片加载失败');
                   },
@@ -68,6 +71,14 @@ class SongInfoPage extends StatelessWidget {
                 child: Text(
                   '曲师： ${song['artist']}',
                   style: const TextStyle(fontSize: 20),
+                ),
+              ),
+              Center(
+                child: Column(
+                  children: [
+                    Text('其余信息：', style: const TextStyle(fontSize: 20)),
+                    Column(children: information),
+                  ],
                 ),
               ),
               SingleChildScrollView(
