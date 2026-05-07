@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import '../tools/list.dart';
 import '../tools/search.dart';
+import 'dart:developer';
 
 class SearchPage extends StatefulWidget {
   const SearchPage({super.key});
@@ -54,74 +55,76 @@ class _SearchPageState extends State<SearchPage> {
         searchResults = results;
       });
     } catch (e) {
-      print('搜索错误: $e');
+      log('搜索错误: $e');
       // 可以显示错误信息给用户
     }
   }
 
   @override
   Widget build(BuildContext context) {
-    return Center(
-      child: Column(
-        children: [
-          Row(
-            children: [
-              Expanded(
-                child: TextField(
-                  controller: _searchController,
-                  decoration: InputDecoration(hintText: 'Search...'),
+    return Scaffold(
+      body: Center(
+        child: Column(
+          children: [
+            Row(
+              children: [
+                Expanded(
+                  child: TextField(
+                    controller: _searchController,
+                    decoration: InputDecoration(hintText: 'Search...'),
+                  ),
                 ),
-              ),
 
-              IconButton(onPressed: _performSearch, icon: Icon(Icons.search)),
-            ],
-          ),
-          Row(
-            children: [
-              Expanded(
-                child: buildGenreDropdownMenu(
-                  initialSelection: selectedGenre,
-                  onSelected: (String? value) {
-                    setState(() {
-                      selectedGenre = value;
-                    });
-                  },
+                IconButton(onPressed: _performSearch, icon: Icon(Icons.search)),
+              ],
+            ),
+            Row(
+              children: [
+                Expanded(
+                  child: buildGenreDropdownMenu(
+                    initialSelection: selectedGenre,
+                    onSelected: (String? value) {
+                      setState(() {
+                        selectedGenre = value;
+                      });
+                    },
+                  ),
                 ),
-              ),
-              Expanded(
-                child: buildVersionDropdownMenu(
-                  initialSelection: selectedVersion,
-                  onSelected: (String? value) {
-                    setState(() {
-                      selectedVersion = value;
-                    });
-                  },
+                Expanded(
+                  child: buildVersionDropdownMenu(
+                    initialSelection: selectedVersion,
+                    onSelected: (String? value) {
+                      setState(() {
+                        selectedVersion = value;
+                      });
+                    },
+                  ),
                 ),
-              ),
-              Expanded(
-                child: buildDifficultyDownDropdownMenu(
-                  initialSelection: selectedDifficultyDown,
-                  onSelected: (String? value) {
-                    setState(() {
-                      selectedDifficultyDown = value;
-                    });
-                  },
+                Expanded(
+                  child: buildDifficultyDownDropdownMenu(
+                    initialSelection: selectedDifficultyDown,
+                    onSelected: (String? value) {
+                      setState(() {
+                        selectedDifficultyDown = value;
+                      });
+                    },
+                  ),
                 ),
-              ),
-              Expanded(
-                child: buildDifficultyUpDropdownMenu(
-                  initialSelection: selectedDifficultyUp,
-                  onSelected: (String? value) {
-                    setState(() {
-                      selectedDifficultyUp = value;
-                    });
-                  },
+                Expanded(
+                  child: buildDifficultyUpDropdownMenu(
+                    initialSelection: selectedDifficultyUp,
+                    onSelected: (String? value) {
+                      setState(() {
+                        selectedDifficultyUp = value;
+                      });
+                    },
+                  ),
                 ),
-              ),
-            ],
-          ),
-          Expanded(child: ListView(children: searchResults)),
-        ],
+              ],
+            ),
+            Expanded(child: ListView(children: searchResults)),
+          ],
+        ),
       ),
     );
   }

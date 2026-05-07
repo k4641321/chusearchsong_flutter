@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'pages/infopage.dart';
 import 'pages/searchpage.dart';
+import 'pages/favoritepage.dart';
+import 'pages/toolspage.dart';
 
 void main() {
   runApp(const MyApp());
@@ -27,7 +29,14 @@ class _MyHomePageState extends State<MyHomePage> {
   int _currentIndex = 0;
   final infopagebox = Info();
   Widget searchpagebox = SearchPage();
-  List<Widget> get _pages => [searchpagebox, infopagebox];
+  Widget favoritepagebox = FavoritePage();
+  Widget toolspagebox = ToolPage();
+  List<Widget> get _pages => [
+    searchpagebox,
+    favoritepagebox,
+    toolspagebox,
+    infopagebox,
+  ];
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -44,13 +53,20 @@ class _MyHomePageState extends State<MyHomePage> {
             if (index == 0) {
               title = '搜索';
             } else if (index == 1) {
+              title = '收藏';
+            } else if (index == 2) {
               title = '关于';
             }
           });
         },
-        fixedColor: const Color.fromARGB(255, 255, 229, 84),
+        // backgroundColor: const Color.fromARGB(255, 255, 229, 84),
+        unselectedItemColor: const Color.fromARGB(255, 250, 231, 125),
+        selectedItemColor: const Color.fromARGB(255, 255, 217, 0),
+        // fixedColor: const Color.fromARGB(255, 255, 217, 0),
         items: [
           BottomNavigationBarItem(icon: Icon(Icons.search), label: '搜索'),
+          BottomNavigationBarItem(icon: Icon(Icons.favorite), label: '收藏'),
+          BottomNavigationBarItem(icon: Icon(Icons.build), label: '工具'),
           BottomNavigationBarItem(icon: Icon(Icons.info), label: '关于'),
         ],
       ),
