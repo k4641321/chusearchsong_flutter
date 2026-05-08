@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'pages/infopage.dart';
 import 'pages/searchpage.dart';
 import 'pages/favoritepage.dart';
@@ -6,6 +7,9 @@ import 'pages/toolspage.dart';
 
 void main() {
   runApp(const MyApp());
+  SystemChrome.setSystemUIOverlayStyle(
+    const SystemUiOverlayStyle(statusBarColor: Colors.transparent),
+  );
 }
 
 class MyApp extends StatelessWidget {

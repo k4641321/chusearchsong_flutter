@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'dart:developer';
+import './musicpage.dart';
 
 class SongInfoPage extends StatelessWidget {
   final Map<String, dynamic> song;
@@ -50,10 +51,20 @@ class SongInfoPage extends StatelessWidget {
           child: Column(
             children: [
               Center(
-                child: Image.network(
-                  'https://assets2.lxns.net/chunithm/jacket/$songid.png',
-                  errorBuilder: (context, error, stackTrace) {
-                    return const Text('图片加载失败');
+                child: InkWell(
+                  child: Image.network(
+                    'https://assets2.lxns.net/chunithm/jacket/$songid.png',
+                    errorBuilder: (context, error, stackTrace) {
+                      return const Text('图片加载失败');
+                    },
+                  ),
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => PlayMusic(songid: songid),
+                      ),
+                    );
                   },
                 ),
               ),
