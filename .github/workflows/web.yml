@@ -1,13 +1,16 @@
-name: Build Flutter Web
+name: Build Flutter Web and Push to Branch
 
 on:
   push:
-    branches: [ main ]
-  workflow_dispatch:
+    branches: [ main ]       # 当 main 分支有推送时触发
+  workflow_dispatch:         # 也支持手动触发
 
 jobs:
   build:
     runs-on: ubuntu-latest
+
+    permissions:
+      contents: write         # 授权推送代码到分支（必须）
 
     steps:
       - name: Checkout code
@@ -16,9 +19,9 @@ jobs:
       - name: Setup Flutter
         uses: subosito/flutter-action@v2
         with:
-          flutter-version: '3.41.9'   # 使用一个确定的稳定版本号，不要用 'stable'
+          flutter-version: '3.41.9'   # 使用具体版本号，避免网络问题
           channel: 'stable'
-          cache: true                  # 开启缓存，加速后续构建
+          cache: true
 
       - name: Install dependencies
         run: flutter pub get
@@ -26,9 +29,11 @@ jobs:
       - name: Build Flutter Web
         run: flutter build web --release
 
-      - name: Upload build artifact
-        uses: actions/upload-artifact@v4
+      - name: Deploy to branch (gh-pages)
+        uses: peaceiris/actions-gh-pages@v3
         with:
-          name: flutter-web-build
-          path: build/web
-          if-no-files-found: error
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./build/web
+          publish_branch: gh-pages   # 你想存放构建结果的分支名
+          force_orphan: false         # 可选：每次清空分支历史，保持干净
+          commit_message: "Deploy Flutter web build from commit ${{ github.sha }}"
