@@ -1,9 +1,9 @@
-name: Web Build
+name: Build Flutter Web
 
 on:
   push:
-    branches: [ main ]       # 当推送到 main 分支时触发，你也可以改成其他分支
-  workflow_dispatch:         # 允许手动触发
+    branches: [ main ]
+  workflow_dispatch:
 
 jobs:
   build:
@@ -16,7 +16,9 @@ jobs:
       - name: Setup Flutter
         uses: subosito/flutter-action@v2
         with:
-          flutter-version: 'stable'   # 使用稳定版，也可以指定具体版本如 '3.22.0'
+          flutter-version: '3.22.0'   # 使用一个确定的稳定版本号，不要用 'stable'
+          channel: 'stable'
+          cache: true                  # 开启缓存，加速后续构建
 
       - name: Install dependencies
         run: flutter pub get
@@ -29,4 +31,4 @@ jobs:
         with:
           name: flutter-web-build
           path: build/web
-          if-no-files-found: error   # 如果 build/web 目录不存在则报错
+          if-no-files-found: error
