@@ -13,7 +13,13 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(title: 'chusearchsong', home: const MyHomePage());
+    return MaterialApp(
+      builder: (context, child) {
+        return SafeArea(bottom: true, child: child!);
+      },
+      title: 'chusearchsong',
+      home: const MyHomePage(),
+    );
   }
 }
 
@@ -55,6 +61,8 @@ class _MyHomePageState extends State<MyHomePage> {
             } else if (index == 1) {
               title = '收藏';
             } else if (index == 2) {
+              title = '工具';
+            } else if (index == 3) {
               title = '关于';
             }
           });

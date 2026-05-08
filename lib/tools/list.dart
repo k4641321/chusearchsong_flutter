@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 
 // 流派
@@ -465,6 +467,211 @@ List<DataRow> ratingColor() {
           ),
         ),
         DataCell(Text('17.00~')),
+      ],
+    ),
+  ];
+  return rowsData;
+}
+
+List<DataRow> ratingCalculator({required double diff}) {
+  List<DataRow> rowsData = [
+    DataRow(
+      cells: [
+        DataCell(
+          Text(
+            '1010000',
+            style: TextStyle(color: const Color.fromARGB(255, 0, 136, 11)),
+          ),
+        ),
+        DataCell(Text('${diff + 2.15}')),
+      ],
+    ),
+    DataRow(
+      cells: [
+        DataCell(
+          Text(
+            '1008500',
+            style: TextStyle(color: const Color.fromARGB(255, 0, 162, 255)),
+          ),
+        ),
+        DataCell(Text('${diff + 2.0 + 0.1}')),
+      ],
+    ),
+    DataRow(
+      cells: [
+        DataCell(
+          Text(
+            '1008000',
+            style: TextStyle(color: const Color.fromARGB(255, 0, 162, 255)),
+          ),
+        ),
+        DataCell(Text('${diff + 2.0 + 0.05}')),
+      ],
+    ),
+    DataRow(
+      cells: [
+        DataCell(
+          Text(
+            '1007750',
+            style: TextStyle(color: const Color.fromARGB(255, 0, 162, 255)),
+          ),
+        ),
+        DataCell(Text('${diff + 2.0 + 0.02}')),
+      ],
+    ),
+    DataRow(
+      cells: [
+        DataCell(
+          Text(
+            '1007500',
+            style: TextStyle(color: const Color.fromARGB(255, 0, 162, 255)),
+          ),
+        ),
+        DataCell(Text('${diff + 2.0}')),
+      ],
+    ),
+    DataRow(
+      cells: [
+        DataCell(
+          Text(
+            '1007000',
+            style: TextStyle(color: const Color.fromARGB(255, 255, 230, 0)),
+          ),
+        ),
+        DataCell(Text('${diff + 1.5 + 0.4}')),
+      ],
+    ),
+    DataRow(
+      cells: [
+        DataCell(
+          Text(
+            '1006000',
+            style: TextStyle(color: const Color.fromARGB(255, 255, 230, 0)),
+          ),
+        ),
+        DataCell(Text('${diff + 1.5 + 0.2}')),
+      ],
+    ),
+    DataRow(
+      cells: [
+        DataCell(
+          Text(
+            '1005000',
+            style: TextStyle(color: const Color.fromARGB(255, 255, 230, 0)),
+          ),
+        ),
+        DataCell(Text('${diff + 1.5}')),
+      ],
+    ),
+    DataRow(
+      cells: [
+        DataCell(
+          Text(
+            '1003000',
+            style: TextStyle(color: const Color.fromARGB(255, 255, 230, 0)),
+          ),
+        ),
+        DataCell(Text('${diff + 1.0 + 0.03}')),
+      ],
+    ),
+    DataRow(
+      cells: [
+        DataCell(
+          Text(
+            '1001000',
+            style: TextStyle(color: const Color.fromARGB(255, 255, 230, 0)),
+          ),
+        ),
+        DataCell(Text('${diff + 1.0 + 0.01}')),
+      ],
+    ),
+    DataRow(
+      cells: [
+        DataCell(
+          Text(
+            '1000000',
+            style: TextStyle(color: const Color.fromARGB(255, 255, 230, 0)),
+          ),
+        ),
+        DataCell(Text('${diff + 1.0}')),
+      ],
+    ),
+
+    DataRow(
+      cells: [
+        DataCell(
+          Text(
+            '997500',
+            style: TextStyle(color: const Color.fromARGB(255, 0, 162, 255)),
+          ),
+        ),
+        DataCell(Text('${diff + 0.9}')),
+      ],
+    ),
+    DataRow(
+      cells: [
+        DataCell(
+          Text(
+            '995000',
+            style: TextStyle(color: const Color.fromARGB(255, 0, 162, 255)),
+          ),
+        ),
+        DataCell(Text('${diff + 0.8}')),
+      ],
+    ),
+    DataRow(
+      cells: [
+        DataCell(
+          Text(
+            '992500',
+            style: TextStyle(color: const Color.fromARGB(255, 0, 162, 255)),
+          ),
+        ),
+        DataCell(Text('${diff + 0.7}')),
+      ],
+    ),
+    DataRow(
+      cells: [
+        DataCell(
+          Text(
+            '990000',
+            style: TextStyle(color: const Color.fromARGB(255, 0, 162, 255)),
+          ),
+        ),
+        DataCell(Text('${diff + 0.6}')),
+      ],
+    ),
+    DataRow(
+      cells: [
+        DataCell(
+          Text(
+            '985000',
+            style: TextStyle(color: const Color.fromARGB(255, 0, 162, 255)),
+          ),
+        ),
+        DataCell(Text('${diff + 0.4}')),
+      ],
+    ),
+    DataRow(
+      cells: [
+        DataCell(
+          Text(
+            '980000',
+            style: TextStyle(color: const Color.fromARGB(255, 0, 162, 255)),
+          ),
+        ),
+        DataCell(Text('${diff + 0.2}')),
+      ],
+    ),
+    DataRow(
+      cells: [
+        DataCell(
+          Text(
+            '975000',
+            style: TextStyle(color: const Color.fromARGB(255, 0, 162, 255)),
+          ),
+        ),
+        DataCell(Text('${diff + 0.0}')),
       ],
     ),
   ];

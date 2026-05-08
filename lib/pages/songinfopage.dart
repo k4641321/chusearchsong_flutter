@@ -33,6 +33,14 @@ class SongInfoPage extends StatelessWidget {
       appBar: AppBar(
         title: Text('${song['title']}    - 歌曲详情'),
         backgroundColor: const Color.fromARGB(255, 255, 229, 84),
+        actions: [
+          IconButton(
+            onPressed: () => ScaffoldMessenger.of(
+              context,
+            ).showSnackBar(const SnackBar(content: Text('急什么，在写了'))),
+            icon: Icon(Icons.favorite),
+          ),
+        ],
       ),
       body: Scrollbar(
         controller: controller,

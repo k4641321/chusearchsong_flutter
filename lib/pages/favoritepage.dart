@@ -10,10 +10,6 @@ class FavoritePage extends StatefulWidget {
 class _FavoritePageState extends State<FavoritePage> {
   @override
   Widget build(BuildContext context) {
-    return Center(
-      child: Text(
-        '在写了在写了在写了在写了在写了在写了在写了在写了在写了在写了在写了在写了在写了在写了在写了在写了在写了在写了在写了在写了在写了在写了在写了在写了在写了在写了在写了在写了在写了在写了在写了在写了在写了在写了在写了在写了在写了在写了在写了在写了在写了在写了在写了在写了在写了在写了在写了在写了',
-      ),
-    );
+    return Row(children: [Text('在写了')]);
   }
 }

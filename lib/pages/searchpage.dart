@@ -20,18 +20,6 @@ class _SearchPageState extends State<SearchPage> {
   // Future result;
   final TextEditingController _searchController = TextEditingController();
 
-  // void addSearchResult(Widget result) {
-  //   setState(() {
-  //     searchResults.add(result);
-  //   });
-  // }
-
-  // void clearSearchResults() {
-  //   setState(() {
-  //     searchResults.clear();
-  //   });
-  // }
-
   Future<void> _performSearch() async {
     String searchTitle = _searchController.text;
     String genre = selectedGenre ?? '-1';
