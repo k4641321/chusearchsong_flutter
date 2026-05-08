@@ -16,7 +16,7 @@ jobs:
       - name: Setup Flutter
         uses: subosito/flutter-action@v2
         with:
-          flutter-version: '3.22.0'   # 使用一个确定的稳定版本号，不要用 'stable'
+          flutter-version: '3.41.9'   # 使用一个确定的稳定版本号，不要用 'stable'
           channel: 'stable'
           cache: true                  # 开启缓存，加速后续构建
 
