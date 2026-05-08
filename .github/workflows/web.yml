@@ -1,0 +1,32 @@
+name: Web Build
+
+on:
+  push:
+    branches: [ main ]       # 当推送到 main 分支时触发，你也可以改成其他分支
+  workflow_dispatch:         # 允许手动触发
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: 'stable'   # 使用稳定版，也可以指定具体版本如 '3.22.0'
+
+      - name: Install dependencies
+        run: flutter pub get
+
+      - name: Build Flutter Web
+        run: flutter build web --release
+
+      - name: Upload build artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: flutter-web-build
+          path: build/web
+          if-no-files-found: error   # 如果 build/web 目录不存在则报错
