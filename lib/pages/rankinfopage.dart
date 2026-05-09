@@ -19,29 +19,26 @@ class RankInfo extends StatelessWidget {
           controller: controller,
           scrollDirection: Axis.vertical,
           child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Center(
-                child: DataTable(
-                  columns: [
-                    DataColumn(label: Text('判定')),
-                    DataColumn(
-                      label: Expanded(
-                        child: Text('取得分数与JUSTICE判定成绩比率', softWrap: true),
-                      ),
+              DataTable(
+                columns: [
+                  DataColumn(label: Text('判定')),
+                  DataColumn(
+                    label: Expanded(
+                      child: Text('取得分数与JUSTICE判定成绩比率', softWrap: true),
                     ),
-                  ],
-                  rows: determineList(),
-                ),
+                  ),
+                ],
+                rows: determineList(),
               ),
               const Divider(),
-              Center(
-                child: DataTable(
-                  columns: [
-                    DataColumn(label: Text('评级')),
-                    DataColumn(label: Text('达成率')),
-                  ],
-                  rows: rankList(),
-                ),
+              DataTable(
+                columns: [
+                  DataColumn(label: Text('评级')),
+                  DataColumn(label: Text('达成率')),
+                ],
+                rows: rankList(),
               ),
             ],
           ),

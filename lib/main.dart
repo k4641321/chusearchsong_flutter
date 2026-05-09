@@ -19,7 +19,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       builder: (context, child) {
-        return SafeArea(bottom: true, child: child!);
+        return SafeArea(top: false, bottom: true, child: child!);
       },
       title: 'chusearchsong',
       home: const MyHomePage(),

@@ -21,118 +21,115 @@ class _ToolPageState extends State<ToolPage> {
         controller: controller,
         child: SingleChildScrollView(
           controller: controller,
-          child: Center(
-            child: Column(
-              children: [
-                Text('信息'),
-                Row(
-                  children: [
-                    Expanded(
-                      child: InkWell(
-                        child: Card(
-                          child: TextButton.icon(
-                            onPressed: () => Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => RankInfo(),
-                              ),
-                            ),
-                            icon: Icon(
-                              Icons.table_chart_outlined,
-                              color: const Color.fromARGB(255, 0, 0, 0),
-                            ),
-                            label: Text(
-                              '等级划分与判定',
-                              style: TextStyle(
-                                color: const Color.fromARGB(255, 0, 0, 0),
-                              ),
-                            ),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Text('信息'),
+              Row(
+                children: [
+                  Expanded(
+                    child: InkWell(
+                      child: Card(
+                        child: TextButton.icon(
+                          onPressed: () => Navigator.push(
+                            context,
+                            MaterialPageRoute(builder: (context) => RankInfo()),
                           ),
-                        ),
-                      ),
-                    ),
-                    Expanded(
-                      child: InkWell(
-                        child: Card(
-                          child: TextButton.icon(
-                            onPressed: () => Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => RatingColor(),
-                              ),
-                            ),
-                            icon: Icon(
-                              Icons.align_vertical_bottom,
-                              color: const Color.fromARGB(255, 0, 0, 0),
-                            ),
-                            label: Text(
-                              'Rating颜色',
-                              style: TextStyle(
-                                color: const Color.fromARGB(255, 0, 0, 0),
-                              ),
-                            ),
+                          icon: Icon(
+                            Icons.table_chart_outlined,
+                            color: const Color.fromARGB(255, 0, 0, 0),
                           ),
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-                const Divider(),
-                Text('工具'),
-                Row(
-                  children: [
-                    Expanded(
-                      child: InkWell(
-                        child: Card(
-                          child: TextButton.icon(
-                            label: Text(
-                              '单曲Rating计算器',
-                              style: TextStyle(
-                                color: const Color.fromARGB(255, 0, 0, 0),
-                              ),
-                            ),
-                            onPressed: () => Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => const RatingCalculator(),
-                              ),
-                            ),
-                            icon: Icon(
-                              Icons.calculate,
+                          label: Text(
+                            '等级划分与判定',
+                            style: TextStyle(
                               color: const Color.fromARGB(255, 0, 0, 0),
                             ),
                           ),
                         ),
                       ),
                     ),
-                    Expanded(
-                      child: InkWell(
-                        child: Card(
-                          child: TextButton.icon(
-                            label: Text(
-                              '分数计算',
-                              style: TextStyle(
-                                color: const Color.fromARGB(255, 0, 0, 0),
-                              ),
+                  ),
+                  Expanded(
+                    child: InkWell(
+                      child: Card(
+                        child: TextButton.icon(
+                          onPressed: () => Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => RatingColor(),
                             ),
-                            onPressed: () => Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => const ScoreCalculation(),
-                              ),
-                            ),
-                            icon: Icon(
-                              Icons.calculate,
+                          ),
+                          icon: Icon(
+                            Icons.align_vertical_bottom,
+                            color: const Color.fromARGB(255, 0, 0, 0),
+                          ),
+                          label: Text(
+                            'Rating颜色',
+                            style: TextStyle(
                               color: const Color.fromARGB(255, 0, 0, 0),
                             ),
                           ),
                         ),
                       ),
                     ),
-                  ],
-                ),
-              ],
-            ),
+                  ),
+                ],
+              ),
+              const Divider(),
+              Text('工具'),
+              Row(
+                children: [
+                  Expanded(
+                    child: InkWell(
+                      child: Card(
+                        child: TextButton.icon(
+                          label: Text(
+                            '单曲Rating计算器',
+                            style: TextStyle(
+                              color: const Color.fromARGB(255, 0, 0, 0),
+                            ),
+                          ),
+                          onPressed: () => Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => const RatingCalculator(),
+                            ),
+                          ),
+                          icon: Icon(
+                            Icons.calculate,
+                            color: const Color.fromARGB(255, 0, 0, 0),
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                  Expanded(
+                    child: InkWell(
+                      child: Card(
+                        child: TextButton.icon(
+                          label: Text(
+                            '分数计算',
+                            style: TextStyle(
+                              color: const Color.fromARGB(255, 0, 0, 0),
+                            ),
+                          ),
+                          onPressed: () => Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => const ScoreCalculation(),
+                            ),
+                          ),
+                          icon: Icon(
+                            Icons.calculate,
+                            color: const Color.fromARGB(255, 0, 0, 0),
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ],
           ),
         ),
       ),

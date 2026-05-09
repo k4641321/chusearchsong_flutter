@@ -116,3 +116,7 @@ Future<List<DataRow>> returnSongInfo(int id) async {
   }
   return rowsData;
 }
+
+double getNavBarHeight(BuildContext context) {
+  return MediaQuery.of(context).viewInsets.bottom;
+}

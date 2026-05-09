@@ -48,10 +48,11 @@ class SongInfoPage extends StatelessWidget {
         interactive: true,
         child: SingleChildScrollView(
           controller: controller,
-          child: Column(
-            children: [
-              Center(
-                child: InkWell(
+          child: Center(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                InkWell(
                   child: Image.network(
                     'https://assets2.lxns.net/chunithm/jacket/$songid.png',
                     errorBuilder: (context, error, stackTrace) {
@@ -62,53 +63,38 @@ class SongInfoPage extends StatelessWidget {
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                        builder: (context) => PlayMusic(songid: songid),
+                        builder: (context) => PlayMusic(song: song),
                       ),
                     );
                   },
                 ),
-              ),
-              Center(
-                child: Text(
+                Text(
                   '分类： ${song['genre']}',
                   style: const TextStyle(fontSize: 20),
                 ),
-              ),
-              Center(
-                child: Text(
-                  '版本： $versionname',
-                  style: const TextStyle(fontSize: 20),
-                ),
-              ),
-              Center(
-                child: Text(
+                Text('版本： $versionname', style: const TextStyle(fontSize: 20)),
+                Text(
                   'BPM:  ${song['bpm']}',
                   style: const TextStyle(fontSize: 20),
                 ),
-              ),
-              Center(
-                child: Text(
+                Text(
                   '曲师： ${song['artist']}',
                   style: const TextStyle(fontSize: 20),
                 ),
-              ),
-              Center(
-                child: Column(
-                  children: [
-                    Text('其余信息：', style: const TextStyle(fontSize: 20)),
-                    Column(children: information),
-                  ],
+
+                Text('其余信息：', style: const TextStyle(fontSize: 20)),
+                Column(children: information),
+
+                SingleChildScrollView(
+                  scrollDirection: Axis.horizontal,
+                  child: DataTable(
+                    columns: columnsdata,
+                    rows: rowsData,
+                    showBottomBorder: true,
+                  ),
                 ),
-              ),
-              SingleChildScrollView(
-                scrollDirection: Axis.horizontal,
-                child: DataTable(
-                  columns: columnsdata,
-                  rows: rowsData,
-                  showBottomBorder: true,
-                ),
-              ),
-            ],
+              ],
+            ),
           ),
         ),
       ),
