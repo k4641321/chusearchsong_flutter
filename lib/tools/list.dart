@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'dart:convert';
 
 // 流派
 Widget buildGenreDropdownMenu({
@@ -674,4 +676,18 @@ List<DataRow> ratingCalculator({required double diff}) {
     ),
   ];
   return rowsData;
+}
+
+Future<List<DropdownMenuEntry<String>>> getlobby() async {
+  List<DropdownMenuEntry<String>> dropdownMenuEntries = [];
+  String lobbyDataStr = await rootBundle.loadString('res/location.json');
+  final lobbyDataJson = json.decode(lobbyDataStr) as List;
+  final Set<String> location = {};
+  for (var i in lobbyDataJson) {
+    location.add(i['province']);
+  }
+  for (var i in location) {
+    dropdownMenuEntries.add(DropdownMenuEntry<String>(value: i, label: i));
+  }
+  return dropdownMenuEntries;
 }

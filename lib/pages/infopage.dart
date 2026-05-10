@@ -80,6 +80,7 @@ class Info extends StatelessWidget {
                     ),
                     onTap: () => _launchUrl(context: context),
                     child: Card(
+                      color: const Color.fromARGB(255, 250, 231, 125),
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.only(
                           topLeft: Radius.circular(10.0),
@@ -109,6 +110,7 @@ class Info extends StatelessWidget {
                     ),
                     onTap: () => _openQQ(context: context),
                     child: Card(
+                      color: const Color.fromARGB(255, 250, 231, 125),
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.only(
                           bottomLeft: Radius.circular(10.0),

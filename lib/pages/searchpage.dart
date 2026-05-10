@@ -59,7 +59,7 @@ class _SearchPageState extends State<SearchPage> {
                 Expanded(
                   child: TextField(
                     controller: _searchController,
-                    decoration: InputDecoration(hintText: 'Search...'),
+                    decoration: InputDecoration(hintText: '搜索...标题，曲师，别名'),
                   ),
                 ),
 

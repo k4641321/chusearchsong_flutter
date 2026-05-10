@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import './rankcolorpage.dart';
 import './rankinfopage.dart';
 import 'scorecalculation.dart';
+import './searchlobbypage.dart';
 
 //主窗口
 class ToolPage extends StatefulWidget {
@@ -65,6 +66,34 @@ class _ToolPageState extends State<ToolPage> {
                           ),
                           label: Text(
                             'Rating颜色',
+                            style: TextStyle(
+                              color: const Color.fromARGB(255, 0, 0, 0),
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+              Row(
+                children: [
+                  Expanded(
+                    child: InkWell(
+                      child: Card(
+                        child: TextButton.icon(
+                          onPressed: () => Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => SearchLobbyPage(),
+                            ),
+                          ),
+                          icon: Icon(
+                            Icons.storefront,
+                            color: const Color.fromARGB(255, 0, 0, 0),
+                          ),
+                          label: Text(
+                            '机厅信息',
                             style: TextStyle(
                               color: const Color.fromARGB(255, 0, 0, 0),
                             ),

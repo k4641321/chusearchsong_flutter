@@ -44,6 +44,26 @@ Future<List<Widget>> search(
     songresultids.add(i['id']);
   }
 
+  //曲师筛选
+  List artistresult = [];
+  for (var i in songData['songs']) {
+    if (i['artist'].toLowerCase().contains(title.toLowerCase())) {
+      log('曲师匹配 ${i['artist']}');
+      artistresult.add(i['id']);
+    }
+  }
+  List artistresult2 = [];
+  for (var i in artistresult) {
+    if (!songresultids.contains(i)) {
+      for (var j in songData['songs']) {
+        if (i == j['id']) {
+          artistresult2.add(j);
+        }
+      }
+    }
+  }
+  songresult.addAll(artistresult2);
+
   //别名筛选
   for (var i in aliasData['aliases']) {
     for (var j in i['aliases']) {
