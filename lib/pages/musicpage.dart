@@ -42,15 +42,6 @@ class _PlayMusic extends State<PlayMusic> {
       );
 
       _subscription.add(
-        _musicplayer.onDurationChanged.listen((duration) {
-          log('歌曲时长: $duration');
-          setState(() {
-            value = duration.inMilliseconds.toDouble();
-            log('歌曲时长: $value');
-          });
-        }),
-      );
-      _subscription.add(
         _musicplayer.onPlayerStateChanged.listen((state) {
           log('播放器状态: $state');
           setState(() {
@@ -106,6 +97,23 @@ class _PlayMusic extends State<PlayMusic> {
 
   @override
   Widget build(BuildContext context) {
+    try {
+      _subscription.add(
+        _musicplayer.onDurationChanged.listen((duration) {
+          log('歌曲时长: $duration');
+          setState(() {
+            value = duration.inMilliseconds.toDouble();
+            log('歌曲时长: $value');
+          });
+        }),
+      );
+    } catch (e) {
+      log('$e', name: 'musicpage', level: 1000);
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text('获取歌曲时长失败')));
+    }
+
     return Scaffold(
       appBar: AppBar(
         title: Text('歌曲试听'),
@@ -169,7 +177,7 @@ class _PlayMusic extends State<PlayMusic> {
                           break;
                       }
                     } catch (e) {
-                      log('$e', name: 'PlayMusic', level: 1000);
+                      log('$e', name: 'musicpage', level: 1000);
                       if (!context.mounted) return;
                       ScaffoldMessenger.of(
                         context,
