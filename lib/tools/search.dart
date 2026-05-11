@@ -1,9 +1,10 @@
 import 'dart:convert';
 import 'dart:developer';
+import 'dart:io';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import '../pages/songinfopage.dart';
 import '../tools/request.dart';
+import 'package:path_provider/path_provider.dart';
 
 Future<List<Widget>> search(
   String title,
@@ -14,12 +15,17 @@ Future<List<Widget>> search(
   BuildContext context,
 ) async {
   // 加载曲目数据
-  String jsonString = await rootBundle.loadString('res/list.json');
+  final dataPath = await getApplicationSupportDirectory();
+  String jsonString = await File(
+    '${dataPath.path}/res/songs.json',
+  ).readAsString();
   Map<String, dynamic> songData = json.decode(jsonString);
   List<dynamic> songresult = [];
 
   //加载别名
-  String aliasString = await rootBundle.loadString('res/alias.json');
+  String aliasString = await File(
+    '${dataPath.path}/res/alias.json',
+  ).readAsString();
   Map<String, dynamic> aliasData = json.decode(aliasString);
   List aliasresult = [];
 

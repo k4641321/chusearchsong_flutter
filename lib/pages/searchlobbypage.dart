@@ -1,10 +1,11 @@
 import 'dart:developer';
-
+import 'package:path_provider/path_provider.dart';
 import 'package:flutter/material.dart';
 import '../tools/list.dart';
 import 'dart:convert';
 import 'package:flutter/services.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'dart:io';
 
 class SearchLobbyPage extends StatefulWidget {
   const SearchLobbyPage({super.key});
@@ -33,10 +34,31 @@ class _SearchLobbyPageState extends State<SearchLobbyPage> {
     final Uri url = Uri.parse(
       'androidamap://poi?sourceApplication=myapp&keywords=${i['address']}',
     );
-
+    final Uri url2 = Uri.parse(
+      'amapuri://keywordsearch?keywords=${i['address']}&sourceApplication=高德地图',
+    );
+    final Uri url3 = Uri.parse(
+      'amapuri://poi?sourceApplication=myapp&keywords=${i['address']}',
+    );
     try {
       if (!await canLaunchUrl(url)) {
-        throw Exception('无法打开高德地图');
+        if (!mounted) return;
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(SnackBar(content: Text('无法打开高德地图，尝试第二种')));
+      }
+      if (!await canLaunchUrl(url2)) {
+        if (!mounted) return;
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(SnackBar(content: Text('无法打开高德地图，尝试第三种')));
+      }
+      if (!await canLaunchUrl(url3)) {
+        if (!mounted) return;
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(SnackBar(content: Text('无法打开高德地图，我没招了')));
+        throw Exception('我没招了');
       }
     } catch (e) {
       if (!mounted) return;
@@ -48,7 +70,10 @@ class _SearchLobbyPageState extends State<SearchLobbyPage> {
   }
 
   Future<void> _search() async {
-    String lobbyDataStr = await rootBundle.loadString('res/location.json');
+    final dataPath = await getApplicationSupportDirectory();
+    String lobbyDataStr = await File(
+      '${dataPath.path}/res/location.json',
+    ).readAsString();
     final lobbyDataJson = json.decode(lobbyDataStr) as List;
     List searchResults2 = [];
     List<Widget> searchResults3 = [];
@@ -60,7 +85,7 @@ class _SearchLobbyPageState extends State<SearchLobbyPage> {
         searchResults2.add(i);
       }
     }
-    print(searchResults2);
+    // print(searchResults2);
     if (initialSelection == null) {
       log('跳过地区筛选');
       for (var i in searchResults2) {
@@ -93,7 +118,7 @@ class _SearchLobbyPageState extends State<SearchLobbyPage> {
         }
       }
     }
-    print(searchResults);
+    // print(searchResults);
     log('搜索完成');
     setState(() {
       searchResults = searchResults3;
@@ -125,10 +150,23 @@ class _SearchLobbyPageState extends State<SearchLobbyPage> {
                   onSelected: (value) => setState(() {
                     initialSelection = value;
                   }),
-                  width: 300,
+                  menuHeight: 300,
                   dropdownMenuEntries: dropdownMenuEntries,
                 ),
-                IconButton(icon: Icon(Icons.search), onPressed: _search),
+                IconButton(
+                  icon: Icon(Icons.search),
+                  onPressed: () {
+                    try {
+                      _search();
+                    } catch (e) {
+                      log('错误', name: 'searchlobbypage', level: 1000);
+                      if (!mounted) return;
+                      ScaffoldMessenger.of(
+                        context,
+                      ).showSnackBar(SnackBar(content: Text('搜索失败，可能数据丢失')));
+                    }
+                  },
+                ),
               ],
             ),
             Expanded(child: ListView(children: searchResults)),
