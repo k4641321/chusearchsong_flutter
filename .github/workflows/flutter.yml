@@ -1,44 +1,36 @@
-name: Flutter Android Build
-
-on:
+# .github/workflows/build-apk.yml
+name: Flutter Android        # 工作流的名称
+on:                     # 触发条件
   push:
-    branches: [ main ]
-
+    branches: [ main ]  # 当代码推送到 main 分支时触发
 jobs:
-  build-android-apk:
-    runs-on: ubuntu-latest
+  build-android-apk:    # 任务的ID
+    runs-on: ubuntu-latest # 使用 Ubuntu 环境，速度快且免费
     steps:
-      - uses: actions/checkout@v4
-      
-      - name: Set up Flutter
-        uses: subosito/flutter-action@v2
+      - uses: actions/checkout@v3  # 1️⃣ 拉取你的代码
+      - uses: subosito/flutter-action@v2  # 2️⃣ 配置 Flutter 环境
         with:
-          flutter-version: '3.41.9' # 替换为你本地的精确版本
+          flutter-version: '3.41.9'  # 指定版本，'stable' 指最新稳定版
           channel: 'stable'
+      - run: flutter pub get      # 3️⃣ 获取项目依赖
+      #- run: flutter test   # (可选)运行测试，确保提交没问题[reference:0]
+      - run: dart run change_app_package_name:main com.k4641321.chusearchsongfultter
       
-      - name: Install dependencies
-        run: |
-          flutter clean
-          flutter pub get
+      # 解码并创建密钥库文件
+     # - name: Create keystore file
+        #run: |
+          #echo "$KEYSTORE_FILE" | base64 --decode > android/app/upload-keystore.jks
+       # env:
+        #  KEYSTORE_FILE: ${{ secrets.KEYSTORE_FILE }}
       
-      # 新增：生成签名密钥文件
-      - name: Decode Keystore
-        run: |
-          echo "${{ secrets.KEYSTORE_BASE64 }}" | base64 -d > android/app/upload-keystore.jks
-        shell: bash
-        env:
-          KEYSTORE_BASE64: ${{ secrets.KEYSTORE_BASE64 }}
-      
-      - name: Build Release APK
-        run: flutter build apk --release
-        env:
-          KEY_ALIAS: ${{ secrets.KEY_ALIAS }}
-          KEY_PASSWORD: ${{ secrets.KEY_PASSWORD }}
-          KEYSTORE_PASSWORD: ${{ secrets.KEYSTORE_PASSWORD }}
-      
-      # 可选：上传APK作为构建产物
-      - name: Upload APK
-        uses: actions/upload-artifact@v4
+      #- run: flutter build apk --release  # 4️⃣ 正式打包 APK
+       # env:
+       #   KEYSTORE_PATH: android/app/upload-keystore.jks
+       #   KEYSTORE_PASSWORD: ${{ secrets.KEYSTORE_PASSWORD }}
+        #  KEY_ALIAS: ${{ secrets.KEY_ALIAS }}
+         # KEY_PASSWORD: ${{ secrets.KEY_PASSWORD }}
+          
+      - uses: actions/upload-artifact@v4  # 5️⃣ 上传产物
         with:
-          name: app-release.apk
+          name: release-apk
           path: build/app/outputs/flutter-apk/app-release.apk
