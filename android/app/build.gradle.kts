@@ -41,18 +41,4 @@ android {
 
 flutter {
     source = "../.."
-}        targetSdk = flutter.targetSdkVersion
-        versionCode = flutter.versionCode
-        versionName = flutter.versionName
-    }
-
-    buildTypes {
-        release {
-            signingConfig = signingConfigs.getByName("release")
-        }
-    }
-}
-
-flutter {
-    source = "../.."
 }
