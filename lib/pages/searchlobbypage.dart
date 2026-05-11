@@ -86,7 +86,7 @@ class _SearchLobbyPageState extends State<SearchLobbyPage> {
       }
     }
     // print(searchResults2);
-    if (initialSelection == null) {
+    if (initialSelection == '全部') {
       log('跳过地区筛选');
       for (var i in searchResults2) {
         searchResults3.add(

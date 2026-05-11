@@ -62,26 +62,34 @@ class _PlayMusic extends State<PlayMusic> {
     } catch (e) {
       log('$e', name: 'PlayMusic', level: 1000);
       log('歌曲加载失败');
-      showDialog(
-        context: context,
-        builder: (context) {
-          return AlertDialog(
-            title: Text('错误'),
-            content: Text('歌曲加载失败'),
-            actions: [
-              TextButton(
-                child: Text('确定'),
-                onPressed: () {
-                  Navigator.pop(context);
-                  if (context.mounted) {
+      try {
+        showDialog(
+          context: context,
+          builder: (context) {
+            return AlertDialog(
+              title: Text('错误'),
+              content: Text('歌曲加载失败'),
+              actions: [
+                TextButton(
+                  child: Text('确定'),
+                  onPressed: () {
                     Navigator.pop(context);
-                  }
-                },
-              ),
-            ],
-          );
-        },
-      );
+                    if (context.mounted) {
+                      Navigator.pop(context);
+                    }
+                  },
+                ),
+              ],
+            );
+          },
+        );
+      } catch (e) {
+        log('$e', name: 'PlayMusic', level: 1000);
+        Navigator.pop(context);
+        if (context.mounted) {
+          Navigator.pop(context);
+        }
+      }
     }
   }
 

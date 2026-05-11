@@ -686,6 +686,7 @@ Future<List<DropdownMenuEntry<String>>> getlobby() async {
   for (var i in lobbyDataJson) {
     location.add(i['province']);
   }
+  dropdownMenuEntries.add(DropdownMenuEntry<String>(value: '全部', label: '全部'));
   for (var i in location) {
     dropdownMenuEntries.add(DropdownMenuEntry<String>(value: i, label: i));
   }

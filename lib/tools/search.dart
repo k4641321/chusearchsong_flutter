@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import '../pages/songinfopage.dart';
 import '../tools/request.dart';
 import 'package:path_provider/path_provider.dart';
+import '../tools/fun.dart';
 
 Future<List<Widget>> search(
   String title,
@@ -167,99 +168,100 @@ Future<List<Widget>> search(
       InkWell(
         key: ValueKey(i['id']),
         onTap: () async {
-          List<DataRow> songData = [];
-          Map<String, dynamic> songInfo = {};
-          List<dynamic> songInfoDiffs = [];
-          try {
-            songData = await returnSongInfo(i['id']);
-          } catch (e) {
-            log('error $e', name: 'search.dart', level: 1000);
-          }
-          try {
-            songInfo = await getSongInfo(i['id']);
-            songInfoDiffs = songInfo['difficulties'];
-          } catch (e) {
-            log('error $e', name: 'search.dart', level: 1000);
-          }
+          interSongInfo(i: i, context: context, versionname: versionname);
+          // List<DataRow> songData = [];
+          // Map<String, dynamic> songInfo = {};
+          // List<dynamic> songInfoDiffs = [];
+          // try {
+          //   songData = await returnSongInfo(i['id']);
+          // } catch (e) {
+          //   log('error $e', name: 'search.dart', level: 1000);
+          // }
+          // try {
+          //   songInfo = await getSongInfo(i['id']);
+          //   songInfoDiffs = songInfo['difficulties'];
+          // } catch (e) {
+          //   log('error $e', name: 'search.dart', level: 1000);
+          // }
 
-          List<Widget> information = [];
-          int songid = i['id'];
-          if (songInfo.keys.contains('map')) {
-            information.add(
-              Text(
-                '地图: ${songInfo['map']}',
-                style: const TextStyle(fontSize: 20),
-              ),
-            );
-          }
-          if (songInfo.keys.contains('locked')) {
-            if (songInfo['locked'] == true) {
-              information.add(
-                Text('需解锁', style: const TextStyle(fontSize: 20)),
-              );
-            } else {
-              information.add(
-                Text('无需解锁', style: const TextStyle(fontSize: 20)),
-              );
-            }
-          }
-          if (songInfo.keys.contains('rights')) {
-            information.add(
-              Text(
-                '版权: ${songInfo['rights']}',
-                style: const TextStyle(fontSize: 20),
-              ),
-            );
-          }
+          // List<Widget> information = [];
+          // int songid = i['id'];
+          // if (songInfo.keys.contains('map')) {
+          //   information.add(
+          //     Text(
+          //       '地图: ${songInfo['map']}',
+          //       style: const TextStyle(fontSize: 20),
+          //     ),
+          //   );
+          // }
+          // if (songInfo.keys.contains('locked')) {
+          //   if (songInfo['locked'] == true) {
+          //     information.add(
+          //       Text('需解锁', style: const TextStyle(fontSize: 20)),
+          //     );
+          //   } else {
+          //     information.add(
+          //       Text('无需解锁', style: const TextStyle(fontSize: 20)),
+          //     );
+          //   }
+          // }
+          // if (songInfo.keys.contains('rights')) {
+          //   information.add(
+          //     Text(
+          //       '版权: ${songInfo['rights']}',
+          //       style: const TextStyle(fontSize: 20),
+          //     ),
+          //   );
+          // }
 
-          final kanji = songInfoDiffs.lastWhere(
-            (d) => d.keys.contains('kanji'),
-            orElse: () => null,
-          );
-          if (kanji != null) {
-            final kanjiText = kanji['kanji'];
-            information.add(
-              Text('谱面属性: $kanjiText', style: const TextStyle(fontSize: 20)),
-            );
-          }
+          // final kanji = songInfoDiffs.lastWhere(
+          //   (d) => d.keys.contains('kanji'),
+          //   orElse: () => null,
+          // );
+          // if (kanji != null) {
+          //   final kanjiText = kanji['kanji'];
+          //   information.add(
+          //     Text('谱面属性: $kanjiText', style: const TextStyle(fontSize: 20)),
+          //   );
+          // }
 
-          final star = songInfoDiffs.lastWhere(
-            (d) => d.keys.contains('star'),
-            orElse: () => null,
-          );
-          if (star != null) {
-            final starValue = star['star'];
-            information.add(
-              Text('星数: $starValue', style: const TextStyle(fontSize: 20)),
-            );
-          }
+          // final star = songInfoDiffs.lastWhere(
+          //   (d) => d.keys.contains('star'),
+          //   orElse: () => null,
+          // );
+          // if (star != null) {
+          //   final starValue = star['star'];
+          //   information.add(
+          //     Text('星数: $starValue', style: const TextStyle(fontSize: 20)),
+          //   );
+          // }
 
-          if (information.isEmpty) {
-            information.add(Text('无信息', style: const TextStyle(fontSize: 20)));
-          }
+          // if (information.isEmpty) {
+          //   information.add(Text('无信息', style: const TextStyle(fontSize: 20)));
+          // }
 
-          final originid = songInfoDiffs.lastWhere(
-            (d) => d.keys.contains('origin_id'),
-            orElse: () => null,
-          );
-          if (originid != null) {
-            songid = originid['origin_id'];
-          }
+          // final originid = songInfoDiffs.lastWhere(
+          //   (d) => d.keys.contains('origin_id'),
+          //   orElse: () => null,
+          // );
+          // if (originid != null) {
+          //   songid = originid['origin_id'];
+          // }
 
-          if (!context.mounted) return;
-          Navigator.push(
-            context,
-            MaterialPageRoute(
-              builder: (context) => SongInfoPage(
-                song: i,
-                versionname: versionname,
-                rowsData: songData,
-                information: information,
-                songid: songid,
-              ),
-            ),
-          );
-          // log('未完成 ${i['id']}');
+          // if (!context.mounted) return;
+          // Navigator.push(
+          //   context,
+          //   MaterialPageRoute(
+          //     builder: (context) => SongInfoPage(
+          //       song: i,
+          //       versionname: versionname,
+          //       rowsData: songData,
+          //       information: information,
+          //       songid: songid,
+          //     ),
+          //   ),
+          // );
+          // // log('未完成 ${i['id']}');
         },
         child: Card(
           shape: RoundedRectangleBorder(

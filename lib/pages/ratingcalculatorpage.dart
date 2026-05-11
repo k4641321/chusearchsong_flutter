@@ -77,7 +77,7 @@ class _RatingCalculatorState extends State<RatingCalculator> {
                                     double score = double.parse(scorestr);
                                     double diff = double.parse(diffstr);
 
-                                    if (score >= 1010000) {
+                                    if (score > 1010000) {
                                       throw Exception('分数输入错误');
                                     } else if (score >= 1009000) {
                                       result = diff + 2.15;

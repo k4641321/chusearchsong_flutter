@@ -2,8 +2,9 @@ import 'ratingcalculatorpage.dart';
 import 'package:flutter/material.dart';
 import './rankcolorpage.dart';
 import './rankinfopage.dart';
-import 'scorecalculation.dart';
+import 'scorecalculationpage.dart';
 import './searchlobbypage.dart';
+import 'randommusicpage.dart';
 
 //主窗口
 class ToolPage extends StatefulWidget {
@@ -146,6 +147,36 @@ class _ToolPageState extends State<ToolPage> {
                             context,
                             MaterialPageRoute(
                               builder: (context) => const ScoreCalculation(),
+                            ),
+                          ),
+                          icon: Icon(
+                            Icons.calculate,
+                            color: const Color.fromARGB(255, 0, 0, 0),
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+              const Divider(),
+              Text('其他'),
+              Row(
+                children: [
+                  Expanded(
+                    child: InkWell(
+                      child: Card(
+                        child: TextButton.icon(
+                          label: Text(
+                            '随机歌曲',
+                            style: TextStyle(
+                              color: const Color.fromARGB(255, 0, 0, 0),
+                            ),
+                          ),
+                          onPressed: () => Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => const RandomMusicPage(),
                             ),
                           ),
                           icon: Icon(
