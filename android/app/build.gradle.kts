@@ -19,14 +19,14 @@ android {
         jvmTarget = JavaVersion.VERSION_17.toString()
     }
 
-    signingConfigs {
-        create("release") {
-            keyAlias = System.getenv("KEY_ALIAS")
-            keyPassword = System.getenv("KEY_PASSWORD")
-            storeFile = file(System.getenv("KEYSTORE_PATH") ?: "upload-keystore.jks")
-            storePassword = System.getenv("KEYSTORE_PASSWORD")
-        }
-    }
+    // signingConfigs {
+        // create("release") {
+            // keyAlias = System.getenv("KEY_ALIAS")
+           // keyPassword = System.getenv("KEY_PASSWORD")
+            // storeFile = file(System.getenv("KEYSTORE_PATH") ?: "upload-keystore.jks")
+            // storePassword = System.getenv("KEYSTORE_PASSWORD")
+       // }
+  //  }
 
     defaultConfig {
         // TODO: Specify your own unique Application ID (https://developer.android.com/studio/build/application-id.html).
