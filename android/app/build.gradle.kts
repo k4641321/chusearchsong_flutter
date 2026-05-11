@@ -19,15 +19,6 @@ android {
         jvmTarget = JavaVersion.VERSION_17.toString()
     }
 
-    // signingConfigs {
-        // create("release") {
-            // keyAlias = System.getenv("KEY_ALIAS")
-           // keyPassword = System.getenv("KEY_PASSWORD")
-            // storeFile = file(System.getenv("KEYSTORE_PATH") ?: "upload-keystore.jks")
-            // storePassword = System.getenv("KEYSTORE_PASSWORD")
-       // }
-  //  }
-
     defaultConfig {
         // TODO: Specify your own unique Application ID (https://developer.android.com/studio/build/application-id.html).
         applicationId = "com.example.chusearchsong_flutter"
@@ -35,6 +26,22 @@ android {
         // For more information, see: https://flutter.dev/to/review-gradle-config.
         minSdk = flutter.minSdkVersion
         targetSdk = flutter.targetSdkVersion
+        versionCode = flutter.versionCode
+        versionName = flutter.versionName
+    }
+
+    buildTypes {
+        release {
+            // TODO: Add your own signing config for the release build.
+            // Signing with the debug keys for now, so `flutter run --release` works.
+            signingConfig = signingConfigs.getByName("debug")
+        }
+    }
+}
+
+flutter {
+    source = "../.."
+}        targetSdk = flutter.targetSdkVersion
         versionCode = flutter.versionCode
         versionName = flutter.versionName
     }
