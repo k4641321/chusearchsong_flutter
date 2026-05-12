@@ -24,30 +24,30 @@ jobs:
     - name: Set up Flutter
       uses: subosito/flutter-action@v2
       with:
-        flutter-version: '3.41.9' # 根据你的项目需求调整版本
+        flutter-version: '3.41.9'
         channel: 'stable'
     
     - name: Install dependencies
       run: flutter pub get
     
-    - name: Create keystore properties file
-      run: |
-        mkdir -p android/key.properties
-        cat > android/key.properties/keystore.properties << EOF
-        storePassword=${{ secrets.KEYSTORE_PASSWORD }}
-        keyPassword=${{ secrets.KEY_PASSWORD }}
-        keyAlias=${{ secrets.KEY_ALIAS }}
-        storeFile=../app/upload-keystore.jks
-        EOF
-    
-    - name: Copy keystore file
+    - name: Create keystore file from secret
       run: |
         echo "${{ secrets.KEYSTORE_FILE }}" | base64 --decode > android/app/upload-keystore.jks
     
     - name: Build APK
+      env:
+        KEY_ALIAS: ${{ secrets.KEY_ALIAS }}
+        KEY_PASSWORD: ${{ secrets.KEY_PASSWORD }}
+        KEYSTORE_PASSWORD: ${{ secrets.KEYSTORE_PASSWORD }}
+        KEYSTORE_FILE_PATH: upload-keystore.jks
       run: flutter build apk --release
     
     - name: Build App Bundle
+      env:
+        KEY_ALIAS: ${{ secrets.KEY_ALIAS }}
+        KEY_PASSWORD: ${{ secrets.KEY_PASSWORD }}
+        KEYSTORE_PASSWORD: ${{ secrets.KEYSTORE_PASSWORD }}
+        KEYSTORE_FILE_PATH: upload-keystore.jks
       run: flutter build appbundle --release
     
     - name: Upload APK
