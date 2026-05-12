@@ -17,7 +17,7 @@ class _SearchLobbyPageState extends State<SearchLobbyPage> {
   List<DropdownMenuEntry> dropdownMenuEntries = [];
   List<Widget> searchResults = [];
   final TextEditingController _controller = TextEditingController();
-  String? initialSelection;
+  String? initialSelection = '全部';
   @override
   void initState() {
     super.initState();
@@ -104,7 +104,9 @@ class _SearchLobbyPageState extends State<SearchLobbyPage> {
             child: Card(
               child: Padding(
                 padding: EdgeInsets.all(8.0),
-                child: Text('${i['province']} - ${i['address']}'),
+                child: Text(
+                  '${i['province']} - ${i['arcadeName']}\n${i['address']}',
+                ),
               ),
             ),
             onTap: () => _openmap(i: i),
@@ -119,7 +121,9 @@ class _SearchLobbyPageState extends State<SearchLobbyPage> {
               child: Card(
                 child: Padding(
                   padding: EdgeInsets.all(8.0),
-                  child: Text('${i['province']} - ${i['address']}'),
+                  child: Text(
+                    '${i['province']} - ${i['arcadeName']}\n${i['address']}',
+                  ),
                 ),
               ),
               onTap: () => _openmap(i: i),
