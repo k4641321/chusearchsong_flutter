@@ -1,10 +1,6 @@
 import 'package:flutter/material.dart';
-import '../tools/request.dart';
-import 'dart:developer';
-import './songinfopage.dart';
 import 'dart:io';
 import 'package:path_provider/path_provider.dart';
-import 'package:flutter/services.dart';
 import 'dart:convert';
 import '../tools/fun.dart';
 
@@ -43,8 +39,13 @@ class _FavoritePageState extends State<FavoritePage> {
         InkWell(
           key: ValueKey(i['id']),
           onTap: () async {
-            interSongInfo(i: i, context: context, versionname: versionname);
+            await interSongInfo(
+              i: i,
+              context: context,
+              versionname: versionname,
+            );
             _returnfavoriteResults();
+
             // log('未完成 ${i['id']}');
           },
           child: Card(

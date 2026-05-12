@@ -5,13 +5,6 @@ plugins {
     id("dev.flutter.flutter-gradle-plugin")
 }
 
-// 读取 keystore 配置
-def keystoreProperties = new Properties()
-def keystorePropertiesFile = rootProject.file("key.properties/keystore.properties")
-if (keystorePropertiesFile.exists()) {
-    keystoreProperties.load(new FileInputStream(keystorePropertiesFile))
-}
-
 android {
     namespace = "com.example.chusearchsong_flutter"
     compileSdk = flutter.compileSdkVersion
@@ -37,21 +30,11 @@ android {
         versionName = flutter.versionName
     }
 
-    // 配置签名
-    signingConfigs {
-        create("release") {
-            keyAlias = keystoreProperties["keyAlias"] ?: System.getenv("KEY_ALIAS")
-            keyPassword = keystoreProperties["keyPassword"] ?: System.getenv("KEY_PASSWORD")
-            storeFile = file(keystoreProperties["storeFile"] ?: "upload-keystore.jks")
-            storePassword = keystoreProperties["storePassword"] ?: System.getenv("KEYSTORE_PASSWORD")
-        }
-    }
-
     buildTypes {
         release {
-            signingConfig = signingConfigs.getByName("release")
-            isMinifyEnabled = true
-            proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
+            // TODO: Add your own signing config for the release build.
+            // Signing with the debug keys for now, so `flutter run --release` works.
+            signingConfig = signingConfigs.getByName("debug")
         }
     }
 }

@@ -21,60 +21,84 @@ Future<List<int>> returnidList() async {
 }
 
 // ... existing code ...
-Future<Widget> randomSong({required BuildContext context}) async {
-  Directory songDataPath = await getApplicationSupportDirectory();
-  String jsonString = await File(
-    '${songDataPath.path}/res/songs.json',
-  ).readAsString();
-  Map<String, dynamic> songData = json.decode(jsonString);
+Future<List<Widget>> randomSong({
+  required BuildContext context,
+  required int count,
+}) async {
+  try {
+    Directory songDataPath = await getApplicationSupportDirectory();
+    String jsonString = await File(
+      '${songDataPath.path}/res/songs.json',
+    ).readAsString();
+    Map<String, dynamic> songData = json.decode(jsonString);
 
-  List<int> idList = await returnidList();
-  if (idList.isEmpty) {
-    return Text('没有可用的歌曲');
-  }
-
-  final random = math.Random();
-  final randomId = random.nextInt(idList.length);
-  final selectId = idList[randomId];
-
-  // 查找选中的歌曲
-  Map<String, dynamic>? selectedSong;
-  for (var i in songData['songs']) {
-    if (i['id'] == selectId) {
-      selectedSong = i;
-      break;
+    List<int> idList = await returnidList();
+    List<Widget> songWidgets = [];
+    final random = math.Random();
+    List<int> resultIds = [];
+    for (var i=0;i<count;i++) {
+      final randomId = random.nextInt(idList.length);
+      resultIds.add(idList[randomId]);
     }
-  }
+    // final randomId = random.nextInt(idList.length);
+    // final selectId = idList[randomId];
 
-  if (selectedSong == null) {
-    return Text('未找到歌曲');
-  }
-
-  // 查找版本名称
-  String versionname = '';
-  for (var j in songData['versions']) {
-    if (j['version'] == selectedSong['version']) {
-      versionname = j['title'];
-      break;
+    // 查找选中的歌曲
+    List selectedSong = [];
+    for (var i in songData['songs']) {
+      for (var j in resultIds) {
+        if (i['id'] == j) {
+          selectedSong.add(i);
+        }
+      }
     }
-  }
 
-  return InkWell(
-    key: ValueKey(selectedSong['id']),
-    onTap: () async {
-      interSongInfo(
-        i: selectedSong!,
-        context: context,
-        versionname: versionname,
-      );
-    },
-    child: Text(
-      '${selectedSong['id']} - ${selectedSong['title']}      ${selectedSong['genre']} - $versionname',
-      textAlign: TextAlign.center,
-    ),
-  );
+    // 查找版本名称
+    String versionname = '';
+    for (var i in selectedSong) {
+      for (var j in songData['versions']) {
+        if (j['version'] == i['version']) {
+          versionname = j['title'];
+          songWidgets.add(
+            Row(
+              children: [
+                Expanded(
+                  child: InkWell(
+                    key: ValueKey(i['id']),
+                    onTap: () async {
+                      interSongInfo(
+                        i: i!,
+                        context: context,
+                        versionname: versionname,
+                      );
+                    },
+                    child: Card(
+                      child: Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Text(
+                          '${i['id']} - ${i['title']}      ${i['genre']} - $versionname',
+                          textAlign: TextAlign.center,
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          );
+        }
+      }
+    }
+    return songWidgets;
+  } catch (e) {
+    if (!context.mounted) return [Text('无结果')];
+    ScaffoldMessenger.of(
+      context,
+    ).showSnackBar(SnackBar(content: Text('错误: $e')));
+    log('error $e', name: 'search.dart', level: 1000);
+    return [Text('无结果')];
+  }
 }
-// ... existing code ...
 
 Future<void> interSongInfo({
   required Map<String, dynamic> i,
@@ -151,7 +175,7 @@ Future<void> interSongInfo({
   }
 
   if (!context.mounted) return;
-  Navigator.push(
+  await Navigator.push(
     context,
     MaterialPageRoute(
       builder: (context) => SongInfoPage(

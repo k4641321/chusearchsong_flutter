@@ -150,7 +150,7 @@ class _ToolPageState extends State<ToolPage> {
                             ),
                           ),
                           icon: Icon(
-                            Icons.calculate,
+                            Icons.calculate_outlined,
                             color: const Color.fromARGB(255, 0, 0, 0),
                           ),
                         ),
@@ -180,7 +180,7 @@ class _ToolPageState extends State<ToolPage> {
                             ),
                           ),
                           icon: Icon(
-                            Icons.calculate,
+                            Icons.casino,
                             color: const Color.fromARGB(255, 0, 0, 0),
                           ),
                         ),
