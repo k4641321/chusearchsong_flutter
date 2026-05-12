@@ -22,43 +22,49 @@ class _InfoState extends State<Info> {
         path.createSync(recursive: true);
       }
       if (!mounted) return;
-      ScaffoldMessenger.of(
-        context,
-      ).showSnackBar(SnackBar(content: Text('开始下载歌曲基本数据')));
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('开始下载歌曲基本数据'), duration: Duration(seconds: 2)),
+      );
       await File('${path.path}/songs.json').create();
       await File(
         '${path.path}/songs.json',
       ).writeAsString(await requestSongData());
       if (!mounted) return;
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('完成')));
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('完成'), duration: Duration(seconds: 1)),
+      );
       log('保存到 ${path.path}/songs.json');
       // 下载歌曲别名数据
-      ScaffoldMessenger.of(
-        context,
-      ).showSnackBar(SnackBar(content: Text('开始下载歌曲别名数据')));
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('开始下载歌曲别名数据'), duration: Duration(seconds: 1)),
+      );
       await File('${path.path}/alias.json').create();
       await File(
         '${path.path}/alias.json',
       ).writeAsString(await requestAliasData());
       if (!mounted) return;
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('完成')));
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('完成'), duration: Duration(seconds: 1)),
+      );
       log('保存到 ${path.path}/alias.json');
       // 下载机厅数据
-      ScaffoldMessenger.of(
-        context,
-      ).showSnackBar(SnackBar(content: Text('开始下载机厅数据')));
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('开始下载机厅数据'), duration: Duration(seconds: 1)),
+      );
       await File('${path.path}/location.json').create();
       await File(
         '${path.path}/location.json',
       ).writeAsString(await requestLobbyData());
       if (!mounted) return;
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('完成')));
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('完成'), duration: Duration(seconds: 1)),
+      );
       log('保存到 ${path.path}/location.json');
     } catch (e) {
       if (!mounted) return;
-      ScaffoldMessenger.of(
-        context,
-      ).showSnackBar(SnackBar(content: Text('下载失败，请检查网络')));
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('下载失败，请检查网络'), duration: Duration(seconds: 1)),
+      );
       log('$e', name: 'main', level: 2000);
     }
     try {
@@ -70,20 +76,20 @@ class _InfoState extends State<Info> {
       if (!mounted) return;
 
       if (!File('${path.path}/favorite.json').existsSync()) {
-        ScaffoldMessenger.of(
-          context,
-        ).showSnackBar(SnackBar(content: Text('开始创建收藏文件')));
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('开始创建收藏文件'), duration: Duration(seconds: 1)),
+        );
         File('${path.path}/favorite.json').createSync();
         File('${path.path}/favorite.json').writeAsStringSync('[]');
-        ScaffoldMessenger.of(
-          context,
-        ).showSnackBar(SnackBar(content: Text('完成')));
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('完成'), duration: Duration(seconds: 1)),
+        );
       }
     } catch (e) {
       if (!mounted) return;
-      ScaffoldMessenger.of(
-        context,
-      ).showSnackBar(SnackBar(content: Text('创建失败')));
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('创建失败'), duration: Duration(seconds: 2)),
+      );
       log('$e', name: 'main', level: 2000);
     }
   }
