@@ -42,5 +42,8 @@
             <action android:name="android.intent.action.PROCESS_TEXT"/>
             <data android:mimeType="text/plain"/>
         </intent>
+        <package android:name="com.autonavi.minimap"/>
+        <package android:name="tv.danmaku.bili"/>
+        <package android:name="com.tencent.mobileqq"/>
     </queries>
 </manifest>

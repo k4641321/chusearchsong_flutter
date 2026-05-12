@@ -114,26 +114,26 @@ class _InfoState extends State<Info> {
       'mqq://card/show_pslcard?src_type=internal&version=1&card_type=group&uin=309546141',
     );
     try {
-      if (!await canLaunchUrl(qqurl)) {
-        if (!context.mounted) return;
-
-        throw Exception('Could not launch $qqurl');
+      if (await canLaunchUrl(qqurl)) {
+        await launchUrl(qqurl);
+        return;
       }
-    } catch (e) {
       if (!context.mounted) return;
       ScaffoldMessenger.of(
         context,
       ).showSnackBar(SnackBar(content: Text('无法打开链接，尝试第二种')));
-      try {
-        if (!await launchUrl(qqurl2)) {
-          throw Exception('Could not launch $qqurl2');
-        }
-      } catch (e) {
-        if (!context.mounted) return;
-        ScaffoldMessenger.of(
-          context,
-        ).showSnackBar(SnackBar(content: Text('无法打开链接')));
+      if (await canLaunchUrl(qqurl2)) {
+        log('尝试第二种');
+        await launchUrl(qqurl2);
+      } else if (!await canLaunchUrl(qqurl2)) {
+        throw Exception('Could not launch $qqurl2');
       }
+    } catch (e) {
+      log('$e', name: 'infopage', level: 500);
+      if (!context.mounted) return;
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text('无法打开链接')));
     }
   }
 

@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import './musicpage.dart';
 import 'dart:io';
 import 'package:path_provider/path_provider.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class SongInfoPage extends StatefulWidget {
   final Map<String, dynamic> song;
@@ -173,6 +174,31 @@ class _SongInfoPageState extends State<SongInfoPage> {
                       ),
                     );
                   },
+                ),
+                TextButton(
+                  onPressed: () async {
+                    try {
+                      final Uri url = Uri.parse(
+                        'bilibili://search?keyword=${widget.song['title']}谱面确认',
+                      );
+                      if (await canLaunchUrl(url)) {
+                        await launchUrl(url);
+                      } else if (!await canLaunchUrl(url)) {
+                        throw Exception('Could not launch $url');
+                      }
+                    } catch (e) {
+                      log('错误', name: 'songinfopage', level: 1000);
+                      if (!context.mounted) return;
+                      ScaffoldMessenger.of(
+                        context,
+                      ).showSnackBar(SnackBar(content: Text('打开B站失败')));
+                    }
+                  },
+                  child: Text(
+                    '前往B站搜索谱面确认',
+                    style: TextStyle(color: Colors.black),
+                    textAlign: TextAlign.center,
+                  ),
                 ),
                 Text(
                   '分类： ${widget.song['genre']}',

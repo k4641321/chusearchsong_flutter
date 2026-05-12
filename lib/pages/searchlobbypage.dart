@@ -30,29 +30,40 @@ class _SearchLobbyPageState extends State<SearchLobbyPage> {
   }
 
   Future<void> _openmap({required Map<String, dynamic> i}) async {
+    final String myapp = ' chusearchsong';
     final Uri url = Uri.parse(
-      'androidamap://poi?sourceApplication=myapp&keywords=${i['address']}',
+      'androidamap://poi?sourceApplication=$myapp&keywords=${i['address']}',
     );
     final Uri url2 = Uri.parse(
-      'amapuri://keywordsearch?keywords=${i['address']}&sourceApplication=高德地图',
+      'amapuri://keywordsearch?keywords=${i['address']}&sourceApplication=$myapp',
     );
     final Uri url3 = Uri.parse(
-      'amapuri://poi?sourceApplication=myapp&keywords=${i['address']}',
+      'amapuri://poi?sourceApplication=$myapp&keywords=${i['address']}',
     );
     try {
-      if (!await canLaunchUrl(url)) {
-        if (!mounted) return;
-        ScaffoldMessenger.of(
-          context,
-        ).showSnackBar(SnackBar(content: Text('无法打开高德地图，尝试第二种')));
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text('打开高德地图，尝试第一种')));
+      if (await canLaunchUrl(url)) {
+        await launchUrl(url);
+        return;
       }
-      if (!await canLaunchUrl(url2)) {
-        if (!mounted) return;
-        ScaffoldMessenger.of(
-          context,
-        ).showSnackBar(SnackBar(content: Text('无法打开高德地图，尝试第三种')));
+      if (!mounted) return;
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text('无法打开高德地图，尝试第二种')));
+      if (await canLaunchUrl(url2)) {
+        await launchUrl(url2);
+        return;
       }
-      if (!await canLaunchUrl(url3)) {
+      if (!mounted) return;
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text('无法打开高德地图，尝试第三种')));
+      if (await canLaunchUrl(url3)) {
+        await launchUrl(url3);
+        return;
+      } else {
         if (!mounted) return;
         ScaffoldMessenger.of(
           context,
