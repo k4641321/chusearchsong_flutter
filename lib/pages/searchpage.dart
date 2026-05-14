@@ -48,6 +48,37 @@ class _SearchPageState extends State<SearchPage> {
     }
   }
 
+  Widget genreDropdownMenu = DropdownMenu<String>(dropdownMenuEntries: []);
+  Widget versionDropdownMenu = DropdownMenu<String>(dropdownMenuEntries: []);
+  Future<void> _buildAllDropdownMenus() async {
+    Widget genreDropdownMenu1 = await buildGenreDropdownMenu(
+      initialSelection: selectedGenre,
+      onSelected: (String? value) {
+        setState(() {
+          selectedGenre = value;
+        });
+      },
+    );
+    Widget versionDropdownMenu1 = await buildVersionDropdownMenu(
+      initialSelection: selectedVersion,
+      onSelected: (String? value) {
+        setState(() {
+          selectedVersion = value;
+        });
+      },
+    );
+    setState(() {
+      genreDropdownMenu = genreDropdownMenu1;
+      versionDropdownMenu = versionDropdownMenu1;
+    });
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    _buildAllDropdownMenus();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -79,26 +110,8 @@ class _SearchPageState extends State<SearchPage> {
             ),
             Row(
               children: [
-                Expanded(
-                  child: buildGenreDropdownMenu(
-                    initialSelection: selectedGenre,
-                    onSelected: (String? value) {
-                      setState(() {
-                        selectedGenre = value;
-                      });
-                    },
-                  ),
-                ),
-                Expanded(
-                  child: buildVersionDropdownMenu(
-                    initialSelection: selectedVersion,
-                    onSelected: (String? value) {
-                      setState(() {
-                        selectedVersion = value;
-                      });
-                    },
-                  ),
-                ),
+                Expanded(child: genreDropdownMenu),
+                Expanded(child: versionDropdownMenu),
                 Expanded(
                   child: buildDifficultyDownDropdownMenu(
                     initialSelection: selectedDifficultyDown,

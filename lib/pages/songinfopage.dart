@@ -91,20 +91,18 @@ class _SongInfoPageState extends State<SongInfoPage> {
       final favoriteJsonPath =
           '${(await getApplicationSupportDirectory()).path}/files/favorite.json';
       String favoriteJsonStr = await File(favoriteJsonPath).readAsString();
-      List<dynamic> favoriteJson = json.decode(favoriteJsonStr);
+      List<dynamic> favoriteJson = json.decode(favoriteJsonStr) as List;
+      bool isFavorite = false;
       for (var i in favoriteJson) {
         if (i['id'] == widget.song['id']) {
-          setState(() {
-            icon = Icons.favorite;
-          });
-          break;
-        } else {
-          setState(() {
-            icon = Icons.favorite_border;
-          });
+          isFavorite = true;
+          log('已收藏');
           break;
         }
       }
+      setState(() {
+        icon = isFavorite ? Icons.favorite : Icons.favorite_border;
+      });
     } catch (e) {
       log('错误', name: 'songinfopage', level: 1000);
       if (!mounted) return;

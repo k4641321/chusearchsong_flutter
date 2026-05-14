@@ -1,18 +1,38 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'dart:convert';
+import 'dart:io';
+import 'package:path_provider/path_provider.dart';
+
+//加载歌曲数据
+Future<Map<String, dynamic>> loadSongs() async {
+  final directory = await getApplicationSupportDirectory();
+  final file = File('${directory.path}/res/songs.json');
+  final json = jsonDecode(await file.readAsString());
+  return json;
+}
 
 // 流派
-Widget buildGenreDropdownMenu({
+Future<Widget> buildGenreDropdownMenu({
   String? initialSelection,
   ValueChanged<String?>? onSelected,
-}) {
-  return DropdownMenu<String>(
-    menuHeight: 300.0,
-    initialSelection: initialSelection ?? '-1',
-    selectOnly: true,
-    onSelected: onSelected,
-    dropdownMenuEntries: const [
+}) async {
+  List<DropdownMenuEntry<String>> dropdownMenuEntries = [];
+  try {
+    Map<String, dynamic> data = await loadSongs();
+    dropdownMenuEntries.add(
+      DropdownMenuEntry<String>(label: '分类', value: '-1'),
+    );
+    for (var i in data['genres']) {
+      dropdownMenuEntries.add(
+        DropdownMenuEntry<String>(label: i['genre'], value: i['id'].toString()),
+      );
+    }
+  } catch (e) {
+    log('创建流派失败 $e 返回默认流派列表');
+    dropdownMenuEntries = const [
       DropdownMenuEntry<String>(label: '分类', value: '-1'),
       DropdownMenuEntry<String>(label: '流行 & 动漫', value: '0'),
       DropdownMenuEntry<String>(label: 'niconico', value: '2'),
@@ -21,21 +41,40 @@ Widget buildGenreDropdownMenu({
       DropdownMenuEntry<String>(label: '其他游戏', value: '6'),
       DropdownMenuEntry<String>(label: '彩绿', value: '7'),
       DropdownMenuEntry<String>(label: '音击舞萌', value: '9'),
-    ],
-  );
-}
+    ];
+  }
 
-// 版本
-Widget buildVersionDropdownMenu({
-  String? initialSelection,
-  ValueChanged<String?>? onSelected,
-}) {
   return DropdownMenu<String>(
     menuHeight: 300.0,
     initialSelection: initialSelection ?? '-1',
     selectOnly: true,
     onSelected: onSelected,
-    dropdownMenuEntries: const [
+    dropdownMenuEntries: dropdownMenuEntries,
+  );
+}
+
+// 版本
+Future<Widget> buildVersionDropdownMenu({
+  String? initialSelection,
+  ValueChanged<String?>? onSelected,
+}) async {
+  List<DropdownMenuEntry<String>> dropdownMenuEntries = [];
+  try {
+    Map<String, dynamic> data = await loadSongs();
+    dropdownMenuEntries.add(
+      DropdownMenuEntry<String>(label: '版本', value: '-1'),
+    );
+    for (var i in data['versions']) {
+      dropdownMenuEntries.add(
+        DropdownMenuEntry<String>(
+          label: i['title'],
+          value: i['version'].toString(),
+        ),
+      );
+    }
+  } catch (e) {
+    log('创建版本失败 $e 返回默认版本列表');
+    dropdownMenuEntries = const [
       DropdownMenuEntry<String>(label: '版本', value: '-1'),
       DropdownMenuEntry<String>(label: 'CHUNITHM', value: '10000'),
       DropdownMenuEntry<String>(label: 'CHUNITHM PLUS', value: '10500'),
@@ -62,7 +101,14 @@ Widget buildVersionDropdownMenu({
         value: '22500',
       ),
       DropdownMenuEntry<String>(label: 'CHUNITHM VERSE', value: '23000'),
-    ],
+    ];
+  }
+  return DropdownMenu<String>(
+    menuHeight: 300.0,
+    initialSelection: initialSelection ?? '-1',
+    selectOnly: true,
+    onSelected: onSelected,
+    dropdownMenuEntries: dropdownMenuEntries,
   );
 }
 
