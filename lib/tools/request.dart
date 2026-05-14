@@ -3,6 +3,34 @@ import 'package:http/http.dart';
 import 'dart:convert';
 import 'dart:developer';
 
+Future<String> requestPlatesData() async {
+  final response = await get(
+    Uri.parse('https://maimai.lxns.net/api/v0/chunithm/plate/list'),
+  );
+  return response.body;
+}
+
+Future<String> requestCharactersData() async {
+  final response = await get(
+    Uri.parse('https://maimai.lxns.net/api/v0/chunithm/character/list'),
+  );
+  return response.body;
+}
+
+Future<String> requestIconsData() async {
+  final response = await get(
+    Uri.parse('https://maimai.lxns.net/api/v0/chunithm/icon/list'),
+  );
+  return response.body;
+}
+
+Future<String> requestTrophiesData() async {
+  final response = await get(
+    Uri.parse('https://maimai.lxns.net/api/v0/chunithm/trophy/list'),
+  );
+  return response.body;
+}
+
 Future<String> requestLobbyData() async {
   final response = await get(
     Uri.parse('http://sega-register.wahlap.net/api/sega/midtr/rest/location'),

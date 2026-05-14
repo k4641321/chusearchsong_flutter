@@ -5,6 +5,7 @@ import './rankinfopage.dart';
 import 'scorecalculationpage.dart';
 import './searchlobbypage.dart';
 import 'randommusicpage.dart';
+import 'searchcollectiblespage.dart';
 
 //主窗口
 class ToolPage extends StatefulWidget {
@@ -62,7 +63,7 @@ class _ToolPageState extends State<ToolPage> {
                             ),
                           ),
                           icon: Icon(
-                            Icons.align_vertical_bottom,
+                            Icons.align_vertical_bottom_outlined,
                             color: const Color.fromARGB(255, 0, 0, 0),
                           ),
                           label: Text(
@@ -77,6 +78,7 @@ class _ToolPageState extends State<ToolPage> {
                   ),
                 ],
               ),
+
               Row(
                 children: [
                   Expanded(
@@ -95,6 +97,30 @@ class _ToolPageState extends State<ToolPage> {
                           ),
                           label: Text(
                             '机厅信息',
+                            style: TextStyle(
+                              color: const Color.fromARGB(255, 0, 0, 0),
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                  Expanded(
+                    child: InkWell(
+                      child: Card(
+                        child: TextButton.icon(
+                          onPressed: () => Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => SearchCollectiblesPage(),
+                            ),
+                          ),
+                          icon: Icon(
+                            Icons.inventory_2_outlined,
+                            color: const Color.fromARGB(255, 0, 0, 0),
+                          ),
+                          label: Text(
+                            '收藏品查询',
                             style: TextStyle(
                               color: const Color.fromARGB(255, 0, 0, 0),
                             ),
@@ -126,7 +152,7 @@ class _ToolPageState extends State<ToolPage> {
                             ),
                           ),
                           icon: Icon(
-                            Icons.calculate,
+                            Icons.calculate_outlined,
                             color: const Color.fromARGB(255, 0, 0, 0),
                           ),
                         ),
@@ -180,7 +206,7 @@ class _ToolPageState extends State<ToolPage> {
                             ),
                           ),
                           icon: Icon(
-                            Icons.casino,
+                            Icons.casino_outlined,
                             color: const Color.fromARGB(255, 0, 0, 0),
                           ),
                         ),

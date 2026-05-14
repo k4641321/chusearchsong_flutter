@@ -1,9 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
-import 'dart:io';
-import 'package:path_provider/path_provider.dart';
 import 'dart:developer';
-import '../tools/request.dart';
+import '../tools/fun.dart';
 
 class Info extends StatefulWidget {
   const Info({super.key});
@@ -13,87 +11,6 @@ class Info extends StatefulWidget {
 }
 
 class _InfoState extends State<Info> {
-  Future<void> _updateData() async {
-    try {
-      final directory = await getApplicationSupportDirectory();
-
-      final path = Directory('${directory.path}/res');
-      if (!path.existsSync()) {
-        path.createSync(recursive: true);
-      }
-      if (!mounted) return;
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('开始下载歌曲基本数据'), duration: Duration(seconds: 2)),
-      );
-      await File('${path.path}/songs.json').create();
-      await File(
-        '${path.path}/songs.json',
-      ).writeAsString(await requestSongData());
-      if (!mounted) return;
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('完成'), duration: Duration(seconds: 1)),
-      );
-      log('保存到 ${path.path}/songs.json');
-      // 下载歌曲别名数据
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('开始下载歌曲别名数据'), duration: Duration(seconds: 1)),
-      );
-      await File('${path.path}/alias.json').create();
-      await File(
-        '${path.path}/alias.json',
-      ).writeAsString(await requestAliasData());
-      if (!mounted) return;
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('完成'), duration: Duration(seconds: 1)),
-      );
-      log('保存到 ${path.path}/alias.json');
-      // 下载机厅数据
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('开始下载机厅数据'), duration: Duration(seconds: 1)),
-      );
-      await File('${path.path}/location.json').create();
-      await File(
-        '${path.path}/location.json',
-      ).writeAsString(await requestLobbyData());
-      if (!mounted) return;
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('完成'), duration: Duration(seconds: 1)),
-      );
-      log('保存到 ${path.path}/location.json');
-    } catch (e) {
-      if (!mounted) return;
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('下载失败，请检查网络'), duration: Duration(seconds: 1)),
-      );
-      log('$e', name: 'main', level: 2000);
-    }
-    try {
-      final directory = await getApplicationSupportDirectory();
-      final path = Directory('${directory.path}/files');
-      if (!path.existsSync()) {
-        path.createSync(recursive: true);
-      }
-      if (!mounted) return;
-
-      if (!File('${path.path}/favorite.json').existsSync()) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('开始创建收藏文件'), duration: Duration(seconds: 1)),
-        );
-        File('${path.path}/favorite.json').createSync();
-        File('${path.path}/favorite.json').writeAsStringSync('[]');
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('完成'), duration: Duration(seconds: 1)),
-        );
-      }
-    } catch (e) {
-      if (!mounted) return;
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('创建失败'), duration: Duration(seconds: 2)),
-      );
-      log('$e', name: 'main', level: 2000);
-    }
-  }
-
   Future<void> _launchUrl({required BuildContext context}) async {
     final githuburl = Uri.parse(
       'https://github.com/k4641321/chusearchsong_flutter',
@@ -225,7 +142,7 @@ class _InfoState extends State<Info> {
                         bottomRight: Radius.circular(10.0),
                       ),
                     ),
-                    onTap: () => _updateData(),
+                    onTap: () => updateData(context: context),
                     child: Card(
                       color: const Color.fromARGB(255, 250, 231, 125),
                       shape: RoundedRectangleBorder(
