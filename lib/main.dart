@@ -1,5 +1,5 @@
 import 'dart:developer';
-
+import 'theme.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'pages/infopage.dart';
@@ -25,6 +25,9 @@ class MyApp extends StatelessWidget {
         return SafeArea(top: false, bottom: true, child: child!);
       },
       title: 'chusearchsong',
+      theme: lightTheme,
+      darkTheme: darkTheme,
+      themeMode: ThemeMode.system,
       home: const MyHomePage(),
     );
   }

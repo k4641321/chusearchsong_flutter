@@ -24,7 +24,22 @@ class _SearchCollectiblesState extends State<SearchCollectiblesPage> {
           children: [
             Row(
               children: [
-                Expanded(child: TextField(controller: _controller)),
+                Expanded(
+                  child: TextField(
+                    controller: _controller,
+                    onChanged: (value) async {
+                      List<Widget> result2 = [];
+                      result2 = await searchCollectibles(
+                        context: context,
+                        searchtext: _controller.text,
+                        searchtype: initialSelection,
+                      );
+                      setState(() {
+                        result = result2;
+                      });
+                    },
+                  ),
+                ),
                 DropdownMenu(
                   selectOnly: true,
                   initialSelection: initialSelection,

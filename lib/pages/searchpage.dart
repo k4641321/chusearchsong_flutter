@@ -91,6 +91,15 @@ class _SearchPageState extends State<SearchPage> {
                   child: TextField(
                     controller: _searchController,
                     decoration: InputDecoration(hintText: '搜索...标题，曲师，别名'),
+                    onChanged: (value) {
+                      try {
+                        _performSearch();
+                      } catch (e) {
+                        ScaffoldMessenger.of(
+                          context,
+                        ).showSnackBar(SnackBar(content: Text('搜索失败，可能是数据丢失')));
+                      }
+                    },
                   ),
                 ),
 

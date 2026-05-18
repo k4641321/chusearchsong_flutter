@@ -155,12 +155,23 @@ class _SearchLobbyPageState extends State<SearchLobbyPage> {
                   child: TextField(
                     controller: _controller,
                     decoration: InputDecoration(hintText: '数据来源于华立官网'),
+                    onChanged: (value) {
+                      try {
+                        _search();
+                      } catch (e) {
+                        log('错误', name: 'searchlobbypage', level: 1000);
+                        if (!mounted) return;
+                        ScaffoldMessenger.of(
+                          context,
+                        ).showSnackBar(SnackBar(content: Text('搜索失败，可能数据丢失')));
+                      }
+                    },
                   ),
                 ),
 
                 DropdownMenu(
                   selectOnly: true,
-                  initialSelection: initialSelection,
+                  initialSelection: initialSelection ?? '全部',
                   onSelected: (value) => setState(() {
                     initialSelection = value;
                   }),

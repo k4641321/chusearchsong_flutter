@@ -487,7 +487,7 @@ List<DataRow> ratingColor() {
         DataCell(
           Text(
             '铂金',
-            style: TextStyle(color: const Color.fromARGB(255, 251, 255, 0)),
+            style: TextStyle(color: const Color.fromARGB(255, 255, 230, 0)),
           ),
         ),
         DataCell(Text('15.25~15.99')),
@@ -648,7 +648,7 @@ List<DataRow> ratingCalculator({required double diff}) {
         DataCell(
           Text(
             '997500',
-            style: TextStyle(color: const Color.fromARGB(255, 0, 162, 255)),
+            style: TextStyle(color: const Color.fromARGB(255, 0, 0, 0)),
           ),
         ),
         DataCell(Text('${diff + 0.9}')),
@@ -659,7 +659,7 @@ List<DataRow> ratingCalculator({required double diff}) {
         DataCell(
           Text(
             '995000',
-            style: TextStyle(color: const Color.fromARGB(255, 0, 162, 255)),
+            style: TextStyle(color: const Color.fromARGB(255, 0, 0, 0)),
           ),
         ),
         DataCell(Text('${diff + 0.8}')),
@@ -670,7 +670,7 @@ List<DataRow> ratingCalculator({required double diff}) {
         DataCell(
           Text(
             '992500',
-            style: TextStyle(color: const Color.fromARGB(255, 0, 162, 255)),
+            style: TextStyle(color: const Color.fromARGB(255, 0, 0, 0)),
           ),
         ),
         DataCell(Text('${diff + 0.7}')),
@@ -681,7 +681,7 @@ List<DataRow> ratingCalculator({required double diff}) {
         DataCell(
           Text(
             '990000',
-            style: TextStyle(color: const Color.fromARGB(255, 0, 162, 255)),
+            style: TextStyle(color: const Color.fromARGB(255, 0, 0, 0)),
           ),
         ),
         DataCell(Text('${diff + 0.6}')),
@@ -692,7 +692,7 @@ List<DataRow> ratingCalculator({required double diff}) {
         DataCell(
           Text(
             '985000',
-            style: TextStyle(color: const Color.fromARGB(255, 0, 162, 255)),
+            style: TextStyle(color: const Color.fromARGB(255, 0, 0, 0)),
           ),
         ),
         DataCell(Text('${diff + 0.4}')),
@@ -703,7 +703,7 @@ List<DataRow> ratingCalculator({required double diff}) {
         DataCell(
           Text(
             '980000',
-            style: TextStyle(color: const Color.fromARGB(255, 0, 162, 255)),
+            style: TextStyle(color: const Color.fromARGB(255, 0, 0, 0)),
           ),
         ),
         DataCell(Text('${diff + 0.2}')),
@@ -714,7 +714,7 @@ List<DataRow> ratingCalculator({required double diff}) {
         DataCell(
           Text(
             '975000',
-            style: TextStyle(color: const Color.fromARGB(255, 0, 162, 255)),
+            style: TextStyle(color: const Color.fromARGB(255, 0, 0, 0)),
           ),
         ),
         DataCell(Text('${diff + 0.0}')),
@@ -726,7 +726,10 @@ List<DataRow> ratingCalculator({required double diff}) {
 
 Future<List<DropdownMenuEntry<String>>> getlobby() async {
   List<DropdownMenuEntry<String>> dropdownMenuEntries = [];
-  String lobbyDataStr = await rootBundle.loadString('res/location.json');
+  final dataPath = await getApplicationSupportDirectory();
+  String lobbyDataStr = await File(
+    '${dataPath.path}/res/location.json',
+  ).readAsString();
   final lobbyDataJson = json.decode(lobbyDataStr) as List;
   final Set<String> location = {};
   for (var i in lobbyDataJson) {
