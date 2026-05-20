@@ -67,7 +67,7 @@ class _MyAppState extends State<MyApp> {
             useMaterial3: true,
           ),
           darkTheme: ThemeData(
-            colorScheme: lightDynamic ?? darkTheme,
+            colorScheme: darkDynamic ?? darkTheme,
             useMaterial3: true,
           ),
           themeMode: _themeMode,
