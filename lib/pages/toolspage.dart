@@ -41,12 +41,12 @@ class _ToolPageState extends State<ToolPage> {
                           ),
                           icon: Icon(
                             Icons.table_chart_outlined,
-                            color: const Color.fromARGB(255, 0, 0, 0),
+                            color: Theme.of(context).colorScheme.onSurface,
                           ),
                           label: Text(
                             '等级划分与判定',
                             style: TextStyle(
-                              color: const Color.fromARGB(255, 0, 0, 0),
+                              color: Theme.of(context).colorScheme.onSurface,
                             ),
                           ),
                         ),
@@ -65,12 +65,12 @@ class _ToolPageState extends State<ToolPage> {
                           ),
                           icon: Icon(
                             Icons.align_vertical_bottom_outlined,
-                            color: const Color.fromARGB(255, 0, 0, 0),
+                            color: Theme.of(context).colorScheme.onSurface,
                           ),
                           label: Text(
                             'Rating颜色',
                             style: TextStyle(
-                              color: const Color.fromARGB(255, 0, 0, 0),
+                              color: Theme.of(context).colorScheme.onSurface,
                             ),
                           ),
                         ),
@@ -94,12 +94,12 @@ class _ToolPageState extends State<ToolPage> {
                           ),
                           icon: Icon(
                             Icons.storefront,
-                            color: const Color.fromARGB(255, 0, 0, 0),
+                            color: Theme.of(context).colorScheme.onSurface,
                           ),
                           label: Text(
                             '机厅信息',
                             style: TextStyle(
-                              color: const Color.fromARGB(255, 0, 0, 0),
+                              color: Theme.of(context).colorScheme.onSurface,
                             ),
                           ),
                         ),
@@ -118,12 +118,12 @@ class _ToolPageState extends State<ToolPage> {
                           ),
                           icon: Icon(
                             Icons.inventory_2_outlined,
-                            color: const Color.fromARGB(255, 0, 0, 0),
+                            color: Theme.of(context).colorScheme.onSurface,
                           ),
                           label: Text(
                             '收藏品查询',
                             style: TextStyle(
-                              color: const Color.fromARGB(255, 0, 0, 0),
+                              color: Theme.of(context).colorScheme.onSurface,
                             ),
                           ),
                         ),
@@ -143,7 +143,7 @@ class _ToolPageState extends State<ToolPage> {
                           label: Text(
                             '单曲Rating计算器',
                             style: TextStyle(
-                              color: const Color.fromARGB(255, 0, 0, 0),
+                              color: Theme.of(context).colorScheme.onSurface,
                             ),
                           ),
                           onPressed: () => Navigator.push(
@@ -154,7 +154,7 @@ class _ToolPageState extends State<ToolPage> {
                           ),
                           icon: Icon(
                             Icons.calculate_outlined,
-                            color: const Color.fromARGB(255, 0, 0, 0),
+                            color: Theme.of(context).colorScheme.onSurface,
                           ),
                         ),
                       ),
@@ -167,7 +167,7 @@ class _ToolPageState extends State<ToolPage> {
                           label: Text(
                             '分数计算',
                             style: TextStyle(
-                              color: const Color.fromARGB(255, 0, 0, 0),
+                              color: Theme.of(context).colorScheme.onSurface,
                             ),
                           ),
                           onPressed: () => Navigator.push(
@@ -178,7 +178,7 @@ class _ToolPageState extends State<ToolPage> {
                           ),
                           icon: Icon(
                             Icons.calculate_outlined,
-                            color: const Color.fromARGB(255, 0, 0, 0),
+                            color: Theme.of(context).colorScheme.onSurface,
                           ),
                         ),
                       ),
@@ -195,7 +195,7 @@ class _ToolPageState extends State<ToolPage> {
                           label: Text(
                             '容错计算',
                             style: TextStyle(
-                              color: const Color.fromARGB(255, 0, 0, 0),
+                              color: Theme.of(context).colorScheme.onSurface,
                             ),
                           ),
                           onPressed: () => Navigator.push(
@@ -207,7 +207,7 @@ class _ToolPageState extends State<ToolPage> {
                           ),
                           icon: Icon(
                             Icons.calculate_outlined,
-                            color: const Color.fromARGB(255, 0, 0, 0),
+                            color: Theme.of(context).colorScheme.onSurface,
                           ),
                         ),
                       ),
@@ -226,7 +226,7 @@ class _ToolPageState extends State<ToolPage> {
                           label: Text(
                             '随机歌曲',
                             style: TextStyle(
-                              color: const Color.fromARGB(255, 0, 0, 0),
+                              color: Theme.of(context).colorScheme.onSurface,
                             ),
                           ),
                           onPressed: () => Navigator.push(
@@ -237,7 +237,7 @@ class _ToolPageState extends State<ToolPage> {
                           ),
                           icon: Icon(
                             Icons.casino_outlined,
-                            color: const Color.fromARGB(255, 0, 0, 0),
+                            color: Theme.of(context).colorScheme.onSurface,
                           ),
                         ),
                       ),

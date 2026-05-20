@@ -7,6 +7,10 @@ import 'pages/searchpage.dart';
 import 'pages/favoritepage.dart';
 import 'pages/toolspage.dart';
 import 'tools/fun.dart';
+import 'dart:io';
+import 'dart:convert';
+import 'package:path_provider/path_provider.dart';
+import 'package:dynamic_color/dynamic_color.dart';
 
 void main() {
   runApp(const MyApp());
@@ -15,26 +19,69 @@ void main() {
   );
 }
 
-class MyApp extends StatelessWidget {
+class MyApp extends StatefulWidget {
   const MyApp({super.key});
 
   @override
+  State<MyApp> createState() => _MyAppState();
+}
+
+class _MyAppState extends State<MyApp> {
+  ThemeMode _themeMode = ThemeMode.light;
+
+  Future<void> _loadTheme() async {
+    final path = await getApplicationSupportDirectory();
+    final file = File('${path.path}/config.json');
+    if (await file.exists()) {
+      String configStr = await file.readAsString();
+      Map<String, dynamic> config = json.decode(configStr);
+      setState(() {
+        _themeMode = config['theme'] == 'dark'
+            ? ThemeMode.dark
+            : ThemeMode.light;
+      });
+    }
+  }
+
+  void _handleThemeChanged() {
+    _loadTheme();
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    _loadTheme();
+  }
+
+  @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      builder: (context, child) {
-        return SafeArea(top: false, bottom: true, child: child!);
+    return DynamicColorBuilder(
+      builder: (ColorScheme? lightDynamic, ColorScheme? darkDynamic) {
+        return MaterialApp(
+          builder: (context, child) {
+            return SafeArea(top: false, bottom: true, child: child!);
+          },
+          title: 'chusearchsong',
+          theme: ThemeData(
+            colorScheme: lightDynamic ?? lightTheme,
+            useMaterial3: true,
+          ),
+          darkTheme: ThemeData(
+            colorScheme: lightDynamic ?? darkTheme,
+            useMaterial3: true,
+          ),
+          themeMode: _themeMode,
+          home: MyHomePage(handleThemeChanged: _handleThemeChanged),
+        );
       },
-      title: 'chusearchsong',
-      theme: lightTheme,
-      darkTheme: darkTheme,
-      themeMode: ThemeMode.system,
-      home: const MyHomePage(),
     );
   }
 }
 
 class MyHomePage extends StatefulWidget {
-  const MyHomePage({super.key});
+  final VoidCallback? handleThemeChanged;
+
+  const MyHomePage({super.key, required this.handleThemeChanged});
 
   @override
   State<MyHomePage> createState() => _MyHomePageState();
@@ -49,7 +96,7 @@ class _MyHomePageState extends State<MyHomePage> {
 
   String title = '搜索';
   int _currentIndex = 0;
-  final infopagebox = Info();
+  // Widget infopagebox =
   Widget searchpagebox = SearchPage();
   Widget favoritepagebox = FavoritePage();
   Widget toolspagebox = ToolPage();
@@ -57,14 +104,15 @@ class _MyHomePageState extends State<MyHomePage> {
     searchpagebox,
     favoritepagebox,
     toolspagebox,
-    infopagebox,
+    // infopagebox,
+    Info(onThemeChanged: widget.handleThemeChanged),
   ];
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: Text(title),
-        backgroundColor: const Color.fromARGB(255, 255, 229, 84),
+        // backgroundColor: const Color.fromARGB(255, 255, 229, 84),
       ),
       body: _pages[_currentIndex],
       bottomNavigationBar: BottomNavigationBar(

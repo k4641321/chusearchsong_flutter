@@ -85,6 +85,7 @@ class _PlayMusic extends State<PlayMusic> {
         );
       } catch (e) {
         log('$e', name: 'PlayMusic', level: 1000);
+        if (!mounted) return;
         Navigator.pop(context);
         if (context.mounted) {
           Navigator.pop(context);
@@ -125,7 +126,7 @@ class _PlayMusic extends State<PlayMusic> {
     return Scaffold(
       appBar: AppBar(
         title: Text('歌曲试听'),
-        backgroundColor: const Color.fromARGB(255, 255, 229, 84),
+        // backgroundColor: const Color.fromARGB(255, 255, 229, 84),
       ),
       body: Center(
         child: Column(

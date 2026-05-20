@@ -2,9 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'dart:developer';
 import '../tools/fun.dart';
+import 'dart:io';
+import 'package:path_provider/path_provider.dart';
+import 'dart:convert';
 
 class Info extends StatefulWidget {
-  const Info({super.key});
+  const Info({super.key, this.onThemeChanged});
+
+  final VoidCallback? onThemeChanged;
 
   @override
   State<Info> createState() => _InfoState();
@@ -60,6 +65,58 @@ class _InfoState extends State<Info> {
     }
   }
 
+  String darkmode = 'light';
+  void darkmodechange() async {
+    final path = await getApplicationSupportDirectory();
+    final config = File('${path.path}/config.json');
+    final configStr = config.readAsStringSync();
+    final configJson = json.decode(configStr);
+    if (darkmode == 'light') {
+      darkmode = 'dark';
+      try {
+        configJson['theme'] = 'dark';
+        config.writeAsStringSync(json.encode(configJson));
+      } catch (e) {
+        log('$e', name: 'infopage', level: 500);
+        if (!mounted) return;
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(SnackBar(content: Text('切换失败')));
+      }
+    } else if (darkmode == 'dark') {
+      darkmode = 'light';
+      try {
+        configJson['theme'] = 'light';
+        config.writeAsStringSync(json.encode(configJson));
+      } catch (e) {
+        log('$e', name: 'infopage', level: 500);
+        if (!mounted) return;
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(SnackBar(content: Text('切换失败')));
+      }
+    }
+    setState(() {});
+    widget.onThemeChanged?.call();
+  }
+
+  Future<void> confirmdarkmode() async {
+    final path = await getApplicationSupportDirectory();
+    String configStr = await File('${path.path}/config.json').readAsString();
+    Map<String, dynamic> config = json.decode(configStr);
+    if (config['theme'] == 'light') {
+      darkmode = 'light';
+    } else if (config['theme'] == 'dark') {
+      darkmode = 'dark';
+    }
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    confirmdarkmode();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -69,6 +126,14 @@ class _InfoState extends State<Info> {
           children: [
             Column(
               children: [
+                Image.asset(
+                  'res/icon.png',
+                  width: 150,
+                  height: 150,
+                  errorBuilder: (context, error, stackTrace) {
+                    return const Text('图片加载失败');
+                  },
+                ),
                 Text(
                   '一个由史山代码构成的答辩查歌软件，更多功能低赞开发中',
                   style: TextStyle(fontSize: 15),
@@ -87,7 +152,7 @@ class _InfoState extends State<Info> {
                     ),
                     onTap: () => _launchUrl(context: context),
                     child: Card(
-                      color: const Color.fromARGB(255, 250, 231, 125),
+                      color: const Color.fromARGB(255, 223, 205, 107),
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.only(
                           topLeft: Radius.circular(10.0),
@@ -99,7 +164,10 @@ class _InfoState extends State<Info> {
                         child: Text(
                           '在Github关注此项目',
                           textAlign: TextAlign.center,
-                          style: TextStyle(fontSize: 20),
+                          style: TextStyle(
+                            fontSize: 20,
+                            color: Theme.of(context).colorScheme.onSurface,
+                          ),
                         ),
                       ),
                     ),
@@ -117,7 +185,7 @@ class _InfoState extends State<Info> {
                     ),
                     onTap: () => _openQQ(context: context),
                     child: Card(
-                      color: const Color.fromARGB(255, 250, 231, 125),
+                      color: const Color.fromARGB(255, 223, 205, 107),
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.all(Radius.circular(0.0)),
                       ),
@@ -126,7 +194,40 @@ class _InfoState extends State<Info> {
                         child: Text(
                           '加入交流群',
                           textAlign: TextAlign.center,
-                          style: TextStyle(fontSize: 20),
+                          style: TextStyle(
+                            fontSize: 20,
+                            color: Theme.of(context).colorScheme.onSurface,
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+                SizedBox(
+                  width: double.infinity,
+                  height: 50,
+                  child: InkWell(
+                    customBorder: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.only(
+                        bottomLeft: Radius.circular(10.0),
+                        bottomRight: Radius.circular(10.0),
+                      ),
+                    ),
+                    onTap: darkmodechange,
+                    child: Card(
+                      color: const Color.fromARGB(255, 223, 205, 107),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.all(Radius.circular(0.0)),
+                      ),
+                      child: Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Text(
+                          '主题模式: $darkmode',
+                          textAlign: TextAlign.center,
+                          style: TextStyle(
+                            fontSize: 20,
+                            color: Theme.of(context).colorScheme.onSurface,
+                          ),
                         ),
                       ),
                     ),
@@ -144,7 +245,7 @@ class _InfoState extends State<Info> {
                     ),
                     onTap: () => updateData(context: context),
                     child: Card(
-                      color: const Color.fromARGB(255, 250, 231, 125),
+                      color: const Color.fromARGB(255, 223, 205, 107),
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.only(
                           bottomLeft: Radius.circular(10.0),
@@ -156,7 +257,10 @@ class _InfoState extends State<Info> {
                         child: Text(
                           '更新数据',
                           textAlign: TextAlign.center,
-                          style: TextStyle(fontSize: 20),
+                          style: TextStyle(
+                            fontSize: 20,
+                            color: Theme.of(context).colorScheme.onSurface,
+                          ),
                         ),
                       ),
                     ),

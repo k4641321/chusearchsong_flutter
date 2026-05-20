@@ -327,6 +327,7 @@ Future<void> ifres({required BuildContext context}) async {
     );
     log('$e', name: 'main', level: 2000);
   }
+  //收藏文件
   try {
     final directory = await getApplicationSupportDirectory();
     final path = Directory('${directory.path}/files');
@@ -344,6 +345,26 @@ Future<void> ifres({required BuildContext context}) async {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text('完成'), duration: Duration(seconds: 1)),
       );
+    }
+  } catch (e) {
+    if (!context.mounted) return;
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(content: Text('创建失败'), duration: Duration(seconds: 1)),
+    );
+    log('$e', name: 'main', level: 2000);
+  }
+  //配置文件
+  try {
+    final directory = await getApplicationSupportDirectory();
+    if (!File('${directory.path}/config.json').existsSync()) {
+      if (!context.mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('开始创建配置文件'), duration: Duration(seconds: 1)),
+      );
+      File('${directory.path}/config.json').createSync();
+      File(
+        '${directory.path}/config.json',
+      ).writeAsStringSync('{"theme":"light"}');
     }
   } catch (e) {
     if (!context.mounted) return;

@@ -22,7 +22,7 @@ class _RatingCalculatorState extends State<RatingCalculator> {
     return Scaffold(
       appBar: AppBar(
         title: const Text('单曲Rating计算器'),
-        backgroundColor: const Color.fromARGB(255, 255, 229, 84),
+        // backgroundColor: const Color.fromARGB(255, 255, 229, 84),
       ),
       body: Center(
         child: DefaultTabController(

@@ -134,7 +134,7 @@ class _SongInfoPageState extends State<SongInfoPage> {
     return Scaffold(
       appBar: AppBar(
         title: Text('${widget.song['title']}    - 歌曲详情'),
-        backgroundColor: const Color.fromARGB(255, 255, 229, 84),
+        // backgroundColor: const Color.fromARGB(255, 255, 229, 84),
         actions: [
           IconButton(
             onPressed: () async {
@@ -194,7 +194,9 @@ class _SongInfoPageState extends State<SongInfoPage> {
                   },
                   child: Text(
                     '前往B站搜索谱面确认',
-                    style: TextStyle(color: Colors.black),
+                    style: TextStyle(
+                      color: Theme.of(context).colorScheme.onSurface,
+                    ),
                     textAlign: TextAlign.center,
                   ),
                 ),

@@ -17,7 +17,7 @@ class _SearchCollectiblesState extends State<SearchCollectiblesPage> {
     return Scaffold(
       appBar: AppBar(
         title: const Text('收藏品搜索'),
-        backgroundColor: const Color.fromARGB(255, 255, 229, 84),
+        // backgroundColor: const Color.fromARGB(255, 255, 229, 84),
       ),
       body: Center(
         child: Column(

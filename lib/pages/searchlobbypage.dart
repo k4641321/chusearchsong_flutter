@@ -144,7 +144,7 @@ class _SearchLobbyPageState extends State<SearchLobbyPage> {
     return Scaffold(
       appBar: AppBar(
         title: Text('机厅搜索'),
-        backgroundColor: const Color.fromARGB(255, 255, 229, 84),
+        // backgroundColor: const Color.fromARGB(255, 255, 229, 84),
       ),
       body: Center(
         child: Column(

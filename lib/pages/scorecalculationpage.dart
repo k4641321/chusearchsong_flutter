@@ -19,7 +19,7 @@ class _ScoreCalculation extends State<ScoreCalculation> {
     return Scaffold(
       appBar: AppBar(
         title: const Text('分数计算'),
-        backgroundColor: const Color.fromARGB(255, 255, 229, 84),
+        // backgroundColor: const Color.fromARGB(255, 255, 229, 84),
       ),
       body: Center(
         child: Column(

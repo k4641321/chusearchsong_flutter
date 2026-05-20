@@ -15,7 +15,7 @@ class _RandomMusicPageState extends State<RandomMusicPage> {
     return Scaffold(
       appBar: AppBar(
         title: Text('随机音乐'),
-        backgroundColor: const Color.fromARGB(255, 255, 229, 84),
+        // backgroundColor: const Color.fromARGB(255, 255, 229, 84),
       ),
       body: Column(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,

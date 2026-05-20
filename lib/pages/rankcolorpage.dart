@@ -11,7 +11,7 @@ class RatingColor extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Rating Color'),
-        backgroundColor: const Color.fromARGB(255, 255, 229, 84),
+        // backgroundColor: const Color.fromARGB(255, 255, 229, 84),
       ),
       body: Scrollbar(
         controller: controller,
