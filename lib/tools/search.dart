@@ -163,11 +163,15 @@ Future<List<Widget>> search(
   List<Widget> songresultWidget = [];
   log('添加组件');
   for (var i in songresult) {
+    List<dynamic> songInfoDiffs = [];
     String versionname = '';
     for (var j in songData['versions']) {
       if (j['version'] == i['version']) {
         versionname = j['title'];
       }
+    }
+    for (var k in i['difficulties']) {
+      songInfoDiffs.add(k['level_value']);
     }
     // songresultWidget.add(const Divider());
     songresultWidget.add(
@@ -177,7 +181,42 @@ Future<List<Widget>> search(
           interSongInfo(i: i, context: context, versionname: versionname);
         },
 
-        // List<DataRow> songData = [];
+        child: Card(
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(0.0),
+          ),
+          child: Padding(
+            padding: EdgeInsetsGeometry.all(10.0),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                // Image.network(
+                //   'https://assets2.lxns.net/chunithm/jacket/${i['id']}.png',
+                //   errorBuilder: (context, error, stackTrace) => Text('图片加载失败'),
+                //   width: 55,
+                //   height: 55,
+                // ),
+                Text(
+                  '${i['id']} - ${i['title']}      ${i['genre']} - $versionname \n $songInfoDiffs',
+                  textAlign: TextAlign.center,
+                ),
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+  // print(songresult);
+  log('完成');
+  return songresultWidget;
+}
+
+
+
+
+
+// List<DataRow> songData = [];
         // Map<String, dynamic> songInfo = {};
         // List<dynamic> songInfoDiffs = [];
         // try {
@@ -270,22 +309,3 @@ Future<List<Widget>> search(
         //   ),
         // );
         // // log('未完成 ${i['id']}');
-        child: Card(
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(0.0),
-          ),
-          child: Padding(
-            padding: EdgeInsetsGeometry.all(10.0),
-            child: Text(
-              '${i['id']} - ${i['title']}      ${i['genre']} - $versionname',
-              textAlign: TextAlign.center,
-            ),
-          ),
-        ),
-      ),
-    );
-  }
-  // print(songresult);
-  log('完成');
-  return songresultWidget;
-}
