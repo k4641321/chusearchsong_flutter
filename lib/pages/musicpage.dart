@@ -104,6 +104,8 @@ class _PlayMusic extends State<PlayMusic> {
     super.dispose();
   }
 
+  final ScrollController _controller = ScrollController();
+
   @override
   Widget build(BuildContext context) {
     try {
@@ -129,102 +131,110 @@ class _PlayMusic extends State<PlayMusic> {
         // backgroundColor: const Color.fromARGB(255, 255, 229, 84),
       ),
       body: Center(
-        child: Column(
-          children: [
-            Image.network(
-              'https://assets2.lxns.net/chunithm/jacket/${widget.song['id']}.png',
-              errorBuilder: (context, error, stackTrace) {
-                return const Text('图片加载失败');
-              },
-            ),
-            Text(
-              '${widget.song['title']} - ${widget.song['artist']}',
-              style: TextStyle(fontSize: 20),
-              textAlign: TextAlign.center,
-            ),
-            Slider(
-              value: position,
-              activeColor: Theme.of(context).colorScheme.primary,
-              inactiveColor: Theme.of(context).colorScheme.secondary,
-              onChanged: (value) async {
-                await _musicplayer.seek(Duration(milliseconds: value.toInt()));
-                setState(() {
-                  position = value;
-
-                  log('$value');
-                });
-              },
-              min: 0.0,
-              max: value,
-              allowedInteraction: SliderInteraction.tapAndSlide,
-            ),
-            Text(
-              '${Duration(milliseconds: position.toInt())} / ${Duration(milliseconds: value.toInt())}',
-              style: TextStyle(fontSize: 20),
-            ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
+        child: Scrollbar(
+          controller: _controller,
+          child: SingleChildScrollView(
+            controller: _controller,
+            child: Column(
               children: [
-                IconButton(
-                  icon: Icon(button),
-                  onPressed: () async {
-                    try {
-                      switch (playerstate) {
-                        case 0:
-                          await _musicplayer.resume();
-                          button = Icons.pause;
-                          break;
-                        case 1:
-                          await _musicplayer.pause();
-                          button = Icons.play_arrow;
-                          break;
-                        case 2:
-                          _musicplayer.resume();
-                          button = Icons.pause;
-                          break;
-                        case 3:
-                          await _musicplayer.resume();
-                          button = Icons.pause;
-                          break;
-                      }
-                    } catch (e) {
-                      log('$e', name: 'musicpage', level: 1000);
-                      if (!context.mounted) return;
-                      ScaffoldMessenger.of(
-                        context,
-                      ).showSnackBar(SnackBar(content: Text('歌曲播放失败 $e')));
-                    }
-
-                    setState(() {});
+                Image.network(
+                  'https://assets2.lxns.net/chunithm/jacket/${widget.song['id']}.png',
+                  errorBuilder: (context, error, stackTrace) {
+                    return const Text('图片加载失败');
                   },
                 ),
-                IconButton(
-                  icon: Icon(Icons.stop),
-                  onPressed: () async {
-                    try {
-                      if (playerstate == 3) {
-                        button = Icons.play_arrow;
-                        playerstate = 0;
-                        await _musicplayer.seek(Duration.zero);
-                        setState(() {});
-                      }
-                      await _musicplayer.pause();
-                      button = Icons.play_arrow;
-                      playerstate = 0;
-                      await _musicplayer.seek(Duration.zero);
-                      setState(() {});
-                    } catch (e) {
-                      log('$e', name: 'PlayMusic', level: 1000);
-                      if (!context.mounted) return;
-                      ScaffoldMessenger.of(
-                        context,
-                      ).showSnackBar(SnackBar(content: Text('歌曲停止失败 $e')));
-                    }
+                Text(
+                  '${widget.song['title']} - ${widget.song['artist']}',
+                  style: TextStyle(fontSize: 20),
+                  textAlign: TextAlign.center,
+                ),
+                Slider(
+                  value: position,
+                  activeColor: Theme.of(context).colorScheme.primary,
+                  inactiveColor: Theme.of(context).colorScheme.secondary,
+                  onChanged: (value) async {
+                    await _musicplayer.seek(
+                      Duration(milliseconds: value.toInt()),
+                    );
+                    setState(() {
+                      position = value;
+
+                      log('$value');
+                    });
                   },
+                  min: 0.0,
+                  max: value,
+                  allowedInteraction: SliderInteraction.tapAndSlide,
+                ),
+                Text(
+                  '${Duration(milliseconds: position.toInt())} / ${Duration(milliseconds: value.toInt())}',
+                  style: TextStyle(fontSize: 20),
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    IconButton(
+                      icon: Icon(button),
+                      onPressed: () async {
+                        try {
+                          switch (playerstate) {
+                            case 0:
+                              await _musicplayer.resume();
+                              button = Icons.pause;
+                              break;
+                            case 1:
+                              await _musicplayer.pause();
+                              button = Icons.play_arrow;
+                              break;
+                            case 2:
+                              _musicplayer.resume();
+                              button = Icons.pause;
+                              break;
+                            case 3:
+                              await _musicplayer.resume();
+                              button = Icons.pause;
+                              break;
+                          }
+                        } catch (e) {
+                          log('$e', name: 'musicpage', level: 1000);
+                          if (!context.mounted) return;
+                          ScaffoldMessenger.of(
+                            context,
+                          ).showSnackBar(SnackBar(content: Text('歌曲播放失败 $e')));
+                        }
+
+                        setState(() {});
+                      },
+                    ),
+                    IconButton(
+                      icon: Icon(Icons.stop),
+                      onPressed: () async {
+                        try {
+                          if (playerstate == 3) {
+                            button = Icons.play_arrow;
+                            playerstate = 0;
+                            await _musicplayer.seek(Duration.zero);
+                            setState(() {});
+                          }
+                          await _musicplayer.pause();
+                          button = Icons.play_arrow;
+                          playerstate = 0;
+                          await _musicplayer.seek(Duration.zero);
+                          setState(() {});
+                        } catch (e) {
+                          log('$e', name: 'PlayMusic', level: 1000);
+                          if (!context.mounted) return;
+                          ScaffoldMessenger.of(
+                            context,
+                          ).showSnackBar(SnackBar(content: Text('歌曲停止失败 $e')));
+                        }
+                      },
+                    ),
+                  ],
                 ),
               ],
             ),
-          ],
+          ),
         ),
       ),
     );
