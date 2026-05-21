@@ -175,7 +175,7 @@ class _CollectibleInfoPageState extends State<CollectibleInfoPage> {
     return Scaffold(
       appBar: AppBar(
         title: const Text('收藏品信息'),
-        backgroundColor: const Color.fromARGB(255, 255, 229, 84),
+        // backgroundColor: const Color.fromARGB(255, 255, 229, 84),
       ),
       body: Center(
         child: Scrollbar(
@@ -189,7 +189,9 @@ class _CollectibleInfoPageState extends State<CollectibleInfoPage> {
                   errorBuilder: (context, error, stackTrace) {
                     return Text(
                       '图片加载失败',
-                      style: TextStyle(color: Colors.black),
+                      style: TextStyle(
+                        color: Theme.of(context).colorScheme.onSurface,
+                      ),
                     );
                   },
                 ),

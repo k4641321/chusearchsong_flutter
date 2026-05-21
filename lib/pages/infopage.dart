@@ -109,6 +109,7 @@ class _InfoState extends State<Info> {
     } else if (config['theme'] == 'dark') {
       darkmode = 'dark';
     }
+    setState(() {});
   }
 
   @override

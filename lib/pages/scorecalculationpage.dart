@@ -84,7 +84,7 @@ class _ScoreCalculation extends State<ScoreCalculation> {
                     child: Text(
                       '计算',
                       style: TextStyle(
-                        color: const Color.fromARGB(255, 0, 0, 0),
+                        color: Theme.of(context).colorScheme.onSurface,
                       ),
                     ),
                   ),
@@ -95,7 +95,9 @@ class _ScoreCalculation extends State<ScoreCalculation> {
               children: [
                 Text(
                   '结果',
-                  style: TextStyle(color: const Color.fromARGB(255, 0, 0, 0)),
+                  style: TextStyle(
+                    color: Theme.of(context).colorScheme.onSurface,
+                  ),
                 ),
                 Expanded(
                   child: TextField(

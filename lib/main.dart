@@ -112,7 +112,7 @@ class _MyHomePageState extends State<MyHomePage> {
     return Scaffold(
       appBar: AppBar(
         title: Text(title),
-        // backgroundColor: const Color.fromARGB(255, 255, 229, 84),
+        backgroundColor: Theme.of(context).colorScheme.primary,
       ),
       body: _pages[_currentIndex],
       bottomNavigationBar: BottomNavigationBar(

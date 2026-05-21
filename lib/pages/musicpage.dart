@@ -144,6 +144,8 @@ class _PlayMusic extends State<PlayMusic> {
             ),
             Slider(
               value: position,
+              activeColor: Theme.of(context).colorScheme.primary,
+              inactiveColor: Theme.of(context).colorScheme.secondary,
               onChanged: (value) async {
                 await _musicplayer.seek(Duration(milliseconds: value.toInt()));
                 setState(() {

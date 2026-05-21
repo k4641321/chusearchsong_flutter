@@ -37,7 +37,10 @@ class _RandomMusicPageState extends State<RandomMusicPage> {
                       },
                       child: Text(
                         '抽一首',
-                        style: TextStyle(fontSize: 20, color: Colors.black),
+                        style: TextStyle(
+                          fontSize: 20,
+                          color: Theme.of(context).colorScheme.onSurface,
+                        ),
                       ),
                     ),
                   ),
@@ -58,7 +61,10 @@ class _RandomMusicPageState extends State<RandomMusicPage> {
                       },
                       child: Text(
                         '抽三首',
-                        style: TextStyle(fontSize: 20, color: Colors.black),
+                        style: TextStyle(
+                          fontSize: 20,
+                          color: Theme.of(context).colorScheme.onSurface,
+                        ),
                       ),
                     ),
                   ),
@@ -88,7 +94,10 @@ class _RandomMusicPageState extends State<RandomMusicPage> {
                       },
                       child: Text(
                         '抽自定义首',
-                        style: TextStyle(fontSize: 20, color: Colors.black),
+                        style: TextStyle(
+                          fontSize: 20,
+                          color: Theme.of(context).colorScheme.onSurface,
+                        ),
                       ),
                     ),
                   ),

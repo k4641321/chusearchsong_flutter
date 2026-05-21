@@ -34,7 +34,7 @@ class _RatingCalculatorState extends State<RatingCalculator> {
                   Tab(text: '按分数算'),
                   Tab(text: '按定数算'),
                 ],
-                labelColor: const Color.fromARGB(255, 0, 0, 0),
+                labelColor: Theme.of(context).colorScheme.onSurface,
                 unselectedLabelColor: const Color.fromARGB(255, 128, 128, 128),
                 indicatorColor: const Color.fromARGB(255, 255, 229, 84),
               ),
@@ -127,7 +127,9 @@ class _RatingCalculatorState extends State<RatingCalculator> {
                                 child: Text(
                                   '计算',
                                   style: TextStyle(
-                                    color: Color.fromARGB(255, 0, 0, 0),
+                                    color: Theme.of(
+                                      context,
+                                    ).colorScheme.onSurface,
                                   ),
                                 ),
                               ),
@@ -191,6 +193,7 @@ class _RatingCalculatorState extends State<RatingCalculator> {
 
                                   ratingCalculatorListData = ratingCalculator(
                                     diff: diff,
+                                    context: context,
                                   );
                                   setState(() {
                                     ratingCalculatorList =
@@ -200,7 +203,9 @@ class _RatingCalculatorState extends State<RatingCalculator> {
                                 child: Text(
                                   '计算',
                                   style: TextStyle(
-                                    color: Color.fromARGB(255, 0, 0, 0),
+                                    color: Theme.of(
+                                      context,
+                                    ).colorScheme.onSurface,
                                   ),
                                 ),
                               ),

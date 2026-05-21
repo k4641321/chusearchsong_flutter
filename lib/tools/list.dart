@@ -519,7 +519,10 @@ List<DataRow> ratingColor() {
   return rowsData;
 }
 
-List<DataRow> ratingCalculator({required double diff}) {
+List<DataRow> ratingCalculator({
+  required double diff,
+  required BuildContext context,
+}) {
   List<DataRow> rowsData = [
     DataRow(
       cells: [
@@ -648,7 +651,7 @@ List<DataRow> ratingCalculator({required double diff}) {
         DataCell(
           Text(
             '997500',
-            style: TextStyle(color: const Color.fromARGB(255, 0, 0, 0)),
+            style: TextStyle(color: Theme.of(context).colorScheme.onSurface),
           ),
         ),
         DataCell(Text('${diff + 0.9}')),
@@ -659,7 +662,7 @@ List<DataRow> ratingCalculator({required double diff}) {
         DataCell(
           Text(
             '995000',
-            style: TextStyle(color: const Color.fromARGB(255, 0, 0, 0)),
+            style: TextStyle(color: Theme.of(context).colorScheme.onSurface),
           ),
         ),
         DataCell(Text('${diff + 0.8}')),
@@ -670,7 +673,7 @@ List<DataRow> ratingCalculator({required double diff}) {
         DataCell(
           Text(
             '992500',
-            style: TextStyle(color: const Color.fromARGB(255, 0, 0, 0)),
+            style: TextStyle(color: Theme.of(context).colorScheme.onSurface),
           ),
         ),
         DataCell(Text('${diff + 0.7}')),
@@ -681,7 +684,7 @@ List<DataRow> ratingCalculator({required double diff}) {
         DataCell(
           Text(
             '990000',
-            style: TextStyle(color: const Color.fromARGB(255, 0, 0, 0)),
+            style: TextStyle(color: Theme.of(context).colorScheme.onSurface),
           ),
         ),
         DataCell(Text('${diff + 0.6}')),
@@ -692,7 +695,7 @@ List<DataRow> ratingCalculator({required double diff}) {
         DataCell(
           Text(
             '985000',
-            style: TextStyle(color: const Color.fromARGB(255, 0, 0, 0)),
+            style: TextStyle(color: Theme.of(context).colorScheme.onSurface),
           ),
         ),
         DataCell(Text('${diff + 0.4}')),
@@ -703,7 +706,7 @@ List<DataRow> ratingCalculator({required double diff}) {
         DataCell(
           Text(
             '980000',
-            style: TextStyle(color: const Color.fromARGB(255, 0, 0, 0)),
+            style: TextStyle(color: Theme.of(context).colorScheme.onSurface),
           ),
         ),
         DataCell(Text('${diff + 0.2}')),
@@ -714,7 +717,7 @@ List<DataRow> ratingCalculator({required double diff}) {
         DataCell(
           Text(
             '975000',
-            style: TextStyle(color: const Color.fromARGB(255, 0, 0, 0)),
+            style: TextStyle(color: Theme.of(context).colorScheme.onSurface),
           ),
         ),
         DataCell(Text('${diff + 0.0}')),
