@@ -153,7 +153,7 @@ class _InfoState extends State<Info> {
                     ),
                     onTap: () => _launchUrl(context: context),
                     child: Card(
-                      color: const Color.fromARGB(255, 223, 205, 107),
+                      color: Theme.of(context).colorScheme.primary,
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.only(
                           topLeft: Radius.circular(10.0),
@@ -186,7 +186,7 @@ class _InfoState extends State<Info> {
                     ),
                     onTap: () => _openQQ(context: context),
                     child: Card(
-                      color: const Color.fromARGB(255, 223, 205, 107),
+                      color: Theme.of(context).colorScheme.primary,
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.all(Radius.circular(0.0)),
                       ),
@@ -216,7 +216,7 @@ class _InfoState extends State<Info> {
                     ),
                     onTap: darkmodechange,
                     child: Card(
-                      color: const Color.fromARGB(255, 223, 205, 107),
+                      color: Theme.of(context).colorScheme.primary,
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.all(Radius.circular(0.0)),
                       ),
@@ -246,7 +246,7 @@ class _InfoState extends State<Info> {
                     ),
                     onTap: () => updateData(context: context),
                     child: Card(
-                      color: const Color.fromARGB(255, 223, 205, 107),
+                      color: Theme.of(context).colorScheme.primary,
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.only(
                           bottomLeft: Radius.circular(10.0),

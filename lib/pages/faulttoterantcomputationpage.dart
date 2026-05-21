@@ -23,7 +23,7 @@ class _FaulttoterantcomputationPageState
     return Scaffold(
       appBar: AppBar(
         title: Text('容错计算'),
-        backgroundColor: const Color.fromARGB(255, 255, 229, 84),
+        // backgroundColor: const Color.fromARGB(255, 255, 229, 84),
       ),
       body: Column(
         children: [
