@@ -5,6 +5,7 @@ import '../tools/fun.dart';
 import 'dart:io';
 import 'package:path_provider/path_provider.dart';
 import 'dart:convert';
+import 'settingspage.dart';
 
 class Info extends StatefulWidget {
   const Info({super.key, this.onThemeChanged});
@@ -159,7 +160,7 @@ class _InfoState extends State<Info> {
                         ),
                         onTap: () => _launchUrl(context: context),
                         child: Card(
-                          color: Theme.of(context).colorScheme.primary,
+                          color: Theme.of(context).colorScheme.primaryFixedDim,
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.only(
                               topLeft: Radius.circular(10.0),
@@ -192,7 +193,7 @@ class _InfoState extends State<Info> {
                         ),
                         onTap: () => _openQQ(context: context),
                         child: Card(
-                          color: Theme.of(context).colorScheme.primary,
+                          color: Theme.of(context).colorScheme.primaryFixedDim,
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.all(
                               Radius.circular(0.0),
@@ -224,7 +225,7 @@ class _InfoState extends State<Info> {
                         ),
                         onTap: darkmodechange,
                         child: Card(
-                          color: Theme.of(context).colorScheme.primary,
+                          color: Theme.of(context).colorScheme.primaryFixedDim,
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.all(
                               Radius.circular(0.0),
@@ -254,9 +255,46 @@ class _InfoState extends State<Info> {
                             bottomRight: Radius.circular(10.0),
                           ),
                         ),
+                        onTap: () => Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => SettingsPage(),
+                          ),
+                        ),
+                        child: Card(
+                          color: Theme.of(context).colorScheme.primaryFixedDim,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.all(
+                              Radius.circular(0.0),
+                            ),
+                          ),
+                          child: Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: Text(
+                              '设置',
+                              textAlign: TextAlign.center,
+                              style: TextStyle(
+                                fontSize: 20,
+                                color: Theme.of(context).colorScheme.onSurface,
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                    SizedBox(
+                      width: double.infinity,
+                      height: 50,
+                      child: InkWell(
+                        customBorder: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.only(
+                            bottomLeft: Radius.circular(10.0),
+                            bottomRight: Radius.circular(10.0),
+                          ),
+                        ),
                         onTap: () => updateData(context: context),
                         child: Card(
-                          color: Theme.of(context).colorScheme.primary,
+                          color: Theme.of(context).colorScheme.primaryFixedDim,
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.only(
                               bottomLeft: Radius.circular(10.0),

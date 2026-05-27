@@ -3,6 +3,7 @@ import '../tools/fun.dart';
 import 'dart:io';
 import 'package:path_provider/path_provider.dart';
 import 'dart:convert';
+import '../tools/texttranslate.dart';
 
 class CollectibleInfoPage extends StatefulWidget {
   const CollectibleInfoPage({
@@ -20,6 +21,7 @@ class CollectibleInfoPage extends StatefulWidget {
 class _CollectibleInfoPageState extends State<CollectibleInfoPage> {
   final ScrollController _controller = ScrollController();
   List<Widget> result = [];
+  String translate = '';
   Future<void> otherinfo({required String type}) async {
     if (type == 'trophy') {
       result.add(
@@ -209,6 +211,31 @@ class _CollectibleInfoPageState extends State<CollectibleInfoPage> {
                 ),
                 const Divider(),
                 Column(children: otherinfowidget),
+                TextButton(
+                  onPressed: () async {
+                    try {
+                      String result = await translateText(
+                        sourceText: widget.data['description'],
+                        context: context,
+                      );
+                      setState(() {
+                        translate = result;
+                      });
+                    } catch (e) {
+                      if (!context.mounted) return;
+                      ScaffoldMessenger.of(
+                        context,
+                      ).showSnackBar(SnackBar(content: Text('翻译失败: $e')));
+                    }
+                  },
+                  child: Text(
+                    '翻译',
+                    style: TextStyle(
+                      color: Theme.of(context).colorScheme.onSurface,
+                    ),
+                  ),
+                ),
+                Text(translate, style: TextStyle(fontSize: 20)),
               ],
             ),
           ),

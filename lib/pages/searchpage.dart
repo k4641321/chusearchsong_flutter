@@ -37,7 +37,7 @@ class _SearchPageState extends State<SearchPage> {
         difficultyUp,
         context,
       );
-
+      if (!mounted) return;
       // 更新状态
       setState(() {
         searchResults = results;
@@ -67,6 +67,7 @@ class _SearchPageState extends State<SearchPage> {
         });
       },
     );
+    if (!mounted) return;
     setState(() {
       genreDropdownMenu = genreDropdownMenu1;
       versionDropdownMenu = versionDropdownMenu1;

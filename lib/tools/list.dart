@@ -188,6 +188,7 @@ Widget buildDifficultyUpDropdownMenu({
       DropdownMenuEntry<String>(label: '14+', value: '14.9'),
       DropdownMenuEntry<String>(label: '15', value: '15'),
       DropdownMenuEntry<String>(label: '15+', value: '15.9'),
+      DropdownMenuEntry<String>(label: '16', value: '16.4'),
     ],
   );
 }

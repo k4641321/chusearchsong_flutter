@@ -112,7 +112,7 @@ class _MyHomePageState extends State<MyHomePage> {
     return Scaffold(
       appBar: AppBar(
         title: Text(title),
-        backgroundColor: Theme.of(context).colorScheme.primary,
+        backgroundColor: Theme.of(context).colorScheme.primaryFixedDim,
       ),
       body: _pages[_currentIndex],
       bottomNavigationBar: BottomNavigationBar(
@@ -132,9 +132,9 @@ class _MyHomePageState extends State<MyHomePage> {
           });
         },
         // backgroundColor: const Color.fromARGB(255, 255, 229, 84),
-        unselectedItemColor: Theme.of(
-          context,
-        ).colorScheme.secondary, //const Color.fromARGB(255, 250, 231, 125),
+        unselectedItemColor: Theme.of(context)
+            .colorScheme
+            .primaryFixedDim, //const Color.fromARGB(255, 250, 231, 125),
         selectedItemColor: Theme.of(
           context,
         ).colorScheme.primary, //const Color.fromARGB(255, 255, 217, 0),
