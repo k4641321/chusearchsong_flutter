@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import '../tools/fun.dart';
+import '../../tools/fun.dart';
 
 class SearchCollectiblesPage extends StatefulWidget {
   const SearchCollectiblesPage({super.key});

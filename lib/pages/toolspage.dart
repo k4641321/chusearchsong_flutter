@@ -1,11 +1,11 @@
-import 'ratingcalculatorpage.dart';
+import 'toolspages/ratingcalculatorpage.dart';
 import 'package:flutter/material.dart';
-import './rankcolorpage.dart';
-import './rankinfopage.dart';
-import 'scorecalculationpage.dart';
-import './searchlobbypage.dart';
-import 'randommusicpage.dart';
-import 'searchcollectiblespage.dart';
+import 'toolspages/rankcolorpage.dart';
+import 'toolspages/rankinfopage.dart';
+import 'toolspages/scorecalculationpage.dart';
+import 'toolspages/searchlobbypage.dart';
+import 'toolspages/randommusicpage.dart';
+import 'toolspages/searchcollectiblespage.dart';
 import 'faulttoterantcomputationpage.dart';
 
 //主窗口

@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-import '../tools/fun.dart';
+import '../../tools/fun.dart';
 import 'dart:io';
 import 'package:path_provider/path_provider.dart';
 import 'dart:convert';
-import '../tools/texttranslate.dart';
+import '../../tools/texttranslate.dart';
 
 class CollectibleInfoPage extends StatefulWidget {
   const CollectibleInfoPage({
@@ -211,29 +211,57 @@ class _CollectibleInfoPageState extends State<CollectibleInfoPage> {
                 ),
                 const Divider(),
                 Column(children: otherinfowidget),
-                TextButton(
-                  onPressed: () async {
-                    try {
-                      String result = await translateText(
-                        sourceText: widget.data['description'],
-                        context: context,
-                      );
-                      setState(() {
-                        translate = result;
-                      });
-                    } catch (e) {
-                      if (!context.mounted) return;
-                      ScaffoldMessenger.of(
-                        context,
-                      ).showSnackBar(SnackBar(content: Text('翻译失败: $e')));
-                    }
-                  },
-                  child: Text(
-                    '翻译',
-                    style: TextStyle(
-                      color: Theme.of(context).colorScheme.onSurface,
+                Row(
+                  children: [
+                    TextButton(
+                      onPressed: () async {
+                        try {
+                          String result = await translateText(
+                            sourceText: widget.data['description'],
+                            context: context,
+                          );
+                          setState(() {
+                            translate = result;
+                          });
+                        } catch (e) {
+                          if (!context.mounted) return;
+                          ScaffoldMessenger.of(
+                            context,
+                          ).showSnackBar(SnackBar(content: Text('翻译失败: $e')));
+                        }
+                      },
+                      child: Text(
+                        '翻译描述',
+                        style: TextStyle(
+                          color: Theme.of(context).colorScheme.onSurface,
+                        ),
+                      ),
                     ),
-                  ),
+                    TextButton(
+                      onPressed: () async {
+                        try {
+                          String result = await translateText(
+                            sourceText: widget.data['name'],
+                            context: context,
+                          );
+                          setState(() {
+                            translate = result;
+                          });
+                        } catch (e) {
+                          if (!context.mounted) return;
+                          ScaffoldMessenger.of(
+                            context,
+                          ).showSnackBar(SnackBar(content: Text('翻译失败: $e')));
+                        }
+                      },
+                      child: Text(
+                        '翻译标题',
+                        style: TextStyle(
+                          color: Theme.of(context).colorScheme.onSurface,
+                        ),
+                      ),
+                    ),
+                  ],
                 ),
                 Text(translate, style: TextStyle(fontSize: 20)),
               ],

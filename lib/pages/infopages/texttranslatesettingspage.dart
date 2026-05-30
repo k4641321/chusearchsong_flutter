@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import '../tools/settingspagefun.dart';
+import '../../tools/settingspagefun.dart';
 
 class TextTranslateSettingsPage extends StatefulWidget {
   const TextTranslateSettingsPage({super.key});
@@ -15,7 +15,8 @@ class _TextTranslateSettingsPageState extends State<TextTranslateSettingsPage> {
   final TextEditingController projectIdController = TextEditingController();
   final ScrollController _scrollController = ScrollController();
   Future<void> loadtextfield() async {
-    Map<String, dynamic> result = await loadconfig(context);
+    Map<String, dynamic> result = await loadtexttranslateconfig(context);
+    if (result.isEmpty) return;
     setState(() {
       secretIdController.text = result['secretId'];
       secretKeyController.text = result['secretKey'];
@@ -63,18 +64,19 @@ class _TextTranslateSettingsPageState extends State<TextTranslateSettingsPage> {
                     Expanded(
                       child: InkWell(
                         child: TextButton(
-                          onPressed: () {
+                          onPressed: () async {
                             try {
                               String secretId = secretIdController.text;
                               String secretKey = secretKeyController.text;
                               String projectId = projectIdController.text;
-                              savetexttranslateconfig(
+                              await savetexttranslateconfig(
                                 secretId: secretId,
                                 secretKey: secretKey,
                                 projectId: projectId,
                                 context: context,
                               );
                             } catch (e) {
+                              if (!context.mounted) return;
                               ScaffoldMessenger.of(
                                 context,
                               ).showSnackBar(SnackBar(content: Text('错误: $e')));

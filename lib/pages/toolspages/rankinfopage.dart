@@ -1,4 +1,4 @@
-import '../tools/list.dart';
+import '../../tools/list.dart';
 import 'package:flutter/material.dart';
 
 // 等级划分与判定

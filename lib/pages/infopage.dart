@@ -5,7 +5,7 @@ import '../tools/fun.dart';
 import 'dart:io';
 import 'package:path_provider/path_provider.dart';
 import 'dart:convert';
-import 'settingspage.dart';
+import 'infopages/settingspage.dart';
 
 class Info extends StatefulWidget {
   const Info({super.key, this.onThemeChanged});

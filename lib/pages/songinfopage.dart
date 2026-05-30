@@ -131,6 +131,7 @@ class _SongInfoPageState extends State<SongInfoPage> {
       DataColumn(label: Text('谱师')),
     ];
     final ScrollController controller = ScrollController();
+    final ScrollController infocontroller = ScrollController();
     return Scaffold(
       appBar: AppBar(
         title: Text('${widget.song['title']}    - 歌曲详情'),
@@ -157,22 +158,58 @@ class _SongInfoPageState extends State<SongInfoPage> {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                InkWell(
-                  child: Image.network(
-                    'https://assets2.lxns.net/chunithm/jacket/${widget.songid}.png',
-                    errorBuilder: (context, error, stackTrace) {
-                      return const Text('图片加载失败');
-                    },
+                Scrollbar(
+                  controller: infocontroller,
+                  child: SingleChildScrollView(
+                    controller: infocontroller,
+                    scrollDirection: Axis.horizontal,
+                    child: Row(
+                      children: [
+                        InkWell(
+                          child: Image.network(
+                            'https://assets2.lxns.net/chunithm/jacket/${widget.songid}.png',
+                            errorBuilder: (context, error, stackTrace) {
+                              return const Text('图片加载失败');
+                            },
+                            width: 200,
+                            height: 200,
+                          ),
+                          onTap: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) =>
+                                    PlayMusic(song: widget.song),
+                              ),
+                            );
+                          },
+                        ),
+                        Column(
+                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                          children: [
+                            Text(
+                              '分类： ${widget.song['genre']}',
+                              style: const TextStyle(fontSize: 15),
+                            ),
+                            Text(
+                              '版本： ${widget.versionname}',
+                              style: const TextStyle(fontSize: 15),
+                            ),
+                            Text(
+                              'BPM:  ${widget.song['bpm']}',
+                              style: const TextStyle(fontSize: 15),
+                            ),
+                            Text(
+                              '曲师： ${widget.song['artist']}',
+                              style: const TextStyle(fontSize: 15),
+                            ),
+                          ],
+                        ),
+                      ],
+                    ),
                   ),
-                  onTap: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => PlayMusic(song: widget.song),
-                      ),
-                    );
-                  },
                 ),
+
                 TextButton(
                   onPressed: () async {
                     try {
@@ -200,26 +237,18 @@ class _SongInfoPageState extends State<SongInfoPage> {
                     textAlign: TextAlign.center,
                   ),
                 ),
-                Text(
-                  '分类： ${widget.song['genre']}',
-                  style: const TextStyle(fontSize: 20),
-                ),
-                Text(
-                  '版本： ${widget.versionname}',
-                  style: const TextStyle(fontSize: 20),
-                ),
-                Text(
-                  'BPM:  ${widget.song['bpm']}',
-                  style: const TextStyle(fontSize: 20),
-                ),
-                Text(
-                  '曲师： ${widget.song['artist']}',
-                  style: const TextStyle(fontSize: 20),
-                ),
 
-                Text('其余信息：', style: const TextStyle(fontSize: 20)),
+                Text('其余信息：', style: const TextStyle(fontSize: 15)),
                 Column(children: widget.information),
 
+                // DefaultTabController(
+                //   length: 2,
+                //   child: Column(
+                //     children: [
+                //       TabBar(tabs: [Tab(text: 'test')]),
+                //     ],
+                //   ),
+                // ),
                 SingleChildScrollView(
                   scrollDirection: Axis.horizontal,
                   child: DataTable(

@@ -1,7 +1,7 @@
 import 'dart:developer';
 import 'package:path_provider/path_provider.dart';
 import 'package:flutter/material.dart';
-import '../tools/list.dart';
+import '../../tools/list.dart';
 import 'dart:convert';
 import 'package:url_launcher/url_launcher.dart';
 import 'dart:io';

@@ -6,7 +6,7 @@ import './request.dart';
 import 'dart:developer';
 import '../pages/songinfopage.dart';
 import 'dart:math' as math;
-import '../pages/collectibleinfopage.dart';
+import '../pages/toolspages/collectibleinfopage.dart';
 
 //返回歌曲id列表
 Future<List<int>> returnidList() async {
@@ -127,19 +127,19 @@ Future<void> interSongInfo({
   int songid = i['id'];
   if (songInfo.keys.contains('map')) {
     information.add(
-      Text('地图: ${songInfo['map']}', style: const TextStyle(fontSize: 20)),
+      Text('地图: ${songInfo['map']}', style: const TextStyle(fontSize: 15)),
     );
   }
   if (songInfo.keys.contains('locked')) {
     if (songInfo['locked'] == true) {
-      information.add(Text('需解锁', style: const TextStyle(fontSize: 20)));
+      information.add(Text('需解锁', style: const TextStyle(fontSize: 15)));
     } else {
-      information.add(Text('无需解锁', style: const TextStyle(fontSize: 20)));
+      information.add(Text('无需解锁', style: const TextStyle(fontSize: 15)));
     }
   }
   if (songInfo.keys.contains('rights')) {
     information.add(
-      Text('版权: ${songInfo['rights']}', style: const TextStyle(fontSize: 20)),
+      Text('版权: ${songInfo['rights']}', style: const TextStyle(fontSize: 15)),
     );
   }
 
@@ -150,7 +150,7 @@ Future<void> interSongInfo({
   if (kanji != null) {
     final kanjiText = kanji['kanji'];
     information.add(
-      Text('谱面属性: $kanjiText', style: const TextStyle(fontSize: 20)),
+      Text('谱面属性: $kanjiText', style: const TextStyle(fontSize: 15)),
     );
   }
 
@@ -161,12 +161,12 @@ Future<void> interSongInfo({
   if (star != null) {
     final starValue = star['star'];
     information.add(
-      Text('星数: $starValue', style: const TextStyle(fontSize: 20)),
+      Text('星数: $starValue', style: const TextStyle(fontSize: 15)),
     );
   }
 
   if (information.isEmpty) {
-    information.add(Text('无信息', style: const TextStyle(fontSize: 20)));
+    information.add(Text('无信息', style: const TextStyle(fontSize: 15)));
   }
 
   final originid = songInfoDiffs.lastWhere(
