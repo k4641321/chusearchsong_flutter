@@ -59,14 +59,21 @@ class _SearchCollectiblesState extends State<SearchCollectiblesPage> {
                 IconButton(
                   onPressed: () async {
                     List<Widget> result2 = [];
-                    result2 = await searchCollectibles(
-                      context: context,
-                      searchtext: _controller.text,
-                      searchtype: initialSelection,
-                    );
-                    setState(() {
-                      result = result2;
-                    });
+                    try {
+                      result2 = await searchCollectibles(
+                        context: context,
+                        searchtext: _controller.text,
+                        searchtype: initialSelection,
+                      );
+                      setState(() {
+                        result = result2;
+                      });
+                    } catch (e) {
+                      if (!context.mounted) return;
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(content: Text('错误，可能数据不存在，请在关于界面更新数据 $e')),
+                      );
+                    }
                   },
                   icon: Icon(Icons.search),
                 ),

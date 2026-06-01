@@ -6,11 +6,13 @@ import './musicpage.dart';
 import 'dart:io';
 import 'package:path_provider/path_provider.dart';
 import 'package:url_launcher/url_launcher.dart';
+import '../tools/songinfopagefun.dart';
 
 class SongInfoPage extends StatefulWidget {
   final Map<String, dynamic> song;
   final String versionname;
-  final List<DataRow> rowsData;
+  // final List<DataRow> rowsData;
+  final List<Widget> rowsData;
   final List<Widget> information;
   final int songid;
   const SongInfoPage({
@@ -120,16 +122,16 @@ class _SongInfoPageState extends State<SongInfoPage> {
 
   @override
   Widget build(BuildContext context) {
-    const columnsdata = [
-      DataColumn(label: Text('level')),
-      DataColumn(label: Text('tap')),
-      DataColumn(label: Text('hold')),
-      DataColumn(label: Text('slide')),
-      DataColumn(label: Text('air')),
-      DataColumn(label: Text('flick')),
-      DataColumn(label: Text('total')),
-      DataColumn(label: Text('谱师')),
-    ];
+    // const columnsdata = [
+    //   DataColumn(label: Text('level')),
+    //   DataColumn(label: Text('tap')),
+    //   DataColumn(label: Text('hold')),
+    //   DataColumn(label: Text('slide')),
+    //   DataColumn(label: Text('air')),
+    //   DataColumn(label: Text('flick')),
+    //   DataColumn(label: Text('total')),
+    //   DataColumn(label: Text('谱师')),
+    // ];
     final ScrollController controller = ScrollController();
     final ScrollController infocontroller = ScrollController();
     return Scaffold(
@@ -241,22 +243,27 @@ class _SongInfoPageState extends State<SongInfoPage> {
                 Text('其余信息：', style: const TextStyle(fontSize: 15)),
                 Column(children: widget.information),
 
-                // DefaultTabController(
-                //   length: 2,
-                //   child: Column(
-                //     children: [
-                //       TabBar(tabs: [Tab(text: 'test')]),
-                //     ],
-                //   ),
-                // ),
-                SingleChildScrollView(
-                  scrollDirection: Axis.horizontal,
-                  child: DataTable(
-                    columns: columnsdata,
-                    rows: widget.rowsData,
-                    showBottomBorder: true,
+                DefaultTabController(
+                  length: widget.song['difficulties'].length,
+                  child: Column(
+                    children: [
+                      TabBar(tabs: returnDiffTabBar(song: widget.song)),
+
+                      SizedBox(
+                        height: 200,
+                        child: TabBarView(children: widget.rowsData),
+                      ),
+                    ],
                   ),
                 ),
+                // SingleChildScrollView(
+                //   scrollDirection: Axis.horizontal,
+                //   child: DataTable(
+                //     columns: columnsdata,
+                //     rows: widget.rowsData,
+                //     showBottomBorder: true,
+                //   ),
+                // ),
               ],
             ),
           ),

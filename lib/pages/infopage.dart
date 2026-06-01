@@ -103,14 +103,21 @@ class _InfoState extends State<Info> {
 
   Future<void> confirmdarkmode() async {
     final path = await getApplicationSupportDirectory();
-    String configStr = await File('${path.path}/config.json').readAsString();
-    Map<String, dynamic> config = json.decode(configStr);
-    if (config['theme'] == 'light') {
-      darkmode = 'light';
-    } else if (config['theme'] == 'dark') {
-      darkmode = 'dark';
+    try {
+      String configStr = await File('${path.path}/config.json').readAsString();
+      Map<String, dynamic> config = json.decode(configStr);
+      if (config['theme'] == 'light') {
+        darkmode = 'light';
+      } else if (config['theme'] == 'dark') {
+        darkmode = 'dark';
+      }
+      setState(() {});
+    } catch (e) {
+      if (!mounted) return;
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text('错误，配置文件不存在')));
     }
-    setState(() {});
   }
 
   @override

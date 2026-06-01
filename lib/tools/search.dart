@@ -196,9 +196,11 @@ Future<List<Widget>> search(
                 //   width: 55,
                 //   height: 55,
                 // ),
-                Text(
-                  '${i['id']} - ${i['title']}      ${i['genre']} - $versionname \n $songInfoDiffs',
-                  textAlign: TextAlign.center,
+                Expanded(
+                  child: Text(
+                    '${i['id']} - ${i['title']}      ${i['genre']} - $versionname  \n $songInfoDiffs',
+                    textAlign: TextAlign.center,
+                  ),
                 ),
               ],
             ),

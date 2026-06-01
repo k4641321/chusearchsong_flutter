@@ -7,6 +7,7 @@ import 'dart:developer';
 import '../pages/songinfopage.dart';
 import 'dart:math' as math;
 import '../pages/toolspages/collectibleinfopage.dart';
+import './songinfopagefun.dart';
 
 //返回歌曲id列表
 Future<List<int>> returnidList() async {
@@ -97,7 +98,7 @@ Future<List<Widget>> randomSong({
     ScaffoldMessenger.of(
       context,
     ).showSnackBar(SnackBar(content: Text('错误: $e')));
-    log('error $e', name: 'search.dart', level: 1000);
+    log('error $e', name: 'fun.dart', level: 1000);
     return [Text('无结果')];
   }
 }
@@ -108,73 +109,80 @@ Future<void> interSongInfo({
   required BuildContext context,
   required String versionname,
 }) async {
-  List<DataRow> songData = [];
+  // List<DataRow> songData = [];
+  List<Widget> songData = [];
   Map<String, dynamic> songInfo = {};
   List<dynamic> songInfoDiffs = [];
   try {
-    songData = await returnSongInfo(i['id']);
+    // songData = await returnSongInfo(i['id']);
+    songData = await returnDiffTabBarView(song: i);
   } catch (e) {
-    log('error $e', name: 'search.dart', level: 1000);
+    log('error $e', name: 'fun.dart', level: 1000);
   }
   try {
     songInfo = await getSongInfo(i['id']);
     songInfoDiffs = songInfo['difficulties'];
   } catch (e) {
-    log('error $e', name: 'search.dart', level: 1000);
+    log('error $e', name: 'fun.dart', level: 1000);
   }
 
   List<Widget> information = [];
   int songid = i['id'];
-  if (songInfo.keys.contains('map')) {
-    information.add(
-      Text('地图: ${songInfo['map']}', style: const TextStyle(fontSize: 15)),
-    );
-  }
-  if (songInfo.keys.contains('locked')) {
-    if (songInfo['locked'] == true) {
-      information.add(Text('需解锁', style: const TextStyle(fontSize: 15)));
-    } else {
-      information.add(Text('无需解锁', style: const TextStyle(fontSize: 15)));
+  if (songInfo.isNotEmpty) {
+    if (songInfo.keys.contains('map')) {
+      information.add(
+        Text('地图: ${songInfo['map']}', style: const TextStyle(fontSize: 15)),
+      );
     }
-  }
-  if (songInfo.keys.contains('rights')) {
-    information.add(
-      Text('版权: ${songInfo['rights']}', style: const TextStyle(fontSize: 15)),
-    );
-  }
-
-  final kanji = songInfoDiffs.lastWhere(
-    (d) => d.keys.contains('kanji'),
-    orElse: () => null,
-  );
-  if (kanji != null) {
-    final kanjiText = kanji['kanji'];
-    information.add(
-      Text('谱面属性: $kanjiText', style: const TextStyle(fontSize: 15)),
-    );
+    if (songInfo.keys.contains('locked')) {
+      if (songInfo['locked'] == true) {
+        information.add(Text('需解锁', style: const TextStyle(fontSize: 15)));
+      } else {
+        information.add(Text('无需解锁', style: const TextStyle(fontSize: 15)));
+      }
+    }
+    if (songInfo.keys.contains('rights')) {
+      information.add(
+        Text('版权: ${songInfo['rights']}', style: const TextStyle(fontSize: 15)),
+      );
+    }
+  } else {
+    information.add(Text('请求失败', style: const TextStyle(fontSize: 15)));
   }
 
-  final star = songInfoDiffs.lastWhere(
-    (d) => d.keys.contains('star'),
-    orElse: () => null,
-  );
-  if (star != null) {
-    final starValue = star['star'];
-    information.add(
-      Text('星数: $starValue', style: const TextStyle(fontSize: 15)),
+  if (songInfoDiffs.isNotEmpty) {
+    final kanji = songInfoDiffs.lastWhere(
+      (d) => d.keys.contains('kanji'),
+      orElse: () => null,
     );
+    if (kanji != null) {
+      final kanjiText = kanji['kanji'];
+      information.add(
+        Text('谱面属性: $kanjiText', style: const TextStyle(fontSize: 15)),
+      );
+    }
+
+    final star = songInfoDiffs.lastWhere(
+      (d) => d.keys.contains('star'),
+      orElse: () => null,
+    );
+    if (star != null) {
+      final starValue = star['star'];
+      information.add(
+        Text('星数: $starValue', style: const TextStyle(fontSize: 15)),
+      );
+    }
+    final originid = songInfoDiffs.lastWhere(
+      (d) => d.keys.contains('origin_id'),
+      orElse: () => null,
+    );
+    if (originid != null) {
+      songid = originid['origin_id'];
+    }
   }
 
   if (information.isEmpty) {
     information.add(Text('无信息', style: const TextStyle(fontSize: 15)));
-  }
-
-  final originid = songInfoDiffs.lastWhere(
-    (d) => d.keys.contains('origin_id'),
-    orElse: () => null,
-  );
-  if (originid != null) {
-    songid = originid['origin_id'];
   }
 
   if (!context.mounted) return;

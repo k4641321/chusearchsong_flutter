@@ -176,7 +176,7 @@ class _CollectibleInfoPageState extends State<CollectibleInfoPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('收藏品信息'),
+        title: Text('${widget.data['name']} - 收藏品信息'),
         // backgroundColor: const Color.fromARGB(255, 255, 229, 84),
       ),
       body: Center(
@@ -212,6 +212,7 @@ class _CollectibleInfoPageState extends State<CollectibleInfoPage> {
                 const Divider(),
                 Column(children: otherinfowidget),
                 Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     TextButton(
                       onPressed: () async {
