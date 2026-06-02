@@ -8,6 +8,7 @@ import '../pages/songinfopage.dart';
 import 'dart:math' as math;
 import '../pages/toolspages/collectibleinfopage.dart';
 import './songinfopagefun.dart';
+import 'settingspagefun.dart';
 
 //返回歌曲id列表
 Future<List<int>> returnidList() async {
@@ -113,12 +114,17 @@ Future<void> interSongInfo({
   List<Widget> songData = [];
   Map<String, dynamic> songInfo = {};
   List<dynamic> songInfoDiffs = [];
+  //获取谱面信息与成绩
   try {
     // songData = await returnSongInfo(i['id']);
-    songData = await returnDiffTabBarView(song: i);
+    songData = await returnDiffTabBarView(
+      song: i,
+      color: Theme.of(context).colorScheme.onSecondary,
+    );
   } catch (e) {
     log('error $e', name: 'fun.dart', level: 1000);
   }
+
   try {
     songInfo = await getSongInfo(i['id']);
     songInfoDiffs = songInfo['difficulties'];
@@ -184,7 +190,10 @@ Future<void> interSongInfo({
   if (information.isEmpty) {
     information.add(Text('无信息', style: const TextStyle(fontSize: 15)));
   }
-
+  information.insert(
+    0,
+    (Row(children: [Icon(Icons.info_outline), Text('其余信息')])),
+  );
   if (!context.mounted) return;
   await Navigator.push(
     context,
@@ -481,7 +490,16 @@ Future<void> updateData({required BuildContext context}) async {
       SnackBar(content: Text('完成'), duration: Duration(seconds: 1)),
     );
     log('保存到 ${path.path}/trophies.json');
-
+    //获取成绩
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(content: Text('开始下载成绩数据'), duration: Duration(seconds: 1)),
+    );
+    await saveAllScore();
+    if (!context.mounted) return;
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(content: Text('完成'), duration: Duration(seconds: 1)),
+    );
+    log('保存到 ${path.path}/allscore.json');
     print(directory);
   } catch (e) {
     if (!context.mounted) return;

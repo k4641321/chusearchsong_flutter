@@ -2,6 +2,33 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart';
 import 'dart:convert';
 import 'dart:developer';
+import 'dart:io';
+import 'package:path_provider/path_provider.dart';
+
+Future<void> saveAllScore() async {
+  final directory = await getApplicationSupportDirectory();
+  final file = File('${directory.path}/res/allscore.json');
+  final String configstr = await File(
+    '${directory.path}/config.json',
+  ).readAsString();
+  Map<String, dynamic> config = json.decode(configstr);
+  String token = config['lxns']['token'];
+  try {
+    String allscorestr = await requestScore(token: token);
+    await file.writeAsString(allscorestr);
+  } catch (e) {
+    log('$e', name: 'settingspagefun.dart', level: 1000);
+  }
+}
+
+Future<String> requestScore({required String token}) async {
+  final headers = {'X-User-Token': token};
+  final response = await get(
+    Uri.parse('https://maimai.lxns.net/api/v0/user/chunithm/player/scores'),
+    headers: headers,
+  );
+  return response.body;
+}
 
 Future<String> requestPlatesData() async {
   final response = await get(

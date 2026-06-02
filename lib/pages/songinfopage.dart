@@ -133,7 +133,8 @@ class _SongInfoPageState extends State<SongInfoPage> {
     //   DataColumn(label: Text('谱师')),
     // ];
     final ScrollController controller = ScrollController();
-    final ScrollController infocontroller = ScrollController();
+    final ScrollController tabbarcontroller = ScrollController();
+    // final ScrollController infocontroller = ScrollController();
     return Scaffold(
       appBar: AppBar(
         title: Text('${widget.song['title']}    - 歌曲详情'),
@@ -160,56 +161,23 @@ class _SongInfoPageState extends State<SongInfoPage> {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Scrollbar(
-                  controller: infocontroller,
-                  child: SingleChildScrollView(
-                    controller: infocontroller,
-                    scrollDirection: Axis.horizontal,
-                    child: Row(
-                      children: [
-                        InkWell(
-                          child: Image.network(
-                            'https://assets2.lxns.net/chunithm/jacket/${widget.songid}.png',
-                            errorBuilder: (context, error, stackTrace) {
-                              return const Text('图片加载失败');
-                            },
-                            width: 200,
-                            height: 200,
-                          ),
-                          onTap: () {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) =>
-                                    PlayMusic(song: widget.song),
-                              ),
-                            );
-                          },
-                        ),
-                        Column(
-                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                          children: [
-                            Text(
-                              '分类： ${widget.song['genre']}',
-                              style: const TextStyle(fontSize: 15),
-                            ),
-                            Text(
-                              '版本： ${widget.versionname}',
-                              style: const TextStyle(fontSize: 15),
-                            ),
-                            Text(
-                              'BPM:  ${widget.song['bpm']}',
-                              style: const TextStyle(fontSize: 15),
-                            ),
-                            Text(
-                              '曲师： ${widget.song['artist']}',
-                              style: const TextStyle(fontSize: 15),
-                            ),
-                          ],
-                        ),
-                      ],
-                    ),
+                InkWell(
+                  child: Image.network(
+                    'https://assets2.lxns.net/chunithm/jacket/${widget.songid}.png',
+                    errorBuilder: (context, error, stackTrace) {
+                      return const Text('图片加载失败');
+                    },
+                    width: 200,
+                    height: 200,
                   ),
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => PlayMusic(song: widget.song),
+                      ),
+                    );
+                  },
                 ),
 
                 TextButton(
@@ -239,23 +207,72 @@ class _SongInfoPageState extends State<SongInfoPage> {
                     textAlign: TextAlign.center,
                   ),
                 ),
-
-                Text('其余信息：', style: const TextStyle(fontSize: 15)),
-                Column(children: widget.information),
+                Row(
+                  children: [
+                    Expanded(
+                      child: InkWell(
+                        child: Card(
+                          color: Theme.of(context).colorScheme.onSecondary,
+                          child: Padding(
+                            padding: EdgeInsetsGeometry.all(8),
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                              children: [
+                                Row(children: [Icon(Icons.info), Text('基本信息')]),
+                                Text(
+                                  '分类： ${widget.song['genre']}',
+                                  style: const TextStyle(fontSize: 15),
+                                ),
+                                Text(
+                                  '版本： ${widget.versionname}',
+                                  style: const TextStyle(fontSize: 15),
+                                ),
+                                Text(
+                                  'BPM:  ${widget.song['bpm']}',
+                                  style: const TextStyle(fontSize: 15),
+                                ),
+                                Text(
+                                  '曲师： ${widget.song['artist']}',
+                                  style: const TextStyle(fontSize: 15),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+                Row(
+                  children: [
+                    Expanded(
+                      child: InkWell(
+                        child: Card(
+                          color: Theme.of(context).colorScheme.onSecondary,
+                          child: Padding(
+                            padding: EdgeInsetsGeometry.all(8),
+                            child: Column(children: widget.information),
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
 
                 DefaultTabController(
                   length: widget.song['difficulties'].length,
+
                   child: Column(
                     children: [
                       TabBar(tabs: returnDiffTabBar(song: widget.song)),
-
                       SizedBox(
-                        height: 200,
+                        height: 700, //MediaQuery.of(context).size.height * 0.8,
                         child: TabBarView(children: widget.rowsData),
                       ),
                     ],
                   ),
                 ),
+
                 // SingleChildScrollView(
                 //   scrollDirection: Axis.horizontal,
                 //   child: DataTable(

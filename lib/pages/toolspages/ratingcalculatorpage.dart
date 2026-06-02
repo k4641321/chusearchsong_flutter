@@ -37,8 +37,8 @@ class _RatingCalculatorState extends State<RatingCalculator> {
                   Tab(text: '按定数算'),
                 ],
                 labelColor: Theme.of(context).colorScheme.onSurface,
-                unselectedLabelColor: const Color.fromARGB(255, 128, 128, 128),
-                indicatorColor: const Color.fromARGB(255, 255, 229, 84),
+                unselectedLabelColor: Theme.of(context).colorScheme.secondary,
+                indicatorColor: Theme.of(context).colorScheme.primary,
               ),
               Expanded(
                 child: TabBarView(

@@ -1,3 +1,5 @@
+import 'dart:developer';
+import 'request.dart';
 import 'package:flutter/material.dart';
 import 'dart:io';
 import 'package:path_provider/path_provider.dart';
@@ -72,6 +74,19 @@ Future<void> savelxnstokenconfig({
     ScaffoldMessenger.of(
       context,
     ).showSnackBar(SnackBar(content: Text('错误，保存Token失败，请检查是否配置正确 $e')));
+  }
+  try {
+    await saveAllScore();
+    if (!context.mounted) return;
+    ScaffoldMessenger.of(
+      context,
+    ).showSnackBar(SnackBar(content: Text('获取成绩成功')));
+  } catch (e) {
+    if (!context.mounted) return;
+    ScaffoldMessenger.of(
+      context,
+    ).showSnackBar(SnackBar(content: Text('错误，获取成绩失败 $e')));
+    log('$e', name: 'settingspagefun.dart', level: 1000);
   }
 }
 
