@@ -161,7 +161,10 @@ Future<List<Widget>> returnDiffTabBarView({
   } catch (e) {
     int length = song['difficulties'].length;
     for (var i = 0; i < length; i++) {
-      result.add(Row(children: [Text('获取谱面信息失败')]));
+      List<Widget> result2 = [];
+      result2.add(await returnscore(song: song['id'], i: i, corlor: color));
+      result2.add(Row(children: [Text('获取谱面信息失败')]));
+      result.add(Column(children: result2));
     }
     log('$e', name: 'songinfopagefun.dart', level: 1000);
     return result;
