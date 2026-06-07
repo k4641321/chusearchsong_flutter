@@ -15,6 +15,7 @@ class _SearchPageState extends State<SearchPage> {
   String? selectedVersion = '-1';
   String? selectedDifficultyDown = '-1';
   String? selectedDifficultyUp = '-1';
+  String? selectedifPlay = '-1';
 
   List<Widget> searchResults = [];
   // Future result;
@@ -26,6 +27,7 @@ class _SearchPageState extends State<SearchPage> {
     String version = selectedVersion ?? '-1';
     String difficultyDown = selectedDifficultyDown ?? '-1';
     String difficultyUp = selectedDifficultyUp ?? '-1';
+    String ifPlay = selectedifPlay ?? '-1';
 
     try {
       // 使用 await 调用异步函数
@@ -35,6 +37,7 @@ class _SearchPageState extends State<SearchPage> {
         version,
         difficultyDown,
         difficultyUp,
+        ifPlay,
         context,
       );
       if (!mounted) return;
@@ -43,7 +46,7 @@ class _SearchPageState extends State<SearchPage> {
         searchResults = results;
       });
     } catch (e) {
-      log('搜索错误: $e');
+      log('搜索错误: $e', name: 'searchpage.dart', level: 1000);
       // 可以显示错误信息给用户
     }
   }
@@ -91,7 +94,7 @@ class _SearchPageState extends State<SearchPage> {
                 Expanded(
                   child: TextField(
                     controller: _searchController,
-                    decoration: InputDecoration(hintText: '搜索...标题，曲师，别名'),
+                    decoration: InputDecoration(hintText: '搜索...标题，曲师，别名，落雪id'),
                     onChanged: (value) {
                       try {
                         _performSearch();
@@ -138,6 +141,20 @@ class _SearchPageState extends State<SearchPage> {
                     onSelected: (String? value) {
                       setState(() {
                         selectedDifficultyUp = value;
+                      });
+                    },
+                  ),
+                ),
+              ],
+            ),
+            Row(
+              children: [
+                Expanded(
+                  child: buildIfPlayDropdownMenu(
+                    initialSelection: selectedifPlay,
+                    onSelected: (String? value) {
+                      setState(() {
+                        selectedifPlay = value;
                       });
                     },
                   ),

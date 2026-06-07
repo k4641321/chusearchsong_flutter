@@ -194,6 +194,9 @@ Future<void> interSongInfo({
     0,
     (Row(children: [Icon(Icons.info_outline), Text('其余信息')])),
   );
+
+  //别名加载
+  List<Widget> alias = await returnAlias(id: i['id']);
   if (!context.mounted) return;
   await Navigator.push(
     context,
@@ -203,6 +206,7 @@ Future<void> interSongInfo({
         versionname: versionname,
         rowsData: songData,
         information: information,
+        alias: alias,
         songid: songid,
       ),
     ),
@@ -500,6 +504,16 @@ Future<void> updateData({required BuildContext context}) async {
       SnackBar(content: Text('完成'), duration: Duration(seconds: 1)),
     );
     log('保存到 ${path.path}/allscore.json');
+    //Rating趋势
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(content: Text('开始下载Rating趋势数据'), duration: Duration(seconds: 1)),
+    );
+    await saveTrend();
+    if (!context.mounted) return;
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(content: Text('完成'), duration: Duration(seconds: 1)),
+    );
+    log('保存到 ${path.path}/trend.json');
     print(directory);
   } catch (e) {
     if (!context.mounted) return;
@@ -637,4 +651,13 @@ Future<List<Widget>> searchCollectibles({
   }
 
   return collectibles;
+}
+
+Future<List> returnscoretrendlist() async {
+  final path = await getApplicationSupportDirectory();
+  String scoretrendJsonStr = await File(
+    '${path.path}/res/trend.json',
+  ).readAsString();
+  Map<String, dynamic> scoretrendJson = json.decode(scoretrendJsonStr);
+  return scoretrendJson['data'];
 }

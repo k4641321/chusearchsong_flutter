@@ -1,3 +1,5 @@
+import 'package:chusearchsong_flutter/tools/fun.dart';
+import '../tools/ratingtrendpagefun.dart';
 import 'toolspages/ratingcalculatorpage.dart';
 import 'package:flutter/material.dart';
 import 'toolspages/rankcolorpage.dart';
@@ -6,7 +8,8 @@ import 'toolspages/scorecalculationpage.dart';
 import 'toolspages/searchlobbypage.dart';
 import 'toolspages/randommusicpage.dart';
 import 'toolspages/searchcollectiblespage.dart';
-import 'faulttoterantcomputationpage.dart';
+import 'toolspages/faulttoterantcomputationpage.dart';
+import './toolspages/ratingtrendpages.dart';
 
 //主窗口
 class ToolPage extends StatefulWidget {
@@ -132,6 +135,42 @@ class _ToolPageState extends State<ToolPage> {
                   ),
                 ],
               ),
+              Row(
+                children: [
+                  Expanded(
+                    child: InkWell(
+                      child: Card(
+                        child: TextButton.icon(
+                          onPressed: () async {
+                            List data1 = [];
+                            data1 = await returnscoretrendlist();
+                            List data2 = [];
+                            data2 = await returnSpot(data: data1);
+                            if (!context.mounted) return;
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) =>
+                                    RatingTrendPages(data: data2),
+                              ),
+                            );
+                          },
+                          icon: Icon(
+                            Icons.inventory_2_outlined,
+                            color: Theme.of(context).colorScheme.onSurface,
+                          ),
+                          label: Text(
+                            'Rating趋势',
+                            style: TextStyle(
+                              color: Theme.of(context).colorScheme.onSurface,
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
               const Divider(),
               Text('工具'),
               Row(
@@ -170,12 +209,14 @@ class _ToolPageState extends State<ToolPage> {
                               color: Theme.of(context).colorScheme.onSurface,
                             ),
                           ),
-                          onPressed: () => Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => const ScoreCalculation(),
-                            ),
-                          ),
+                          onPressed: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => ScoreCalculation(),
+                              ),
+                            );
+                          },
                           icon: Icon(
                             Icons.calculate_outlined,
                             color: Theme.of(context).colorScheme.onSurface,

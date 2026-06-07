@@ -172,3 +172,34 @@ Future<List<Widget>> returnDiffTabBarView({
 
   return result;
 }
+
+Future<List<Widget>> returnAlias({required int id}) async {
+  List<Widget> result = [];
+  try {
+    final path = await getApplicationSupportDirectory();
+    final aliasstr = File('${path.path}/res/alias.json').readAsStringSync();
+    Map<String, dynamic> aliasjson = json.decode(aliasstr);
+    List alias = aliasjson['aliases'];
+    for (var i in alias) {
+      if (i['song_id'] == id) {
+        List songalias = i['aliases'];
+        for (var j in songalias) {
+          result.add(Text('$j'));
+          // result.add(const Divider());
+        }
+      }
+    }
+    if (result.isEmpty) {
+      result.add(Text('无'));
+    }
+    result.insert(0, Row(children: [Icon(Icons.label), Text('别名')]));
+  } catch (e) {
+    log('$e', name: 'songinfopagefun.dart', level: 1000);
+    result = [
+      Row(children: [Icon(Icons.label), Text('别名')]),
+      Text('获取别名失败'),
+    ];
+  }
+
+  return result;
+}

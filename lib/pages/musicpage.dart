@@ -143,10 +143,24 @@ class _PlayMusic extends State<PlayMusic> {
                     return const Text('图片加载失败');
                   },
                 ),
-                Text(
-                  '${widget.song['title']} - ${widget.song['artist']}',
-                  style: TextStyle(fontSize: 20),
-                  textAlign: TextAlign.center,
+                const Divider(),
+                Row(
+                  children: [
+                    Text(
+                      '  ${widget.song['title']}',
+                      style: TextStyle(fontSize: 20),
+                      textAlign: TextAlign.center,
+                    ),
+                  ],
+                ),
+                Row(
+                  children: [
+                    Text(
+                      '   ${widget.song['artist']}',
+                      style: TextStyle(fontSize: 15),
+                      textAlign: TextAlign.center,
+                    ),
+                  ],
                 ),
                 Slider(
                   value: position,
@@ -166,14 +180,22 @@ class _PlayMusic extends State<PlayMusic> {
                   max: value,
                   allowedInteraction: SliderInteraction.tapAndSlide,
                 ),
-                Text(
-                  '${Duration(milliseconds: position.toInt())} / ${Duration(milliseconds: value.toInt())}',
-                  style: TextStyle(fontSize: 20),
+                Row(
+                  children: [
+                    Text('${Duration(milliseconds: position.toInt())}'),
+                    Expanded(
+                      child: Text(
+                        '${Duration(milliseconds: value.toInt())}',
+                        textAlign: TextAlign.right,
+                      ),
+                    ),
+                  ],
                 ),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     IconButton(
+                      iconSize: 50,
                       icon: Icon(button),
                       onPressed: () async {
                         try {

@@ -15,12 +15,14 @@ class SongInfoPage extends StatefulWidget {
   final List<Widget> rowsData;
   final List<Widget> information;
   final int songid;
+  final List<Widget> alias;
   const SongInfoPage({
     super.key,
     required this.song,
     required this.versionname,
     required this.rowsData,
     required this.information,
+    required this.alias,
     required this.songid,
   });
 
@@ -133,7 +135,7 @@ class _SongInfoPageState extends State<SongInfoPage> {
     //   DataColumn(label: Text('谱师')),
     // ];
     final ScrollController controller = ScrollController();
-    final ScrollController tabbarcontroller = ScrollController();
+    // final ScrollController tabbarcontroller = ScrollController();
     // final ScrollController infocontroller = ScrollController();
     return Scaffold(
       appBar: AppBar(
@@ -252,6 +254,21 @@ class _SongInfoPageState extends State<SongInfoPage> {
                           child: Padding(
                             padding: EdgeInsetsGeometry.all(8),
                             child: Column(children: widget.information),
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+                Row(
+                  children: [
+                    Expanded(
+                      child: InkWell(
+                        child: Card(
+                          color: Theme.of(context).colorScheme.onSecondary,
+                          child: Padding(
+                            padding: EdgeInsetsGeometry.all(8),
+                            child: Column(children: widget.alias),
                           ),
                         ),
                       ),

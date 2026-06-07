@@ -6,10 +6,10 @@ List<DataRow> calculate({required int total, required bool countdown}) {
   List<DataRow> rows = [];
   // double onetap = 1010000 / total;
   double jc = 1010000 / total;
-  double j = 1000000 / total;
+  double j = 10000 / total;
   double a = 500000 / total;
   double m = 0;
-  //SSS+
+
   int tapm = 0;
   int tapa = 0;
   int tapj = 0;
@@ -34,22 +34,25 @@ List<DataRow> calculate({required int total, required bool countdown}) {
     tapj = 0;
   }
 
+  void ifjgreaterthantotal() {
+    if (tapj >= total) {
+      tapj = 0;
+    }
+  }
+
   reset();
+  //SSS+
   log('SSS+');
   log('jc: $jc');
-  if (jc > 1000) {
-    tapm = 0;
-    tapa = 1000 ~/ a;
-    log('tapa: $tapa');
-    tapj = 1000 ~/ j;
-    log('tapj: $tapj');
-  } else if (jc < 1000) {
-    tapm = 1000 ~/ jc;
-    log('tapm: $tapm');
-    tapa = 1000 ~/ a;
-    log('tapa: $tapa');
-    tapj = 1000 ~/ j;
-  }
+  log('j: $j');
+  tapj = 1000 ~/ j;
+  log('tapj: $tapj');
+  tapm = 1000 ~/ jc;
+  log('tapm: $tapm');
+  tapa = 1000 ~/ a;
+  log('tapa: $tapa');
+  tapj = 1000 ~/ j;
+  ifjgreaterthantotal();
   countdownall();
   rows.add(
     DataRow(
@@ -68,6 +71,7 @@ List<DataRow> calculate({required int total, required bool countdown}) {
   tapa = 2500 ~/ a;
   log('tapa: $tapa');
   tapj = 2500 ~/ j;
+  ifjgreaterthantotal();
   countdownall();
   rows.add(
     DataRow(
@@ -86,6 +90,7 @@ List<DataRow> calculate({required int total, required bool countdown}) {
   tapa = 5000 ~/ a;
   log('tapa: $tapa');
   tapj = 5000 ~/ j;
+  ifjgreaterthantotal();
   countdownall();
   rows.add(
     DataRow(
@@ -104,6 +109,7 @@ List<DataRow> calculate({required int total, required bool countdown}) {
   tapa = 10000 ~/ a;
   log('tapa: $tapa');
   tapj = 10000 ~/ j;
+  ifjgreaterthantotal();
   countdownall();
   rows.add(
     DataRow(
@@ -122,6 +128,7 @@ List<DataRow> calculate({required int total, required bool countdown}) {
   tapa = 20000 ~/ a;
   log('tapa: $tapa');
   tapj = 20000 ~/ j;
+  ifjgreaterthantotal();
   countdownall();
   rows.add(
     DataRow(
@@ -134,13 +141,14 @@ List<DataRow> calculate({required int total, required bool countdown}) {
 
   //S
   reset();
-  log('S+');
+  log('S');
   log('jc: $jc');
   tapm = 35000 ~/ jc;
   log('tapm: $tapm');
   tapa = 35000 ~/ a;
   log('tapa: $tapa');
   tapj = 35000 ~/ j;
+  ifjgreaterthantotal();
   countdownall();
   rows.add(
     DataRow(

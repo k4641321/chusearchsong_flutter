@@ -1,5 +1,5 @@
 import 'dart:developer';
-
+import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'dart:convert';
@@ -46,6 +46,7 @@ Future<Widget> buildGenreDropdownMenu({
 
   return DropdownMenu<String>(
     menuHeight: 300.0,
+    width: double.infinity,
     initialSelection: initialSelection ?? '-1',
     selectOnly: true,
     onSelected: onSelected,
@@ -105,6 +106,7 @@ Future<Widget> buildVersionDropdownMenu({
   }
   return DropdownMenu<String>(
     menuHeight: 300.0,
+    width: double.infinity,
     initialSelection: initialSelection ?? '-1',
     selectOnly: true,
     onSelected: onSelected,
@@ -119,6 +121,7 @@ Widget buildDifficultyDownDropdownMenu({
 }) {
   return DropdownMenu<String>(
     menuHeight: 300.0,
+    width: double.infinity,
     initialSelection: initialSelection ?? '-1',
     selectOnly: false,
     onSelected: onSelected,
@@ -148,6 +151,7 @@ Widget buildDifficultyDownDropdownMenu({
       DropdownMenuEntry<String>(label: '14+', value: '14.5'),
       DropdownMenuEntry<String>(label: '15', value: '15'),
       DropdownMenuEntry<String>(label: '15+', value: '15.5'),
+      DropdownMenuEntry<String>(label: '16', value: '16'),
     ],
   );
 }
@@ -159,6 +163,7 @@ Widget buildDifficultyUpDropdownMenu({
 }) {
   return DropdownMenu<String>(
     menuHeight: 300.0,
+    width: double.infinity,
     initialSelection: initialSelection ?? '-1',
     selectOnly: true,
     onSelected: onSelected,
@@ -189,6 +194,26 @@ Widget buildDifficultyUpDropdownMenu({
       DropdownMenuEntry<String>(label: '15', value: '15'),
       DropdownMenuEntry<String>(label: '15+', value: '15.9'),
       DropdownMenuEntry<String>(label: '16', value: '16.4'),
+      DropdownMenuEntry<String>(label: '16+', value: '16.9'),
+    ],
+  );
+}
+
+//是否游玩
+Widget buildIfPlayDropdownMenu({
+  String? initialSelection,
+  ValueChanged<String?>? onSelected,
+}) {
+  return DropdownMenu<String>(
+    menuHeight: 300.0,
+    width: double.infinity,
+    initialSelection: initialSelection ?? '-1',
+    selectOnly: true,
+    onSelected: onSelected,
+    dropdownMenuEntries: const [
+      DropdownMenuEntry<String>(label: '全部', value: '-1'),
+      DropdownMenuEntry<String>(label: '已游玩', value: '1'),
+      DropdownMenuEntry<String>(label: '未游玩', value: '0'),
     ],
   );
 }
