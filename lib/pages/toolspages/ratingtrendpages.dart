@@ -27,7 +27,7 @@ class _RatingTrendPagesState extends State<RatingTrendPages> {
             children: [
               SizedBox(
                 width: MediaQuery.widthOf(context) * 1.5,
-                height: MediaQuery.heightOf(context) * 0.8,
+                height: MediaQuery.heightOf(context) * 0.9,
                 child: Padding(
                   padding: EdgeInsetsGeometry.all(15),
                   child: LineChart(
@@ -63,9 +63,15 @@ class _RatingTrendPagesState extends State<RatingTrendPages> {
                               }
                               return SideTitleWidget(
                                 meta: meta,
-                                child: Text(
-                                  lable,
-                                  style: TextStyle(fontSize: 10),
+                                child: Transform.rotate(
+                                  angle: 45 * (3.1415926535 / 180),
+                                  child: Padding(
+                                    padding: EdgeInsetsGeometry.only(top: 20),
+                                    child: Text(
+                                      lable,
+                                      style: TextStyle(fontSize: 10),
+                                    ),
+                                  ),
                                 ),
                               );
                             },
