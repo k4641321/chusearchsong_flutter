@@ -18,24 +18,31 @@ class _FaulttoterantcomputationPageState
   final ScrollController _controller = ScrollController();
   final TextEditingController _textfieldController = TextEditingController();
   bool isChecked = false;
+  bool _isInitialized = false;
+
+  @override
+  void didChangeDependencies() {
+    if (!_isInitialized && widget.totaltap != 0) {
+      _isInitialized = true;
+      _textfieldController.text = widget.totaltap.toString();
+      int total = 0;
+      try {
+        total = int.parse(_textfieldController.text);
+      } catch (e) {
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(SnackBar(content: Text('你看看你输的什么东西')));
+      }
+      setState(() {
+        rows = calculate(total: total, countdown: isChecked);
+      });
+    }
+
+    super.didChangeDependencies();
+  }
 
   @override
   void initState() {
-    if (widget.totaltap != 0) {
-      _textfieldController.text = widget.totaltap.toString();
-    }
-    int total = 0;
-    try {
-      total = int.parse(_textfieldController.text);
-    } catch (e) {
-      ScaffoldMessenger.of(
-        context,
-      ).showSnackBar(SnackBar(content: Text('你看看你输的什么东西')));
-    }
-    setState(() {
-      rows = calculate(total: total, countdown: isChecked);
-    });
-    setState(() {});
     super.initState();
   }
 
@@ -57,7 +64,6 @@ class _FaulttoterantcomputationPageState
               SizedBox(
                 height: 30,
                 width: 250,
-
                 child: ListTile(
                   leading: Checkbox(
                     value: isChecked,
