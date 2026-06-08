@@ -201,13 +201,23 @@ class _CollectibleInfoPageState extends State<CollectibleInfoPage> {
                   '落雪id: ${widget.data['id']}',
                   style: const TextStyle(fontSize: 20),
                 ),
-                Text(
-                  '名称: ${widget.data['name']}',
-                  style: const TextStyle(fontSize: 20),
+                InkWell(
+                  onLongPress: () =>
+                      copytext(text: widget.data['name'], context: context),
+                  child: Text(
+                    '名称: ${widget.data['name']}',
+                    style: const TextStyle(fontSize: 20),
+                  ),
                 ),
-                Text(
-                  '描述: ${widget.data['description']}',
-                  style: const TextStyle(fontSize: 20),
+                InkWell(
+                  onLongPress: () => copytext(
+                    text: widget.data['description'],
+                    context: context,
+                  ),
+                  child: Text(
+                    '描述: ${widget.data['description']}',
+                    style: const TextStyle(fontSize: 20),
+                  ),
                 ),
                 const Divider(),
                 Column(children: otherinfowidget),
@@ -264,7 +274,11 @@ class _CollectibleInfoPageState extends State<CollectibleInfoPage> {
                     ),
                   ],
                 ),
-                Text(translate, style: TextStyle(fontSize: 20)),
+                InkWell(
+                  onLongPress: () =>
+                      copytext(text: translate, context: context),
+                  child: Text(translate, style: TextStyle(fontSize: 20)),
+                ),
               ],
             ),
           ),

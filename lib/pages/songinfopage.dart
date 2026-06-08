@@ -7,6 +7,7 @@ import 'dart:io';
 import 'package:path_provider/path_provider.dart';
 import 'package:url_launcher/url_launcher.dart';
 import '../tools/songinfopagefun.dart';
+import '../tools/fun.dart';
 
 class SongInfoPage extends StatefulWidget {
   final Map<String, dynamic> song;
@@ -139,7 +140,11 @@ class _SongInfoPageState extends State<SongInfoPage> {
     // final ScrollController infocontroller = ScrollController();
     return Scaffold(
       appBar: AppBar(
-        title: Text('${widget.song['title']}    - 歌曲详情'),
+        title: InkWell(
+          onLongPress: () =>
+              copytext(text: widget.song['title'], context: context),
+          child: Text('${widget.song['title']}    - 歌曲详情'),
+        ),
         // backgroundColor: const Color.fromARGB(255, 255, 229, 84),
         actions: [
           IconButton(
@@ -233,9 +238,15 @@ class _SongInfoPageState extends State<SongInfoPage> {
                                   'BPM:  ${widget.song['bpm']}',
                                   style: const TextStyle(fontSize: 15),
                                 ),
-                                Text(
-                                  '曲师： ${widget.song['artist']}',
-                                  style: const TextStyle(fontSize: 15),
+                                InkWell(
+                                  onLongPress: () => copytext(
+                                    text: widget.song['artist'],
+                                    context: context,
+                                  ),
+                                  child: Text(
+                                    '曲师： ${widget.song['artist']}',
+                                    style: const TextStyle(fontSize: 15),
+                                  ),
                                 ),
                               ],
                             ),

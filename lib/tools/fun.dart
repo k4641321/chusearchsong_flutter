@@ -9,6 +9,7 @@ import 'dart:math' as math;
 import '../pages/toolspages/collectibleinfopage.dart';
 import './songinfopagefun.dart';
 import 'settingspagefun.dart';
+import 'package:flutter/services.dart';
 
 //返回歌曲id列表
 Future<List<int>> returnidList() async {
@@ -120,6 +121,7 @@ Future<void> interSongInfo({
     songData = await returnDiffTabBarView(
       song: i,
       color: Theme.of(context).colorScheme.onSecondary,
+      context: context,
     );
   } catch (e) {
     log('error $e', name: 'fun.dart', level: 1000);
@@ -196,7 +198,8 @@ Future<void> interSongInfo({
   );
 
   //别名加载
-  List<Widget> alias = await returnAlias(id: i['id']);
+  if (!context.mounted) return;
+  List<Widget> alias = await returnAlias(id: i['id'], context: context);
   if (!context.mounted) return;
   await Navigator.push(
     context,
@@ -660,4 +663,13 @@ Future<List> returnscoretrendlist() async {
   ).readAsString();
   Map<String, dynamic> scoretrendJson = json.decode(scoretrendJsonStr);
   return scoretrendJson['data'];
+}
+
+void copytext({required String text, required BuildContext context}) {
+  try {
+    Clipboard.setData(ClipboardData(text: text));
+    ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('复制成功')));
+  } catch (e) {
+    ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('复制失败')));
+  }
 }

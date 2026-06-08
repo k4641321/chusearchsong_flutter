@@ -5,6 +5,9 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart';
 import 'package:path_provider/path_provider.dart';
 import 'request.dart';
+import 'package:flutter/services.dart';
+import '../pages/toolspages/faulttoterantcomputationpage.dart';
+import '../tools/fun.dart';
 
 List<Widget> returnDiffTabBar({required Map song}) {
   List<Widget> result = [];
@@ -92,6 +95,7 @@ Future<Widget> returnscore({
 Future<List<Widget>> returnDiffTabBarView({
   required Map<String, dynamic> song,
   required Color color,
+  required BuildContext context,
 }) async {
   List<Widget> result = [];
   try {
@@ -104,6 +108,13 @@ Future<List<Widget>> returnDiffTabBarView({
       result2.add(await returnscore(song: song['id'], i: i, corlor: color));
       result2.add(
         InkWell(
+          onLongPress: () => Navigator.of(context).push(
+            MaterialPageRoute(
+              builder: (context) => FaulttoterantcomputationPage(
+                totaltap: song2['notes']['total'],
+              ),
+            ),
+          ),
           child: Card(
             color: color,
             child: Padding(
@@ -173,7 +184,10 @@ Future<List<Widget>> returnDiffTabBarView({
   return result;
 }
 
-Future<List<Widget>> returnAlias({required int id}) async {
+Future<List<Widget>> returnAlias({
+  required int id,
+  required BuildContext context,
+}) async {
   List<Widget> result = [];
   try {
     final path = await getApplicationSupportDirectory();
@@ -184,7 +198,12 @@ Future<List<Widget>> returnAlias({required int id}) async {
       if (i['song_id'] == id) {
         List songalias = i['aliases'];
         for (var j in songalias) {
-          result.add(Text('$j'));
+          result.add(
+            InkWell(
+              onLongPress: () => copytext(text: j, context: context),
+              child: Text('$j'),
+            ),
+          );
           // result.add(const Divider());
         }
       }

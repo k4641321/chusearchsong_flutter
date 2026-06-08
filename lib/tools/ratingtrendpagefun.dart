@@ -18,5 +18,6 @@ Future<List> returnSpot({required List data}) async {
   result.add(maxY);
   maxX = data.length.toDouble() + 1;
   result.add(maxX);
+
   return result;
 }

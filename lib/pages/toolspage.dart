@@ -142,18 +142,29 @@ class _ToolPageState extends State<ToolPage> {
                       child: Card(
                         child: TextButton.icon(
                           onPressed: () async {
-                            List data1 = [];
-                            data1 = await returnscoretrendlist();
-                            List data2 = [];
-                            data2 = await returnSpot(data: data1);
-                            if (!context.mounted) return;
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) =>
-                                    RatingTrendPages(data: data2),
-                              ),
-                            );
+                            try {
+                              List data1 = [];
+                              data1 = await returnscoretrendlist();
+                              List data2 = [];
+                              data2 = await returnSpot(data: data1);
+                              if (!context.mounted) return;
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => RatingTrendPages(
+                                    data2: data1,
+                                    data1: data2,
+                                  ),
+                                ),
+                              );
+                            } catch (e) {
+                              if (!context.mounted) return;
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                SnackBar(
+                                  content: Text('获取Rating趋势失败，请尝试在关于页面更新数据'),
+                                ),
+                              );
+                            }
                           },
                           icon: Icon(
                             Icons.inventory_2_outlined,
@@ -243,7 +254,9 @@ class _ToolPageState extends State<ToolPage> {
                             context,
                             MaterialPageRoute(
                               builder: (context) =>
-                                  const FaulttoterantcomputationPage(),
+                                  const FaulttoterantcomputationPage(
+                                    totaltap: 0,
+                                  ),
                             ),
                           ),
                           icon: Icon(

@@ -1,4 +1,5 @@
 import 'dart:developer';
+import 'package:chusearchsong_flutter/tools/fun.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:flutter/material.dart';
 import '../../tools/list.dart';
@@ -118,6 +119,7 @@ class _SearchLobbyPageState extends State<SearchLobbyPage> {
         if (i['province'] == initialSelection) {
           searchResults3.add(
             InkWell(
+              onLongPress: () => copytext(text: i['address'], context: context),
               child: Card(
                 child: Padding(
                   padding: EdgeInsets.all(8.0),
