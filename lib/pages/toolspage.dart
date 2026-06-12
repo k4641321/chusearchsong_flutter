@@ -10,6 +10,7 @@ import 'toolspages/randommusicpage.dart';
 import 'toolspages/searchcollectiblespage.dart';
 import 'toolspages/faulttoterantcomputationpage.dart';
 import './toolspages/ratingtrendpages.dart';
+import './toolspages/updatescorepage.dart';
 
 //主窗口
 class ToolPage extends StatefulWidget {
@@ -167,7 +168,7 @@ class _ToolPageState extends State<ToolPage> {
                             }
                           },
                           icon: Icon(
-                            Icons.inventory_2_outlined,
+                            Icons.trending_up_outlined,
                             color: Theme.of(context).colorScheme.onSurface,
                           ),
                           label: Text(
@@ -289,6 +290,39 @@ class _ToolPageState extends State<ToolPage> {
                               builder: (context) => const RandomMusicPage(),
                             ),
                           ),
+                          icon: Icon(
+                            Icons.casino_outlined,
+                            color: Theme.of(context).colorScheme.onSurface,
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                  Expanded(
+                    child: InkWell(
+                      child: Card(
+                        child: TextButton.icon(
+                          label: Text(
+                            '更新成绩',
+                            style: TextStyle(
+                              color: Theme.of(context).colorScheme.onSurface,
+                            ),
+                          ),
+                          onPressed: () {
+                            final platform = Theme.of(context).platform;
+                            if (platform != TargetPlatform.android) {
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                SnackBar(content: Text('不是目标平台，不给予打开')),
+                              );
+                              return;
+                            }
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => UpdateScorePage(),
+                              ),
+                            );
+                          },
                           icon: Icon(
                             Icons.casino_outlined,
                             color: Theme.of(context).colorScheme.onSurface,

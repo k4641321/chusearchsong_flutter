@@ -1,0 +1,60 @@
+{
+  "log": {
+    "loglevel": "info"
+  },
+  "inbounds": [
+    {
+      "port": 7890,
+      "protocol": "http",
+      "tag": "http-in",
+      "settings": {
+        "timeout": 0
+      }
+    },
+    {
+      "port": 7891,
+      "protocol": "socks",
+      "tag": "socks-in",
+      "settings": {
+        "auth": "noauth",
+        "udp": true
+      }
+    }
+  ],
+  "outbounds": [
+    {
+      "tag": "direct",
+      "protocol": "freedom",
+      "settings": {}
+    },
+    {
+      "tag": "maimai",
+      "protocol": "http",
+      "settings": {
+        "servers": [
+          {
+            "address": "proxy.maimai.lxns.net",
+            "port": 8080
+          }
+        ]
+      }
+    }
+  ],
+  "routing": {
+    "domainStrategy": "AsIs",
+    "rules": [
+      {
+        "type": "field",
+        "domain": [
+          "domain:wahlap.com"
+        ],
+        "outboundTag": "maimai"
+      },
+      {
+        "type": "field",
+        "network": "tcp,udp",
+        "outboundTag": "direct"
+      }
+    ]
+  }
+}

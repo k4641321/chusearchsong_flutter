@@ -45,6 +45,8 @@ dependencies:
   dynamic_color: ^1.8.1
   intl: ^0.20.2
   fl_chart: ^1.2.0
+  webview_flutter: ^4.13.1
+  flutter_v2ray_client: ^3.2.0
 
 dev_dependencies:
   flutter_test:
@@ -74,6 +76,7 @@ flutter:
     # - res/alias.json
     # - res/location.json
     - res/icon.png
+    - res/maimaiproxy.json
   #   - images/a_dot_burr.jpeg
   #   - images/a_dot_ham.jpeg
 
