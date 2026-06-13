@@ -1,60 +1,45 @@
 {
   "log": {
-    "loglevel": "info"
+    "level": "info",
+    "disabled": false,
+    "timestamp": true
   },
   "inbounds": [
     {
-      "port": 7890,
-      "protocol": "http",
-      "tag": "http-in",
-      "settings": {
-        "timeout": 0
-      }
-    },
-    {
-      "port": 7891,
-      "protocol": "socks",
-      "tag": "socks-in",
-      "settings": {
-        "auth": "noauth",
-        "udp": true
-      }
+      "type": "mixed",
+      "tag": "mixed-in",
+      "listen": "127.0.0.1",
+      "listen_port": 7890,
+      "sniff": true
     }
   ],
   "outbounds": [
     {
-      "tag": "direct",
-      "protocol": "freedom",
-      "settings": {}
+      "type": "direct",
+      "tag": "DIRECT"
     },
     {
+      "type": "http",
       "tag": "maimai",
-      "protocol": "http",
-      "settings": {
-        "servers": [
-          {
-            "address": "proxy.maimai.lxns.net",
-            "port": 8080
-          }
-        ]
-      }
+      "server": "proxy.maimai.lxns.net",
+      "server_port": 8080
+    },
+    {
+      "type": "selector",
+      "tag": "default",
+      "outbounds": ["maimai", "DIRECT"]
     }
   ],
-  "routing": {
-    "domainStrategy": "AsIs",
+  "route": {
     "rules": [
       {
-        "type": "field",
-        "domain": [
-          "domain:wahlap.com"
-        ],
-        "outboundTag": "maimai"
+        "domain_suffix": ["wahlap.com"],
+        "outbound": "default"
       },
       {
-        "type": "field",
-        "network": "tcp,udp",
-        "outboundTag": "direct"
+        "outbound": "DIRECT"
       }
-    ]
+    ],
+    "final": "DIRECT"
   }
 }
