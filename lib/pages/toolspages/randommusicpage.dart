@@ -114,7 +114,6 @@ class _RandomMusicPageState extends State<RandomMusicPage> {
                       Expanded(child: TextField(controller: _controller)),
                     ],
                   ),
-                  const Divider(),
                 ],
               ),
               ListView(

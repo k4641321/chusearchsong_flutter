@@ -30,11 +30,17 @@ Future<List<Widget>> search(
   List aliasresult = [];
 
   //加载游玩记录
-  String playhistorystr = await File(
-    '${dataPath.path}/res/allscore.json',
-  ).readAsString();
-  Map<String, dynamic> playhistoryjson = json.decode(playhistorystr);
-  List playhistory = playhistoryjson['data'];
+  List playhistory = [];
+  try {
+    String playhistorystr = await File(
+      '${dataPath.path}/res/allscore.json',
+    ).readAsString();
+    Map<String, dynamic> playhistoryjson = json.decode(playhistorystr);
+    playhistory = playhistoryjson['data'];
+  } catch (e) {
+    log('无游玩记录文件');
+  }
+
   // print(playhistory);
   // List playhistoryresult = [];
 

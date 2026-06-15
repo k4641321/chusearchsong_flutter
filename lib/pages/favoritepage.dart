@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:path_provider/path_provider.dart';
 import 'dart:convert';
 import '../tools/fun.dart';
+import '../tools/favoritepagefun.dart';
 
 class FavoritePage extends StatefulWidget {
   const FavoritePage({super.key});
@@ -45,8 +46,6 @@ class _FavoritePageState extends State<FavoritePage> {
               versionname: versionname,
             );
             _returnfavoriteResults();
-
-            // log('未完成 ${i['id']}');
           },
           child: Card(
             shape: RoundedRectangleBorder(
@@ -78,7 +77,74 @@ class _FavoritePageState extends State<FavoritePage> {
   Widget build(BuildContext context) {
     return Center(
       child: Column(
-        children: [Expanded(child: ListView(children: favorite))],
+        children: [
+          Row(
+            children: [
+              Expanded(
+                child: InkWell(
+                  onTap: () async {
+                    try {
+                      await importFavoriteSong();
+                      if (!context.mounted) return;
+                      ScaffoldMessenger.of(
+                        context,
+                      ).showSnackBar(const SnackBar(content: Text('成功')));
+                      _returnfavoriteResults();
+                    } catch (e) {
+                      if (!context.mounted) return;
+                      ScaffoldMessenger.of(
+                        context,
+                      ).showSnackBar(const SnackBar(content: Text('导入失败')));
+                    }
+                  },
+                  child: Card(
+                    child: Padding(
+                      padding: EdgeInsetsGeometry.all(8),
+                      child: Text(
+                        '导入收藏曲目',
+                        style: TextStyle(fontSize: 15),
+                        textAlign: TextAlign.center,
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+            ],
+          ),
+          Row(
+            children: [
+              Expanded(
+                child: InkWell(
+                  onTap: () async {
+                    try {
+                      await exportFavoriteSong();
+                      if (!context.mounted) return;
+                      ScaffoldMessenger.of(
+                        context,
+                      ).showSnackBar(const SnackBar(content: Text('成功')));
+                    } catch (e) {
+                      if (!context.mounted) return;
+                      ScaffoldMessenger.of(
+                        context,
+                      ).showSnackBar(const SnackBar(content: Text('导出失败')));
+                    }
+                  },
+                  child: Card(
+                    child: Padding(
+                      padding: EdgeInsetsGeometry.all(8),
+                      child: Text(
+                        '导出收藏曲目',
+                        style: TextStyle(fontSize: 15),
+                        textAlign: TextAlign.center,
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+            ],
+          ),
+          Expanded(child: ListView(children: favorite)),
+        ],
       ),
     );
   }

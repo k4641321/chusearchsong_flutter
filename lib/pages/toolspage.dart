@@ -324,7 +324,7 @@ class _ToolPageState extends State<ToolPage> {
                             );
                           },
                           icon: Icon(
-                            Icons.casino_outlined,
+                            Icons.sync,
                             color: Theme.of(context).colorScheme.onSurface,
                           ),
                         ),

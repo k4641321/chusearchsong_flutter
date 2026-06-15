@@ -45,13 +45,14 @@ Future<Widget> returnscore({
   required Color corlor,
 }) async {
   //加载成绩
-  final path = await getApplicationSupportDirectory();
-  final file = File('${path.path}/res/allscore.json');
-  Map<String, dynamic> allscore1 = json.decode(file.readAsStringSync());
-  List allscore = allscore1['data'];
   Widget result = const Text('无成绩');
-  print(i);
   try {
+    final path = await getApplicationSupportDirectory();
+    final file = File('${path.path}/res/allscore.json');
+    Map<String, dynamic> allscore1 = json.decode(file.readAsStringSync());
+    List allscore = allscore1['data'];
+
+    print(i);
     for (var j in allscore) {
       // print('${j['id']},$song');
       if (j['id'] == song) {

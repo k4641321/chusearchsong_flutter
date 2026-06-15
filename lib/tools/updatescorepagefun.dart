@@ -1,17 +1,39 @@
 import 'dart:developer';
-
+import 'package:flutter_singbox_client/flutter_singbox_client.dart';
 import 'package:flutter/services.dart';
 
-class V2rayService {
-  static const platform = MethodChannel(
-    'com.k4641321.chusearchsong_flutter.maimaiproxy/controller',
-  );
-
-  static Future<void> start(String configJson) async {
-    await platform.invokeMethod('start', {'config': configJson});
-  }
-
-  static Future<void> stop() async {
-    await platform.invokeMethod('stop');
+Future<void> connect({required SingboxClient client}) async {
+  try {
+    if (!await client.requestVPNPermission()) return;
+    final config = await rootBundle.loadString('res/maimaiproxy_copy.json');
+    // final config = await rootBundle.loadString('res/maimai-prober-proxy.yaml');
+    try {
+      await client.checkConfig(config);
+    } catch (e) {
+      log('$e', name: 'updatescorepagefun.dart', level: 1000);
+      return;
+    }
+    await client.connect(
+      SessionOptions(
+        config: config,
+        networkMode: NetworkMode.vpn,
+        systemProxyEnabled: true,
+        // perAppProxy: PerAppProxyOptions(
+        //   mode: PerAppProxyMode.include,
+        //   packages: [
+        //     'com.k4641321.chusearchsong_flutter',
+        //     'com.tencent.mm',
+        //     'com.android.chromium',
+        //   ],
+        // ),
+        notification: NotificationConfig(
+          title: 'MaimaiProxy',
+          showTrafficStats: true,
+          showStopButton: false,
+        ),
+      ),
+    );
+  } catch (e) {
+    log('$e', name: 'updatescorepagefun.dart', level: 1000);
   }
 }

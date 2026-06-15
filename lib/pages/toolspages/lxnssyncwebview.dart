@@ -34,6 +34,8 @@ class _LxnsSyncWebViewState extends State<LxnsSyncWebView> {
     )
     ..loadRequest(Uri.parse('https://maimai.lxns.net/sync'));
 
+  // final SingboxClient singbox = SingboxClient();
+
   @override
   void initState() {
     super.initState();
@@ -47,32 +49,7 @@ class _LxnsSyncWebViewState extends State<LxnsSyncWebView> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Row(
-          children: [
-            Text('打开代理'),
-            Switch(
-              value: _switchValue,
-              onChanged: (value) async {
-                // String link =
-                //     "vmess://ew0KICAidiI6ICIyIiwNCiAgInBzIjogIjEiLA0KICAiYWRkIjogInByb3h5Lm1haW1haS5seG5zLm5ldCIsDQogICJwb3J0IjogIjgwODAiLA0KICAiaWQiOiAiZGNjM2UzZmYtNjlmNC00NDk0LWI1NDgtMTc0ZWY1ODQ5OWE5IiwNCiAgImFpZCI6ICIwIiwNCiAgInNjeSI6ICJhdXRvIiwNCiAgIm5ldCI6ICJ0Y3AiLA0KICAidHlwZSI6ICJub25lIiwNCiAgInRscyI6ICIiLA0KICAiYWxwbiI6ICIiLA0KICAiaW5zZWN1cmUiOiAiMCINCn0=";
-                String link = await rootBundle.loadString(
-                  'res/maimaiproxy.json',
-                );
-                // print(link);
-                if (value) {
-                  await V2rayService.start(link);
-                } else {
-                  await V2rayService.stop();
-                }
-                setState(() {
-                  _switchValue = value;
-                });
-              },
-            ),
-          ],
-        ),
-      ),
+      appBar: AppBar(title: Row(children: [Text('落雪成绩更新')])),
       body: WebViewWidget(controller: controller),
     );
   }
