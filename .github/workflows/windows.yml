@@ -1,0 +1,45 @@
+name: Build Windows
+
+on:
+  push:
+    branches: [ main, master ]
+  pull_request:
+    branches: [ main, master ]
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: windows-latest
+    
+    steps:
+    - uses: actions/checkout@v4
+    
+    - name: Set up Java
+      uses: actions/setup-java@v4
+      with:
+        java-version: '17'
+        distribution: 'temurin'
+    
+    - name: Set up Flutter
+      uses: subosito/flutter-action@v2
+      with:
+        flutter-version: '3.41.9'
+        channel: 'stable'
+    
+    - name: Install dependencies
+      run: flutter pub get
+    
+    - name: Build App Bundle
+      run: flutter build windows
+    
+    - name: Upload split APKs
+      uses: actions/upload-artifact@v4
+      with:
+        name: 上传构建产物
+        path: build\windows\x64\runner\Release
+    
+    - name: Upload AAB
+      uses: actions/upload-artifact@v4
+      with:
+        name: release-bundle
+        path: build/app/outputs/bundle/release/app-release.aab

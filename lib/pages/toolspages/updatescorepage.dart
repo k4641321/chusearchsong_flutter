@@ -46,7 +46,7 @@ class _UpdateScorePageState extends State<UpdateScorePage> {
       body: Center(
         child: Column(
           children: [
-            Text('打开网页后，点击最上面的开关，根据网页提示操作，开关打开期间无法正常访问其他网页'),
+            Text('打开下面的开关，打开网页，根据网页提示操作，开关打开期间可能无法正常访问其他网页'),
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
