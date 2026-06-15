@@ -1,4 +1,3 @@
-# .github/workflows/build-apk.yml
 name: Build Flutter App
 
 on:
@@ -34,13 +33,13 @@ jobs:
       run: |
         echo "${{ secrets.KEYSTORE_FILE }}" | base64 --decode > android/app/upload-keystore.jks
     
-    - name: Build APK
+    - name: Build split APKs per ABI
       env:
         KEY_ALIAS: ${{ secrets.KEY_ALIAS }}
         KEY_PASSWORD: ${{ secrets.KEY_PASSWORD }}
         KEYSTORE_PASSWORD: ${{ secrets.KEYSTORE_PASSWORD }}
         KEYSTORE_FILE_PATH: upload-keystore.jks
-      run: flutter build apk --release
+      run: flutter build apk --release --split-per-abi
     
     - name: Build App Bundle
       env:
@@ -50,39 +49,14 @@ jobs:
         KEYSTORE_FILE_PATH: upload-keystore.jks
       run: flutter build appbundle --release
     
-    - name: Upload APK
+    - name: Upload split APKs
       uses: actions/upload-artifact@v4
       with:
-        name: release-apk
-        path: build/app/outputs/flutter-apk/app-release.apk
+        name: split-apks
+        path: build/app/outputs/flutter-apk/app-*-release.apk
     
     - name: Upload AAB
       uses: actions/upload-artifact@v4
       with:
         name: release-bundle
         path: build/app/outputs/bundle/release/app-release.aab
-
-
-
-
-# name: Flutter Android        # 工作流的名称
-# on:                     # 触发条件
-#   push:
-#     branches: [ main ]  # 当代码推送到 main 分支时触发
-# jobs:
-#   build-android-apk:    # 任务的ID
-#     runs-on: ubuntu-latest # 使用 Ubuntu 环境，速度快且免费
-#     steps:
-#       - uses: actions/checkout@v3  # 1️⃣ 拉取你的代码
-#       - uses: subosito/flutter-action@v2  # 2️⃣ 配置 Flutter 环境
-#         with:
-#           flutter-version: '3.41.9'  # 指定版本，'stable' 指最新稳定版
-#           channel: 'stable'
-#       - run: flutter pub get      # 3️⃣ 获取项目依赖
-#       #- run: flutter test   # (可选)运行测试，确保提交没问题[reference:0]
-#       - run: dart run change_app_package_name:main com.k4641321.chusearchsongfultter
-#       - run: flutter build apk --release  # 4️⃣ 正式打包 APK
-#       - uses: actions/upload-artifact@v4  # 5️⃣ 上传产物
-#         with:
-#           name: release-apk
-#           path: build/app/outputs/flutter-apk/app-release.apk
