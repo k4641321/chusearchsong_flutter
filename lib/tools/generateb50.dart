@@ -1,11 +1,17 @@
-import 'dart:io';
-import 'package:image/image.dart' as img;
+﻿import 'dart:io';
 import 'dart:convert';
-import 'package:http/http.dart';
 import 'dart:developer';
-import 'package:flutter/material.dart';
-import './request.dart';
+import 'package:flutter/services.dart';
+import 'package:http/http.dart';
+import 'package:image/image.dart' as img;
 import 'package:path_provider/path_provider.dart';
+
+import './request.dart';
+
+Future<Uint8List> loadAsset(String path) async {
+  final data = await rootBundle.load(path);
+  return data.buffer.asUint8List();
+}
 
 Future<img.Image> getIcon({required int id}) async {
   log('请求头像$id');
@@ -60,38 +66,8 @@ img.Color diffcolor({required int levelindex}) {
 }
 
 Future<img.Image> getrank({required String rank}) async {
-  switch (rank) {
-    case 'sssp':
-      return img.decodePng(File('res/rank/$rank.png').readAsBytesSync())!;
-    case 'sss':
-      return img.decodePng(File('res/rank/$rank.png').readAsBytesSync())!;
-    case 'ssp':
-      return img.decodePng(File('res/rank/$rank.png').readAsBytesSync())!;
-    case 'ss':
-      return img.decodePng(File('res/rank/$rank.png').readAsBytesSync())!;
-    case 'sp':
-      return img.decodePng(File('res/rank/$rank.png').readAsBytesSync())!;
-    case 's':
-      return img.decodePng(File('res/rank/$rank.png').readAsBytesSync())!;
-    case 'aaa':
-      return img.decodePng(File('res/rank/$rank.png').readAsBytesSync())!;
-    case 'aa':
-      return img.decodePng(File('res/rank/$rank.png').readAsBytesSync())!;
-    case 'a':
-      return img.decodePng(File('res/rank/$rank.png').readAsBytesSync())!;
-    case 'bbb':
-      return img.decodePng(File('res/rank/$rank.png').readAsBytesSync())!;
-    case 'bb':
-      return img.decodePng(File('res/rank/$rank.png').readAsBytesSync())!;
-    case 'b':
-      return img.decodePng(File('res/rank/$rank.png').readAsBytesSync())!;
-    case 'c':
-      return img.decodePng(File('res/rank/$rank.png').readAsBytesSync())!;
-    case 'd':
-      return img.decodePng(File('res/rank/$rank.png').readAsBytesSync())!;
-    default:
-      return img.decodePng(File('res/rank/$rank.png').readAsBytesSync())!;
-  }
+  final bytes = await loadAsset('res/rank/$rank.png');
+  return img.decodePng(bytes)!;
 }
 
 Future<img.Image> getimage({required int id}) async {
@@ -103,38 +79,39 @@ Future<img.Image> getimage({required int id}) async {
   return img.decodeImage(bytes)!;
 }
 
-img.Image getClear({required Map<String, dynamic> song}) {
+Future<img.Image> getClear({required Map<String, dynamic> song}) async {
+  String path;
   if (song['clear'] == 'catastrophy') {
-    return img.decodePng(
-      File('res/complete/catastrophy.png').readAsBytesSync(),
-    )!;
+    path = 'res/complete/catastrophy.png';
   } else if (song['clear'] == 'absolute') {
-    return img.decodePng(File('res/complete/absolute.png').readAsBytesSync())!;
+    path = 'res/complete/absolute.png';
   } else if (song['clear'] == 'brave') {
-    return img.decodePng(File('res/complete/brave.png').readAsBytesSync())!;
+    path = 'res/complete/brave.png';
   } else if (song['clear'] == 'hard') {
-    return img.decodePng(File('res/complete/hard.png').readAsBytesSync())!;
+    path = 'res/complete/hard.png';
   } else if (song['clear'] == 'clear') {
-    return img.decodePng(File('res/complete/clear.png').readAsBytesSync())!;
-  } else if (song['clear'] == 'failed') {
-    return img.decodePng(File('res/complete/failed.png').readAsBytesSync())!;
+    path = 'res/complete/clear.png';
   } else {
-    return img.decodePng(File('res/complete/failed.png').readAsBytesSync())!;
+    path = 'res/complete/failed.png';
   }
+  final bytes = await loadAsset(path);
+  return img.decodePng(bytes)!;
 }
 
-img.Image? getfc({required Map song}) {
+Future<img.Image?> getfc({required Map song}) async {
+  String? path;
   if (song['full_combo'] == 'alljusticecritical') {
-    return img.decodePng(
-      File('res/complete/alljusticecritical.png').readAsBytesSync(),
-    );
+    path = 'res/complete/alljusticecritical.png';
   } else if (song['full_combo'] == 'alljustice') {
-    return img.decodePng(File('res/complete/alljustice.png').readAsBytesSync());
+    path = 'res/complete/alljustice.png';
   } else if (song['full_combo'] == 'fullcombo') {
-    return img.decodePng(File('res/complete/fullcombo.png').readAsBytesSync());
-  } else {
-    return null;
+    path = 'res/complete/fullcombo.png';
   }
+  if (path != null) {
+    final bytes = await loadAsset(path);
+    return img.decodePng(bytes);
+  }
+  return null;
 }
 
 Future<void> generateb50() async {
@@ -148,7 +125,7 @@ Future<void> generateb50() async {
   final String token = config['lxns']['token'];
   //加载字体包
 
-  final fontZipFile = await File('res/fnt/font.zip').readAsBytes();
+  final fontZipBytes = await loadAsset('res/fnt/font.zip');
   //加载b50
 
   final allscorestr = await requestB50(token: token);
@@ -158,9 +135,8 @@ Future<void> generateb50() async {
   final List newbest = allscore['new_bests'];
   //加载背景
 
-  final background = img.decodePng(
-    File('res/background.png').readAsBytesSync(),
-  )!;
+  final backgroundBytes = await loadAsset('res/background.png');
+  final background = img.decodePng(backgroundBytes)!;
   //加载玩家信息
 
   final playerinfostr = await requestPlayerInfo(token: token);
@@ -200,7 +176,7 @@ Future<void> generateb50() async {
     ..fill(color: img.ColorRgba8(255, 255, 255, 255))
     ..drawString(
       'Lv.${playerinfo['level']} ${playerinfo['name']}',
-      font: img.BitmapFont.fromZip(fontZipFile),
+      font: img.BitmapFont.fromZip(fontZipBytes),
       color: img.ColorRgba8(0, 0, 0, 255),
     );
   final nameandlevel = await nameandlevelcmd.getImage();
@@ -226,7 +202,7 @@ Future<void> generateb50() async {
     ..fill(color: img.ColorRgba8(244, 244, 244, 255))
     ..drawString(
       'Rating: ${playerinfo['rating']}',
-      font: img.BitmapFont.fromZip(fontZipFile),
+      font: img.BitmapFont.fromZip(fontZipBytes),
       color: ratingColor(rating: playerinfo['rating']),
     );
   final rating = await ratingcmd.getImage();
@@ -243,7 +219,7 @@ Future<void> generateb50() async {
     ..fill(color: img.ColorRgba8(0, 51, 102, 255))
     ..drawString(
       "B30",
-      font: img.BitmapFont.fromZip(fontZipFile),
+      font: img.BitmapFont.fromZip(fontZipBytes),
       color: img.ColorRgba8(255, 255, 255, 255),
     );
   final b30str = await b30strcmd.getImage();
@@ -260,7 +236,7 @@ Future<void> generateb50() async {
     ..fill(color: img.ColorRgba8(0, 51, 102, 255))
     ..drawString(
       "B20",
-      font: img.BitmapFont.fromZip(fontZipFile),
+      font: img.BitmapFont.fromZip(fontZipBytes),
       color: img.ColorRgba8(255, 255, 255, 255),
     );
   final b20str = await b20strcmd.getImage();
@@ -299,7 +275,7 @@ Future<void> generateb50() async {
     img.drawString(
       background,
       i['song_name'],
-      font: img.BitmapFont.fromZip(fontZipFile),
+      font: img.BitmapFont.fromZip(fontZipBytes),
       x: x1 + 10,
       y: y1 + 295,
       color: img.ColorRgba8(255, 255, 255, 255),
@@ -311,7 +287,7 @@ Future<void> generateb50() async {
       ..fill(color: diffcolor(levelindex: i['level_index']))
       ..drawString(
         i['score'].toString(),
-        font: img.BitmapFont.fromZip(fontZipFile),
+        font: img.BitmapFont.fromZip(fontZipBytes),
       );
     final scoreImage = await scorecmd.getImage();
     img.Image scoreimg = img.copyResize(scoreImage!, width: 280);
@@ -321,7 +297,7 @@ Future<void> generateb50() async {
     img.drawString(
       background,
       '#$index',
-      font: img.BitmapFont.fromZip(fontZipFile),
+      font: img.BitmapFont.fromZip(fontZipBytes),
       x: x1 + 495,
       y: y1,
     );
@@ -330,7 +306,7 @@ Future<void> generateb50() async {
     img.drawString(
       background,
       i['level'],
-      font: img.BitmapFont.fromZip(fontZipFile),
+      font: img.BitmapFont.fromZip(fontZipBytes),
       x: x1 + 280,
       y: y1,
     );
@@ -350,13 +326,13 @@ Future<void> generateb50() async {
     img.drawString(
       background,
       'Rating: ${i['rating']}',
-      font: img.BitmapFont.fromZip(fontZipFile),
+      font: img.BitmapFont.fromZip(fontZipBytes),
       x: x1 + 285,
       y: y1 + 160,
     );
     //绘制通关情况
 
-    img.Image complete = getClear(song: i);
+    img.Image complete = await getClear(song: i);
     img.compositeImage(
       background,
       img.copyResize(complete, width: 230),
@@ -367,7 +343,7 @@ Future<void> generateb50() async {
     );
     //绘制fc
 
-    img.Image? fullcombo = getfc(song: i);
+    img.Image? fullcombo = await getfc(song: i);
     if (fullcombo == null) {
       log('跳过fc');
     } else {
@@ -435,7 +411,7 @@ Future<void> generateb50() async {
     img.drawString(
       background,
       i['song_name'],
-      font: img.BitmapFont.fromZip(fontZipFile),
+      font: img.BitmapFont.fromZip(fontZipBytes),
       x: x1 + 10,
       y: y1 + 295,
       color: img.ColorRgba8(255, 255, 255, 255),
@@ -447,7 +423,7 @@ Future<void> generateb50() async {
       ..fill(color: diffcolor(levelindex: i['level_index']))
       ..drawString(
         i['score'].toString(),
-        font: img.BitmapFont.fromZip(fontZipFile),
+        font: img.BitmapFont.fromZip(fontZipBytes),
       );
     final scoreImage = await scorecmd.getImage();
     img.Image scoreimg = img.copyResize(scoreImage!, width: 280);
@@ -457,7 +433,7 @@ Future<void> generateb50() async {
     img.drawString(
       background,
       '#$index',
-      font: img.BitmapFont.fromZip(fontZipFile),
+      font: img.BitmapFont.fromZip(fontZipBytes),
       x: x1 + 495,
       y: y1,
     );
@@ -466,7 +442,7 @@ Future<void> generateb50() async {
     img.drawString(
       background,
       i['level'],
-      font: img.BitmapFont.fromZip(fontZipFile),
+      font: img.BitmapFont.fromZip(fontZipBytes),
       x: x1 + 280,
       y: y1,
     );
@@ -486,13 +462,13 @@ Future<void> generateb50() async {
     img.drawString(
       background,
       'Rating: ${i['rating']}',
-      font: img.BitmapFont.fromZip(fontZipFile),
+      font: img.BitmapFont.fromZip(fontZipBytes),
       x: x1 + 285,
       y: y1 + 160,
     );
     //绘制通关情况
 
-    img.Image complete = getClear(song: i);
+    img.Image complete = await getClear(song: i);
     img.compositeImage(
       background,
       img.copyResize(complete, width: 230),
@@ -503,7 +479,7 @@ Future<void> generateb50() async {
     );
     //绘制fc
 
-    img.Image? fullcombo = getfc(song: i);
+    img.Image? fullcombo = await getfc(song: i);
     if (fullcombo == null) {
       log('跳过fc');
     } else {
@@ -532,7 +508,7 @@ Future<void> generateb50() async {
   img.drawString(
     background,
     '此b50由 chusearchsong(中二查歌) 生成 成绩最后更新时间 ${playerinfo['upload_time']}',
-    font: img.BitmapFont.fromZip(fontZipFile),
+    font: img.BitmapFont.fromZip(fontZipBytes),
     x: 5896 ~/ 2 - 300,
     y: 2800,
     color: img.ColorRgba8(0, 0, 0, 255),

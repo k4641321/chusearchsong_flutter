@@ -1,4 +1,4 @@
-import 'dart:developer';
+﻿import 'dart:developer';
 import 'dart:io';
 import 'package:path_provider/path_provider.dart';
 import '../../tools/generateb50.dart';
@@ -49,6 +49,9 @@ class _GenerateB50PageState extends State<GenerateB50Page> {
   Future<void> init() async {
     try {
       final path = await getApplicationSupportDirectory();
+      if (!Directory('${path.path}/tmp').existsSync()) {
+        Directory('${path.path}/tmp').createSync(recursive: true);
+      }
       setState(() {
         image = Image.memory(
           File('${path.path}/tmp/b50.png').readAsBytesSync(),
