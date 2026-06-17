@@ -29,17 +29,20 @@ jobs:
     - name: Install dependencies
       run: flutter pub get
     
-    - name: Build App Bundle
+    - name: Build Windows  # 👈 修改此处
+      env:
+        CL: /D_SILENCE_EXPERIMENTAL_COROUTINE_DEPRECATION_WARNINGS
       run: flutter build windows
     
-    - name: Upload split APKs
+    - name: Upload build artifacts
       uses: actions/upload-artifact@v4
       with:
-        name: 上传构建产物
+        name: windows-build
         path: build\windows\x64\runner\Release
     
+    # 注意：以下 AAB 上传步骤是 Android 产物，与 Windows 无关，建议移除或正确指定 Windows 产物
     - name: Upload AAB
       uses: actions/upload-artifact@v4
       with:
         name: release-bundle
-        path: build/app/outputs/bundle/release/app-release.aab
+        path: build/app/outputs/bundle/release/app-release.aab  # 此路径在 Windows 构建中不存在，会失败

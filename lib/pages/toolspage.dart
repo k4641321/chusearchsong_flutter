@@ -11,6 +11,7 @@ import 'toolspages/searchcollectiblespage.dart';
 import 'toolspages/faulttoterantcomputationpage.dart';
 import './toolspages/ratingtrendpages.dart';
 import './toolspages/updatescorepage.dart';
+import './toolspages/generateb50page.dart';
 
 //主窗口
 class ToolPage extends StatefulWidget {
@@ -262,6 +263,30 @@ class _ToolPageState extends State<ToolPage> {
                           ),
                           icon: Icon(
                             Icons.calculate_outlined,
+                            color: Theme.of(context).colorScheme.onSurface,
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                  Expanded(
+                    child: InkWell(
+                      child: Card(
+                        child: TextButton.icon(
+                          label: Text(
+                            'B50生成',
+                            style: TextStyle(
+                              color: Theme.of(context).colorScheme.onSurface,
+                            ),
+                          ),
+                          onPressed: () => Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => GenerateB50Page(),
+                            ),
+                          ),
+                          icon: Icon(
+                            Icons.image_outlined,
                             color: Theme.of(context).colorScheme.onSurface,
                           ),
                         ),

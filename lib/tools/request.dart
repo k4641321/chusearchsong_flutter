@@ -5,6 +5,24 @@ import 'dart:developer';
 import 'dart:io';
 import 'package:path_provider/path_provider.dart';
 
+Future<String> requestB50({required String token}) async {
+  final headers = {'X-User-Token': token};
+  final response = await get(
+    Uri.parse('https://maimai.lxns.net/api/v0/user/chunithm/player/bests'),
+    headers: headers,
+  );
+  return response.body;
+}
+
+Future<String> requestPlayerInfo({required String token}) async {
+  final headers = {'X-User-Token': token};
+  final response = await get(
+    Uri.parse('https://maimai.lxns.net/api/v0/user/chunithm/player'),
+    headers: headers,
+  );
+  return response.body;
+}
+
 Future<void> saveTrend() async {
   final directory = await getApplicationSupportDirectory();
   final file = File('${directory.path}/res/trend.json');
