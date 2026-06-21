@@ -1,10 +1,14 @@
 ﻿import 'dart:io';
+import 'package:flutter/services.dart';
 import 'package:image/image.dart' as img;
 import 'dart:convert';
 import 'package:http/http.dart';
+import 'dart:developer';
+import '../tools/request.dart';
+import 'package:path_provider/path_provider.dart';
 
 Future<img.Image> getIcon({required int id}) async {
-  print('请求头像$id');
+  log('请求头像$id');
   final response = await get(
     Uri.parse('https://assets2.lxns.net/chunithm/character/$id.png'),
   );
@@ -55,12 +59,13 @@ img.Color diffcolor({required int levelindex}) {
   }
 }
 
-img.Image getrank(String rank) {
-  return img.decodePng(File('res/rank/$rank.png').readAsBytesSync())!;
+Future<img.Image> getrank(String rank) async {
+  final data = await rootBundle.load('res/rank/$rank.png');
+  return img.decodePng(data.buffer.asUint8List())!;
 }
 
 Future<img.Image> getimage({required int id}) async {
-  print('请求曲绘$id');
+  log('请求曲绘$id');
   final response = await get(
     Uri.parse('https://assets2.lxns.net/chunithm/jacket/$id.png'),
   );
@@ -68,39 +73,46 @@ Future<img.Image> getimage({required int id}) async {
   return img.decodeImage(bytes)!;
 }
 
-img.Image getClear(String clear) {
-  return img.decodePng(File('res/complete/$clear.png').readAsBytesSync())!;
+Future<img.Image> getClear(String clear) async {
+  final clearimg = await rootBundle.load('res/complete/$clear.png');
+  final bytes = clearimg.buffer.asUint8List();
+  return img.decodePng(bytes)!;
 }
 
-img.Image? getfc(String? fullCombo) {
+Future<img.Image?> getfc(String? fullCombo) async {
   if (fullCombo == null) return null;
-  final file = File('res/complete/$fullCombo.png');
-  if (!file.existsSync()) return null;
-  return img.decodePng(file.readAsBytesSync());
+  final data = await rootBundle.load('res/complete/$fullCombo.png');
+  final bytes = data.buffer.asUint8List();
+  return img.decodePng(bytes);
 }
 
 Future<void> generateb50() async {
   // ═══════════ 加载必要文件 ═══════════
-  final fontZipFile = await File('res/fnt/font3.zip').readAsBytes();
-  final font = img.BitmapFont.fromZip(fontZipFile);
+  final configpath = await getApplicationSupportDirectory();
+  final configstr = await File('${configpath.path}/config.json').readAsString();
+  final Map<String, dynamic> configjson = jsonDecode(configstr);
+  final lxnstoken = configjson['lxns']['token'];
+  final fontZipData = await rootBundle.load('res/fnt/font.zip');
+  final font = img.BitmapFont.fromZip(fontZipData.buffer.asUint8List());
 
   // 加载b50
-  final allscorestr = File('res/bests.json').readAsStringSync();
+  final allscorestr = await requestB50(token: lxnstoken);
   final Map<String, dynamic> allscorejson = jsonDecode(allscorestr);
   final Map<String, dynamic> allscore = allscorejson['data'];
   final List bests = allscore['bests'];
   final List newbest = allscore['new_bests'];
 
   // 加载背景
-  var background = img.decodePng(File('res/background.png').readAsBytesSync())!;
+  final bgData = await rootBundle.load('res/background.png');
+  var background = img.decodePng(bgData.buffer.asUint8List())!;
 
   // 加载玩家信息
-  final playerinfostr = File('res/player.json').readAsStringSync();
+  final playerinfostr = await requestPlayerInfo(token: lxnstoken);
   final Map<String, dynamic> playerinfojson = jsonDecode(playerinfostr);
   final Map<String, dynamic> playerinfo = playerinfojson['data'];
 
   // ═══════════ 并行预下载所有曲绘 ═══════════
-  print('并行预下载所有曲绘...');
+  log('并行预下载所有曲绘...');
   final allSongs = [...bests, ...newbest];
   final allJackets = <int, img.Image>{};
   final futures = <Future>[];
@@ -112,10 +124,10 @@ Future<void> generateb50() async {
     );
   }
   await Future.wait(futures);
-  print('曲绘下载完成 (${allJackets.length} 张)');
+  log('曲绘下载完成 (${allJackets.length} 张)');
 
   // ═══════════ 预加载资源 ═══════════
-  print('预加载评级/通关/FC图片...');
+  log('预加载评级/通关/FC图片...');
 
   final rankCache = <String, img.Image>{};
   for (final rank in [
@@ -134,7 +146,7 @@ Future<void> generateb50() async {
     'c',
     'd',
   ]) {
-    rankCache[rank] = getrank(rank);
+    rankCache[rank] = await getrank(rank);
   }
 
   final clearCache = <String, img.Image>{};
@@ -146,21 +158,21 @@ Future<void> generateb50() async {
     'clear',
     'failed',
   ]) {
-    clearCache[c] = getClear(c);
+    clearCache[c] = await getClear(c);
   }
 
   final fcCache = <String, img.Image>{};
   for (final fc in ['alljusticecritical', 'alljustice', 'fullcombo']) {
-    fcCache[fc] = getfc(fc)!;
+    fcCache[fc] = (await getfc(fc))!;
   }
 
   // ═══════════ 绘制函数 ═══════════
-  void drawSongCard(
+  Future<void> drawSongCard(
     Map song, {
     required int x1,
     required int y1,
     required int index,
-  }) {
+  }) async {
     final color = diffcolor(levelindex: song['level_index']);
 
     // 背景色块
@@ -188,14 +200,22 @@ Future<void> generateb50() async {
     );
 
     // 分数
-    img.drawString(
-      background,
-      song['score'].toString(),
-      font: font,
-      x: x1 + 280,
-      y: y1 + 100,
-      color: img.ColorRgba8(255, 255, 255, 255),
-    );
+    final scorecmd = img.Command()
+      ..createImage(width: 150, height: 35)
+      ..fill(color: diffcolor(levelindex: song['level_index']))
+      ..drawString(song['score'].toString(), font: font);
+    final scoreImage = await scorecmd.getImage();
+    img.Image scoreimg = img.copyResize(scoreImage!, width: 280);
+    img.compositeImage(background, scoreimg, dstX: x1 + 280, dstY: y1 + 100);
+
+    // img.drawString(
+    //   background,
+    //   song['score'].toString(),
+    //   font: font,
+    //   x: x1 + 280,
+    //   y: y1 + 100,
+    //   color: img.ColorRgba8(255, 255, 255, 255),
+    // );
 
     // 排序
     img.drawString(
@@ -258,7 +278,7 @@ Future<void> generateb50() async {
   }
 
   // ═══════════ 绘制玩家信息 ═══════════
-  print('绘制玩家信息');
+  log('绘制玩家信息');
 
   // 玩家信息背景
   final namebackgroundCmd = img.Command()
@@ -349,7 +369,7 @@ Future<void> generateb50() async {
   );
 
   // ═══════════ 绘制 B30 ═══════════
-  print('绘制 B30 成绩...');
+  log('绘制 B30 成绩...');
   int x1 = 7;
   int y1 = 460;
   int lineint = 0;
@@ -359,7 +379,7 @@ Future<void> generateb50() async {
   final sw = Stopwatch()..start();
 
   for (var i in bests) {
-    drawSongCard(i, x1: x1, y1: y1, index: index);
+    await drawSongCard(i, x1: x1, y1: y1, index: index);
 
     x1 += 570 + 20;
     lineint++;
@@ -373,14 +393,14 @@ Future<void> generateb50() async {
   }
 
   // ═══════════ 绘制 B20 ═══════════
-  print('绘制 B20 成绩...');
+  log('绘制 B20 成绩...');
   x1 = 7;
   y1 += 325;
   lineint = 0;
   row = 0;
 
   for (var i in newbest) {
-    drawSongCard(i, x1: x1, y1: y1, index: index);
+    await drawSongCard(i, x1: x1, y1: y1, index: index);
 
     x1 += 570 + 20;
     lineint++;
@@ -394,7 +414,7 @@ Future<void> generateb50() async {
   }
 
   sw.stop();
-  print('绘制耗时: ${sw.elapsedMilliseconds}ms');
+  log('绘制耗时: ${sw.elapsedMilliseconds}ms');
 
   // ═══════════ 水印 ═══════════
   img.drawString(
@@ -408,6 +428,9 @@ Future<void> generateb50() async {
 
   // ═══════════ 保存 ═══════════
   final png = img.encodePng(background);
-  await File('image.png').writeAsBytes(png);
-  print('图片已保存到 image.png');
+  if (!Directory('${configpath.path}/tmp').existsSync()) {
+    await Directory('${configpath.path}/tmp').create();
+  }
+  await File('${configpath.path}/tmp/b50.png').writeAsBytes(png);
+  log('图片已保存到 b50.png');
 }

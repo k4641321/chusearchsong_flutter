@@ -49,6 +49,7 @@ dependencies:
   flutter_singbox_client: ^1.0.1
   file_picker: ^11.0.2
   image: ^4.8.0
+  share_plus: ^12.0.2
 
 dev_dependencies:
   flutter_test:
@@ -87,6 +88,7 @@ flutter:
     - res/name/
     - res/rank/
     - res/background.png
+    - res/sharebg.webp
   #   - images/a_dot_burr.jpeg
   #   - images/a_dot_ham.jpeg
 

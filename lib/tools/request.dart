@@ -5,6 +5,20 @@ import 'dart:developer';
 import 'dart:io';
 import 'package:path_provider/path_provider.dart';
 
+Future<String> requestSongBests({
+  required String token,
+  required int songid,
+}) async {
+  final headers = {'X-User-Token': token};
+  final response = await get(
+    Uri.parse(
+      'https://maimai.lxns.net/api/v0/user/chunithm/player/bests?song_id=$songid',
+    ),
+    headers: headers,
+  );
+  return response.body;
+}
+
 Future<String> requestB50({required String token}) async {
   final headers = {'X-User-Token': token};
   final response = await get(

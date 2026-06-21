@@ -8,6 +8,7 @@ import 'package:path_provider/path_provider.dart';
 import 'package:url_launcher/url_launcher.dart';
 import '../tools/songinfopagefun.dart';
 import '../tools/fun.dart';
+import '../tools/sharescorefun.dart';
 
 class SongInfoPage extends StatefulWidget {
   final Map<String, dynamic> song;
@@ -147,6 +148,30 @@ class _SongInfoPageState extends State<SongInfoPage> {
         ),
         // backgroundColor: const Color.fromARGB(255, 255, 229, 84),
         actions: [
+          IconButton(
+            onPressed: () async {
+              try {
+                // 显示加载对话框
+                if (!context.mounted) return;
+                showDialog(
+                  context: context,
+                  barrierDismissible: false,
+                  builder: (_) =>
+                      const Center(child: CircularProgressIndicator()),
+                );
+                await sharescore(songdata: widget.song);
+                if (context.mounted) Navigator.of(context).pop();
+              } catch (e) {
+                log('错误$e', name: 'songinfopage.dart', level: 1000);
+                if (context.mounted) Navigator.of(context).pop();
+                if (!context.mounted) return;
+                ScaffoldMessenger.of(
+                  context,
+                ).showSnackBar(SnackBar(content: Text('分享失败')));
+              }
+            },
+            icon: Icon(Icons.share),
+          ),
           IconButton(
             onPressed: () async {
               if (icon == Icons.favorite_border) {
