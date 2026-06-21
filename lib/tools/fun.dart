@@ -351,6 +351,7 @@ Future<void> ifres({required BuildContext context}) async {
     );
     log('$e', name: 'main', level: 2000);
   }
+
   //收藏文件
   try {
     final directory = await getApplicationSupportDirectory();
@@ -377,6 +378,7 @@ Future<void> ifres({required BuildContext context}) async {
     );
     log('$e', name: 'main', level: 2000);
   }
+
   //配置文件
   try {
     final directory = await getApplicationSupportDirectory();

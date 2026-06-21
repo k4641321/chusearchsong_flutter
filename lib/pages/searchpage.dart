@@ -16,10 +16,13 @@ class _SearchPageState extends State<SearchPage> {
   String? selectedDifficultyDown = '-1';
   String? selectedDifficultyUp = '-1';
   String? selectedifPlay = '-1';
-
+  int? bpmup;
+  int? bpmdown;
   List<Widget> searchResults = [];
   // Future result;
   final TextEditingController _searchController = TextEditingController();
+  final TextEditingController _bpmup = TextEditingController();
+  final TextEditingController _bpmdown = TextEditingController();
 
   Future<void> _performSearch() async {
     String searchTitle = _searchController.text;
@@ -38,6 +41,8 @@ class _SearchPageState extends State<SearchPage> {
         difficultyDown,
         difficultyUp,
         ifPlay,
+        bpmup,
+        bpmdown,
         context,
       );
       if (!mounted) return;
@@ -94,7 +99,9 @@ class _SearchPageState extends State<SearchPage> {
                 Expanded(
                   child: TextField(
                     controller: _searchController,
-                    decoration: InputDecoration(hintText: '搜索...标题，曲师，别名，落雪id'),
+                    decoration: InputDecoration(
+                      hintText: '搜索...标题，曲师，别名，落雪id，谱师',
+                    ),
                     onChanged: (value) {
                       try {
                         _performSearch();
@@ -149,6 +156,37 @@ class _SearchPageState extends State<SearchPage> {
             ),
             Row(
               children: [
+                Expanded(
+                  child: TextField(
+                    controller: _bpmdown,
+                    decoration: InputDecoration(hintText: 'BPM下限'),
+                    onChanged: (value) {
+                      try {
+                        bpmdown = int.parse(_bpmdown.text);
+                        _performSearch();
+                      } catch (e) {
+                        bpmdown = null;
+                        log('bpmdown不是数字');
+                      }
+                    },
+                  ),
+                ),
+                Expanded(
+                  child: TextField(
+                    controller: _bpmup,
+                    decoration: InputDecoration(hintText: 'BPM上限'),
+                    onChanged: (value) {
+                      try {
+                        bpmup = int.parse(_bpmup.text);
+                        _performSearch();
+                      } catch (e) {
+                        bpmup = null;
+                        log('bpmup不是数字');
+                      }
+                    },
+                  ),
+                ),
+
                 Expanded(
                   child: buildIfPlayDropdownMenu(
                     initialSelection: selectedifPlay,

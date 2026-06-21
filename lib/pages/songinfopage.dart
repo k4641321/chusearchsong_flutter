@@ -199,8 +199,6 @@ class _SongInfoPageState extends State<SongInfoPage> {
                     errorBuilder: (context, error, stackTrace) {
                       return const Text('图片加载失败');
                     },
-                    width: 200,
-                    height: 200,
                   ),
                   onTap: () {
                     Navigator.push(
@@ -251,6 +249,10 @@ class _SongInfoPageState extends State<SongInfoPage> {
                               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                               children: [
                                 Row(children: [Icon(Icons.info), Text('基本信息')]),
+                                Text(
+                                  '落雪id： ${widget.song['id']}',
+                                  style: const TextStyle(fontSize: 15),
+                                ),
                                 Text(
                                   '分类： ${widget.song['genre']}',
                                   style: const TextStyle(fontSize: 15),

@@ -2,10 +2,8 @@ import 'dart:developer';
 import 'dart:io';
 import 'dart:convert';
 import 'package:flutter/material.dart';
-import 'package:http/http.dart';
 import 'package:path_provider/path_provider.dart';
 import 'request.dart';
-import 'package:flutter/services.dart';
 import '../pages/toolspages/faulttoterantcomputationpage.dart';
 import '../tools/fun.dart';
 
@@ -52,7 +50,7 @@ Future<Widget> returnscore({
     Map<String, dynamic> allscore1 = json.decode(file.readAsStringSync());
     List allscore = allscore1['data'];
 
-    print(i);
+    // print(i);
     for (var j in allscore) {
       // print('${j['id']},$song');
       if (j['id'] == song) {

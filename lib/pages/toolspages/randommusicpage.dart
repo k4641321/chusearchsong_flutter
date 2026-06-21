@@ -16,7 +16,7 @@ class _RandomMusicPageState extends State<RandomMusicPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('随机音乐'),
+        title: Text('随机歌曲'),
         // backgroundColor: const Color.fromARGB(255, 255, 229, 84),
       ),
       body: Scrollbar(

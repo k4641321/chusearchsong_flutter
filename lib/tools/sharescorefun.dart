@@ -9,6 +9,8 @@ import 'package:flutter/services.dart';
 import '../tools/request.dart';
 import 'package:share_plus/share_plus.dart';
 
+//此页面经过ai优化过
+
 Future<img.Image> getimage({required int id}) async {
   log('请求曲绘$id');
   final response = await get(
@@ -16,6 +18,18 @@ Future<img.Image> getimage({required int id}) async {
   );
   final bytes = response.bodyBytes;
   return img.decodeImage(bytes)!;
+}
+
+Future<String> getversion({required int version}) async {
+  final path = await getApplicationSupportDirectory();
+  final file = File('${path.path}/res/songs.json');
+  Map<String, dynamic> songdata = jsonDecode(file.readAsStringSync());
+  for (var i in songdata['versions']) {
+    if (version == i['version']) {
+      return i['title'];
+    }
+  }
+  return version.toString();
 }
 
 Future<img.Image?> getfc({required Map song}) async {
@@ -58,6 +72,8 @@ img.Color diffcolor({required int levelindex}) {
       return img.ColorRgba8(178, 102, 255, 255);
     case 4:
       return img.ColorRgba8(32, 32, 32, 255);
+    case 5:
+      return img.ColorRgba8(51, 51, 255, 255);
     default:
       return img.ColorRgba8(192, 192, 192, 255);
   }
@@ -69,17 +85,31 @@ Future<void> sharescore({required Map<String, dynamic> songdata}) async {
   final Map<String, dynamic> config = jsonDecode(configstr);
 
   // ═══ Phase 1: 并行加载所有资源 ═══
+  List songdiff = songdata['difficulties'] as List;
+  final originid = songdiff.lastWhere(
+    (d) => d.keys.contains('origin_id'),
+    orElse: () => null,
+  );
+  int songid;
+  if (originid != null) {
+    songid = originid['origin_id'];
+  } else {
+    songid = songdata['id'];
+  }
+
   final results = await Future.wait([
-    _loadSongBests(config: config, songId: songdata['id']),
+    _loadSongBests(config: config, songId: songid),
     rootBundle.load('res/fnt/font.zip').then((b) => b.buffer.asUint8List()),
     rootBundle.load('res/sharebg.webp').then((b) => b.buffer.asUint8List()),
-    _fetchJacketBytes(id: songdata['id']),
+    _fetchJacketBytes(id: songid),
+    getversion(version: songdata['version']),
   ]);
 
   final List songbests = results[0] as List;
   final Uint8List fontBytes = results[1] as Uint8List;
   final Uint8List bgBytes = results[2] as Uint8List;
   final Uint8List jacketBytes = results[3] as Uint8List;
+  final String version = results[4] as String;
 
   // 预加载需要的 rank / fc 图标字节
   final rankByteMap = <String, Uint8List>{};
@@ -109,6 +139,7 @@ Future<void> sharescore({required Map<String, dynamic> songdata}) async {
       jacketBytes: jacketBytes,
       rankByteMap: rankByteMap,
       fcByteMap: fcByteMap,
+      version: version,
     ),
   );
 
@@ -158,6 +189,7 @@ Uint8List _generateImage({
   required Uint8List jacketBytes,
   required Map<String, Uint8List> rankByteMap,
   required Map<String, Uint8List> fcByteMap,
+  required String version,
 }) {
   final font = img.BitmapFont.fromZip(fontBytes);
   final background = img.decodeWebP(bgBytes)!;
@@ -165,7 +197,7 @@ Uint8List _generateImage({
 
   // ── 绘制难度背景 ──
   int x1 = 1000;
-  int y1 = 250;
+  int y1 = 275;
   for (final i in songdata['difficulties']) {
     final color = _isolateDiffColor(levelindex: i['difficulty']);
     img.fillRect(
@@ -227,17 +259,34 @@ Uint8List _generateImage({
   );
 
   // ── 绘制曲名（动态缩放） ──
-  const maxTitleWidth = 700;
-  const singleCharWidth = 20;
-  const maxTitleHeight = 200;
-  const minTitleHeight = 80;
+  // const maxTitleWidth = 1000;
+  // const singleCharWidth = 20;
+  // const maxTitleHeight = 200;
+  // const minTitleHeight = 80;
+
+  // final titleText = songdata['title'] as String;
+  // final rawTitleImage = img.Image(
+  //   width: titleText.length * singleCharWidth,
+  //   height: 40,
+  //   numChannels: 4,
+  // );
+  // img.fill(rawTitleImage, color: img.ColorRgba8(0, 0, 0, 0));
+  // img.drawString(
+  //   rawTitleImage,
+  //   titleText,
+  //   font: font,
+  //   color: img.ColorRgba8(0, 0, 0, 255),
+  // );
+
+  // final scaleHeight = (maxTitleWidth / titleText.length * 2)
+  //     .clamp(minTitleHeight.toDouble(), maxTitleHeight.toDouble())
+  //     .toInt();
+  // final titleImage = img.copyResize(rawTitleImage, height: scaleHeight);
+  // final titleDstX = (300 - titleImage.width / 2).toInt().clamp(0, 200);
+  // img.compositeImage(background, titleImage, dstX: titleDstX, dstY: 40);
 
   final titleText = songdata['title'] as String;
-  final rawTitleImage = img.Image(
-    width: titleText.length * singleCharWidth,
-    height: 40,
-    numChannels: 4,
-  );
+  final rawTitleImage = img.Image(width: 700, height: 40, numChannels: 4);
   img.fill(rawTitleImage, color: img.ColorRgba8(0, 0, 0, 0));
   img.drawString(
     rawTitleImage,
@@ -245,21 +294,16 @@ Uint8List _generateImage({
     font: font,
     color: img.ColorRgba8(0, 0, 0, 255),
   );
-
-  final scaleHeight = (maxTitleWidth / titleText.length * 2)
-      .clamp(minTitleHeight.toDouble(), maxTitleHeight.toDouble())
-      .toInt();
-  final titleImage = img.copyResize(rawTitleImage, height: scaleHeight);
-  final titleDstX = (200 - titleImage.width / 2).toInt().clamp(0, 200);
-  img.compositeImage(background, titleImage, dstX: titleDstX, dstY: 70);
-
+  final titleImage = img.copyResize(rawTitleImage, width: 1800);
+  img.compositeImage(background, titleImage, dstX: 100, dstY: 30);
   // ── 绘制其余信息 ──
+
   img.drawString(
     background,
-    '曲师: ${songdata['artist']}      BPM: ${songdata['bpm']}\n\n分类: ${songdata['genre']}      版本: ${songdata['version']}',
+    '曲师: ${songdata['artist']}\n分类: ${songdata['genre']}      版本: $version      BPM: ${songdata['bpm']}',
     font: font,
-    x: 1000,
-    y: 50,
+    x: 925,
+    y: 150,
     color: img.ColorRgb8(0, 0, 0),
   );
   img.drawString(
@@ -269,6 +313,15 @@ Uint8List _generateImage({
     x: 650,
     y: 1025,
     color: img.ColorRgba8(0, 0, 0, 255),
+  );
+
+  img.drawString(
+    background,
+    songdata['id'].toString(),
+    font: font,
+    x: 25,
+    y: 1025,
+    color: img.ColorRgb8(0, 0, 0),
   );
 
   return Uint8List.fromList(img.encodePng(background));
@@ -286,6 +339,8 @@ img.Color _isolateDiffColor({required int levelindex}) {
       return img.ColorRgba8(178, 102, 255, 255);
     case 4:
       return img.ColorRgba8(32, 32, 32, 255);
+    case 5:
+      return img.ColorRgba8(51, 51, 255, 255);
     default:
       return img.ColorRgba8(192, 192, 192, 255);
   }
