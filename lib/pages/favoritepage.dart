@@ -29,12 +29,17 @@ class _FavoritePageState extends State<FavoritePage> {
     ).readAsString();
     Map<String, dynamic> songData = json.decode(jsonString);
     for (var i in favoriteJson) {
+      List<dynamic> songInfoDiffs = [];
       String versionname = '';
       for (var j in songData['versions']) {
         if (j['version'] == i['version']) {
           versionname = j['title'];
         }
       }
+      for (var k in i['difficulties']) {
+        songInfoDiffs.add(k['level_value']);
+      }
+
       // songresultWidget.add(const Divider());
       favoriteResults.add(
         InkWell(
@@ -54,7 +59,7 @@ class _FavoritePageState extends State<FavoritePage> {
             child: Padding(
               padding: EdgeInsetsGeometry.all(10.0),
               child: Text(
-                '${i['id']} - ${i['title']}      ${i['genre']} - $versionname',
+                '${i['id']} - ${i['title']}      ${i['genre']} - $versionname\n$songInfoDiffs',
                 textAlign: TextAlign.center,
               ),
             ),

@@ -121,7 +121,7 @@ Widget buildDifficultyDownDropdownMenu({
     menuHeight: 300.0,
     width: double.infinity,
     initialSelection: initialSelection ?? '-1',
-    selectOnly: false,
+    selectOnly: true,
     onSelected: onSelected,
     dropdownMenuEntries: const [
       DropdownMenuEntry<String>(label: '难度下限', value: '-1'),

@@ -67,6 +67,13 @@ class _SearchPageState extends State<SearchPage> {
         setState(() {
           selectedGenre = value;
         });
+        try {
+          _performSearch();
+        } catch (e) {
+          ScaffoldMessenger.of(
+            context,
+          ).showSnackBar(SnackBar(content: Text('搜索失败，可能是数据丢失')));
+        }
       },
     );
     Widget versionDropdownMenu1 = await buildVersionDropdownMenu(
@@ -75,6 +82,13 @@ class _SearchPageState extends State<SearchPage> {
         setState(() {
           selectedVersion = value;
         });
+        try {
+          _performSearch();
+        } catch (e) {
+          ScaffoldMessenger.of(
+            context,
+          ).showSnackBar(SnackBar(content: Text('搜索失败，可能是数据丢失')));
+        }
       },
     );
     if (!mounted) return;
@@ -141,6 +155,13 @@ class _SearchPageState extends State<SearchPage> {
                       setState(() {
                         selectedDifficultyDown = value;
                       });
+                      try {
+                        _performSearch();
+                      } catch (e) {
+                        ScaffoldMessenger.of(
+                          context,
+                        ).showSnackBar(SnackBar(content: Text('搜索失败，可能是数据丢失')));
+                      }
                     },
                   ),
                 ),
@@ -151,6 +172,13 @@ class _SearchPageState extends State<SearchPage> {
                       setState(() {
                         selectedDifficultyUp = value;
                       });
+                      try {
+                        _performSearch();
+                      } catch (e) {
+                        ScaffoldMessenger.of(
+                          context,
+                        ).showSnackBar(SnackBar(content: Text('搜索失败，可能是数据丢失')));
+                      }
                     },
                   ),
                 ),
@@ -196,6 +224,13 @@ class _SearchPageState extends State<SearchPage> {
                       setState(() {
                         selectedifPlay = value;
                       });
+                      try {
+                        _performSearch();
+                      } catch (e) {
+                        ScaffoldMessenger.of(
+                          context,
+                        ).showSnackBar(SnackBar(content: Text('搜索失败，可能是数据丢失')));
+                      }
                     },
                   ),
                 ),
