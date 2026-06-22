@@ -4,6 +4,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:path_provider/path_provider.dart';
 import '../tools/fun.dart';
+import 'dart:math' as math;
 
 //我操了，自己都快看力竭了，太石了，自己都要看不懂了
 
@@ -16,6 +17,8 @@ Future<List<Widget>> search(
   String ifplay,
   int? bpmup,
   int? bpmdown,
+  bool isSearch,
+  int? count,
   BuildContext context,
 ) async {
   // 加载曲目数据
@@ -56,7 +59,8 @@ Future<List<Widget>> search(
       difficultyup == '-1' &&
       ifplay == '-1' &&
       bpmup == null &&
-      bpmdown == null) {
+      bpmdown == null &&
+      isSearch == true) {
     log('未选择条件');
     return [];
   }
@@ -89,7 +93,7 @@ Future<List<Widget>> search(
   }
 
   //别名筛选
-  Set<Map<String, dynamic>> aliasresult = {};
+  // Set<Map<String, dynamic>> aliasresult = {};
   for (var i in aliasData['aliases']) {
     for (var j in i['aliases']) {
       if (j.toLowerCase().contains(title.toLowerCase())) {
@@ -230,6 +234,30 @@ Future<List<Widget>> search(
     songresultMap = songresult4;
   }
 
+  if (isSearch == false) {
+    List idlist = [];
+    for (var i in songresultMap) {
+      idlist.add(i['id']);
+    }
+    List<int> resultIds = [];
+    final random = math.Random();
+    if (count != null) {
+      for (var i = 0; i < count; i++) {
+        final randomId = random.nextInt(idlist.length);
+        resultIds.add(idlist[randomId]);
+      }
+      List randomresult = [];
+      for (var i in songData['songs']) {
+        for (var j in resultIds) {
+          if (i['id'] == j) {
+            randomresult.add(i);
+          }
+        }
+      }
+      songresultMap = randomresult;
+    }
+  }
+
   //生成组件
   List<Widget> songresultWidget = [];
   log('添加组件');
@@ -249,7 +277,7 @@ Future<List<Widget>> search(
     // songresultWidget.add(const Divider());
     songresultWidget.add(
       InkWell(
-        key: ValueKey(i['id']),
+        // key: ValueKey(i['id']),
         onTap: () async {
           interSongInfo(i: i, context: context, versionname: versionname);
         },

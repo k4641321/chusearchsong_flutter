@@ -111,7 +111,7 @@ class _PlayMusic extends State<PlayMusic> {
     try {
       _subscription.add(
         _musicplayer.onDurationChanged.listen((duration) {
-          log('歌曲时长: $duration');
+          // log('歌曲时长: $duration');
           setState(() {
             value = duration.inMilliseconds.toDouble();
             log('歌曲时长: $value');
@@ -146,19 +146,23 @@ class _PlayMusic extends State<PlayMusic> {
                 const Divider(),
                 Row(
                   children: [
-                    Text(
-                      '  ${widget.song['title']}',
-                      style: TextStyle(fontSize: 20),
-                      textAlign: TextAlign.center,
+                    Expanded(
+                      child: Text(
+                        '  ${widget.song['title']}',
+                        style: TextStyle(fontSize: 20),
+                        textAlign: TextAlign.center,
+                      ),
                     ),
                   ],
                 ),
                 Row(
                   children: [
-                    Text(
-                      '   ${widget.song['artist']}',
-                      style: TextStyle(fontSize: 15),
-                      textAlign: TextAlign.center,
+                    Expanded(
+                      child: Text(
+                        '   ${widget.song['artist']}',
+                        style: TextStyle(fontSize: 15),
+                        textAlign: TextAlign.center,
+                      ),
                     ),
                   ],
                 ),

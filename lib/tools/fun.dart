@@ -8,7 +8,6 @@ import '../pages/songinfopage.dart';
 import 'dart:math' as math;
 import '../pages/toolspages/collectibleinfopage.dart';
 import './songinfopagefun.dart';
-import 'settingspagefun.dart';
 import 'package:flutter/services.dart';
 
 //返回歌曲id列表

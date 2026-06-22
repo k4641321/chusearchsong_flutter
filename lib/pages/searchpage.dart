@@ -43,6 +43,8 @@ class _SearchPageState extends State<SearchPage> {
         ifPlay,
         bpmup,
         bpmdown,
+        true,
+        null,
         context,
       );
       if (!mounted) return;

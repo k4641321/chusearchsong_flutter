@@ -18,7 +18,7 @@ class _SearchLobbyPageState extends State<SearchLobbyPage> {
   List<DropdownMenuEntry> dropdownMenuEntries = [];
   List<Widget> searchResults = [];
   final TextEditingController _controller = TextEditingController();
-  String? initialSelection = '全部';
+  String initialSelection = '全部';
   @override
   void initState() {
     super.initState();
@@ -111,6 +111,7 @@ class _SearchLobbyPageState extends State<SearchLobbyPage> {
               ),
             ),
             onTap: () => _openmap(i: i),
+            onLongPress: () => copytext(text: i['address'], context: context),
           ),
         );
       }
@@ -173,7 +174,7 @@ class _SearchLobbyPageState extends State<SearchLobbyPage> {
 
                 DropdownMenu(
                   selectOnly: true,
-                  initialSelection: initialSelection ?? '全部',
+                  initialSelection: initialSelection,
                   onSelected: (value) => setState(() {
                     initialSelection = value;
                   }),
