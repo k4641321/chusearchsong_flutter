@@ -5,6 +5,7 @@ import '../../tools/generateb50.dart';
 import 'package:flutter/material.dart';
 import 'package:file_picker/file_picker.dart';
 import 'dart:typed_data';
+import '../../tools/fun.dart';
 
 class GenerateB50Page extends StatefulWidget {
   const GenerateB50Page({super.key});
@@ -18,33 +19,6 @@ class _GenerateB50PageState extends State<GenerateB50Page> {
 
   Widget image = Text('未生成或错误');
   int _generationKey = 0;
-
-  void showZoomableImageDialog(BuildContext context, File imageFile) {
-    showDialog(
-      context: context,
-      builder: (context) => Dialog(
-        backgroundColor: Colors.black,
-        insetPadding: EdgeInsets.zero,
-        child: Stack(
-          children: [
-            InteractiveViewer(
-              minScale: 0.5,
-              maxScale: 5.0,
-              child: Center(child: Image.file(imageFile)),
-            ),
-            Positioned(
-              top: 40,
-              right: 20,
-              child: IconButton(
-                icon: const Icon(Icons.close, color: Colors.white, size: 30),
-                onPressed: () => Navigator.of(context).pop(),
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
 
   Future<void> init() async {
     try {

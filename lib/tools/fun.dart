@@ -674,3 +674,30 @@ void copytext({required String text, required BuildContext context}) {
     ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('复制失败')));
   }
 }
+
+void showZoomableImageDialog(BuildContext context, File imageFile) {
+  showDialog(
+    context: context,
+    builder: (context) => Dialog(
+      backgroundColor: Colors.black,
+      insetPadding: EdgeInsets.zero,
+      child: Stack(
+        children: [
+          InteractiveViewer(
+            minScale: 0.5,
+            maxScale: 5.0,
+            child: Center(child: Image.file(imageFile)),
+          ),
+          Positioned(
+            top: 40,
+            right: 20,
+            child: IconButton(
+              icon: const Icon(Icons.close, color: Colors.white, size: 30),
+              onPressed: () => Navigator.of(context).pop(),
+            ),
+          ),
+        ],
+      ),
+    ),
+  );
+}
