@@ -1,4 +1,5 @@
 import 'package:chusearchsong_flutter/tools/fun.dart';
+import 'package:path_provider/path_provider.dart';
 import '../tools/ratingtrendpagefun.dart';
 import 'toolspages/ratingcalculatorpage.dart';
 import 'package:flutter/material.dart';
@@ -12,6 +13,7 @@ import 'toolspages/faulttoterantcomputationpage.dart';
 import './toolspages/ratingtrendpages.dart';
 import './toolspages/updatescorepage.dart';
 import './toolspages/generateb50page.dart';
+import './toolspages/playerinfopage.dart';
 
 //主窗口
 class ToolPage extends StatefulWidget {
@@ -174,6 +176,45 @@ class _ToolPageState extends State<ToolPage> {
                           ),
                           label: Text(
                             'Rating趋势',
+                            style: TextStyle(
+                              color: Theme.of(context).colorScheme.onSurface,
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                  Expanded(
+                    child: InkWell(
+                      child: Card(
+                        child: TextButton.icon(
+                          onPressed: () async {
+                            try {
+                              final Map<String, dynamic> playerdata =
+                                  await returnplayerinfodata();
+                              if (!context.mounted) return;
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) =>
+                                      PlayerInfoPage(playerdata: playerdata),
+                                ),
+                              );
+                            } catch (e) {
+                              if (!context.mounted) return;
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                SnackBar(
+                                  content: Text('获取玩家信息失败，请尝试在关于页面更新数据'),
+                                ),
+                              );
+                            }
+                          },
+                          icon: Icon(
+                            Icons.person_outlined,
+                            color: Theme.of(context).colorScheme.onSurface,
+                          ),
+                          label: Text(
+                            '玩家信息',
                             style: TextStyle(
                               color: Theme.of(context).colorScheme.onSurface,
                             ),

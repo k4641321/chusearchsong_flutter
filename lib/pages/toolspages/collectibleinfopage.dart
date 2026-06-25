@@ -1,9 +1,13 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import '../../tools/fun.dart';
 import 'dart:io';
 import 'package:path_provider/path_provider.dart';
 import 'dart:convert';
 import '../../tools/texttranslate.dart';
+import '../../tools/playerinfopagefun.dart';
+import '../../tools/request.dart';
 
 class CollectibleInfoPage extends StatefulWidget {
   const CollectibleInfoPage({
@@ -22,19 +26,31 @@ class _CollectibleInfoPageState extends State<CollectibleInfoPage> {
   final ScrollController _controller = ScrollController();
   List<Widget> result = [];
   String translate = '';
+  Map<String, dynamic> newdata = {};
+
   Future<void> otherinfo({required String type}) async {
+    newdata = widget.data;
     if (type == 'trophy') {
+      try {
+        String trophyprogressstr = await requestTrendProgress(
+          id: newdata['id'],
+        );
+        Map<String, dynamic> trophyprogressjson = json.decode(
+          trophyprogressstr,
+        );
+        newdata = trophyprogressjson['data'];
+      } catch (e) {
+        newdata = widget.data;
+        log('trophyprogressstr error: $e');
+      }
       result.add(
-        Text(
-          '颜色: ${widget.data['color']}',
-          style: const TextStyle(fontSize: 20),
-        ),
+        Text('颜色: ${newdata['color']}', style: const TextStyle(fontSize: 20)),
       );
 
-      if (widget.data.keys.contains('required')) {
+      if (newdata.keys.contains('required')) {
         List<String> difficulties = [];
-        Map<String, dynamic> requiredList = widget.data['required'][0];
-
+        Map<String, dynamic> requiredList = newdata['required'][0];
+        List<Widget> songList = [];
         if (requiredList['difficulties'].isEmpty) {
           difficulties.add('任意难度');
         } else {
@@ -131,9 +147,9 @@ class _CollectibleInfoPageState extends State<CollectibleInfoPage> {
               }
             }
 
-            result.add(
+            songList.add(
               InkWell(
-                key: ValueKey(songItem['id']),
+                // key: ValueKey(songItem['id']),
                 onTap: () async {
                   interSongInfo(
                     i: song,
@@ -156,6 +172,77 @@ class _CollectibleInfoPageState extends State<CollectibleInfoPage> {
               ),
             );
           }
+          result.add(
+            SizedBox(height: 300, child: ListView(children: songList)),
+          );
+          result.add(const Divider());
+
+          if (newdata.containsKey('required')) {
+            List allrequiredList = newdata['required'];
+            if (allrequiredList.contains('completed') == true) {
+              result.add(
+                Text('总完成状态: 完成', style: const TextStyle(fontSize: 20)),
+              );
+            } else if (allrequiredList.contains('completed') == false) {
+              result.add(
+                Text('总完成状态: 未完成', style: const TextStyle(fontSize: 20)),
+              );
+            }
+          }
+          if (newdata.containsKey('songs')) {
+            for (var i in newdata['songs']) {
+              List<dynamic> songs = requiredList['songs'];
+              //加载曲目
+              final dataPath = await getApplicationSupportDirectory();
+              String jsonString = await File(
+                '${dataPath.path}/res/songs.json',
+              ).readAsString();
+              Map<String, dynamic> songData = json.decode(jsonString);
+              result.add(Text('关联曲目: ', style: const TextStyle(fontSize: 20)));
+              //获取曲目信息
+              for (var songItem in songs) {
+                Map<String, dynamic> song = {};
+                for (var j in songData['songs']) {
+                  if (i['id'] == songItem['id']) {
+                    song = j;
+                    break;
+                  }
+                }
+                //获取版本名
+                String versionname = '';
+                for (var j in songData['versions']) {
+                  if (j['version'] == song['version']) {
+                    versionname = j['title'];
+                  }
+                }
+
+                result.add(
+                  InkWell(
+                    // key: ValueKey(songItem['id']),
+                    onTap: () async {
+                      interSongInfo(
+                        i: song,
+                        context: context,
+                        versionname: versionname,
+                      );
+                    },
+                    child: Card(
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(0.0),
+                      ),
+                      child: Padding(
+                        padding: EdgeInsetsGeometry.all(10.0),
+                        child: Text(
+                          '${song['id']} - ${song['title']}      ${song['genre']} - $versionname',
+                          textAlign: TextAlign.center,
+                        ),
+                      ),
+                    ),
+                  ),
+                );
+              }
+            }
+          }
         }
       }
     }
@@ -173,10 +260,15 @@ class _CollectibleInfoPageState extends State<CollectibleInfoPage> {
   }
 
   @override
+  void dispose() {
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('${widget.data['name']} - 收藏品信息'),
+        title: Text('${newdata['name']} - 收藏品信息'),
         // backgroundColor: const Color.fromARGB(255, 255, 229, 84),
       ),
       body: Center(
@@ -187,8 +279,28 @@ class _CollectibleInfoPageState extends State<CollectibleInfoPage> {
             child: Column(
               children: [
                 Image.network(
-                  'https://assets2.lxns.net/chunithm/${widget.type}/${widget.data['id']}.png',
+                  'https://assets2.lxns.net/chunithm/${widget.type}/${newdata['id']}.png',
                   errorBuilder: (context, error, stackTrace) {
+                    if (widget.type == 'trophy') {
+                      return InkWell(
+                        child: Container(
+                          color: returnTrophyBackgroundColor(newdata['color']),
+                          padding: EdgeInsets.all(8),
+                          child: Text(
+                            newdata['name'],
+                            style: TextStyle(
+                              shadows: [
+                                Shadow(
+                                  color: returnTrophyColor(newdata['color']),
+                                ),
+                              ],
+                              color: returnTrophyColor(newdata['color']),
+                              fontSize: 20,
+                            ),
+                          ),
+                        ),
+                      );
+                    }
                     return Text(
                       '图片加载失败',
                       style: TextStyle(
@@ -198,24 +310,22 @@ class _CollectibleInfoPageState extends State<CollectibleInfoPage> {
                   },
                 ),
                 Text(
-                  '落雪id: ${widget.data['id']}',
+                  '落雪id: ${newdata['id']}',
                   style: const TextStyle(fontSize: 20),
                 ),
                 InkWell(
                   onLongPress: () =>
-                      copytext(text: widget.data['name'], context: context),
+                      copytext(text: newdata['name'], context: context),
                   child: Text(
-                    '名称: ${widget.data['name']}',
+                    '名称: ${newdata['name']}',
                     style: const TextStyle(fontSize: 20),
                   ),
                 ),
                 InkWell(
-                  onLongPress: () => copytext(
-                    text: widget.data['description'],
-                    context: context,
-                  ),
+                  onLongPress: () =>
+                      copytext(text: newdata['description'], context: context),
                   child: Text(
-                    '描述: ${widget.data['description']}',
+                    '描述: ${newdata['description']}',
                     style: const TextStyle(fontSize: 20),
                   ),
                 ),
@@ -228,7 +338,7 @@ class _CollectibleInfoPageState extends State<CollectibleInfoPage> {
                       onPressed: () async {
                         try {
                           String result = await translateText(
-                            sourceText: widget.data['description'],
+                            sourceText: newdata['description'],
                             context: context,
                           );
                           setState(() {
@@ -252,7 +362,7 @@ class _CollectibleInfoPageState extends State<CollectibleInfoPage> {
                       onPressed: () async {
                         try {
                           String result = await translateText(
-                            sourceText: widget.data['name'],
+                            sourceText: newdata['name'],
                             context: context,
                           );
                           setState(() {

@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import '../../tools/settingspagefun.dart';
+import '../../../tools/settingspagefun.dart';
 
 class TextTranslateSettingsPage extends StatefulWidget {
   const TextTranslateSettingsPage({super.key});

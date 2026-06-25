@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:webview_flutter/webview_flutter.dart';
-import '../../tools/updatescorepagefun.dart';
-import 'package:flutter/services.dart';
 
 class LxnsSyncWebView extends StatefulWidget {
   const LxnsSyncWebView({super.key});
@@ -11,8 +9,6 @@ class LxnsSyncWebView extends StatefulWidget {
 }
 
 class _LxnsSyncWebViewState extends State<LxnsSyncWebView> {
-  bool _switchValue = false;
-
   final controller = WebViewController()
     ..setJavaScriptMode(JavaScriptMode.unrestricted)
     ..setNavigationDelegate(

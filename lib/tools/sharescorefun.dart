@@ -240,9 +240,10 @@ Uint8List _generateImage({
       }
     }
 
+    String notedesigner = truncatenoteDesigner(i['note_designer']);
     img.drawString(
       background,
-      '${i['level_value']}   ${i['note_designer']}   $score',
+      '${i['level_value']}   $notedesigner   $score',
       font: font,
       x: x1 + 20,
       y: y1 + 30,
@@ -344,4 +345,11 @@ img.Color _isolateDiffColor({required int levelindex}) {
     default:
       return img.ColorRgba8(192, 192, 192, 255);
   }
+}
+
+String truncatenoteDesigner(String noteDesigner) {
+  if (noteDesigner.length > 10) {
+    return '${noteDesigner.substring(0, 10)}…';
+  }
+  return noteDesigner;
 }

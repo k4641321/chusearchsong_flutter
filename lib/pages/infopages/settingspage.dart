@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
-import 'lxnssettingspage.dart';
-import 'texttranslatesettingspage.dart';
+import 'settingspage/lxnssettingspage.dart';
+import 'settingspage/texttranslatesettingspage.dart';
+import 'settingspage/mapsettingspage.dart';
 
 class SettingsPage extends StatefulWidget {
   const SettingsPage({super.key});
@@ -79,6 +80,37 @@ class _SettingsPageState extends State<SettingsPage> {
                           context,
                           MaterialPageRoute(
                             builder: (context) => LxnsSettingsPage(),
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Expanded(
+                      child: InkWell(
+                        child: Card(
+                          color: Theme.of(context).colorScheme.primaryFixedDim,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.all(
+                              Radius.circular(0.0),
+                            ),
+                          ),
+                          child: Padding(
+                            padding: EdgeInsetsGeometry.all(10),
+                            child: Text(
+                              '地图设置',
+                              textAlign: TextAlign.center,
+                              style: TextStyle(fontSize: 20),
+                            ),
+                          ),
+                        ),
+                        onTap: () => Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => MapSettingsPage(),
                           ),
                         ),
                       ),

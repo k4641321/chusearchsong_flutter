@@ -11,9 +11,9 @@ Future<void> savetexttranslateconfig({
   required String projectId,
   required BuildContext context,
 }) async {
-  final Directory directory = await getApplicationSupportDirectory();
-  final File file = File('${directory.path}/config.json');
   try {
+    final Directory directory = await getApplicationSupportDirectory();
+    final File file = File('${directory.path}/config.json');
     final String configstr = await file.readAsString();
     Map<String, dynamic> config = json.decode(configstr);
     if (!config.containsKey('texttranslate')) {
@@ -36,9 +36,9 @@ Future<void> savetexttranslateconfig({
 Future<Map<String, dynamic>> loadtexttranslateconfig(
   BuildContext context,
 ) async {
-  final Directory directory = await getApplicationSupportDirectory();
-  final File file = File('${directory.path}/config.json');
   try {
+    final Directory directory = await getApplicationSupportDirectory();
+    final File file = File('${directory.path}/config.json');
     final String configstr = await file.readAsString();
     Map<String, dynamic> config = json.decode(configstr);
     // print(config);
@@ -57,9 +57,9 @@ Future<void> savelxnstokenconfig({
   required String lxnstoken,
   required BuildContext context,
 }) async {
-  final Directory directory = await getApplicationSupportDirectory();
-  final File file = File('${directory.path}/config.json');
   try {
+    final Directory directory = await getApplicationSupportDirectory();
+    final File file = File('${directory.path}/config.json');
     final String configstr = await file.readAsString();
     Map<String, dynamic> config = json.decode(configstr);
     if (!config.containsKey('lxns')) {
@@ -104,9 +104,9 @@ Future<void> savelxnstokenconfig({
 }
 
 Future<Map<String, dynamic>> loadlxnsconfig(BuildContext context) async {
-  final Directory directory = await getApplicationSupportDirectory();
-  final File file = File('${directory.path}/config.json');
   try {
+    final Directory directory = await getApplicationSupportDirectory();
+    final File file = File('${directory.path}/config.json');
     final String configstr = await file.readAsString();
     Map<String, dynamic> config = json.decode(configstr);
     // print(config);
@@ -118,5 +118,50 @@ Future<Map<String, dynamic>> loadlxnsconfig(BuildContext context) async {
       context,
     ).showSnackBar(SnackBar(content: Text('错误，读取配置文件失败，请检查是否配置正确 $e')));
     return {};
+  }
+}
+
+Future<void> updateconfig() async {
+  final path = await getApplicationSupportDirectory();
+  final configstr = File('${path.path}/config.json').readAsStringSync();
+  Map<String, dynamic> config = json.decode(configstr);
+  if (!config.containsKey('map')) {
+    config['map'] = 'amap';
+  }
+}
+
+Future<String> loadmapconfig(BuildContext context) async {
+  try {
+    final Directory directory = await getApplicationSupportDirectory();
+    final File file = File('${directory.path}/config.json');
+    final String configstr = await file.readAsString();
+    Map<String, dynamic> config = json.decode(configstr);
+    // print(config);
+    String mapconfig = config['map'];
+    return mapconfig;
+  } catch (e) {
+    if (!context.mounted) return 'amap';
+    ScaffoldMessenger.of(
+      context,
+    ).showSnackBar(SnackBar(content: Text('错误，读取配置文件失败，请检查是否配置正确 $e')));
+    return 'amap';
+  }
+}
+
+Future<void> saveMapConfig(String map, BuildContext context) async {
+  try {
+    final Directory directory = await getApplicationSupportDirectory();
+    final File file = File('${directory.path}/config.json');
+    final String configstr = await file.readAsString();
+    Map<String, dynamic> config = json.decode(configstr);
+    config['map'] = map;
+    await file.writeAsString(json.encode(config));
+    if (!context.mounted) return;
+    ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('成功')));
+  } catch (e) {
+    if (!context.mounted) return;
+    ScaffoldMessenger.of(
+      context,
+    ).showSnackBar(SnackBar(content: Text('错误，保存配置文件失败，请检查是否配置正确 $e')));
   }
 }

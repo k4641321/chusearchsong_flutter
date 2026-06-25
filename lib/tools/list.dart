@@ -431,111 +431,61 @@ List<DataRow> ratingColor() {
   List<DataRow> rowsData = [
     DataRow(
       cells: [
-        DataCell(
-          Text(
-            '绿',
-            style: TextStyle(color: const Color.fromARGB(255, 0, 110, 9)),
-          ),
-        ),
+        DataCell(Text('绿', style: TextStyle(color: Colors.green))),
         DataCell(Text('0.00~3.99')),
       ],
     ),
     DataRow(
       cells: [
-        DataCell(
-          Text(
-            '橙',
-            style: TextStyle(color: const Color.fromARGB(255, 255, 136, 0)),
-          ),
-        ),
+        DataCell(Text('橙', style: TextStyle(color: Colors.orange))),
         DataCell(Text('4.00~6.99')),
       ],
     ),
     DataRow(
       cells: [
-        DataCell(
-          Text(
-            '红',
-            style: TextStyle(color: const Color.fromARGB(255, 255, 0, 0)),
-          ),
-        ),
+        DataCell(Text('红', style: TextStyle(color: Colors.red))),
         DataCell(Text('7.00~9.99')),
       ],
     ),
     DataRow(
       cells: [
-        DataCell(
-          Text(
-            '紫',
-            style: TextStyle(color: const Color.fromARGB(255, 95, 0, 95)),
-          ),
-        ),
+        DataCell(Text('紫', style: TextStyle(color: Colors.deepPurple))),
         DataCell(Text('10.00~11.99')),
       ],
     ),
     DataRow(
       cells: [
-        DataCell(
-          Text(
-            '铜',
-            style: TextStyle(color: const Color.fromARGB(255, 255, 123, 0)),
-          ),
-        ),
+        DataCell(Text('铜', style: TextStyle(color: Colors.deepOrange))),
         DataCell(Text('12.00~13.24')),
       ],
     ),
     DataRow(
       cells: [
-        DataCell(
-          Text(
-            '银',
-            style: TextStyle(color: const Color.fromARGB(255, 189, 189, 189)),
-          ),
-        ),
+        DataCell(Text('银', style: TextStyle(color: Colors.grey))),
         DataCell(Text('13.25~14.49')),
       ],
     ),
     DataRow(
       cells: [
-        DataCell(
-          Text(
-            '金',
-            style: TextStyle(color: const Color.fromARGB(255, 255, 217, 0)),
-          ),
-        ),
+        DataCell(Text('金', style: TextStyle(color: Colors.yellow))),
         DataCell(Text('14.50~15.24')),
       ],
     ),
     DataRow(
       cells: [
-        DataCell(
-          Text(
-            '铂金',
-            style: TextStyle(color: const Color.fromARGB(255, 255, 230, 0)),
-          ),
-        ),
+        DataCell(Text('铂金', style: TextStyle(color: Colors.amber))),
         DataCell(Text('15.25~15.99')),
       ],
     ),
     DataRow(
       cells: [
-        DataCell(
-          Text(
-            '彩虹',
-            style: TextStyle(color: const Color.fromARGB(255, 204, 0, 255)),
-          ),
-        ),
+        DataCell(Text('彩虹', style: TextStyle(color: Colors.purple))),
         DataCell(Text('16.00~16.99')),
       ],
     ),
     DataRow(
       cells: [
-        DataCell(
-          Text(
-            '彩虹(极)',
-            style: TextStyle(color: const Color.fromARGB(255, 255, 0, 234)),
-          ),
-        ),
+        DataCell(Text('彩虹(极)', style: TextStyle(color: Colors.purpleAccent))),
         DataCell(Text('17.00~')),
       ],
     ),

@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import '../../tools/fun.dart';
 import '../../tools/list.dart';
 import 'dart:developer';
 import '../../tools/search.dart';

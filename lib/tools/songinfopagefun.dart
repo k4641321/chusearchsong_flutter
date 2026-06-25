@@ -121,9 +121,15 @@ Future<List<Widget>> returnDiffTabBarView({
               child: Column(
                 children: [
                   Row(children: [Icon(Icons.queue_music), Text('谱面信息')]),
-                  Text(
-                    '谱师:       ${song2['note_designer']}',
-                    textAlign: TextAlign.start,
+                  InkWell(
+                    onLongPress: () => copytext(
+                      text: song2['note_designer'],
+                      context: context,
+                    ),
+                    child: Text(
+                      '谱师:       ${song2['note_designer']}',
+                      textAlign: TextAlign.start,
+                    ),
                   ),
                   const Divider(),
                   Text(

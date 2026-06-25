@@ -1,11 +1,7 @@
 import 'dart:developer';
-import 'package:chusearchsong_flutter/tools/fun.dart';
-import 'package:path_provider/path_provider.dart';
+import '../../tools/searchlobbypagefun.dart';
 import 'package:flutter/material.dart';
 import '../../tools/list.dart';
-import 'dart:convert';
-import 'package:url_launcher/url_launcher.dart';
-import 'dart:io';
 
 class SearchLobbyPage extends StatefulWidget {
   const SearchLobbyPage({super.key});
@@ -30,118 +26,6 @@ class _SearchLobbyPageState extends State<SearchLobbyPage> {
     setState(() {});
   }
 
-  Future<void> _openmap({required Map<String, dynamic> i}) async {
-    final String myapp = ' chusearchsong';
-    final Uri url = Uri.parse(
-      'androidamap://poi?sourceApplication=$myapp&keywords=${i['address']}',
-    );
-    final Uri url2 = Uri.parse(
-      'amapuri://keywordsearch?keywords=${i['address']}&sourceApplication=$myapp',
-    );
-    final Uri url3 = Uri.parse(
-      'amapuri://poi?sourceApplication=$myapp&keywords=${i['address']}',
-    );
-    try {
-      ScaffoldMessenger.of(
-        context,
-      ).showSnackBar(SnackBar(content: Text('打开高德地图，尝试第一种')));
-      if (await canLaunchUrl(url)) {
-        await launchUrl(url);
-        return;
-      }
-      if (!mounted) return;
-      ScaffoldMessenger.of(
-        context,
-      ).showSnackBar(SnackBar(content: Text('无法打开高德地图，尝试第二种')));
-      if (await canLaunchUrl(url2)) {
-        await launchUrl(url2);
-        return;
-      }
-      if (!mounted) return;
-      ScaffoldMessenger.of(
-        context,
-      ).showSnackBar(SnackBar(content: Text('无法打开高德地图，尝试第三种')));
-      if (await canLaunchUrl(url3)) {
-        await launchUrl(url3);
-        return;
-      } else {
-        if (!mounted) return;
-        ScaffoldMessenger.of(
-          context,
-        ).showSnackBar(SnackBar(content: Text('无法打开高德地图，我没招了')));
-        throw Exception('我没招了');
-      }
-    } catch (e) {
-      if (!mounted) return;
-      ScaffoldMessenger.of(
-        context,
-      ).showSnackBar(SnackBar(content: Text('无法打开高德地图')));
-      log('$e', name: 'searchLobbyPage', level: 1000);
-    }
-  }
-
-  Future<void> _search() async {
-    final dataPath = await getApplicationSupportDirectory();
-    String lobbyDataStr = await File(
-      '${dataPath.path}/res/location.json',
-    ).readAsString();
-    final lobbyDataJson = json.decode(lobbyDataStr) as List;
-    List searchResults2 = [];
-    List<Widget> searchResults3 = [];
-    searchResults.clear();
-    for (var i in lobbyDataJson) {
-      if (i['arcadeName'].toLowerCase().contains(
-        _controller.text.toLowerCase(),
-      )) {
-        searchResults2.add(i);
-      }
-    }
-    // print(searchResults2);
-    if (initialSelection == '全部') {
-      log('跳过地区筛选');
-      for (var i in searchResults2) {
-        searchResults3.add(
-          InkWell(
-            child: Card(
-              child: Padding(
-                padding: EdgeInsets.all(8.0),
-                child: Text(
-                  '${i['province']} - ${i['arcadeName']}\n${i['address']}',
-                ),
-              ),
-            ),
-            onTap: () => _openmap(i: i),
-            onLongPress: () => copytext(text: i['address'], context: context),
-          ),
-        );
-      }
-    } else {
-      for (var i in searchResults2) {
-        if (i['province'] == initialSelection) {
-          searchResults3.add(
-            InkWell(
-              onLongPress: () => copytext(text: i['address'], context: context),
-              child: Card(
-                child: Padding(
-                  padding: EdgeInsets.all(8.0),
-                  child: Text(
-                    '${i['province']} - ${i['arcadeName']}\n${i['address']}',
-                  ),
-                ),
-              ),
-              onTap: () => _openmap(i: i),
-            ),
-          );
-        }
-      }
-    }
-    // print(searchResults);
-    log('搜索完成');
-    setState(() {
-      searchResults = searchResults3;
-    });
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -158,12 +42,20 @@ class _SearchLobbyPageState extends State<SearchLobbyPage> {
                   child: TextField(
                     controller: _controller,
                     decoration: InputDecoration(hintText: '数据来源于华立官网'),
-                    onChanged: (value) {
+                    onChanged: (value) async {
                       try {
-                        _search();
+                        List<Widget> searchresults = await search(
+                          searchResults: searchResults,
+                          controller: _controller,
+                          initialSelection: initialSelection,
+                          context: context,
+                        );
+                        setState(() {
+                          searchResults = searchresults;
+                        });
                       } catch (e) {
                         log('错误', name: 'searchlobbypage', level: 1000);
-                        if (!mounted) return;
+                        if (!context.mounted) return;
                         ScaffoldMessenger.of(
                           context,
                         ).showSnackBar(SnackBar(content: Text('搜索失败，可能数据丢失')));
@@ -175,20 +67,47 @@ class _SearchLobbyPageState extends State<SearchLobbyPage> {
                 DropdownMenu(
                   selectOnly: true,
                   initialSelection: initialSelection,
-                  onSelected: (value) => setState(() {
-                    initialSelection = value;
-                  }),
+                  onSelected: (value) async {
+                    setState(() {
+                      initialSelection = value;
+                    });
+                    try {
+                      List<Widget> searchresults = await search(
+                        searchResults: searchResults,
+                        controller: _controller,
+                        initialSelection: initialSelection,
+                        context: context,
+                      );
+                      setState(() {
+                        searchResults = searchresults;
+                      });
+                    } catch (e) {
+                      log('错误', name: 'searchlobbypage', level: 1000);
+                      if (!context.mounted) return;
+                      ScaffoldMessenger.of(
+                        context,
+                      ).showSnackBar(SnackBar(content: Text('搜索失败，可能数据丢失')));
+                    }
+                  },
                   menuHeight: 300,
                   dropdownMenuEntries: dropdownMenuEntries,
                 ),
                 IconButton(
                   icon: Icon(Icons.search),
-                  onPressed: () {
+                  onPressed: () async {
                     try {
-                      _search();
+                      List<Widget> searchresults = await search(
+                        searchResults: searchResults,
+                        controller: _controller,
+                        initialSelection: initialSelection,
+                        context: context,
+                      );
+                      setState(() {
+                        searchResults = searchresults;
+                      });
                     } catch (e) {
                       log('错误', name: 'searchlobbypage', level: 1000);
-                      if (!mounted) return;
+                      if (!context.mounted) return;
                       ScaffoldMessenger.of(
                         context,
                       ).showSnackBar(SnackBar(content: Text('搜索失败，可能数据丢失')));

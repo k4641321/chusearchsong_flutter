@@ -23,7 +23,10 @@ List<DataRow> calculate({required int total, required bool countdown}) {
         --tapa;
       }
       if (tapj != 0) {
-        --tapj;
+        tapj = tapj - 146;
+        if (tapj < 0) {
+          tapj = 0;
+        }
       }
     }
   }

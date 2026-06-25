@@ -5,6 +5,26 @@ import 'dart:developer';
 import 'dart:io';
 import 'package:path_provider/path_provider.dart';
 
+Future<String> requestTrendProgress({required int id}) async {
+  final headers = {'X-User-Token': await returnlxnstoken()};
+  final response = await get(
+    Uri.parse('https://maimai.lxns.net/api/v0/user/chunithm/player/trophy/$id'),
+    headers: headers,
+  );
+  return response.body;
+}
+
+Future<String> returnlxnstoken() async {
+  final directory = await getApplicationSupportDirectory();
+
+  final String configstr = await File(
+    '${directory.path}/config.json',
+  ).readAsString();
+  Map<String, dynamic> config = json.decode(configstr);
+  String token = config['lxns']['token'];
+  return token;
+}
+
 Future<String> requestSongBests({
   required String token,
   required int songid,
@@ -37,35 +57,38 @@ Future<String> requestPlayerInfo({required String token}) async {
   return response.body;
 }
 
+Future<void> savePlayerInfo() async {
+  final directory = await getApplicationSupportDirectory();
+  final file = File('${directory.path}/res/playerinfo.json');
+  try {
+    String playerinfostr = await requestPlayerInfo(
+      token: await returnlxnstoken(),
+    );
+    await file.writeAsString(playerinfostr);
+  } catch (e) {
+    log('$e', name: 'settingspagefun.dart - request.dart', level: 1000);
+  }
+}
+
 Future<void> saveTrend() async {
   final directory = await getApplicationSupportDirectory();
   final file = File('${directory.path}/res/trend.json');
-  final String configstr = await File(
-    '${directory.path}/config.json',
-  ).readAsString();
-  Map<String, dynamic> config = json.decode(configstr);
-  String token = config['lxns']['token'];
   try {
-    String allscorestr = await requestTrend(token: token);
+    String allscorestr = await requestTrend(token: await returnlxnstoken());
     await file.writeAsString(allscorestr);
   } catch (e) {
-    log('$e', name: 'settingspagefun.dart', level: 1000);
+    log('$e', name: 'settingspagefun.dart - request.dart', level: 1000);
   }
 }
 
 Future<void> saveAllScore() async {
   final directory = await getApplicationSupportDirectory();
   final file = File('${directory.path}/res/allscore.json');
-  final String configstr = await File(
-    '${directory.path}/config.json',
-  ).readAsString();
-  Map<String, dynamic> config = json.decode(configstr);
-  String token = config['lxns']['token'];
   try {
-    String allscorestr = await requestScore(token: token);
+    String allscorestr = await requestScore(token: await returnlxnstoken());
     await file.writeAsString(allscorestr);
   } catch (e) {
-    log('$e', name: 'settingspagefun.dart', level: 1000);
+    log('$e', name: 'settingspagefun.dart - request.dart', level: 1000);
   }
 }
 

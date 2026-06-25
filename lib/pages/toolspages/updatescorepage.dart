@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'lxnssyncwebview.dart';
 import '../../tools/updatescorepagefun.dart';
 import 'package:flutter_singbox_client/flutter_singbox_client.dart';
-import 'package:flutter/services.dart';
 
 class UpdateScorePage extends StatefulWidget {
   const UpdateScorePage({super.key});

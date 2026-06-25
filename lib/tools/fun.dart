@@ -9,6 +9,7 @@ import 'dart:math' as math;
 import '../pages/toolspages/collectibleinfopage.dart';
 import './songinfopagefun.dart';
 import 'package:flutter/services.dart';
+import './settingspagefun.dart';
 
 //返回歌曲id列表
 Future<List<int>> returnidList() async {
@@ -252,7 +253,10 @@ Future<void> ifres({required BuildContext context}) async {
       );
       // 下载歌曲数据
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('开始下载歌曲基本数据'), duration: Duration(seconds: 1)),
+        SnackBar(
+          content: Text('开始下载歌曲基本数据'),
+          duration: Duration(microseconds: 500),
+        ),
       );
       await File('${path.path}/songs.json').create();
       await File(
@@ -260,12 +264,15 @@ Future<void> ifres({required BuildContext context}) async {
       ).writeAsString(await requestSongData());
       if (!context.mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('完成'), duration: Duration(seconds: 1)),
+        SnackBar(content: Text('完成'), duration: Duration(microseconds: 500)),
       );
       log('保存到 ${path.path}/songs.json');
       // 下载歌曲别名数据
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('开始下载歌曲别名数据'), duration: Duration(seconds: 1)),
+        SnackBar(
+          content: Text('开始下载歌曲别名数据'),
+          duration: Duration(microseconds: 500),
+        ),
       );
       await File('${path.path}/alias.json').create();
       await File(
@@ -273,12 +280,15 @@ Future<void> ifres({required BuildContext context}) async {
       ).writeAsString(await requestAliasData());
       if (!context.mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('完成'), duration: Duration(seconds: 1)),
+        SnackBar(content: Text('完成'), duration: Duration(microseconds: 500)),
       );
       log('保存到 ${path.path}/alias.json');
       // 下载机厅数据
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('开始下载机厅数据'), duration: Duration(seconds: 1)),
+        SnackBar(
+          content: Text('开始下载机厅数据'),
+          duration: Duration(microseconds: 500),
+        ),
       );
       await File('${path.path}/location.json').create();
       await File(
@@ -286,12 +296,15 @@ Future<void> ifres({required BuildContext context}) async {
       ).writeAsString(await requestLobbyData());
       if (!context.mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('完成'), duration: Duration(seconds: 1)),
+        SnackBar(content: Text('完成'), duration: Duration(microseconds: 500)),
       );
       log('保存到 ${path.path}/location.json');
       // 下载角色数据
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('开始下载角色数据'), duration: Duration(seconds: 1)),
+        SnackBar(
+          content: Text('开始下载角色数据'),
+          duration: Duration(microseconds: 500),
+        ),
       );
       await File('${path.path}/characters.json').create();
       await File(
@@ -299,12 +312,15 @@ Future<void> ifres({required BuildContext context}) async {
       ).writeAsString(await requestCharactersData());
       if (!context.mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('完成'), duration: Duration(seconds: 1)),
+        SnackBar(content: Text('完成'), duration: Duration(microseconds: 500)),
       );
       log('保存到 ${path.path}/characters.json');
       // 下载头像数据
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('开始下载头像数据'), duration: Duration(seconds: 1)),
+        SnackBar(
+          content: Text('开始下载头像数据'),
+          duration: Duration(microseconds: 500),
+        ),
       );
       await File('${path.path}/icons.json').create();
       await File(
@@ -312,12 +328,15 @@ Future<void> ifres({required BuildContext context}) async {
       ).writeAsString(await requestIconsData());
       if (!context.mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('完成'), duration: Duration(seconds: 1)),
+        SnackBar(content: Text('完成'), duration: Duration(microseconds: 500)),
       );
       log('保存到 ${path.path}/icons.json');
       // 下载名牌版数据
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('开始下载名牌版数据'), duration: Duration(seconds: 1)),
+        SnackBar(
+          content: Text('开始下载名牌版数据'),
+          duration: Duration(microseconds: 500),
+        ),
       );
       await File('${path.path}/plates.json').create();
       await File(
@@ -325,12 +344,15 @@ Future<void> ifres({required BuildContext context}) async {
       ).writeAsString(await requestPlatesData());
       if (!context.mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('完成'), duration: Duration(seconds: 1)),
+        SnackBar(content: Text('完成'), duration: Duration(microseconds: 500)),
       );
       log('保存到 ${path.path}/plates.json');
       //下载称号数据
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('开始下载称号数据'), duration: Duration(seconds: 1)),
+        SnackBar(
+          content: Text('开始下载称号数据'),
+          duration: Duration(microseconds: 500),
+        ),
       );
       await File('${path.path}/trophies.json').create();
       await File(
@@ -338,7 +360,7 @@ Future<void> ifres({required BuildContext context}) async {
       ).writeAsString(await requestTrophiesData());
       if (!context.mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('完成'), duration: Duration(seconds: 1)),
+        SnackBar(content: Text('完成'), duration: Duration(microseconds: 500)),
       );
       log('保存到 ${path.path}/trophies.json');
     }
@@ -346,7 +368,10 @@ Future<void> ifres({required BuildContext context}) async {
   } catch (e) {
     if (!context.mounted) return;
     ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(content: Text('下载失败，请检查网络'), duration: Duration(seconds: 1)),
+      SnackBar(
+        content: Text('下载失败，请检查网络'),
+        duration: Duration(microseconds: 500),
+      ),
     );
     log('$e', name: 'main', level: 2000);
   }
@@ -362,18 +387,21 @@ Future<void> ifres({required BuildContext context}) async {
 
     if (!File('${path.path}/favorite.json').existsSync()) {
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('开始创建收藏文件'), duration: Duration(seconds: 1)),
+        SnackBar(
+          content: Text('开始创建收藏文件'),
+          duration: Duration(microseconds: 500),
+        ),
       );
       File('${path.path}/favorite.json').createSync();
       File('${path.path}/favorite.json').writeAsStringSync('[]');
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('完成'), duration: Duration(seconds: 1)),
+        SnackBar(content: Text('完成'), duration: Duration(microseconds: 500)),
       );
     }
   } catch (e) {
     if (!context.mounted) return;
     ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(content: Text('创建失败'), duration: Duration(seconds: 1)),
+      SnackBar(content: Text('创建失败'), duration: Duration(microseconds: 500)),
     );
     log('$e', name: 'main', level: 2000);
   }
@@ -384,7 +412,10 @@ Future<void> ifres({required BuildContext context}) async {
     if (!File('${directory.path}/config.json').existsSync()) {
       if (!context.mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('开始创建配置文件'), duration: Duration(seconds: 1)),
+        SnackBar(
+          content: Text('开始创建配置文件'),
+          duration: Duration(microseconds: 500),
+        ),
       );
       File('${directory.path}/config.json').createSync();
       File(
@@ -394,9 +425,20 @@ Future<void> ifres({required BuildContext context}) async {
   } catch (e) {
     if (!context.mounted) return;
     ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(content: Text('创建失败'), duration: Duration(seconds: 1)),
+      SnackBar(content: Text('创建失败'), duration: Duration(microseconds: 500)),
     );
     log('$e', name: 'main', level: 2000);
+  }
+
+  //配置更新
+  try {
+    await updateconfig();
+  } catch (e) {
+    if (!context.mounted) return;
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(content: Text('配置更新失败'), duration: Duration(microseconds: 500)),
+    );
+    log('$e', name: 'fun.dart', level: 2000);
   }
 }
 
@@ -409,7 +451,10 @@ Future<void> updateData({required BuildContext context}) async {
     if (!context.mounted) return;
     // 下载歌曲数据
     ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(content: Text('开始下载歌曲基本数据'), duration: Duration(seconds: 1)),
+      SnackBar(
+        content: Text('开始下载歌曲基本数据'),
+        duration: Duration(microseconds: 500),
+      ),
     );
     await File('${path.path}/songs.json').create();
     await File(
@@ -417,12 +462,15 @@ Future<void> updateData({required BuildContext context}) async {
     ).writeAsString(await requestSongData());
     if (!context.mounted) return;
     ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(content: Text('完成'), duration: Duration(seconds: 1)),
+      SnackBar(content: Text('完成'), duration: Duration(microseconds: 500)),
     );
     log('保存到 ${path.path}/songs.json');
     // 下载歌曲别名数据
     ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(content: Text('开始下载歌曲别名数据'), duration: Duration(seconds: 1)),
+      SnackBar(
+        content: Text('开始下载歌曲别名数据'),
+        duration: Duration(microseconds: 500),
+      ),
     );
     await File('${path.path}/alias.json').create();
     await File(
@@ -430,12 +478,15 @@ Future<void> updateData({required BuildContext context}) async {
     ).writeAsString(await requestAliasData());
     if (!context.mounted) return;
     ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(content: Text('完成'), duration: Duration(seconds: 1)),
+      SnackBar(content: Text('完成'), duration: Duration(microseconds: 500)),
     );
     log('保存到 ${path.path}/alias.json');
     // 下载机厅数据
     ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(content: Text('开始下载机厅数据'), duration: Duration(seconds: 1)),
+      SnackBar(
+        content: Text('开始下载机厅数据'),
+        duration: Duration(microseconds: 500),
+      ),
     );
     await File('${path.path}/location.json').create();
     await File(
@@ -443,12 +494,15 @@ Future<void> updateData({required BuildContext context}) async {
     ).writeAsString(await requestLobbyData());
     if (!context.mounted) return;
     ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(content: Text('完成'), duration: Duration(seconds: 1)),
+      SnackBar(content: Text('完成'), duration: Duration(microseconds: 500)),
     );
     log('保存到 ${path.path}/location.json');
     // 下载角色数据
     ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(content: Text('开始下载角色数据'), duration: Duration(seconds: 1)),
+      SnackBar(
+        content: Text('开始下载角色数据'),
+        duration: Duration(microseconds: 500),
+      ),
     );
     await File('${path.path}/characters.json').create();
     await File(
@@ -456,12 +510,15 @@ Future<void> updateData({required BuildContext context}) async {
     ).writeAsString(await requestCharactersData());
     if (!context.mounted) return;
     ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(content: Text('完成'), duration: Duration(seconds: 1)),
+      SnackBar(content: Text('完成'), duration: Duration(microseconds: 500)),
     );
     log('保存到 ${path.path}/characters.json');
     // 下载头像数据
     ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(content: Text('开始下载头像数据'), duration: Duration(seconds: 1)),
+      SnackBar(
+        content: Text('开始下载头像数据'),
+        duration: Duration(microseconds: 500),
+      ),
     );
     await File('${path.path}/icons.json').create();
     await File(
@@ -469,12 +526,15 @@ Future<void> updateData({required BuildContext context}) async {
     ).writeAsString(await requestIconsData());
     if (!context.mounted) return;
     ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(content: Text('完成'), duration: Duration(seconds: 1)),
+      SnackBar(content: Text('完成'), duration: Duration(microseconds: 500)),
     );
     log('保存到 ${path.path}/icons.json');
     // 下载名牌版数据
     ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(content: Text('开始下载名牌版数据'), duration: Duration(seconds: 1)),
+      SnackBar(
+        content: Text('开始下载名牌版数据'),
+        duration: Duration(microseconds: 500),
+      ),
     );
     await File('${path.path}/plates.json').create();
     await File(
@@ -482,12 +542,15 @@ Future<void> updateData({required BuildContext context}) async {
     ).writeAsString(await requestPlatesData());
     if (!context.mounted) return;
     ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(content: Text('完成'), duration: Duration(seconds: 1)),
+      SnackBar(content: Text('完成'), duration: Duration(microseconds: 500)),
     );
     log('保存到 ${path.path}/plates.json');
     //下载称号数据
     ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(content: Text('开始下载称号数据'), duration: Duration(seconds: 1)),
+      SnackBar(
+        content: Text('开始下载称号数据'),
+        duration: Duration(microseconds: 500),
+      ),
     );
     await File('${path.path}/trophies.json').create();
     await File(
@@ -495,34 +558,56 @@ Future<void> updateData({required BuildContext context}) async {
     ).writeAsString(await requestTrophiesData());
     if (!context.mounted) return;
     ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(content: Text('完成'), duration: Duration(seconds: 1)),
+      SnackBar(content: Text('完成'), duration: Duration(microseconds: 500)),
     );
     log('保存到 ${path.path}/trophies.json');
     //获取成绩
     ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(content: Text('开始下载成绩数据'), duration: Duration(seconds: 1)),
+      SnackBar(
+        content: Text('开始下载成绩数据'),
+        duration: Duration(microseconds: 500),
+      ),
     );
     await saveAllScore();
     if (!context.mounted) return;
     ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(content: Text('完成'), duration: Duration(seconds: 1)),
+      SnackBar(content: Text('完成'), duration: Duration(microseconds: 500)),
     );
     log('保存到 ${path.path}/allscore.json');
     //Rating趋势
     ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(content: Text('开始下载Rating趋势数据'), duration: Duration(seconds: 1)),
+      SnackBar(
+        content: Text('开始下载Rating趋势数据'),
+        duration: Duration(microseconds: 500),
+      ),
     );
     await saveTrend();
     if (!context.mounted) return;
     ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(content: Text('完成'), duration: Duration(seconds: 1)),
+      SnackBar(content: Text('完成'), duration: Duration(microseconds: 500)),
     );
     log('保存到 ${path.path}/trend.json');
+    //玩家信息
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text('开始下载玩家信息'),
+        duration: Duration(microseconds: 500),
+      ),
+    );
+    await savePlayerInfo();
+    if (!context.mounted) return;
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(content: Text('完成'), duration: Duration(microseconds: 500)),
+    );
+    log('保存到 ${path.path}/playerinfo.json');
     print(directory);
   } catch (e) {
     if (!context.mounted) return;
     ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(content: Text('下载失败，请检查网络'), duration: Duration(seconds: 1)),
+      SnackBar(
+        content: Text('下载失败，请检查网络'),
+        duration: Duration(microseconds: 500),
+      ),
     );
     log('$e', name: 'main', level: 2000);
   }
@@ -700,4 +785,13 @@ void showZoomableImageDialog(BuildContext context, File imageFile) {
       ),
     ),
   );
+}
+
+Future<Map<String, dynamic>> returnplayerinfodata() async {
+  final path = await getApplicationSupportDirectory();
+  String scoretrendJsonStr = await File(
+    '${path.path}/res/playerinfo.json',
+  ).readAsString();
+  Map<String, dynamic> scoretrendJson = json.decode(scoretrendJsonStr);
+  return scoretrendJson['data'];
 }
