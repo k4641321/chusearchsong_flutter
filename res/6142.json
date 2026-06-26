@@ -1,0 +1,29 @@
+{
+  "success": true,
+  "code": 200,
+  "data": {
+    "id": 6142,
+    "name": "お腹すいた",
+    "color": "silver",
+    "description": "ぱくぱく☆がーる/MASTER/RANK S達成",
+    "required": [
+      {
+        "difficulties": [
+          3
+        ],
+        "rank": "s",
+        "songs": [
+          {
+            "id": 2365,
+            "title": "ぱくぱく☆がーる",
+            "completed": true,
+            "completed_difficulties": [
+              3
+            ]
+          }
+        ],
+        "completed": true
+      }
+    ]
+  }
+}

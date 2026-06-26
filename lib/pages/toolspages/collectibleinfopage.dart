@@ -38,10 +38,13 @@ class _CollectibleInfoPageState extends State<CollectibleInfoPage> {
         Map<String, dynamic> trophyprogressjson = json.decode(
           trophyprogressstr,
         );
-        newdata = trophyprogressjson['data'];
-      } catch (e) {
+        if (trophyprogressjson.keys.contains('data')) {
+          newdata = trophyprogressjson['data'];
+        }
+      } catch (e, stackTrace) {
         newdata = widget.data;
         log('trophyprogressstr error: $e');
+        log('trophyprogressstr stackTrace: $stackTrace');
       }
       result.add(
         Text('颜色: ${newdata['color']}', style: const TextStyle(fontSize: 20)),
@@ -147,99 +150,224 @@ class _CollectibleInfoPageState extends State<CollectibleInfoPage> {
               }
             }
 
-            songList.add(
-              InkWell(
-                // key: ValueKey(songItem['id']),
-                onTap: () async {
-                  interSongInfo(
-                    i: song,
-                    context: context,
-                    versionname: versionname,
-                  );
-                },
-                child: Card(
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(0.0),
-                  ),
-                  child: Padding(
-                    padding: EdgeInsetsGeometry.all(10.0),
-                    child: Text(
-                      '${song['id']} - ${song['title']}      ${song['genre']} - $versionname',
-                      textAlign: TextAlign.center,
+            if (songs.length > 4) {
+              songList.add(
+                InkWell(
+                  // key: ValueKey(songItem['id']),
+                  onTap: () async {
+                    interSongInfo(
+                      i: song,
+                      context: context,
+                      versionname: versionname,
+                    );
+                  },
+                  child: Card(
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(0.0),
+                    ),
+                    child: Padding(
+                      padding: EdgeInsetsGeometry.all(10.0),
+                      child: Text(
+                        '${song['id']} - ${song['title']}      ${song['genre']} - $versionname',
+                        textAlign: TextAlign.center,
+                      ),
                     ),
                   ),
                 ),
-              ),
-            );
-          }
-          result.add(
-            SizedBox(height: 300, child: ListView(children: songList)),
-          );
-          result.add(const Divider());
-
-          if (newdata.containsKey('required')) {
-            List allrequiredList = newdata['required'];
-            if (allrequiredList.contains('completed') == true) {
-              result.add(
-                Text('总完成状态: 完成', style: const TextStyle(fontSize: 20)),
               );
-            } else if (allrequiredList.contains('completed') == false) {
+            } else {
               result.add(
-                Text('总完成状态: 未完成', style: const TextStyle(fontSize: 20)),
-              );
-            }
-          }
-          if (newdata.containsKey('songs')) {
-            for (var i in newdata['songs']) {
-              List<dynamic> songs = requiredList['songs'];
-              //加载曲目
-              final dataPath = await getApplicationSupportDirectory();
-              String jsonString = await File(
-                '${dataPath.path}/res/songs.json',
-              ).readAsString();
-              Map<String, dynamic> songData = json.decode(jsonString);
-              result.add(Text('关联曲目: ', style: const TextStyle(fontSize: 20)));
-              //获取曲目信息
-              for (var songItem in songs) {
-                Map<String, dynamic> song = {};
-                for (var j in songData['songs']) {
-                  if (i['id'] == songItem['id']) {
-                    song = j;
-                    break;
-                  }
-                }
-                //获取版本名
-                String versionname = '';
-                for (var j in songData['versions']) {
-                  if (j['version'] == song['version']) {
-                    versionname = j['title'];
-                  }
-                }
-
-                result.add(
-                  InkWell(
-                    // key: ValueKey(songItem['id']),
-                    onTap: () async {
-                      interSongInfo(
-                        i: song,
-                        context: context,
-                        versionname: versionname,
-                      );
-                    },
-                    child: Card(
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(0.0),
-                      ),
-                      child: Padding(
-                        padding: EdgeInsetsGeometry.all(10.0),
-                        child: Text(
-                          '${song['id']} - ${song['title']}      ${song['genre']} - $versionname',
-                          textAlign: TextAlign.center,
-                        ),
+                InkWell(
+                  // key: ValueKey(songItem['id']),
+                  onTap: () async {
+                    interSongInfo(
+                      i: song,
+                      context: context,
+                      versionname: versionname,
+                    );
+                  },
+                  child: Card(
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(0.0),
+                    ),
+                    child: Padding(
+                      padding: EdgeInsetsGeometry.all(10.0),
+                      child: Text(
+                        '${song['id']} - ${song['title']}      ${song['genre']} - $versionname',
+                        textAlign: TextAlign.center,
                       ),
                     ),
                   ),
+                ),
+              );
+            }
+          }
+          if (songList.isNotEmpty) {
+            result.add(
+              SizedBox(height: 250, child: ListView(children: songList)),
+            );
+          }
+          result.add(const Divider());
+
+          if (newdata.containsKey('required')) {
+            List allsongrequiredlist = newdata['required'];
+            List allsongrequired = [];
+            int songcount = 0;
+            for (var i in allsongrequiredlist) {
+              if (i.containsKey('songs')) {
+                allsongrequired = i['songs'];
+                songcount = allsongrequired.length;
+              }
+              if (i.containsKey('completed')) {
+                if (i['completed'] == true) {
+                  result.add(
+                    Text(
+                      '总完成状态: 完成 $songcount/$songcount',
+                      style: const TextStyle(fontSize: 20),
+                    ),
+                  );
+                } else if (i['completed'] == false) {
+                  result.add(
+                    Text('总完成状态: 未完成', style: const TextStyle(fontSize: 20)),
+                  );
+                }
+              }
+            }
+            List<Widget> uncompletedsongs = [];
+            List<Widget> completedsongs = [];
+            int completedsongscount = 0;
+            if (allsongrequired.isNotEmpty) {
+              for (var i in allsongrequired) {
+                if (i['completed'] == true) {
+                  completedsongscount++;
+                  Map<String, dynamic> song = {};
+                  for (var j in songData['songs']) {
+                    if (j['id'] == i['id']) {
+                      song = j;
+                      break;
+                    }
+                  }
+                  //获取版本名
+                  String versionname = '';
+                  for (var j in songData['versions']) {
+                    if (j['version'] == song['version']) {
+                      versionname = j['title'];
+                    }
+                  }
+                  completedsongs.add(
+                    InkWell(
+                      // key: ValueKey(songItem['id']),
+                      onTap: () async {
+                        interSongInfo(
+                          i: song,
+                          context: context,
+                          versionname: versionname,
+                        );
+                      },
+                      child: Card(
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(0.0),
+                        ),
+                        child: Padding(
+                          padding: EdgeInsetsGeometry.all(10.0),
+                          child: Text(
+                            '${song['id']} - ${song['title']}      ${song['genre']} - $versionname',
+                            textAlign: TextAlign.center,
+                          ),
+                        ),
+                      ),
+                    ),
+                  );
+                } else if (i['completed'] == false) {
+                  Map<String, dynamic> song = {};
+                  for (var j in songData['songs']) {
+                    if (j['id'] == i['id']) {
+                      song = j;
+                      break;
+                    }
+                  }
+                  //获取版本名
+                  String versionname = '';
+                  for (var j in songData['versions']) {
+                    if (j['version'] == song['version']) {
+                      versionname = j['title'];
+                    }
+                  }
+                  uncompletedsongs.add(
+                    InkWell(
+                      // key: ValueKey(songItem['id']),
+                      onTap: () async {
+                        interSongInfo(
+                          i: song,
+                          context: context,
+                          versionname: versionname,
+                        );
+                      },
+                      child: Card(
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(0.0),
+                        ),
+                        child: Padding(
+                          padding: EdgeInsetsGeometry.all(10.0),
+                          child: Text(
+                            '${song['id']} - ${song['title']}      ${song['genre']} - $versionname',
+                            textAlign: TextAlign.center,
+                          ),
+                        ),
+                      ),
+                    ),
+                  );
+                }
+              }
+
+              if (completedsongs.length > 4) {
+                result.add(
+                  Text(
+                    '已完成歌曲曲目 $completedsongscount/$songcount',
+                    style: const TextStyle(fontSize: 18),
+                  ),
                 );
+                result.add(
+                  SizedBox(
+                    height: 250,
+                    child: ListView(children: completedsongs),
+                  ),
+                );
+              } else if (completedsongs.isNotEmpty) {
+                result.add(
+                  Text(
+                    '已完成歌曲曲目 $completedsongscount/$songcount',
+                    style: const TextStyle(fontSize: 18),
+                  ),
+                );
+                for (var i in completedsongs) {
+                  result.add(i);
+                }
+              }
+
+              if (uncompletedsongs.length > 4) {
+                result.add(
+                  Text(
+                    '未完成歌曲曲目 ${songcount - completedsongscount}/$songcount',
+                    style: const TextStyle(fontSize: 18),
+                  ),
+                );
+                result.add(
+                  SizedBox(
+                    height: 250,
+                    child: ListView(children: uncompletedsongs),
+                  ),
+                );
+              } else if (uncompletedsongs.isNotEmpty) {
+                result.add(
+                  Text(
+                    '未完成歌曲曲目 ${songcount - completedsongscount}/$songcount',
+                    style: const TextStyle(fontSize: 18),
+                  ),
+                );
+                for (var i in uncompletedsongs) {
+                  result.add(i);
+                }
               }
             }
           }
@@ -329,8 +457,6 @@ class _CollectibleInfoPageState extends State<CollectibleInfoPage> {
                     style: const TextStyle(fontSize: 20),
                   ),
                 ),
-                const Divider(),
-                Column(children: otherinfowidget),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
@@ -389,6 +515,8 @@ class _CollectibleInfoPageState extends State<CollectibleInfoPage> {
                       copytext(text: translate, context: context),
                   child: Text(translate, style: TextStyle(fontSize: 20)),
                 ),
+                const Divider(),
+                Column(children: otherinfowidget),
               ],
             ),
           ),

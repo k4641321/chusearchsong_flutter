@@ -1,0 +1,468 @@
+{
+  "success": true,
+  "code": 200,
+  "data": {
+    "id": 8807,
+    "name": "Legend of LUMINOUS PLUS",
+    "color": "image",
+    "description": "CHUNITHM LUMINOUS PLUSの全ての譜面でALL JUSTICEを達成した証です。",
+    "required": [
+      {
+        "difficulties": [
+          0,
+          1,
+          2,
+          3
+        ],
+        "full_combo": "alljustice",
+        "songs": [
+          {
+            "id": 2584,
+            "title": "勇者",
+            "completed": false,
+            "completed_difficulties": []
+          },
+          {
+            "id": 2585,
+            "title": "カオスが極まる",
+            "completed": false,
+            "completed_difficulties": []
+          },
+          {
+            "id": 2586,
+            "title": "唱",
+            "completed": false,
+            "completed_difficulties": []
+          },
+          {
+            "id": 2589,
+            "title": "ÅMARA (大未来電脳)",
+            "completed": false,
+            "completed_difficulties": []
+          },
+          {
+            "id": 2591,
+            "title": "寝起きヤシの木",
+            "completed": false,
+            "completed_difficulties": []
+          },
+          {
+            "id": 2592,
+            "title": "マツヨイナイトバグ",
+            "completed": false,
+            "completed_difficulties": []
+          },
+          {
+            "id": 2593,
+            "title": "Rrhar'il",
+            "completed": false,
+            "completed_difficulties": []
+          },
+          {
+            "id": 2594,
+            "title": "ヒュブリスの頂に聳えるのは",
+            "completed": false,
+            "completed_difficulties": []
+          },
+          {
+            "id": 2596,
+            "title": "The Greatest Night",
+            "completed": false,
+            "completed_difficulties": []
+          },
+          {
+            "id": 2597,
+            "title": "Stardust:RAY",
+            "completed": false,
+            "completed_difficulties": []
+          },
+          {
+            "id": 2598,
+            "title": "HECATONCHEIR",
+            "completed": false,
+            "completed_difficulties": []
+          },
+          {
+            "id": 2599,
+            "title": "夏宵スターマイン",
+            "completed": false,
+            "completed_difficulties": []
+          },
+          {
+            "id": 2600,
+            "title": "其のエメラルドを見よ",
+            "completed": false,
+            "completed_difficulties": []
+          },
+          {
+            "id": 2601,
+            "title": "バッドトリッパー",
+            "completed": false,
+            "completed_difficulties": []
+          },
+          {
+            "id": 2602,
+            "title": "幻想ロードオブキング",
+            "completed": false,
+            "completed_difficulties": []
+          },
+          {
+            "id": 2603,
+            "title": "イーヴィルガール",
+            "completed": false,
+            "completed_difficulties": []
+          },
+          {
+            "id": 2604,
+            "title": "わたしはオッセルヴァトリーチェ！",
+            "completed": false,
+            "completed_difficulties": []
+          },
+          {
+            "id": 2605,
+            "title": "優勝Princess♡",
+            "completed": false,
+            "completed_difficulties": []
+          },
+          {
+            "id": 2606,
+            "title": "リ・フィクション・O",
+            "completed": false,
+            "completed_difficulties": []
+          },
+          {
+            "id": 2610,
+            "title": "おくすり飲んで寝よう",
+            "completed": false,
+            "completed_difficulties": []
+          },
+          {
+            "id": 2611,
+            "title": "匿名M",
+            "completed": false,
+            "completed_difficulties": []
+          },
+          {
+            "id": 2612,
+            "title": "DRE4M1N9",
+            "completed": false,
+            "completed_difficulties": []
+          },
+          {
+            "id": 2613,
+            "title": "Overhea[r]t",
+            "completed": false,
+            "completed_difficulties": []
+          },
+          {
+            "id": 2614,
+            "title": "Malleus Maleficarum",
+            "completed": false,
+            "completed_difficulties": []
+          },
+          {
+            "id": 2615,
+            "title": "Elusive Enforcer",
+            "completed": false,
+            "completed_difficulties": []
+          },
+          {
+            "id": 2616,
+            "title": "黎命に殉ず",
+            "completed": false,
+            "completed_difficulties": []
+          },
+          {
+            "id": 2618,
+            "title": "ReCoda",
+            "completed": false,
+            "completed_difficulties": []
+          },
+          {
+            "id": 2619,
+            "title": "Presence",
+            "completed": false,
+            "completed_difficulties": []
+          },
+          {
+            "id": 2620,
+            "title": "チューリングの跡",
+            "completed": false,
+            "completed_difficulties": []
+          },
+          {
+            "id": 2621,
+            "title": "NIGHTWAVE FRAGMENTS",
+            "completed": false,
+            "completed_difficulties": []
+          },
+          {
+            "id": 2622,
+            "title": "Joe Fight",
+            "completed": false,
+            "completed_difficulties": []
+          },
+          {
+            "id": 2623,
+            "title": "Poppin' Dream",
+            "completed": false,
+            "completed_difficulties": []
+          },
+          {
+            "id": 2624,
+            "title": "Make Up Your World feat. キョンシーのCiちゃん & らっぷびと",
+            "completed": false,
+            "completed_difficulties": []
+          },
+          {
+            "id": 2625,
+            "title": "Latent Kingdom",
+            "completed": false,
+            "completed_difficulties": []
+          },
+          {
+            "id": 2629,
+            "title": "壱雫空",
+            "completed": false,
+            "completed_difficulties": []
+          },
+          {
+            "id": 2630,
+            "title": "迷星叫",
+            "completed": false,
+            "completed_difficulties": []
+          },
+          {
+            "id": 2631,
+            "title": "スコーピオンガールの貴重な捕食シーン",
+            "completed": false,
+            "completed_difficulties": []
+          },
+          {
+            "id": 2632,
+            "title": "ずんだパーリナイ",
+            "completed": false,
+            "completed_difficulties": []
+          },
+          {
+            "id": 2633,
+            "title": "Rhythmic Ride",
+            "completed": false,
+            "completed_difficulties": []
+          },
+          {
+            "id": 2634,
+            "title": "Dramatic…?",
+            "completed": false,
+            "completed_difficulties": []
+          },
+          {
+            "id": 2635,
+            "title": "X.Y.Z.",
+            "completed": false,
+            "completed_difficulties": []
+          },
+          {
+            "id": 2636,
+            "title": "コメクエスト",
+            "completed": false,
+            "completed_difficulties": []
+          },
+          {
+            "id": 2637,
+            "title": "乙女戦士☆あーし。",
+            "completed": false,
+            "completed_difficulties": []
+          },
+          {
+            "id": 2638,
+            "title": "おしゃまなプリンセス",
+            "completed": false,
+            "completed_difficulties": []
+          },
+          {
+            "id": 2639,
+            "title": "ソーシャルワンダーランド",
+            "completed": false,
+            "completed_difficulties": []
+          },
+          {
+            "id": 2641,
+            "title": "マシンガンポエムドール",
+            "completed": false,
+            "completed_difficulties": []
+          },
+          {
+            "id": 2642,
+            "title": "壊れた人形のマーチ",
+            "completed": false,
+            "completed_difficulties": []
+          },
+          {
+            "id": 2643,
+            "title": "ヒトリシズカ(Arranged: Iceon)",
+            "completed": false,
+            "completed_difficulties": []
+          },
+          {
+            "id": 2644,
+            "title": "Death Doll",
+            "completed": false,
+            "completed_difficulties": []
+          },
+          {
+            "id": 2645,
+            "title": "Lovely Lovely Lover",
+            "completed": false,
+            "completed_difficulties": []
+          },
+          {
+            "id": 2646,
+            "title": "Fire Engine73",
+            "completed": false,
+            "completed_difficulties": []
+          },
+          {
+            "id": 2647,
+            "title": "LibrariA",
+            "completed": false,
+            "completed_difficulties": []
+          },
+          {
+            "id": 2648,
+            "title": "Tuatha Dé Danann",
+            "completed": false,
+            "completed_difficulties": []
+          },
+          {
+            "id": 2650,
+            "title": "MeteorSnow",
+            "completed": false,
+            "completed_difficulties": []
+          },
+          {
+            "id": 2651,
+            "title": "Acid God",
+            "completed": false,
+            "completed_difficulties": []
+          },
+          {
+            "id": 2652,
+            "title": "Forsaken Tale",
+            "completed": false,
+            "completed_difficulties": []
+          },
+          {
+            "id": 2653,
+            "title": "Sleep Walking Orchestra",
+            "completed": false,
+            "completed_difficulties": []
+          },
+          {
+            "id": 2654,
+            "title": "Here the Our MIRAI!",
+            "completed": false,
+            "completed_difficulties": []
+          },
+          {
+            "id": 2657,
+            "title": "1000年生きてる",
+            "completed": false,
+            "completed_difficulties": []
+          },
+          {
+            "id": 2658,
+            "title": "熱異常",
+            "completed": false,
+            "completed_difficulties": []
+          },
+          {
+            "id": 2659,
+            "title": "アプリコット",
+            "completed": false,
+            "completed_difficulties": []
+          },
+          {
+            "id": 2660,
+            "title": "What's up? Pop!",
+            "completed": false,
+            "completed_difficulties": []
+          },
+          {
+            "id": 2661,
+            "title": "まにまに",
+            "completed": false,
+            "completed_difficulties": []
+          },
+          {
+            "id": 2663,
+            "title": "Flower",
+            "completed": false,
+            "completed_difficulties": []
+          },
+          {
+            "id": 2665,
+            "title": "超熊猫的周遊記（ワンダーパンダートラベラー）",
+            "completed": false,
+            "completed_difficulties": []
+          },
+          {
+            "id": 2670,
+            "title": "自称、音楽愛好家",
+            "completed": false,
+            "completed_difficulties": []
+          },
+          {
+            "id": 2671,
+            "title": "デビルじゃないもん",
+            "completed": false,
+            "completed_difficulties": []
+          },
+          {
+            "id": 2673,
+            "title": "ハッピータイフーン",
+            "completed": false,
+            "completed_difficulties": []
+          },
+          {
+            "id": 2674,
+            "title": "M.L.V.G",
+            "completed": false,
+            "completed_difficulties": []
+          },
+          {
+            "id": 2675,
+            "title": "トゥッティ！",
+            "completed": false,
+            "completed_difficulties": []
+          },
+          {
+            "id": 2676,
+            "title": "ハートサーモグラフィー",
+            "completed": false,
+            "completed_difficulties": []
+          },
+          {
+            "id": 2677,
+            "title": "モンダイナイトリッパー！",
+            "completed": false,
+            "completed_difficulties": []
+          },
+          {
+            "id": 2680,
+            "title": "NAGAREBOSHI☆ROCKET",
+            "completed": false,
+            "completed_difficulties": []
+          },
+          {
+            "id": 2681,
+            "title": "群青シグナル",
+            "completed": false,
+            "completed_difficulties": []
+          }
+        ],
+        "completed": false
+      }
+    ]
+  }
+}
