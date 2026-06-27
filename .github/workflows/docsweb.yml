@@ -39,18 +39,11 @@ jobs:
         run: cd docs && npm ci
 
       - name: Build VitePress docs
-        run: cd docs && npx vitepress build --base /docs/
-
-      - name: Combine build outputs
-        run: |
-          mkdir -p deploy
-          cp -r build/web/* deploy/
-          mkdir -p deploy/docs
-          cp -r docs/.vitepress/dist/* deploy/docs/
+        run: cd docs && npx vitepress build
 
       - name: Deploy to gh-pages
         uses: peaceiris/actions-gh-pages@v4
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: ./deploy
+          publish_dir: ./docs/.vitepress/dist
           force_orphan: true
