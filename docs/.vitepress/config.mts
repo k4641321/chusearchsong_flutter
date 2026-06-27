@@ -3,6 +3,7 @@ import { defineConfig } from 'vitepress'
 
 // https://vitepress.dev/reference/site-config
 export default defineConfig({
+  base: '/chusearchsong_flutter/',
   title: "chusearchsong_flutter Docs",
   description: "chusearchsong(中二查歌) 帮助文档",
   themeConfig: {
