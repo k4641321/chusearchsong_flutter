@@ -29,6 +29,50 @@ class _CollectibleInfoPageState extends State<CollectibleInfoPage> {
   Map<String, dynamic> newdata = {};
 
   Future<void> otherinfo({required String type}) async {
+    List returnEnglishDiff({
+      required List difficulties,
+      required bool isComplete,
+    }) {
+      List result = [];
+      if (isComplete == true) {
+        for (var i in difficulties) {
+          switch (i) {
+            case 0:
+              result.add('BASIC');
+            case 1:
+              result.add('ADVANCED');
+            case 2:
+              result.add('EXPERT');
+            case 3:
+              result.add('MASTER');
+            case 4:
+              result.add('ULTIMATE');
+            default:
+              result.add('未知');
+          }
+        }
+      } else if (isComplete == false) {
+        result = ['BASIC', 'ADVANCED', 'EXPERT', 'MASTER', 'ULTIMATE'];
+        for (var i in difficulties) {
+          switch (i) {
+            case 0:
+              result.removeAt(0);
+            case 1:
+              result.removeAt(1);
+            case 2:
+              result.removeAt(2);
+            case 3:
+              result.removeAt(3);
+            case 4:
+              result.removeAt(4);
+            default:
+              result = ['未知'];
+          }
+        }
+      }
+      return result;
+    }
+
     newdata = widget.data;
     if (type == 'trophy') {
       try {
@@ -68,6 +112,12 @@ class _CollectibleInfoPageState extends State<CollectibleInfoPage> {
                 difficulties.add('EXPERT');
               case 3:
                 difficulties.add('MASTER');
+              case 4:
+                difficulties.add('ULTIMATE');
+              case 5:
+                difficulties.add('Worlds\'End');
+              default:
+                difficulties.add('未知');
             }
           }
         }
@@ -271,7 +321,7 @@ class _CollectibleInfoPageState extends State<CollectibleInfoPage> {
                         child: Padding(
                           padding: EdgeInsetsGeometry.all(10.0),
                           child: Text(
-                            '${song['id']} - ${song['title']}      ${song['genre']} - $versionname',
+                            '${song['id']} - ${song['title']}      ${song['genre']} - $versionname\n${returnEnglishDiff(difficulties: i['completed_difficulties'], isComplete: true)}',
                             textAlign: TextAlign.center,
                           ),
                         ),
@@ -310,7 +360,7 @@ class _CollectibleInfoPageState extends State<CollectibleInfoPage> {
                         child: Padding(
                           padding: EdgeInsetsGeometry.all(10.0),
                           child: Text(
-                            '${song['id']} - ${song['title']}      ${song['genre']} - $versionname',
+                            '${song['id']} - ${song['title']}      ${song['genre']} - $versionname\n${returnEnglishDiff(difficulties: i['completed_difficulties'], isComplete: false)}',
                             textAlign: TextAlign.center,
                           ),
                         ),

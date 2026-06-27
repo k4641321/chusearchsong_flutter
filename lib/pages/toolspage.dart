@@ -104,7 +104,7 @@ class _ToolPageState extends State<ToolPage> {
                             color: Theme.of(context).colorScheme.onSurface,
                           ),
                           label: Text(
-                            '机厅信息',
+                            '机厅搜索',
                             style: TextStyle(
                               color: Theme.of(context).colorScheme.onSurface,
                             ),

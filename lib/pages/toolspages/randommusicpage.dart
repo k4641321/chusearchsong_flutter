@@ -184,22 +184,6 @@ class _RandomMusicPageState extends State<RandomMusicPage> {
               ),
               Row(
                 children: [
-                  IconButton(
-                    onPressed: () {
-                      try {
-                        _performSearch();
-                      } catch (e) {
-                        ScaffoldMessenger.of(
-                          context,
-                        ).showSnackBar(SnackBar(content: Text('搜索失败，可能是数据丢失')));
-                      }
-                    },
-                    icon: Icon(Icons.search),
-                  ),
-                ],
-              ),
-              Row(
-                children: [
                   Expanded(child: genreDropdownMenu),
                   Expanded(child: versionDropdownMenu),
                   Expanded(
