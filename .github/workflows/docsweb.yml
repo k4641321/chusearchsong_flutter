@@ -1,0 +1,56 @@
+name: Docs Web
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.41.9'
+          channel: stable
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Install Flutter dependencies
+        run: flutter pub get
+
+      - name: Build Flutter web
+        run: flutter build web --release
+
+      - name: Fix Flutter base href
+        run: sed -i 's|<base href="/">|<base href="./">|g' build/web/index.html
+
+      - name: Install docs dependencies
+        run: cd docs && npm ci
+
+      - name: Build VitePress docs
+        run: cd docs && npx vitepress build --base /docs/
+
+      - name: Combine build outputs
+        run: |
+          mkdir -p deploy
+          cp -r build/web/* deploy/
+          mkdir -p deploy/docs
+          cp -r docs/.vitepress/dist/* deploy/docs/
+
+      - name: Deploy to gh-pages
+        uses: peaceiris/actions-gh-pages@v4
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./deploy
+          force_orphan: true
