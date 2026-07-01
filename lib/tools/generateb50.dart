@@ -419,7 +419,7 @@ Future<void> generateb50() async {
   // ═══════════ 水印 ═══════════
   img.drawString(
     background,
-    '此b50由 chusearchsong(中二查歌) 生成 成绩最后更新时间 ${playerinfo['upload_time']}',
+    '此b50由 chusearchsong(中二查歌) 生成 成绩最后更新时间 ${DateTime.parse(playerinfo['upload_time']).toLocal()}',
     font: font,
     x: 5896 ~/ 2 - 300,
     y: 2800,

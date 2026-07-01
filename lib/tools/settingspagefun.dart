@@ -128,6 +128,7 @@ Future<void> updateconfig() async {
   if (!config.containsKey('map')) {
     config['map'] = 'amap';
   }
+  File('${path.path}/config.json').writeAsStringSync(json.encode(config));
 }
 
 Future<String> loadmapconfig(BuildContext context) async {

@@ -6,6 +6,7 @@ import 'package:path_provider/path_provider.dart';
 import 'request.dart';
 import '../pages/toolspages/faulttoterantcomputationpage.dart';
 import '../tools/fun.dart';
+import '../pages/scorehistorypage.dart';
 
 List<Widget> returnDiffTabBar({required Map song}) {
   List<Widget> result = [];
@@ -41,6 +42,7 @@ Future<Widget> returnscore({
   required int song,
   required int i,
   required Color corlor,
+  required BuildContext context,
 }) async {
   //加载成绩
   Widget result = const Text('无成绩');
@@ -57,6 +59,12 @@ Future<Widget> returnscore({
         // print('${j['id']},$song');
         if (j['level_index'] == i) {
           result = InkWell(
+            onLongPress: () => Navigator.of(context).push(
+              MaterialPageRoute(
+                builder: (builder) =>
+                    ScoreHistoryPage(songid: song, diffindex: i),
+              ),
+            ),
             child: Card(
               color: corlor,
               child: Padding(
@@ -64,19 +72,21 @@ Future<Widget> returnscore({
                 child: Column(
                   children: [
                     Row(children: [Icon(Icons.star), Text('历史成绩')]),
-                    Text('score:   ${j['score']}'),
+                    Text('Score:   ${j['score']}'),
                     const Divider(),
-                    Text('rating:   ${j['rating']}'),
+                    Text('Rating:   ${j['rating']}'),
                     const Divider(),
-                    Text('over_power:   ${j['over_power']}'),
+                    Text('Over_power:   ${j['over_power']}'),
                     const Divider(),
-                    Text('clear:   ${j['clear']}'),
+                    Text('Clear:   ${j['clear']}'),
                     const Divider(),
-                    Text('full_combo:   ${j['full_combo']}'),
+                    Text('Full Combo:   ${j['full_combo']}'),
                     const Divider(),
-                    Text('full_chain:   ${j['full_chain']}'),
+                    Text('Full Chain:   ${j['full_chain']}'),
                     const Divider(),
-                    Text('rank:   ${j['rank']}'),
+                    Text(
+                      'Rank:   ${(j['rank'] as String).replaceFirst('p', '+')}',
+                    ),
                   ],
                 ),
               ),
@@ -104,7 +114,6 @@ Future<List<Widget>> returnDiffTabBarView({
     for (var i = 0; i < diffs.length; i++) {
       var song2 = diffs[i];
       List<Widget> result2 = [];
-      result2.add(await returnscore(song: song['id'], i: i, corlor: color));
       result2.add(
         InkWell(
           onLongPress: () => Navigator.of(context).push(
@@ -138,32 +147,32 @@ Future<List<Widget>> returnDiffTabBarView({
                   ),
                   const Divider(),
                   Text(
-                    'total:      ${song2['notes']['total']}',
+                    'Total:      ${song2['notes']['total']}',
                     style: TextStyle(fontSize: 15),
                   ),
                   const Divider(),
                   Text(
-                    'tap:      ${song2['notes']['tap']}',
+                    'Tap:      ${song2['notes']['tap']}',
                     style: TextStyle(fontSize: 15),
                   ),
                   const Divider(),
                   Text(
-                    'hold:      ${song2['notes']['hold']}',
+                    'Hold:      ${song2['notes']['hold']}',
                     style: TextStyle(fontSize: 15),
                   ),
                   const Divider(),
                   Text(
-                    'slide:      ${song2['notes']['slide']}',
+                    'Slide:      ${song2['notes']['slide']}',
                     style: TextStyle(fontSize: 15),
                   ),
                   const Divider(),
                   Text(
-                    'air:       ${song2['notes']['air']}',
+                    'Air:       ${song2['notes']['air']}',
                     style: TextStyle(fontSize: 15),
                   ),
                   const Divider(),
                   Text(
-                    'flick:       ${song2['notes']['flick']}',
+                    'Flick:       ${song2['notes']['flick']}',
                     style: TextStyle(fontSize: 15),
                   ),
                 ],
@@ -172,14 +181,40 @@ Future<List<Widget>> returnDiffTabBarView({
           ),
         ),
       );
+      if (!context.mounted) {
+        result.add(Column(children: result2));
+        return result;
+      }
+      result2.insert(
+        0,
+        await returnscore(
+          song: song['id'],
+          i: i,
+          corlor: color,
+          context: context,
+        ),
+      );
       result.add(Column(children: result2));
     }
   } catch (e) {
     int length = song['difficulties'].length;
     for (var i = 0; i < length; i++) {
       List<Widget> result2 = [];
-      result2.add(await returnscore(song: song['id'], i: i, corlor: color));
       result2.add(Row(children: [Text('获取谱面信息失败')]));
+      if (!context.mounted) {
+        result.add(Column(children: result2));
+        return result;
+      }
+      result2.insert(
+        0,
+        await returnscore(
+          song: song['id'],
+          i: i,
+          corlor: color,
+          context: context,
+        ),
+      );
+
       result.add(Column(children: result2));
     }
     log('$e', name: 'songinfopagefun.dart', level: 1000);

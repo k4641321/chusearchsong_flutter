@@ -8,7 +8,7 @@ List<DataRow> calculate({required int total, required bool countdown}) {
   double jc = 1010000 / total;
   double j = 10000 / total;
   double a = 500000 / total;
-  double m = 0;
+  // double m = 0;
 
   int tapm = 0;
   int tapa = 0;

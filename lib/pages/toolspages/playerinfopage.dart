@@ -138,7 +138,9 @@ class _PlayerInfoPageState extends State<PlayerInfoPage> {
                   'OVER POWER 总进度: ${widget.playerdata['over_power_progress']}',
                 ),
                 Text('玩家等级突破次数: ${widget.playerdata['reborn_count']}'),
-                Text('最后更新时间: ${widget.playerdata['upload_time']}'),
+                Text(
+                  '最后更新时间: ${DateTime.parse(widget.playerdata['upload_time']).toLocal()}',
+                ),
               ],
             ),
           ),

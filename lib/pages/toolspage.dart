@@ -1,5 +1,4 @@
 import 'package:chusearchsong_flutter/tools/fun.dart';
-import 'package:path_provider/path_provider.dart';
 import '../tools/ratingtrendpagefun.dart';
 import 'toolspages/ratingcalculatorpage.dart';
 import 'package:flutter/material.dart';

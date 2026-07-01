@@ -45,14 +45,12 @@ class _CollectibleInfoPageState extends State<CollectibleInfoPage> {
               result.add('EXPERT');
             case 3:
               result.add('MASTER');
-            case 4:
-              result.add('ULTIMATE');
             default:
               result.add('未知');
           }
         }
       } else if (isComplete == false) {
-        result = ['BASIC', 'ADVANCED', 'EXPERT', 'MASTER', 'ULTIMATE'];
+        result = ['BASIC', 'ADVANCED', 'EXPERT', 'MASTER'];
         for (var i in difficulties) {
           switch (i) {
             case 0:
@@ -449,10 +447,10 @@ class _CollectibleInfoPageState extends State<CollectibleInfoPage> {
         title: Text('${newdata['name']} - 收藏品信息'),
         // backgroundColor: const Color.fromARGB(255, 255, 229, 84),
       ),
-      body: Center(
-        child: Scrollbar(
-          controller: _controller,
-          child: SingleChildScrollView(
+      body: DraggableScrollableSheet(
+        initialChildSize: 1.0,
+        builder: (BuildContext context, ScrollController scrollController) {
+          return SingleChildScrollView(
             controller: _controller,
             child: Column(
               children: [
@@ -569,8 +567,8 @@ class _CollectibleInfoPageState extends State<CollectibleInfoPage> {
                 Column(children: otherinfowidget),
               ],
             ),
-          ),
-        ),
+          );
+        },
       ),
     );
   }
