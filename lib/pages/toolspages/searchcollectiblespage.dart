@@ -33,6 +33,7 @@ class _SearchCollectiblesState extends State<SearchCollectiblesPage> {
                         context: context,
                         searchtext: _controller.text,
                         searchtype: initialSelection,
+                        isSonginfo: false,
                       );
                       setState(() {
                         result = result2;
@@ -64,6 +65,7 @@ class _SearchCollectiblesState extends State<SearchCollectiblesPage> {
                         context: context,
                         searchtext: _controller.text,
                         searchtype: initialSelection,
+                        isSonginfo: false,
                       );
                       setState(() {
                         result = result2;

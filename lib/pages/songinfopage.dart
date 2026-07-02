@@ -33,6 +33,7 @@ class SongInfoPage extends StatefulWidget {
 
 class _SongInfoPageState extends State<SongInfoPage> {
   IconData icon = Icons.favorite_border;
+  List<Widget> relatedCollectibles = [Text('加载中')];
 
   Future<void> _add() async {
     try {
@@ -117,10 +118,26 @@ class _SongInfoPageState extends State<SongInfoPage> {
     }
   }
 
+  Future<void> loadrelatedCollectibles() async {
+    List<Widget> result = await returnRelatedCollectibles(
+      id: widget.song['id'],
+      context: context,
+    );
+    setState(() {
+      relatedCollectibles = result;
+    });
+  }
+
   @override
   void initState() {
     super.initState();
     _buttonIcon();
+  }
+
+  @override
+  void didChangeDependencies() {
+    loadrelatedCollectibles();
+    super.didChangeDependencies();
   }
 
   @override
@@ -306,6 +323,21 @@ class _SongInfoPageState extends State<SongInfoPage> {
                           child: Padding(
                             padding: EdgeInsetsGeometry.all(8),
                             child: Column(children: widget.alias),
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+                Row(
+                  children: [
+                    Expanded(
+                      child: InkWell(
+                        child: Card(
+                          color: Theme.of(context).colorScheme.onSecondary,
+                          child: Padding(
+                            padding: EdgeInsetsGeometry.all(8),
+                            child: Column(children: relatedCollectibles),
                           ),
                         ),
                       ),

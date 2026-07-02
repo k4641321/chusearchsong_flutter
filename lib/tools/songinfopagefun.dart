@@ -7,6 +7,7 @@ import 'request.dart';
 import '../pages/toolspages/faulttoterantcomputationpage.dart';
 import '../tools/fun.dart';
 import '../pages/scorehistorypage.dart';
+import '../tools/fun.dart';
 
 List<Widget> returnDiffTabBar({required Map song}) {
   List<Widget> result = [];
@@ -260,5 +261,57 @@ Future<List<Widget>> returnAlias({
     ];
   }
 
+  return result;
+}
+
+Future<List<Widget>> returnRelatedCollectibles({
+  required int id,
+  required BuildContext context,
+}) async {
+  List<Widget> result = [];
+  try {
+    String requestresultstr = await requestRelatedCollectibles(id: id);
+    List requestresult = json.decode(requestresultstr);
+    // String type(String type) {
+    //   switch (type) {
+    //     case 'trophy':
+    //       return '称号';
+    //     case 'plate':
+    //       return '名牌版';
+    //     case 'icon':
+    //       return '头像';
+    //     case 'character':
+    //       return '角色';
+    //     default:
+    //       return '未知';
+    //   }
+    // }
+
+    if (requestresult.isEmpty) {
+      result.add(Text('无'));
+    } else {
+      if (!context.mounted) {
+        result = [
+          Row(children: [Icon(Icons.label), Text('关联收藏品')]),
+          const Divider(),
+          Text('无'),
+        ];
+        return result;
+      }
+      for (var i in requestresult) {
+        List<Widget> result2 = await searchCollectibles(
+          searchtext: i['id'].toString(),
+          context: context,
+          searchtype: i['type'],
+          isSonginfo: true,
+        );
+        result.addAll(result2);
+        // log('执行');
+      }
+    }
+  } catch (e) {
+    result.add(Text('错误 $e'));
+  }
+  result.insert(0, Row(children: [Icon(Icons.label), Text('关联收藏品')]));
   return result;
 }

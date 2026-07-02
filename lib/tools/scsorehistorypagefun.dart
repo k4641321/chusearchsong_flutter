@@ -11,6 +11,7 @@ Future<List<Widget>> getLineChartAndCard({
   required int id,
   required int diffindex,
   required Color corlor,
+  // required void Function(int index) onSpotTouched,
 }) async {
   try {
     List<Widget> result = [];
@@ -30,10 +31,10 @@ Future<List<Widget>> getLineChartAndCard({
       if (i['score'] > maxscore) {
         maxscore = i['score'];
       }
-      if (i['score'] < minscore) {
+      if (i['score'] < minscore || minscore == 0) {
         minscore = i['score'];
       }
-      date.add(i['play_time']);
+      date.insert(0, i['play_time']);
     }
 
     Widget lineChart = Padding(
@@ -44,10 +45,17 @@ Future<List<Widget>> getLineChartAndCard({
           LineChartData(
             lineTouchData: LineTouchData(
               enabled: true,
+              // touchCallback:
+              //     (FlTouchEvent event, LineTouchResponse? touchResponse) {
+              //       if (event is FlTapUpEvent &&
+              //           touchResponse?.lineBarSpots?.isNotEmpty == true) {
+              //         int index =
+              //             touchResponse!.lineBarSpots!.last.x.toInt() - 1;
+              //         onSpotTouched(index); // 告诉父组件"用户点了第几个"
+              //       }
+              //     },
               touchTooltipData: LineTouchTooltipData(
                 getTooltipItems: (touchedSpots) {
-                  print(touchedSpots);
-
                   List<LineTooltipItem> result = [
                     LineTooltipItem(
                       '${touchedSpots.last.y.toInt()}\n${DateTime.parse(date[date.length - touchedSpots.last.x.toInt()]).toLocal().toString()}',
@@ -70,35 +78,35 @@ Future<List<Widget>> getLineChartAndCard({
               bottomTitles: AxisTitles(
                 drawBelowEverything: false,
                 sideTitles: SideTitles(
+                  interval: 1,
                   showTitles: true,
                   reservedSize: 90,
                   minIncluded: false,
                   getTitlesWidget: (value, meta) {
-                    int index = date.length - value.toInt();
+                    int index = value.toInt() - 1;
                     if (index >= date.length) {
-                      return Transform.rotate(
-                        angle: 45,
-                        child: Text(
-                          DateTime.parse(date.last).toLocal().toString(),
-                        ),
-                      );
+                      index = date.length - 1;
                     } else if (index < 0) {
-                      return Transform.rotate(
-                        angle: 45,
-                        child: Text(
-                          DateTime.parse(date.first).toLocal().toString(),
+                      index = 0;
+                    }
+                    if (index >= 0 && index < date.length) {
+                      return SideTitleWidget(
+                        meta: meta,
+                        child: Transform.rotate(
+                          angle: 45 * (3.1415926535 / 180), // 45度转弧度
+                          child: Padding(
+                            padding: EdgeInsets.only(top: 15),
+                            child: Text(
+                              DateTime.parse(date[index]).toLocal().toString(),
+                              style: TextStyle(fontSize: 10),
+                            ),
+                          ),
                         ),
                       );
-                    } else if (value != value.roundToDouble()) {
-                      return const SizedBox.shrink();
+                    } else {
+                      return SizedBox.shrink();
                     }
                     // print(index);
-                    return Transform.rotate(
-                      angle: 45,
-                      child: Text(
-                        DateTime.parse(date[index]).toLocal().toString(),
-                      ),
-                    );
                   },
                 ),
               ),
@@ -111,7 +119,7 @@ Future<List<Widget>> getLineChartAndCard({
             ),
             lineBarsData: [LineChartBarData(spots: spots)],
             minX: 0,
-            maxX: allscore.length.toDouble(),
+            maxX: allscore.length.toDouble() + 1,
             minY: minscore.toDouble(),
             maxY: maxscore.toDouble(),
           ),
@@ -160,6 +168,7 @@ Future<List<Widget>> getLineChartAndCard({
     }
     result.add(lineChart);
     result.add(Column(children: cardList));
+
     return result;
   } catch (e, stackTrace) {
     log('$e\n$stackTrace', name: 'scorehistorypagefun.dart', level: 1000);

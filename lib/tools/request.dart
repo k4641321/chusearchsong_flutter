@@ -5,6 +5,13 @@ import 'dart:developer';
 import 'dart:io';
 import 'package:path_provider/path_provider.dart';
 
+Future<String> requestRelatedCollectibles({required int id}) async {
+  final response = await get(
+    Uri.parse('https://maimai.lxns.net/api/v0/chunithm/song-collections/$id'),
+  );
+  return response.body;
+}
+
 Future<String> requestSongHistory({required int id, required int diff}) async {
   final headers = {'X-User-Token': await returnlxnstoken()};
   final response = await get(

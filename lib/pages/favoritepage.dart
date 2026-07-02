@@ -50,6 +50,7 @@ class _FavoritePageState extends State<FavoritePage> {
               context: context,
               versionname: versionname,
             );
+            if (!mounted) return;
             _returnfavoriteResults();
           },
           child: Card(
@@ -67,6 +68,7 @@ class _FavoritePageState extends State<FavoritePage> {
         ),
       );
     }
+    if (!mounted) return;
     setState(() {
       favorite = favoriteResults;
     });

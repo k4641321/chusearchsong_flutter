@@ -1,8 +1,8 @@
 # chusearchsong_flutter
 
-## 是的是的，又是一个新框架，kivy貌似因为库的问题本地构建不成功，转为flutter了，气笑了
+### 是的是的，又是一个新框架，kivy貌似因为库的问题本地构建不成功，转为flutter了，气笑了
 
-# 此项目为[chusearchsong](https://github.com/k4641321/chusearchsong) flutter的重构版
+## 此项目为[chusearchsong](https://github.com/k4641321/chusearchsong) flutter的重构版
 
 # 中二查歌
 
@@ -32,7 +32,8 @@
 - [x] B50生成
 - [x] 成绩分享
 - [x] 收藏品进度
-- [ ] 成绩曲线图
+- [x] 成绩曲线图
+- [x] 曲目与收藏品关联
 - [ ] 排行榜
 - [ ] ~~多个收藏夹~~(技术力不行，不做了)  
 ...more...
