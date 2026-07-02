@@ -32,6 +32,7 @@ class _CollectibleInfoPageState extends State<CollectibleInfoPage> {
     List returnEnglishDiff({
       required List difficulties,
       required bool isComplete,
+      List<String>? requireddifficulties,
     }) {
       List result = [];
       if (isComplete == true) {
@@ -45,24 +46,30 @@ class _CollectibleInfoPageState extends State<CollectibleInfoPage> {
               result.add('EXPERT');
             case 3:
               result.add('MASTER');
+            case 4:
+              difficulties.add('ULTIMATE');
+            case 5:
+              difficulties.add('Worlds\'End');
             default:
               result.add('未知');
           }
         }
-      } else if (isComplete == false) {
-        result = ['BASIC', 'ADVANCED', 'EXPERT', 'MASTER'];
+      } else if (isComplete == false && requireddifficulties != null) {
+        result = requireddifficulties;
         for (var i in difficulties) {
           switch (i) {
             case 0:
-              result.removeAt(0);
+              result.remove('BASIC');
             case 1:
-              result.removeAt(1);
+              result.remove('ADVANCED');
             case 2:
-              result.removeAt(2);
+              result.remove('EXPERT');
             case 3:
-              result.removeAt(3);
+              result.remove('MASTER');
             case 4:
-              result.removeAt(4);
+              result.remove('ULTIMATE');
+            case 5:
+              result.remove('Worlds\'End');
             default:
               result = ['未知'];
           }
@@ -89,7 +96,11 @@ class _CollectibleInfoPageState extends State<CollectibleInfoPage> {
         log('trophyprogressstr stackTrace: $stackTrace');
       }
       result.add(
-        Text('颜色: ${newdata['color']}', style: const TextStyle(fontSize: 20)),
+        Text(
+          '颜色: ${newdata['color']}',
+          style: const TextStyle(fontSize: 20),
+          textAlign: TextAlign.center,
+        ),
       );
 
       if (newdata.keys.contains('required')) {
@@ -141,6 +152,7 @@ class _CollectibleInfoPageState extends State<CollectibleInfoPage> {
             Text(
               'Full Chain要求: $fullchain',
               style: const TextStyle(fontSize: 20),
+              textAlign: TextAlign.center,
             ),
           );
         }
@@ -160,6 +172,7 @@ class _CollectibleInfoPageState extends State<CollectibleInfoPage> {
             Text(
               'Full Combo要求: $fullcombo',
               style: const TextStyle(fontSize: 20),
+              textAlign: TextAlign.center,
             ),
           );
         }
@@ -168,7 +181,11 @@ class _CollectibleInfoPageState extends State<CollectibleInfoPage> {
           String rank;
           rank = requiredList['rank'];
           result.add(
-            Text('rank要求: $rank', style: const TextStyle(fontSize: 20)),
+            Text(
+              'rank要求: $rank',
+              style: const TextStyle(fontSize: 20),
+              textAlign: TextAlign.center,
+            ),
           );
         }
 
@@ -180,7 +197,13 @@ class _CollectibleInfoPageState extends State<CollectibleInfoPage> {
             '${dataPath.path}/res/songs.json',
           ).readAsString();
           Map<String, dynamic> songData = json.decode(jsonString);
-          result.add(Text('关联曲目: ', style: const TextStyle(fontSize: 20)));
+          result.add(
+            Text(
+              '关联曲目: ',
+              style: const TextStyle(fontSize: 20),
+              textAlign: TextAlign.center,
+            ),
+          );
           //获取曲目信息
           for (var songItem in songs) {
             Map<String, dynamic> song = {};
@@ -251,9 +274,7 @@ class _CollectibleInfoPageState extends State<CollectibleInfoPage> {
             }
           }
           if (songList.isNotEmpty) {
-            result.add(
-              SizedBox(height: 250, child: ListView(children: songList)),
-            );
+            result.add(_buildSongListSection(songList));
           }
           result.add(const Divider());
 
@@ -272,11 +293,16 @@ class _CollectibleInfoPageState extends State<CollectibleInfoPage> {
                     Text(
                       '总完成状态: 完成 $songcount/$songcount',
                       style: const TextStyle(fontSize: 20),
+                      textAlign: TextAlign.center,
                     ),
                   );
                 } else if (i['completed'] == false) {
                   result.add(
-                    Text('总完成状态: 未完成', style: const TextStyle(fontSize: 20)),
+                    Text(
+                      '总完成状态: 未完成',
+                      style: const TextStyle(fontSize: 20),
+                      textAlign: TextAlign.center,
+                    ),
                   );
                 }
               }
@@ -358,7 +384,7 @@ class _CollectibleInfoPageState extends State<CollectibleInfoPage> {
                         child: Padding(
                           padding: EdgeInsetsGeometry.all(10.0),
                           child: Text(
-                            '${song['id']} - ${song['title']}      ${song['genre']} - $versionname\n${returnEnglishDiff(difficulties: i['completed_difficulties'], isComplete: false)}',
+                            '${song['id']} - ${song['title']}      ${song['genre']} - $versionname\n${returnEnglishDiff(difficulties: i['completed_difficulties'], isComplete: false, requireddifficulties: difficulties)}',
                             textAlign: TextAlign.center,
                           ),
                         ),
@@ -373,19 +399,16 @@ class _CollectibleInfoPageState extends State<CollectibleInfoPage> {
                   Text(
                     '已完成歌曲曲目 $completedsongscount/$songcount',
                     style: const TextStyle(fontSize: 18),
+                    textAlign: TextAlign.center,
                   ),
                 );
-                result.add(
-                  SizedBox(
-                    height: 250,
-                    child: ListView(children: completedsongs),
-                  ),
-                );
+                result.add(_buildSongListSection(completedsongs));
               } else if (completedsongs.isNotEmpty) {
                 result.add(
                   Text(
                     '已完成歌曲曲目 $completedsongscount/$songcount',
                     style: const TextStyle(fontSize: 18),
+                    textAlign: TextAlign.center,
                   ),
                 );
                 for (var i in completedsongs) {
@@ -398,19 +421,16 @@ class _CollectibleInfoPageState extends State<CollectibleInfoPage> {
                   Text(
                     '未完成歌曲曲目 ${songcount - completedsongscount}/$songcount',
                     style: const TextStyle(fontSize: 18),
+                    textAlign: TextAlign.center,
                   ),
                 );
-                result.add(
-                  SizedBox(
-                    height: 250,
-                    child: ListView(children: uncompletedsongs),
-                  ),
-                );
+                result.add(_buildSongListSection(uncompletedsongs));
               } else if (uncompletedsongs.isNotEmpty) {
                 result.add(
                   Text(
                     '未完成歌曲曲目 ${songcount - completedsongscount}/$songcount',
                     style: const TextStyle(fontSize: 18),
+                    textAlign: TextAlign.center,
                   ),
                 );
                 for (var i in uncompletedsongs) {
@@ -422,12 +442,41 @@ class _CollectibleInfoPageState extends State<CollectibleInfoPage> {
         }
       }
     }
+    if (!mounted) return;
     setState(() {
       otherinfowidget = result;
     });
   }
 
   List<Widget> otherinfowidget = [];
+
+  /// 构建带嵌套滚动转发的固定高度歌曲列表
+  Widget _buildSongListSection(List<Widget> children) {
+    final innerController = ScrollController();
+    return NotificationListener<ScrollUpdateNotification>(
+      onNotification: (notification) {
+        final metrics = notification.metrics;
+        final delta = notification.dragDetails?.delta.dy ?? 0;
+        // 内层到顶且手指继续下滑 → 外层向上滚
+        if (metrics.pixels <= metrics.minScrollExtent && delta > 0) {
+          _controller.jumpTo(_controller.offset - delta);
+        }
+        // 内层到底且手指继续上滑 → 外层向下滚
+        if (metrics.pixels >= metrics.maxScrollExtent && delta < 0) {
+          _controller.jumpTo(_controller.offset - delta);
+        }
+        return false;
+      },
+      child: SizedBox(
+        height: 250,
+        child: ListView(
+          controller: innerController,
+          physics: const ClampingScrollPhysics(),
+          children: children,
+        ),
+      ),
+    );
+  }
 
   @override
   void initState() {
@@ -437,6 +486,7 @@ class _CollectibleInfoPageState extends State<CollectibleInfoPage> {
 
   @override
   void dispose() {
+    _controller.dispose();
     super.dispose();
   }
 
@@ -447,12 +497,12 @@ class _CollectibleInfoPageState extends State<CollectibleInfoPage> {
         title: Text('${newdata['name']} - 收藏品信息'),
         // backgroundColor: const Color.fromARGB(255, 255, 229, 84),
       ),
-      body: DraggableScrollableSheet(
-        initialChildSize: 1.0,
-        builder: (BuildContext context, ScrollController scrollController) {
-          return SingleChildScrollView(
-            controller: _controller,
+      body: CustomScrollView(
+        controller: _controller,
+        slivers: [
+          SliverToBoxAdapter(
             child: Column(
+              crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 Image.network(
                   'https://assets2.lxns.net/chunithm/${widget.type}/${newdata['id']}.png',
@@ -515,6 +565,7 @@ class _CollectibleInfoPageState extends State<CollectibleInfoPage> {
                             sourceText: newdata['description'],
                             context: context,
                           );
+                          if (!mounted) return;
                           setState(() {
                             translate = result;
                           });
@@ -539,6 +590,7 @@ class _CollectibleInfoPageState extends State<CollectibleInfoPage> {
                             sourceText: newdata['name'],
                             context: context,
                           );
+                          if (!mounted) return;
                           setState(() {
                             translate = result;
                           });
@@ -564,11 +616,16 @@ class _CollectibleInfoPageState extends State<CollectibleInfoPage> {
                   child: Text(translate, style: TextStyle(fontSize: 20)),
                 ),
                 const Divider(),
-                Column(children: otherinfowidget),
               ],
             ),
-          );
-        },
+          ),
+          SliverList(
+            delegate: SliverChildBuilderDelegate(
+              (context, index) => otherinfowidget[index],
+              childCount: otherinfowidget.length,
+            ),
+          ),
+        ],
       ),
     );
   }

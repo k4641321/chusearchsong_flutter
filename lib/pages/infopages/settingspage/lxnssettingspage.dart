@@ -15,6 +15,7 @@ class _LxnsSettingsPageState extends State<LxnsSettingsPage> {
   Future<void> loadtextfield() async {
     Map<String, dynamic> result = await loadlxnsconfig(context);
     if (result.isEmpty) return;
+    if (!mounted) return;
     setState(() {
       tokenController.text = result['token'];
     });

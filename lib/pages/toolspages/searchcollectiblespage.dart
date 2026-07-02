@@ -35,6 +35,7 @@ class _SearchCollectiblesState extends State<SearchCollectiblesPage> {
                         searchtype: initialSelection,
                         isSonginfo: false,
                       );
+                      if (!mounted) return;
                       setState(() {
                         result = result2;
                       });
@@ -67,6 +68,7 @@ class _SearchCollectiblesState extends State<SearchCollectiblesPage> {
                         searchtype: initialSelection,
                         isSonginfo: false,
                       );
+                      if (!mounted) return;
                       setState(() {
                         result = result2;
                       });

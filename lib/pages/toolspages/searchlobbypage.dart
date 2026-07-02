@@ -23,6 +23,7 @@ class _SearchLobbyPageState extends State<SearchLobbyPage> {
 
   Future<void> _getdropdownMenuEntries() async {
     dropdownMenuEntries = await getlobby();
+    if (!mounted) return;
     setState(() {});
   }
 
@@ -50,6 +51,7 @@ class _SearchLobbyPageState extends State<SearchLobbyPage> {
                           initialSelection: initialSelection,
                           context: context,
                         );
+                        if (!mounted) return;
                         setState(() {
                           searchResults = searchresults;
                         });
@@ -78,6 +80,7 @@ class _SearchLobbyPageState extends State<SearchLobbyPage> {
                         initialSelection: initialSelection,
                         context: context,
                       );
+                      if (!mounted) return;
                       setState(() {
                         searchResults = searchresults;
                       });
@@ -102,6 +105,7 @@ class _SearchLobbyPageState extends State<SearchLobbyPage> {
                         initialSelection: initialSelection,
                         context: context,
                       );
+                      if (!mounted) return;
                       setState(() {
                         searchResults = searchresults;
                       });

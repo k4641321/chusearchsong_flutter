@@ -7,7 +7,7 @@ import 'request.dart';
 import '../pages/toolspages/faulttoterantcomputationpage.dart';
 import '../tools/fun.dart';
 import '../pages/scorehistorypage.dart';
-import '../tools/fun.dart';
+import '../pages/rankinglistpage.dart';
 
 List<Widget> returnDiffTabBar({required Map song}) {
   List<Widget> result = [];
@@ -111,7 +111,7 @@ Future<List<Widget>> returnDiffTabBarView({
   try {
     Map<String, dynamic> songInfo = await getSongInfo(song['id']);
     List diffs = songInfo['difficulties'];
-
+    //添加谱面信息
     for (var i = 0; i < diffs.length; i++) {
       var song2 = diffs[i];
       List<Widget> result2 = [];
@@ -186,6 +186,7 @@ Future<List<Widget>> returnDiffTabBarView({
         result.add(Column(children: result2));
         return result;
       }
+      //添加成绩信息
       result2.insert(
         0,
         await returnscore(
@@ -193,6 +194,37 @@ Future<List<Widget>> returnDiffTabBarView({
           i: i,
           corlor: color,
           context: context,
+        ),
+      );
+      //排行榜按钮
+      if (!context.mounted) {
+        result.add(Column(children: result2));
+        return result;
+      }
+      result2.insert(
+        0,
+        Row(
+          children: [
+            Expanded(
+              child: TextButton(
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (builder) =>
+                          RankingListPage(songid: song['id'], levelindex: i),
+                    ),
+                  );
+                },
+                child: Text(
+                  '查看排行榜',
+                  style: TextStyle(
+                    color: Theme.of(context).colorScheme.onSurface,
+                  ),
+                ),
+              ),
+            ),
+          ],
         ),
       );
       result.add(Column(children: result2));
@@ -215,7 +247,37 @@ Future<List<Widget>> returnDiffTabBarView({
           context: context,
         ),
       );
-
+      if (!context.mounted) {
+        result.add(Column(children: result2));
+        return result;
+      }
+      result2.insert(
+        0,
+        Row(
+          children: [
+            Expanded(
+              child: TextButton(
+                onPressed: () {
+                  log('message');
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (builder) =>
+                          RankingListPage(songid: song['id'], levelindex: i),
+                    ),
+                  );
+                },
+                child: Text(
+                  '查看排行榜',
+                  style: TextStyle(
+                    color: Theme.of(context).colorScheme.onSurface,
+                  ),
+                ),
+              ),
+            ),
+          ],
+        ),
+      );
       result.add(Column(children: result2));
     }
     log('$e', name: 'songinfopagefun.dart', level: 1000);
@@ -305,6 +367,7 @@ Future<List<Widget>> returnRelatedCollectibles({
           searchtype: i['type'],
           isSonginfo: true,
         );
+        // result2.insert(0, const Divider());
         result.addAll(result2);
         // log('执行');
       }

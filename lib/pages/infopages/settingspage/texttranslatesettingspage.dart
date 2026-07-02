@@ -17,6 +17,7 @@ class _TextTranslateSettingsPageState extends State<TextTranslateSettingsPage> {
   Future<void> loadtextfield() async {
     Map<String, dynamic> result = await loadtexttranslateconfig(context);
     if (result.isEmpty) return;
+    if (!mounted) return;
     setState(() {
       secretIdController.text = result['secretId'];
       secretKeyController.text = result['secretKey'];

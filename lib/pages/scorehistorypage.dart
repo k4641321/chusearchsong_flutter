@@ -28,6 +28,7 @@ class _ScoreHistoryPageState extends State<ScoreHistoryPage> {
       corlor: Theme.of(context).colorScheme.onSecondary,
     );
     historyCardBackup = result[1];
+    if (!mounted) return;
     setState(() {
       lineChat = result[0];
       historyCard = result[1];
@@ -52,18 +53,18 @@ class _ScoreHistoryPageState extends State<ScoreHistoryPage> {
             child: Column(
               children: [
                 lineChat,
-                Row(
-                  children: [
-                    Expanded(
-                      child: TextButton(
-                        onPressed: () => setState(() {
-                          historyCard = historyCardBackup;
-                        }),
-                        child: Text('显示全部成绩'),
-                      ),
-                    ),
-                  ],
-                ),
+                // Row(
+                //   children: [
+                //     Expanded(
+                //       child: TextButton(
+                //         onPressed: () => setState(() {
+                //           historyCard = historyCardBackup;
+                //         }),
+                //         child: Text('显示全部成绩'),
+                //       ),
+                //     ),
+                //   ],
+                // ),
                 const Divider(),
                 historyCard,
               ],

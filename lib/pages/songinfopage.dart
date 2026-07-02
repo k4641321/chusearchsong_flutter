@@ -55,6 +55,7 @@ class _SongInfoPageState extends State<SongInfoPage> {
       favoriteJson.addAll(willadd);
       favoriteJsonStr = json.encode(favoriteJson);
       File(favoriteJsonPath).writeAsStringSync(favoriteJsonStr);
+      if (!mounted) return;
       setState(() {
         icon = Icons.favorite;
       });
@@ -78,6 +79,7 @@ class _SongInfoPageState extends State<SongInfoPage> {
       favoriteJson.removeWhere((item) => item['id'] == widget.song['id']);
       favoriteJsonStr = json.encode(favoriteJson);
       File(favoriteJsonPath).writeAsStringSync(favoriteJsonStr);
+      if (!mounted) return;
       setState(() {
         icon = Icons.favorite_border;
       });
@@ -105,6 +107,7 @@ class _SongInfoPageState extends State<SongInfoPage> {
           log('已收藏');
           break;
         }
+        if (!mounted) return;
       }
       setState(() {
         icon = isFavorite ? Icons.favorite : Icons.favorite_border;
@@ -142,19 +145,7 @@ class _SongInfoPageState extends State<SongInfoPage> {
 
   @override
   Widget build(BuildContext context) {
-    // const columnsdata = [
-    //   DataColumn(label: Text('level')),
-    //   DataColumn(label: Text('tap')),
-    //   DataColumn(label: Text('hold')),
-    //   DataColumn(label: Text('slide')),
-    //   DataColumn(label: Text('air')),
-    //   DataColumn(label: Text('flick')),
-    //   DataColumn(label: Text('total')),
-    //   DataColumn(label: Text('谱师')),
-    // ];
     final ScrollController controller = ScrollController();
-    // final ScrollController tabbarcontroller = ScrollController();
-    // final ScrollController infocontroller = ScrollController();
     return Scaffold(
       appBar: AppBar(
         title: InkWell(
@@ -162,7 +153,6 @@ class _SongInfoPageState extends State<SongInfoPage> {
               copytext(text: widget.song['title'], context: context),
           child: Text('${widget.song['title']}    - 歌曲详情'),
         ),
-        // backgroundColor: const Color.fromARGB(255, 255, 229, 84),
         actions: [
           IconButton(
             onPressed: () async {
@@ -358,15 +348,6 @@ class _SongInfoPageState extends State<SongInfoPage> {
                     ],
                   ),
                 ),
-
-                // SingleChildScrollView(
-                //   scrollDirection: Axis.horizontal,
-                //   child: DataTable(
-                //     columns: columnsdata,
-                //     rows: widget.rowsData,
-                //     showBottomBorder: true,
-                //   ),
-                // ),
               ],
             ),
           ),

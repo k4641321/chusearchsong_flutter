@@ -53,6 +53,7 @@ class _PlayMusic extends State<PlayMusic> {
       _subscription.add(
         _musicplayer.onPlayerComplete.listen((_) async {
           await _musicplayer.stop();
+          if (!mounted) return;
           setState(() {
             button = Icons.play_arrow;
             playerstate = 0;

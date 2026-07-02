@@ -23,6 +23,7 @@ class _GenerateB50PageState extends State<GenerateB50Page> {
   Future<void> init() async {
     try {
       final path = await getApplicationSupportDirectory();
+      if (!mounted) return;
       setState(() {
         image = Image.memory(
           File('${path.path}/tmp/b50.png').readAsBytesSync(),
@@ -67,6 +68,7 @@ class _GenerateB50PageState extends State<GenerateB50Page> {
                             ).showSnackBar(SnackBar(content: Text('正在生成')));
                             await generateb50();
                             final path = await getApplicationSupportDirectory();
+                            if (!mounted) return;
                             setState(() {
                               _generationKey++;
                               image = Image.memory(
@@ -88,6 +90,7 @@ class _GenerateB50PageState extends State<GenerateB50Page> {
                               name: 'generateb50page.dart',
                               level: 1000,
                             );
+                            if (!mounted) return;
                             setState(() {
                               image = Text('生成失败');
                             });

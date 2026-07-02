@@ -66,6 +66,7 @@ class _UpdateScorePageState extends State<UpdateScorePage> {
                       await singbox.disconnect();
                       await singbox.dispose();
                     }
+                    if (!mounted) return;
                     setState(() {
                       _switchValue = value;
                     });

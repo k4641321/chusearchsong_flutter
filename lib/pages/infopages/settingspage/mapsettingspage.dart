@@ -17,6 +17,7 @@ class _MapSettingsPageState extends State<MapSettingsPage> {
 
   Future<void> _loadSettings() async {
     String selectedMap = await loadmapconfig(context);
+    if (!mounted) return;
     setState(() {
       _selectedMap = selectedMap;
     });

@@ -97,6 +97,7 @@ class _InfoState extends State<Info> {
         ).showSnackBar(SnackBar(content: Text('切换失败')));
       }
     }
+    if (!mounted) return;
     setState(() {});
     widget.onThemeChanged?.call();
   }
@@ -111,6 +112,7 @@ class _InfoState extends State<Info> {
       } else if (config['theme'] == 'dark') {
         darkmode = 'dark';
       }
+      if (!mounted) return;
       setState(() {});
     } catch (e) {
       if (!mounted) return;
