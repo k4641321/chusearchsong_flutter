@@ -21,11 +21,13 @@ Future<List<Widget>> getLineChartAndCard({
 
     //表格绘制
     List<FlSpot> spots = [];
-    double x = 1;
+    double x = 0;
     int maxscore = 0;
     int minscore = 0;
     List date = [];
-    for (var i in allscore) {
+    // 反转数据，使图表从左到右按时间从旧到新排列
+    List reversedScore = allscore.reversed.toList();
+    for (var i in reversedScore) {
       spots.add(FlSpot(x, i['score'].toDouble()));
       x += 1;
       if (i['score'] > maxscore) {
@@ -34,7 +36,7 @@ Future<List<Widget>> getLineChartAndCard({
       if (i['score'] < minscore || minscore == 0) {
         minscore = i['score'];
       }
-      date.insert(0, i['play_time']);
+      date.add(i['play_time']);
     }
 
     Widget lineChart = Padding(
@@ -56,9 +58,10 @@ Future<List<Widget>> getLineChartAndCard({
               //     },
               touchTooltipData: LineTouchTooltipData(
                 getTooltipItems: (touchedSpots) {
+                  int idx = touchedSpots.last.x.toInt();
                   List<LineTooltipItem> result = [
                     LineTooltipItem(
-                      '${touchedSpots.last.y.toInt()}\n${DateTime.parse(date[date.length - touchedSpots.last.x.toInt()]).toLocal().toString()}',
+                      '${touchedSpots.last.y.toInt()}\n${idx >= 0 && idx < date.length ? DateTime.parse(date[idx]).toLocal().toString() : ''}',
                       TextStyle(color: Colors.black),
                     ),
                   ];
@@ -81,9 +84,9 @@ Future<List<Widget>> getLineChartAndCard({
                   interval: 1,
                   showTitles: true,
                   reservedSize: 90,
-                  minIncluded: false,
+                  minIncluded: true,
                   getTitlesWidget: (value, meta) {
-                    int index = value.toInt() - 1;
+                    int index = value.toInt();
                     if (index >= date.length) {
                       index = date.length - 1;
                     } else if (index < 0) {
