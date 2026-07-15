@@ -1,436 +1,537 @@
 ﻿import 'dart:io';
-import 'package:flutter/services.dart';
-import 'package:image/image.dart' as img;
-import 'dart:convert';
-import 'package:http/http.dart';
-import 'dart:developer';
-import '../tools/request.dart';
+import 'package:chusearchsong_flutter/tools/fun.dart';
+import 'package:flutter/material.dart';
 import 'package:path_provider/path_provider.dart';
+import '../tools/request.dart';
+import 'dart:convert';
 
-Future<img.Image> getIcon({required int id}) async {
-  log('请求头像$id');
-  final response = await get(
-    Uri.parse('https://assets2.lxns.net/chunithm/character/$id.png'),
-  );
-  final bytes = response.bodyBytes;
-  return img.decodeImage(bytes)!;
-}
-
-img.Color ratingColor({required double rating}) {
-  if (rating > 0 && rating < 3.99) {
-    return img.ColorRgba8(0, 153, 76, 255);
-  } else if (rating > 4.0 && rating < 6.49) {
-    return img.ColorRgba8(255, 153, 51, 255);
-  } else if (rating > 7.0 && rating < 9.99) {
-    return img.ColorRgba8(255, 0, 0, 255);
-  } else if (rating > 10.0 && rating < 11.99) {
-    return img.ColorRgba8(153, 0, 153, 255);
-  } else if (rating > 12.0 && rating < 13.24) {
-    return img.ColorRgba8(204, 102, 0, 255);
-  } else if (rating > 13.25 && rating < 14.49) {
-    return img.ColorRgba8(244, 244, 244, 255);
-  } else if (rating > 14.50 && rating < 15.24) {
-    return img.ColorRgba8(255, 255, 0, 255);
-  } else if (rating > 15.25 && rating < 15.99) {
-    return img.ColorRgba8(255, 255, 102, 255);
-  } else if (rating > 16.0 && rating < 16.99) {
-    return img.ColorRgba8(255, 0, 255, 255);
-  } else if (rating > 17.0) {
-    return img.ColorRgba8(255, 153, 255, 255);
-  } else {
-    return img.ColorRgba8(0, 0, 0, 255);
-  }
-}
-
-img.Color diffcolor({required int levelindex}) {
-  switch (levelindex) {
+Color diffcolor({required int diffindex}) {
+  switch (diffindex) {
     case 0:
-      return img.ColorRgba8(153, 255, 153, 255);
+      return Colors.green;
     case 1:
-      return img.ColorRgba8(255, 153, 51, 255);
+      return Colors.blue;
     case 2:
-      return img.ColorRgba8(255, 51, 51, 255);
+      return Colors.red;
     case 3:
-      return img.ColorRgba8(178, 102, 255, 255);
-    case 4:
-      return img.ColorRgba8(32, 32, 32, 255);
+      return Colors.purple;
     default:
-      return img.ColorRgba8(192, 192, 192, 255);
+      return Colors.black;
   }
 }
 
-Future<img.Image> getrank(String rank) async {
-  final data = await rootBundle.load('res/rank/$rank.png');
-  return img.decodePng(data.buffer.asUint8List())!;
+Color ratingColor({required double rating}) {
+  if (rating >= 0 && rating < 4) {
+    return Colors.green; // 绿  0.00~3.99
+  } else if (rating < 7) {
+    return Colors.orange; // 橙  4.00~6.99
+  } else if (rating < 10) {
+    return Colors.red; // 红  7.00~9.99
+  } else if (rating < 12) {
+    return Colors.deepPurple; // 紫  10.00~11.99
+  } else if (rating < 13.25) {
+    return Colors.deepOrange; // 铜  12.00~13.24
+  } else if (rating < 14.5) {
+    return Colors.grey; // 银  13.25~14.49
+  } else if (rating < 15.25) {
+    return Colors.yellow; // 金  14.50~15.24
+  } else if (rating < 16) {
+    return Colors.amber; // 铂金 15.25~15.99
+  } else if (rating < 17) {
+    return Colors.purple; // 彩虹 16.00~16.99
+  } else {
+    return Colors.purpleAccent; // 彩虹(极) 17.00~
+  }
 }
 
-Future<img.Image> getimage({required int id}) async {
-  log('请求曲绘$id');
-  final response = await get(
-    Uri.parse('https://assets2.lxns.net/chunithm/jacket/$id.png'),
-  );
-  final bytes = response.bodyBytes;
-  return img.decodeImage(bytes)!;
+Color trophyColor({required String trophy}) {
+  switch (trophy) {
+    case 'platina':
+      return Colors.purpleAccent;
+    case 'gold':
+      return Colors.yellowAccent;
+    case 'silver':
+      return Colors.grey;
+    default:
+      return Colors.white;
+  }
 }
 
-Future<img.Image> getClear(String clear) async {
-  final clearimg = await rootBundle.load('res/complete/$clear.png');
-  final bytes = clearimg.buffer.asUint8List();
-  return img.decodePng(bytes)!;
+String rankImg({required String rank}) {
+  switch (rank) {
+    case 'sssp':
+      return 'res/rank/sssp.png';
+    case 'sss':
+      return 'res/rank/sss.png';
+    case 'ssp':
+      return 'res/rank/ssp.png';
+    case 'ss':
+      return 'res/rank/ss.png';
+    case 'sp':
+      return 'res/rank/sp.png';
+    case 's':
+      return 'res/rank/s.png';
+    case 'aaa':
+      return 'res/rank/aaa.png';
+    case 'aa':
+      return 'res/rank/aa.png';
+    case 'a':
+      return 'res/rank/a.png';
+    case 'bbb':
+      return 'res/rank/bbb.png';
+    case 'bb':
+      return 'res/rank/bb.png';
+    case 'b':
+      return 'res/rank/b.png';
+    case 'c':
+      return 'res/rank/c.png';
+    case 'd':
+      return 'res/rank/d.png';
+    default:
+      return 'res/rank/d.png';
+  }
 }
 
-Future<img.Image?> getfc(String? fullCombo) async {
-  if (fullCombo == null) return null;
-  final data = await rootBundle.load('res/complete/$fullCombo.png');
-  final bytes = data.buffer.asUint8List();
-  return img.decodePng(bytes);
+String clearImg({required String clear}) {
+  switch (clear) {
+    case 'failed':
+      return 'res/complete/failed.png';
+    case 'clear':
+      return 'res/complete/clear.png';
+    case 'hard':
+      return 'res/complete/hard.png';
+    case 'brave':
+      return 'res/complete/brave.png';
+    case 'catastrophy':
+      return 'res/complete/catastrophy.png';
+    case 'absolute':
+      return 'res/complete/absolute.png';
+    default:
+      return 'res/complete/failed.png';
+  }
 }
 
-Future<void> generateb50() async {
-  // ═══════════ 加载必要文件 ═══════════
-  final configpath = await getApplicationSupportDirectory();
-  final configstr = await File('${configpath.path}/config.json').readAsString();
-  final Map<String, dynamic> configjson = jsonDecode(configstr);
-  final lxnstoken = configjson['lxns']['token'];
-  final fontZipData = await rootBundle.load('res/fnt/font.zip');
-  final font = img.BitmapFont.fromZip(fontZipData.buffer.asUint8List());
-
-  // 加载b50
-  final allscorestr = await requestB50(token: lxnstoken);
-  final Map<String, dynamic> allscorejson = jsonDecode(allscorestr);
-  final Map<String, dynamic> allscore = allscorejson['data'];
-  final List bests = allscore['bests'];
-  final List newbest = allscore['new_bests'];
-
-  // 加载背景
-  final bgData = await rootBundle.load('res/background.png');
-  var background = img.decodePng(bgData.buffer.asUint8List())!;
-
-  // 加载玩家信息
-  final playerinfostr = await requestPlayerInfo(token: lxnstoken);
-  final Map<String, dynamic> playerinfojson = jsonDecode(playerinfostr);
-  final Map<String, dynamic> playerinfo = playerinfojson['data'];
-
-  // ═══════════ 并行预下载所有曲绘 ═══════════
-  log('并行预下载所有曲绘...');
-  final allSongs = [...bests, ...newbest];
-  final allJackets = <int, img.Image>{};
-  final futures = <Future>[];
-  for (final song in allSongs) {
-    futures.add(
-      getimage(id: song['id']).then((jacket) {
-        allJackets[song['id']] = img.copyResize(jacket, height: 270);
-      }),
-    );
+String? fullcomboImg({required String fullcombo}) {
+  switch (fullcombo) {
+    case 'fullcombo':
+      return 'res/complete/fullcombo.png';
+    case 'alljustice':
+      return 'res/complete/alljustice.png';
+    case 'alljusticecritical':
+      return 'res/complete/alljusticecritical.png';
+    default:
+      return null;
   }
-  await Future.wait(futures);
-  log('曲绘下载完成 (${allJackets.length} 张)');
+}
 
-  // ═══════════ 预加载资源 ═══════════
-  log('预加载评级/通关/FC图片...');
+Future<Widget> generateb50Body({required BuildContext context}) async {
+  //请求b50数据
+  String b50datastr = await requestB50();
+  Map<String, dynamic> b50data = (jsonDecode(b50datastr) as Map)['data'];
+  //请求玩家信息
+  String playerdatastr = await requestPlayerInfo();
+  Map<String, dynamic> playerdata = (jsonDecode(playerdatastr) as Map)['data'];
+  //先定义所需的变量
+  List<Widget> b30body = [];
+  Widget b30 = Column(children: b30body);
+  List<Widget> b20body = [];
+  Widget b20 = Column(children: b20body);
+  Widget title = SizedBox(
+    height: 170,
+    child: Row(
+      mainAxisAlignment: MainAxisAlignment.start,
+      children: [
+        Padding(
+          padding: EdgeInsetsGeometry.only(left: 55),
+          child: SizedBox(
+            width: 525,
+            height: 225,
+            child: Card(
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  Column(
+                    mainAxisAlignment: MainAxisAlignment.spaceAround,
+                    children: [
+                      Card(
+                        color: trophyColor(
+                          trophy: playerdata['trophy']['color'],
+                        ),
+                        child: Padding(
+                          padding: EdgeInsetsGeometry.only(
+                            left: 60,
+                            right: 60,
+                            top: 5,
+                            bottom: 5,
+                          ),
+                          child: Text(
+                            '${playerdata['trophy']['name']}',
+                            style: TextStyle(color: Colors.black),
+                          ),
+                        ),
+                      ),
+                      Padding(
+                        padding: EdgeInsetsGeometry.only(left: 15),
+                        child: Text(
+                          'Lv.${playerdata['level']}  ${playerdata['name']}',
+                          style: TextStyle(fontSize: 30),
+                        ),
+                      ),
+                      Text(
+                        'Rating:   ${playerdata['rating']}',
 
-  final rankCache = <String, img.Image>{};
-  for (final rank in [
-    'sssp',
-    'sss',
-    'ssp',
-    'ss',
-    'sp',
-    's',
-    'aaa',
-    'aa',
-    'a',
-    'bbb',
-    'bb',
-    'b',
-    'c',
-    'd',
-  ]) {
-    rankCache[rank] = await getrank(rank);
-  }
-
-  final clearCache = <String, img.Image>{};
-  for (final c in [
-    'catastrophy',
-    'absolute',
-    'brave',
-    'hard',
-    'clear',
-    'failed',
-  ]) {
-    clearCache[c] = await getClear(c);
-  }
-
-  final fcCache = <String, img.Image>{};
-  for (final fc in ['alljusticecritical', 'alljustice', 'fullcombo']) {
-    fcCache[fc] = (await getfc(fc))!;
-  }
-
-  // ═══════════ 绘制函数 ═══════════
-  Future<void> drawSongCard(
-    Map song, {
-    required int x1,
-    required int y1,
-    required int index,
-  }) async {
-    final color = diffcolor(levelindex: song['level_index']);
-
-    // 背景色块
-    img.fillRect(
-      background,
-      x1: x1,
-      y1: y1,
-      x2: x1 + 570,
-      y2: y1 + 350,
-      color: color,
-    );
-
-    // 曲绘
-    final jacket = allJackets[song['id']]!;
-    img.compositeImage(background, jacket, dstX: x1 + 10, dstY: y1 + 10);
-
-    // 曲名
-    img.drawString(
-      background,
-      song['song_name'],
-      font: font,
-      x: x1 + 10,
-      y: y1 + 295,
-      color: img.ColorRgba8(255, 255, 255, 255),
-    );
-
-    // 分数
-    final scorecmd = img.Command()
-      ..createImage(width: 150, height: 35)
-      ..fill(color: diffcolor(levelindex: song['level_index']))
-      ..drawString(song['score'].toString(), font: font);
-    final scoreImage = await scorecmd.getImage();
-    img.Image scoreimg = img.copyResize(scoreImage!, width: 280);
-    img.compositeImage(background, scoreimg, dstX: x1 + 280, dstY: y1 + 100);
-
-    // img.drawString(
-    //   background,
-    //   song['score'].toString(),
-    //   font: font,
-    //   x: x1 + 280,
-    //   y: y1 + 100,
-    //   color: img.ColorRgba8(255, 255, 255, 255),
-    // );
-
-    // 排序
-    img.drawString(
-      background,
-      '#$index',
-      font: font,
-      x: x1 + 495,
-      y: y1,
-      color: img.ColorRgba8(255, 255, 255, 255),
-    );
-
-    // 难度
-    img.drawString(
-      background,
-      song['level'],
-      font: font,
-      x: x1 + 280,
-      y: y1,
-      color: img.ColorRgba8(255, 255, 255, 255),
-    );
-
-    // 评级
-    final rank = rankCache[song['rank']] ?? rankCache['d']!;
-    img.compositeImage(
-      background,
-      img.copyResize(rank, width: 170),
-      dstX: x1 + 280,
-      dstY: y1 + 35,
-    );
-
-    // Rating
-    img.drawString(
-      background,
-      'Rating: ${song['rating']}',
-      font: font,
-      x: x1 + 285,
-      y: y1 + 160,
-      color: img.ColorRgba8(255, 255, 255, 255),
-    );
-
-    // 通关情况
-    final clear = clearCache[song['clear']] ?? clearCache['failed']!;
-    img.compositeImage(
-      background,
-      img.copyResize(clear, width: 230),
-      dstX: x1 + 310,
-      dstY: y1 + 205,
-    );
-
-    // FC
-    final fc = fcCache[song['full_combo']];
-    if (fc != null) {
-      img.compositeImage(
-        background,
-        img.copyResize(fc, width: 230),
-        dstX: x1 + 310,
-        dstY: y1 + 250,
-      );
-    }
-  }
-
-  // ═══════════ 绘制玩家信息 ═══════════
-  log('绘制玩家信息');
-
-  // 玩家信息背景
-  final namebackgroundCmd = img.Command()
-    ..createImage(width: 850, height: 250)
-    ..fill(color: img.ColorRgba8(255, 255, 255, 255))
-    ..fillRect(
-      x1: 0,
-      y1: 125,
-      x2: 850,
-      y2: 250,
-      color: img.ColorRgba8(244, 244, 244, 255),
-    );
-  await namebackgroundCmd.executeThread();
-  final namebackground = await namebackgroundCmd.getImage();
-  img.compositeImage(background, namebackground!, dstX: 100, dstY: 100);
-
-  // 等级与名称
-  final nameandlevelCmd = img.Command()
-    ..createImage(width: 400, height: 50)
-    ..fill(color: img.ColorRgba8(255, 255, 255, 255))
-    ..drawString(
-      'Lv.${playerinfo['level']} ${playerinfo['name']}',
-      font: font,
-      color: img.ColorRgba8(0, 0, 0, 255),
-    );
-  await nameandlevelCmd.executeThread();
-  final nameandlevel = await nameandlevelCmd.getImage();
-  img.compositeImage(
-    background,
-    img.copyResize(nameandlevel!, height: 80),
-    dstX: 100,
-    dstY: 180,
+                        style: TextStyle(
+                          fontSize: 25,
+                          color: ratingColor(rating: playerdata['rating']),
+                          shadows: [Shadow(color: Colors.black, blurRadius: 3)],
+                        ),
+                      ),
+                    ],
+                  ),
+                  Image.network(
+                    'https://assets2.lxns.net/chunithm/character/${playerdata['character']['id']}.png',
+                    width: 175,
+                    height: 175,
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ),
+      ],
+    ),
   );
-
-  // 玩家头像
-  final plaerIcon = await getIcon(id: playerinfo['character']['id']);
-  img.compositeImage(
-    background,
-    img.copyResize(plaerIcon, height: 225),
-    dstX: 720,
-    dstY: 110,
+  // final ScrollController _scrollController = ScrollController();
+  //b30文字
+  Widget b30text = Row(
+    mainAxisAlignment: MainAxisAlignment.center,
+    children: [
+      Card(
+        color: Color.fromARGB(255, 0, 64, 99),
+        child: Padding(
+          padding: EdgeInsetsGeometry.only(
+            top: 5,
+            bottom: 5,
+            left: 20,
+            right: 20,
+          ),
+          child: Text(
+            'B30',
+            style: TextStyle(fontSize: 30, color: Colors.white),
+          ),
+        ),
+      ),
+    ],
   );
-
-  // Rating
-  final ratingCmd = img.Command()
-    ..createImage(width: 225, height: 50)
-    ..fill(color: img.ColorRgba8(244, 244, 244, 255))
-    ..drawString(
-      'Rating: ${playerinfo['rating']}',
-      font: font,
-      color: ratingColor(rating: playerinfo['rating']),
-    );
-  await ratingCmd.executeThread();
-  final rating = await ratingCmd.getImage();
-  img.compositeImage(
-    background,
-    img.copyResize(rating!, height: 80),
-    dstX: 130,
-    dstY: 260,
+  //b20文字
+  Widget b20text = Row(
+    mainAxisAlignment: MainAxisAlignment.center,
+    children: [
+      Card(
+        color: Color.fromARGB(255, 0, 64, 99),
+        child: Padding(
+          padding: EdgeInsetsGeometry.only(
+            top: 5,
+            bottom: 5,
+            left: 20,
+            right: 20,
+          ),
+          child: Text(
+            'B20',
+            style: TextStyle(fontSize: 30, color: Colors.white),
+          ),
+        ),
+      ),
+    ],
   );
-
-  // B30 文字
-  final b30strCmd = img.Command()
-    ..createImage(width: 300, height: 80)
-    ..fill(color: img.ColorRgba8(0, 51, 102, 255))
-    ..drawString('B30', font: font, color: img.ColorRgba8(255, 255, 255, 255));
-  await b30strCmd.executeThread();
-  final b30str = await b30strCmd.getImage();
-  img.compositeImage(
-    background,
-    img.copyResize(b30str!, height: 200),
-    dstX: 2650,
-    dstY: 200,
+  //底部信息
+  Widget fontter = Row(
+    mainAxisAlignment: MainAxisAlignment.center,
+    children: [
+      Text(
+        '此B50由chusearchsong（中二查歌）生成，生成时间：${DateTime.now()}',
+        style: TextStyle(fontWeight: FontWeight.bold),
+      ),
+    ],
   );
-
-  // B20 文字
-  final b20strCmd = img.Command()
-    ..createImage(width: 300, height: 80)
-    ..fill(color: img.ColorRgba8(0, 51, 102, 255))
-    ..drawString('B20', font: font, color: img.ColorRgba8(255, 255, 255, 255));
-  await b20strCmd.executeThread();
-  final b20str = await b20strCmd.getImage();
-  img.compositeImage(
-    background,
-    img.copyResize(b20str!, height: 200),
-    dstX: 2650,
-    dstY: 1700,
+  //b30绘制
+  List<Widget> b30rowbody = [];
+  Widget b30row = Row(
+    mainAxisAlignment: MainAxisAlignment.center,
+    children: b30rowbody,
   );
-
-  // ═══════════ 绘制 B30 ═══════════
-  log('绘制 B30 成绩...');
-  int x1 = 7;
-  int y1 = 460;
-  int lineint = 0;
   int row = 0;
-  int index = 1;
-
-  final sw = Stopwatch()..start();
-
-  for (var i in bests) {
-    await drawSongCard(i, x1: x1, y1: y1, index: index);
-
-    x1 += 570 + 20;
-    lineint++;
-    index++;
-    if (lineint == 10) {
-      lineint = 0;
-      row++;
-      x1 = 7;
-      y1 += 350 + 50;
+  int songcount = 1;
+  for (var i in b50data['bests']) {
+    String songname;
+    if ((i['song_name'] as String).length > 30) {
+      songname = i['song_name'].substring(0, 30) + '...';
+    } else {
+      songname = i['song_name'];
     }
-  }
 
-  // ═══════════ 绘制 B20 ═══════════
-  log('绘制 B20 成绩...');
-  x1 = 7;
-  y1 += 325;
-  lineint = 0;
+    b30rowbody.add(
+      InkWell(
+        onTap: () async {
+          final path = await getApplicationSupportDirectory();
+          String songdatastr = await File(
+            '${path.path}/res/songs.json',
+          ).readAsString();
+          Map<String, dynamic> songsdata = jsonDecode(songdatastr);
+          Map<String, dynamic>? songdata;
+          String? versionname;
+          for (var j in songsdata['songs']) {
+            if (i['id'] == j['id']) {
+              songdata = j;
+              for (var k in songsdata['versions']) {
+                if (j['version'] == k['version']) {
+                  versionname = k['title'];
+                  break;
+                }
+              }
+              break;
+            }
+          }
+          if (!context.mounted) return;
+          if (songdata == null || versionname == null) return;
+          await interSongInfo(
+            i: songdata,
+            context: context,
+            versionname: versionname,
+          );
+        },
+        child: SizedBox(
+          width: 292,
+          height: 219,
+          child: Padding(
+            padding: EdgeInsetsGeometry.all(8),
+            child: Card(
+              child: Column(
+                // crossAxisAlignment: CrossAxisAlignment.start,
+                // mainAxisAlignment: MainAxisAlignment.start,
+                children: [
+                  Card(
+                    color: diffcolor(diffindex: i['level_index']),
+                    child: Row(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      mainAxisAlignment: MainAxisAlignment.spaceAround,
+                      children: [
+                        Padding(
+                          padding: EdgeInsetsGeometry.only(
+                            top: 6,
+                            // left: 6,
+                            bottom: 6,
+                            // right: 6,
+                          ),
+                          child: Image.network(
+                            'https://assets2.lxns.net/chunithm/jacket/${i['id']}.png',
+                            width: 135,
+                            height: 135,
+                            errorBuilder: (context, error, stackTrace) {
+                              return const Text('图片加载失败');
+                            },
+                          ),
+                        ),
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          children: [
+                            Text(
+                              '${i['level'].toString()}                  #$songcount',
+                              // style: TextStyle(fontSize: ),
+                              textAlign: TextAlign.end,
+                              style: TextStyle(color: Colors.white),
+                            ),
+
+                            Text(
+                              i['score'].toString(),
+                              style: TextStyle(
+                                fontSize: 25,
+                                color: Colors.white,
+                              ),
+                            ),
+                            Text(
+                              'Rating: ${i['rating'].toString().substring(0, 5)}',
+                              style: TextStyle(
+                                fontSize: 15,
+                                color: Colors.white,
+                              ),
+                            ),
+                            Image.asset(rankImg(rank: i['rank']), height: 30),
+                            Image.asset(
+                              clearImg(clear: i['clear']),
+                              height: 18,
+                            ),
+                            fullcomboImg(fullcombo: i['full_combo'] ?? '') !=
+                                    null
+                                ? Image.asset(
+                                    fullcomboImg(fullcombo: i['full_combo'])!,
+                                    height: 18,
+                                  )
+                                : SizedBox.shrink(),
+                          ],
+                        ),
+                      ],
+                    ),
+                  ),
+                  Column(
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    children: [
+                      Text(
+                        songname,
+                        style: TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ),
+      ),
+    );
+    if (row == 9) {
+      b30body.add(b30row);
+      row = 0;
+      b30rowbody = [];
+      b30row = Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: b30rowbody,
+      );
+    } else {
+      row++;
+    }
+    songcount++;
+  }
+  //b20绘制
+  List<Widget> b20rowbody = [];
+  Widget b20row = Row(
+    mainAxisAlignment: MainAxisAlignment.center,
+    children: b20rowbody,
+  );
   row = 0;
-
-  for (var i in newbest) {
-    await drawSongCard(i, x1: x1, y1: y1, index: index);
-
-    x1 += 570 + 20;
-    lineint++;
-    index++;
-    if (lineint == 10) {
-      lineint = 0;
-      row++;
-      x1 = 7;
-      y1 += 350 + 50;
+  for (var i in b50data['new_bests']) {
+    String songname;
+    if ((i['song_name'] as String).length > 30) {
+      songname = i['song_name'].substring(0, 30) + '...';
+    } else {
+      songname = i['song_name'];
     }
+
+    b20rowbody.add(
+      SizedBox(
+        width: 292,
+        height: 225,
+        child: Padding(
+          padding: EdgeInsetsGeometry.all(8),
+          child: Card(
+            child: Column(
+              // crossAxisAlignment: CrossAxisAlignment.start,
+              // mainAxisAlignment: MainAxisAlignment.start,
+              children: [
+                Card(
+                  color: diffcolor(diffindex: i['level_index']),
+                  child: Row(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisAlignment: MainAxisAlignment.spaceAround,
+                    children: [
+                      Padding(
+                        padding: EdgeInsetsGeometry.only(
+                          top: 6,
+                          // left: 6,
+                          bottom: 6,
+                          // right: 6,
+                        ),
+                        child: Image.network(
+                          'https://assets2.lxns.net/chunithm/jacket/${i['id']}.png',
+                          width: 135,
+                          height: 135,
+                          errorBuilder: (context, error, stackTrace) {
+                            return const Text('图片加载失败');
+                          },
+                        ),
+                      ),
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        children: [
+                          Text(
+                            '${i['level'].toString()}                  #$songcount',
+                            // style: TextStyle(fontSize: ),
+                            textAlign: TextAlign.end,
+                            style: TextStyle(color: Colors.white),
+                          ),
+
+                          Text(
+                            i['score'].toString(),
+                            style: TextStyle(fontSize: 25, color: Colors.white),
+                          ),
+                          Text(
+                            'Rating: ${i['rating'].toString().substring(0, 5)}',
+                            style: TextStyle(fontSize: 15, color: Colors.white),
+                          ),
+                          Image.asset(rankImg(rank: i['rank']), height: 30),
+                          Image.asset(clearImg(clear: i['clear']), height: 18),
+                          fullcomboImg(fullcombo: i['full_combo'] ?? '') != null
+                              ? Image.asset(
+                                  fullcomboImg(fullcombo: i['full_combo'])!,
+                                  height: 18,
+                                )
+                              : SizedBox.shrink(),
+                        ],
+                      ),
+                    ],
+                  ),
+                ),
+                Column(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: [
+                    Text(
+                      songname,
+                      // maxLines: 1,
+                      style: TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ],
+                ),
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
+    if (row == 9) {
+      b20body.add(b20row);
+      row = 0;
+      b20rowbody = [];
+      b20row = Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: b20rowbody,
+      );
+    } else {
+      row++;
+    }
+    songcount++;
   }
-
-  sw.stop();
-  log('绘制耗时: ${sw.elapsedMilliseconds}ms');
-
-  // ═══════════ 水印 ═══════════
-  img.drawString(
-    background,
-    '此b50由 chusearchsong(中二查歌) 生成 成绩最后更新时间 ${DateTime.parse(playerinfo['upload_time']).toLocal()}',
-    font: font,
-    x: 5896 ~/ 2 - 300,
-    y: 2800,
-    color: img.ColorRgba8(0, 0, 0, 255),
+  //背景绘制
+  Widget result = Container(
+    width: 5896 / 2,
+    height: 2844 / 2,
+    decoration: BoxDecoration(
+      image: DecorationImage(
+        image: AssetImage('res/background.png'),
+        fit: BoxFit.cover,
+      ),
+    ),
+    child: Center(
+      child: Column(children: [title, b30text, b30, b20text, b20, fontter]),
+    ),
   );
 
-  // ═══════════ 保存 ═══════════
-  final png = img.encodePng(background);
-  if (!Directory('${configpath.path}/tmp').existsSync()) {
-    await Directory('${configpath.path}/tmp').create();
-  }
-  await File('${configpath.path}/tmp/b50.png').writeAsBytes(png);
-  log('图片已保存到 b50.png');
+  return result;
 }

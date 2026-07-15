@@ -101,6 +101,19 @@ Future<void> savelxnstokenconfig({
     ).showSnackBar(SnackBar(content: Text('错误，获取Rating趋势失败 $e')));
     log('$e', name: 'settingspagefun.dart', level: 1000);
   }
+  try {
+    await saveB50();
+    if (!context.mounted) return;
+    ScaffoldMessenger.of(
+      context,
+    ).showSnackBar(SnackBar(content: Text('获取B50成功')));
+  } catch (e) {
+    if (!context.mounted) return;
+    ScaffoldMessenger.of(
+      context,
+    ).showSnackBar(SnackBar(content: Text('错误，获取B50失败 $e')));
+    log('$e', name: 'settingspagefun.dart', level: 1000);
+  }
 }
 
 Future<Map<String, dynamic>> loadlxnsconfig(BuildContext context) async {
@@ -129,6 +142,7 @@ Future<void> updateconfig() async {
     config['map'] = 'amap';
   }
   File('${path.path}/config.json').writeAsStringSync(json.encode(config));
+  await saveLatestVersion();
 }
 
 Future<String> loadmapconfig(BuildContext context) async {

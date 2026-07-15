@@ -1,3 +1,4 @@
+import 'package:chusearchsong_flutter/pages/toolspages/songrecommendationpage.dart';
 import 'package:chusearchsong_flutter/tools/fun.dart';
 import '../tools/ratingtrendpagefun.dart';
 import 'toolspages/ratingcalculatorpage.dart';
@@ -390,6 +391,35 @@ class _ToolPageState extends State<ToolPage> {
                           },
                           icon: Icon(
                             Icons.sync,
+                            color: Theme.of(context).colorScheme.onSurface,
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+              Row(
+                children: [
+                  Expanded(
+                    child: InkWell(
+                      child: Card(
+                        child: TextButton.icon(
+                          label: Text(
+                            '吃分推荐',
+                            style: TextStyle(
+                              color: Theme.of(context).colorScheme.onSurface,
+                            ),
+                          ),
+                          onPressed: () => Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) =>
+                                  const SongRecommendationPage(),
+                            ),
+                          ),
+                          icon: Icon(
+                            Icons.casino_outlined,
                             color: Theme.of(context).colorScheme.onSurface,
                           ),
                         ),

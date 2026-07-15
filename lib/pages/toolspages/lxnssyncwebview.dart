@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:url_launcher/url_launcher.dart';
 import 'package:webview_flutter/webview_flutter.dart';
+import 'dart:developer';
 
 class LxnsSyncWebView extends StatefulWidget {
   const LxnsSyncWebView({super.key});
@@ -9,6 +12,27 @@ class LxnsSyncWebView extends StatefulWidget {
 }
 
 class _LxnsSyncWebViewState extends State<LxnsSyncWebView> {
+  // Future<void> getOAuth() async {
+  //   while (true) {
+  //     var result = await controller.runJavaScriptReturningResult(
+  //       "(function() {var inputs = document.querySelectorAll('input[readonly]');for (var i = 0; i < inputs.length; i++) {if (inputs[i].value && inputs[i].value.includes('wechat/auth')) {return inputs[i].value;}}return '';})()",
+  //     );
+  //     final url = result.toString().replaceAll('"', '');
+  //     log(url);
+  //     if (url.isNotEmpty) {
+  //       log('退出');
+  //       await Clipboard.setData(ClipboardData(text: url));
+  //       await launchUrl(
+  //         Uri.parse('weixin://'),
+  //         mode: LaunchMode.externalApplication,
+  //       );
+  //       break;
+  //     }
+  //     log('继续');
+  //     await Future.delayed(Duration(seconds: 2));
+  //   }
+  // }
+
   final controller = WebViewController()
     ..setJavaScriptMode(JavaScriptMode.unrestricted)
     ..setNavigationDelegate(
@@ -17,7 +41,7 @@ class _LxnsSyncWebViewState extends State<LxnsSyncWebView> {
           // Update loading bar.
         },
         onPageStarted: (String url) {},
-        onPageFinished: (String url) {},
+        onPageFinished: (String url) async {},
         onHttpError: (HttpResponseError error) {},
         onWebResourceError: (WebResourceError error) {},
         onNavigationRequest: (NavigationRequest request) {
@@ -35,6 +59,12 @@ class _LxnsSyncWebViewState extends State<LxnsSyncWebView> {
   @override
   void initState() {
     super.initState();
+  }
+
+  @override
+  void didChangeDependencies() {
+    // getOAuth();
+    super.didChangeDependencies();
   }
 
   @override

@@ -3,7 +3,6 @@ import 'dart:developer';
 import 'package:fl_chart/fl_chart.dart';
 import 'request.dart';
 import 'package:flutter/material.dart';
-import 'request.dart';
 import 'dart:convert';
 
 Future<List<Widget>> getLineChartAndCard({

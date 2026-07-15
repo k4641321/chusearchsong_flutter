@@ -600,6 +600,30 @@ Future<void> updateData({required BuildContext context}) async {
       SnackBar(content: Text('完成'), duration: Duration(microseconds: 500)),
     );
     log('保存到 ${path.path}/playerinfo.json');
+    //B50
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(content: Text('开始下载B50'), duration: Duration(microseconds: 500)),
+    );
+    await saveB50();
+    if (!context.mounted) return;
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(content: Text('完成'), duration: Duration(microseconds: 500)),
+    );
+    log('保存到 ${path.path}/b50.json');
+    print(directory);
+    //获取最新版本
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text('开始下载最新版本号'),
+        duration: Duration(microseconds: 500),
+      ),
+    );
+    await saveLatestVersion();
+    if (!context.mounted) return;
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(content: Text('完成'), duration: Duration(microseconds: 500)),
+    );
+    log('保存到 ${directory.path}/config.json');
     print(directory);
   } catch (e) {
     if (!context.mounted) return;

@@ -5,6 +5,23 @@ import 'dart:developer';
 import 'dart:io';
 import 'package:path_provider/path_provider.dart';
 
+Future<void> saveLatestVersion() async {
+  final path = await getApplicationSupportDirectory();
+  String configstr = await File('${path.path}/config.json').readAsString();
+  Map<String, dynamic> config = json.decode(configstr);
+  String latestversionstr = await requestLatestVersion();
+  Map<String, dynamic> latestversion = json.decode(latestversionstr);
+  config['latest_version'] = latestversion['version'];
+  await File('${path.path}/config.json').writeAsString(json.encode(config));
+}
+
+Future<String> requestLatestVersion() async {
+  final response = await get(
+    Uri.parse('https://www.diving-fish.com/api/chunithmprober/latest_version'),
+  );
+  return response.body;
+}
+
 Future<String> requestRankingList({required int id, required int diff}) async {
   final headers = {'X-User-Token': await returnlxnstoken()};
   final response = await get(
@@ -68,8 +85,8 @@ Future<String> requestSongBests({
   return response.body;
 }
 
-Future<String> requestB50({required String token}) async {
-  final headers = {'X-User-Token': token};
+Future<String> requestB50() async {
+  final headers = {'X-User-Token': await returnlxnstoken()};
   final response = await get(
     Uri.parse('https://maimai.lxns.net/api/v0/user/chunithm/player/bests'),
     headers: headers,
@@ -77,8 +94,19 @@ Future<String> requestB50({required String token}) async {
   return response.body;
 }
 
-Future<String> requestPlayerInfo({required String token}) async {
-  final headers = {'X-User-Token': token};
+Future<void> saveB50() async {
+  final directory = await getApplicationSupportDirectory();
+  final file = File('${directory.path}/res/b50.json');
+  try {
+    String b50str = await requestB50();
+    await file.writeAsString(b50str);
+  } catch (e) {
+    log('$e', name: 'settingspagefun.dart - request.dart', level: 1000);
+  }
+}
+
+Future<String> requestPlayerInfo() async {
+  final headers = {'X-User-Token': await returnlxnstoken()};
   final response = await get(
     Uri.parse('https://maimai.lxns.net/api/v0/user/chunithm/player'),
     headers: headers,
@@ -90,9 +118,7 @@ Future<void> savePlayerInfo() async {
   final directory = await getApplicationSupportDirectory();
   final file = File('${directory.path}/res/playerinfo.json');
   try {
-    String playerinfostr = await requestPlayerInfo(
-      token: await returnlxnstoken(),
-    );
+    String playerinfostr = await requestPlayerInfo();
     await file.writeAsString(playerinfostr);
   } catch (e) {
     log('$e', name: 'settingspagefun.dart - request.dart', level: 1000);

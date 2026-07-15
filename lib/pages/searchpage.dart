@@ -236,7 +236,12 @@ class _SearchPageState extends State<SearchPage> {
                 ),
               ],
             ),
-            Expanded(child: ListView(children: searchResults)),
+            Expanded(
+              child: ListView.builder(
+                itemCount: searchResults.length,
+                itemBuilder: (context, index) => searchResults[index],
+              ),
+            ),
           ],
         ),
       ),

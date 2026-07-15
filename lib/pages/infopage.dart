@@ -6,6 +6,7 @@ import 'dart:io';
 import 'package:path_provider/path_provider.dart';
 import 'dart:convert';
 import 'infopages/settingspage.dart';
+import '../pages/infopages/thankyoulistpage.dart';
 
 class Info extends StatefulWidget {
   const Info({super.key, this.onThemeChanged});
@@ -156,7 +157,26 @@ class _InfoState extends State<Info> {
                       style: TextStyle(fontSize: 15),
                       textAlign: TextAlign.center,
                     ),
+                    Text(
+                      '当前版本号：0.13.0',
+                      style: TextStyle(fontSize: 15),
+                      textAlign: TextAlign.center,
+                    ),
                     const Divider(),
+                    InkWell(
+                      onTap: () async {
+                        final uri = Uri.parse(
+                          'https://github.com/ChiffonOwO/ChiffonMai',
+                        );
+                        if (await canLaunchUrl(uri)) {
+                          await launchUrl(
+                            uri,
+                            mode: LaunchMode.externalApplication,
+                          );
+                        }
+                      },
+                      child: Text('功能最全的舞萌工具，尽在 ChiffonMai !\n（点击文字即可跳转到项目页面）'),
+                    ),
                     SizedBox(
                       width: double.infinity,
                       height: 50,
@@ -281,6 +301,77 @@ class _InfoState extends State<Info> {
                             padding: const EdgeInsets.all(8.0),
                             child: Text(
                               '设置',
+                              textAlign: TextAlign.center,
+                              style: TextStyle(
+                                fontSize: 20,
+                                color: Theme.of(context).colorScheme.onSurface,
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                    SizedBox(
+                      width: double.infinity,
+                      height: 50,
+                      child: InkWell(
+                        customBorder: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.only(
+                            bottomLeft: Radius.circular(10.0),
+                            bottomRight: Radius.circular(10.0),
+                          ),
+                        ),
+                        onTap: () => ScaffoldMessenger.of(
+                          context,
+                        ).showSnackBar(SnackBar(content: Text('别急，在做了'))),
+                        child: Card(
+                          color: Theme.of(context).colorScheme.primaryFixedDim,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.all(
+                              Radius.circular(0.0),
+                            ),
+                          ),
+                          child: Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: Text(
+                              '检查更新',
+                              textAlign: TextAlign.center,
+                              style: TextStyle(
+                                fontSize: 20,
+                                color: Theme.of(context).colorScheme.onSurface,
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                    SizedBox(
+                      width: double.infinity,
+                      height: 50,
+                      child: InkWell(
+                        customBorder: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.only(
+                            bottomLeft: Radius.circular(10.0),
+                            bottomRight: Radius.circular(10.0),
+                          ),
+                        ),
+                        onTap: () => Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => ThankYouListPage(),
+                          ),
+                        ),
+                        child: Card(
+                          color: Theme.of(context).colorScheme.primaryFixedDim,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.all(
+                              Radius.circular(0.0),
+                            ),
+                          ),
+                          child: Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: Text(
+                              '感谢名单',
                               textAlign: TextAlign.center,
                               style: TextStyle(
                                 fontSize: 20,

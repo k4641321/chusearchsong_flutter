@@ -3,9 +3,10 @@ import 'dart:io';
 import 'package:path_provider/path_provider.dart';
 import '../../tools/generateb50.dart';
 import 'package:flutter/material.dart';
-import 'package:file_picker/file_picker.dart';
 import 'dart:typed_data';
-import '../../tools/fun.dart';
+import 'package:flutter/rendering.dart';
+import 'dart:ui' as ui;
+import 'package:file_picker/file_picker.dart';
 
 class GenerateB50Page extends StatefulWidget {
   const GenerateB50Page({super.key});
@@ -16,9 +17,9 @@ class GenerateB50Page extends StatefulWidget {
 
 class _GenerateB50PageState extends State<GenerateB50Page> {
   final ScrollController _controller = ScrollController();
+  final ScrollController _controller2 = ScrollController();
 
   Widget image = Text('未生成或错误');
-  int _generationKey = 0;
 
   Future<void> init() async {
     try {
@@ -42,6 +43,17 @@ class _GenerateB50PageState extends State<GenerateB50Page> {
     init();
   }
 
+  final GlobalKey _globalKey = GlobalKey();
+
+  Future<ui.Image?> captureWidget(GlobalKey key) async {
+    final boundary =
+        key.currentContext?.findRenderObject() as RenderRepaintBoundary?;
+    if (boundary == null) return null;
+    return await boundary.toImage(pixelRatio: 2.0); // pixelRatio 控制清晰度
+  }
+
+  Widget b50Body = Text('未生成');
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -54,7 +66,7 @@ class _GenerateB50PageState extends State<GenerateB50Page> {
             child: Column(
               children: [
                 Text(
-                  '生成时请保证网络畅通，基本所有数据都是在线获取，目前有部分字体缺失，部分歌曲名字显示不全，使用前请配置好落雪token，生成期间程序可能弹出未响应，请点击等待，不要关闭程序，生成之后长按图片可保存，又由于几乎所有都是绘画的，生成比较慢（因个人设备而异',
+                  '生成时请保证网络畅通，基本所有数据都是在线获取，使用前请配置好落雪token，没生成好点击保存按钮只会保存一张未生成的文字',
                 ),
                 const Divider(),
                 Row(
@@ -62,81 +74,83 @@ class _GenerateB50PageState extends State<GenerateB50Page> {
                     Expanded(
                       child: TextButton(
                         onPressed: () async {
+                          setState(() {
+                            b50Body = Text('生成中...');
+                          });
                           try {
-                            ScaffoldMessenger.of(
-                              context,
-                            ).showSnackBar(SnackBar(content: Text('正在生成')));
-                            await generateb50();
-                            final path = await getApplicationSupportDirectory();
-                            if (!mounted) return;
+                            Widget result = await generateb50Body(
+                              context: context,
+                            );
                             setState(() {
-                              _generationKey++;
-                              image = Image.memory(
-                                File(
-                                  '${path.path}/tmp/b50.png',
-                                ).readAsBytesSync(),
-                                key: ValueKey(_generationKey),
-                                errorBuilder: (context, error, stackTrace) =>
-                                    Text('未生成或错误'),
-                              );
+                              b50Body = result;
                             });
                             if (!context.mounted) return;
                             ScaffoldMessenger.of(
                               context,
-                            ).showSnackBar(SnackBar(content: Text('成功')));
+                            ).showSnackBar(SnackBar(content: Text('完成')));
+                          } catch (e, strack) {
+                            log(
+                              '$e',
+                              name: 'generateb50page.dart',
+                              level: 1000,
+                            );
+                            setState(() {
+                              b50Body = Text('生成失败 $e\n$strack');
+                            });
+                            if (!context.mounted) return;
+                            ScaffoldMessenger.of(
+                              context,
+                            ).showSnackBar(SnackBar(content: Text('生成失败')));
+                          }
+                        },
+                        child: Text('点击生成B50'),
+                      ),
+                    ),
+                  ],
+                ),
+                Row(
+                  children: [
+                    Expanded(
+                      child: TextButton(
+                        onPressed: () async {
+                          try {
+                            final image = await captureWidget(_globalKey);
+                            final byteData = await image?.toByteData(
+                              format: .png,
+                            );
+                            final pngBytes = byteData?.buffer.asUint8List();
+                            final path = await getApplicationSupportDirectory();
+                            File(
+                              '${path.path}/tmp/b50.png',
+                            ).writeAsBytesSync(pngBytes!);
+                            if (!context.mounted) return;
+                            await FilePicker.saveFile(
+                              dialogTitle: '保存B50',
+                              fileName: 'b50.png',
+                              bytes: pngBytes,
+                              type: FileType.custom,
+                              allowedExtensions: ['png'],
+                            );
                           } catch (e) {
                             log(
                               '$e',
                               name: 'generateb50page.dart',
                               level: 1000,
                             );
-                            if (!mounted) return;
-                            setState(() {
-                              image = Text('生成失败');
-                            });
-                            if (!context.mounted) return;
-                            ScaffoldMessenger.of(
-                              context,
-                            ).showSnackBar(SnackBar(content: Text('生成失败 $e')));
                           }
                         },
-                        child: Text('点我生成B50'),
+                        child: Text('保存B50'),
                       ),
                     ),
                   ],
                 ),
-                InkWell(
-                  onTap: () async {
-                    final path = await getApplicationSupportDirectory();
-                    if (!context.mounted) return;
-                    showZoomableImageDialog(
-                      context,
-                      File('${path.path}/tmp/b50.png'),
-                    );
-                  },
-                  onLongPress: () async {
-                    try {
-                      final Directory path =
-                          await getApplicationSupportDirectory();
-                      final Uint8List dataBytes = await File(
-                        '${path.path}/tmp/b50.png',
-                      ).readAsBytes();
-                      await FilePicker.saveFile(
-                        dialogTitle: '保存B50',
-                        fileName: 'b50.png',
-                        bytes: dataBytes,
-                        type: FileType.custom,
-                        allowedExtensions: ['png'],
-                      );
-                    } catch (e) {
-                      log('$e', name: 'generateb50page.dart', level: 1000);
-                      if (!context.mounted) return;
-                      ScaffoldMessenger.of(
-                        context,
-                      ).showSnackBar(SnackBar(content: Text('保存失败 $e')));
-                    }
-                  },
-                  child: image,
+                Scrollbar(
+                  controller: _controller2,
+                  child: SingleChildScrollView(
+                    scrollDirection: Axis.horizontal,
+                    controller: _controller2,
+                    child: RepaintBoundary(key: _globalKey, child: b50Body),
+                  ),
                 ),
               ],
             ),
