@@ -1,19 +1,19 @@
 import 'package:chusearchsong_flutter/pages/toolspages/songrecommendationpage.dart';
-import 'package:chusearchsong_flutter/tools/fun.dart';
-import '../tools/ratingtrendpagefun.dart';
-import 'toolspages/ratingcalculatorpage.dart';
+import 'package:chusearchsong_flutter/function/fun.dart';
+import '../../function/toolsfun/ratingtrendpagefun.dart';
+import '../toolspages/ratingcalculatorpage.dart';
 import 'package:flutter/material.dart';
-import 'toolspages/rankcolorpage.dart';
-import 'toolspages/rankinfopage.dart';
-import 'toolspages/scorecalculationpage.dart';
-import 'toolspages/searchlobbypage.dart';
-import 'toolspages/randommusicpage.dart';
-import 'toolspages/searchcollectiblespage.dart';
-import 'toolspages/faulttoterantcomputationpage.dart';
-import './toolspages/ratingtrendpages.dart';
-import './toolspages/updatescorepage.dart';
-import './toolspages/generateb50page.dart';
-import './toolspages/playerinfopage.dart';
+import '../toolspages/rankcolorpage.dart';
+import '../toolspages/rankinfopage.dart';
+import '../toolspages/scorecalculationpage.dart';
+import '../toolspages/searchlobbypage.dart';
+import '../toolspages/randommusicpage.dart';
+import '../toolspages/searchcollectiblespage.dart';
+import '../toolspages/faulttoterantcomputationpage.dart';
+import '../toolspages/ratingtrendpages.dart';
+import '../toolspages/updatescorepage.dart';
+import '../toolspages/generateb50page.dart';
+import '../toolspages/playerinfopage.dart';
 
 //主窗口
 class ToolPage extends StatefulWidget {

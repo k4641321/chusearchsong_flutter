@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'lxnssyncwebview.dart';
-import '../../tools/updatescorepagefun.dart';
+import '../../function/toolsfun/updatescorepagefun.dart';
 import 'package:flutter_singbox_client/flutter_singbox_client.dart';
 
 class UpdateScorePage extends StatefulWidget {

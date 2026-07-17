@@ -1,11 +1,11 @@
 import 'theme.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'pages/infopage.dart';
-import 'pages/searchpage.dart';
-import 'pages/favoritepage.dart';
-import 'pages/toolspage.dart';
-import 'tools/fun.dart';
+import 'pages/homepages/infopage.dart';
+import 'pages/homepages/searchpage.dart';
+import 'pages/homepages/favoritepage.dart';
+import 'pages/homepages/toolspage.dart';
+import 'function/fun.dart';
 import 'dart:io';
 import 'dart:convert';
 import 'package:path_provider/path_provider.dart';

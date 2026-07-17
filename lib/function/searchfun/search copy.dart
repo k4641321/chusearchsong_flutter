@@ -3,7 +3,7 @@ import 'dart:developer';
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:path_provider/path_provider.dart';
-import '../tools/fun.dart';
+import '../fun.dart';
 
 //我操了，自己都快看力竭了，太石了，自己都要看不懂了
 

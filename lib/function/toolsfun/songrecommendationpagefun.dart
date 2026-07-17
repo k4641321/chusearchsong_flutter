@@ -1,16 +1,17 @@
 import 'dart:developer';
 import 'dart:io';
 import 'dart:convert';
-import 'package:chusearchsong_flutter/tools/fun.dart';
+import 'package:chusearchsong_flutter/function/fun.dart';
 import 'package:flutter/material.dart';
 import 'package:path_provider/path_provider.dart';
-import '../tools/request.dart';
+import '../request.dart';
 
-Future<Widget> oldSongRecommendation({
+Future<List<List<Widget>>> oldSongRecommendation({
   required bool ifYueJi,
   required BuildContext context,
 }) async {
   List<Widget> songresultWidget = [];
+  List<List<Widget>> songresultWidgetList = [];
   double maxdiff;
   double mindiff = 0;
   try {
@@ -66,7 +67,7 @@ Future<Widget> oldSongRecommendation({
     }
     log(resultsongs.length.toString());
     //构建组件
-
+    int widgetlistcout = 0;
     for (var i in resultsongs) {
       List<dynamic> songInfoDiffs = [];
       String versionname = '';
@@ -113,10 +114,20 @@ Future<Widget> oldSongRecommendation({
           ),
         ),
       );
+      widgetlistcout++;
+      // print(songresultWidget);
+      if (widgetlistcout == 10) {
+        // print(songresultWidget);
+        songresultWidgetList.add(songresultWidget);
+        songresultWidget = [];
+        widgetlistcout = 0;
+      }
     }
   } catch (e, strack) {
-    return Text("$e\n$strack");
+    return [
+      [Text("$e\n$strack")],
+    ];
   }
 
-  return ListView(children: songresultWidget);
+  return songresultWidgetList;
 }

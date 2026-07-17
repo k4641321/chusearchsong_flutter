@@ -1,13 +1,13 @@
 import 'dart:developer';
 
 import 'package:flutter/material.dart';
-import '../../tools/fun.dart';
+import '../../function/fun.dart';
 import 'dart:io';
 import 'package:path_provider/path_provider.dart';
 import 'dart:convert';
-import '../../tools/texttranslate.dart';
-import '../../tools/playerinfopagefun.dart';
-import '../../tools/request.dart';
+import '../../function/texttranslate.dart';
+import '../../function/toolsfun/playerinfopagefun.dart';
+import '../../function/request.dart';
 
 class CollectibleInfoPage extends StatefulWidget {
   const CollectibleInfoPage({

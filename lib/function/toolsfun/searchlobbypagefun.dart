@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'dart:convert';
 import 'package:url_launcher/url_launcher.dart';
 import 'dart:io';
-import 'package:chusearchsong_flutter/tools/fun.dart';
+import 'package:chusearchsong_flutter/function/fun.dart';
 import 'package:path_provider/path_provider.dart';
 import 'dart:developer';
 

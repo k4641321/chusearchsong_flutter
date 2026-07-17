@@ -1,4 +1,4 @@
-import 'package:chusearchsong_flutter/tools/settingspagefun.dart';
+import 'package:chusearchsong_flutter/function/settingspagefun.dart';
 import 'package:flutter/material.dart';
 
 class MapSettingsPage extends StatefulWidget {

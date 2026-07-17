@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'dart:developer';
-import '../tools/fun.dart';
+import '../../function/fun.dart';
 import 'dart:io';
 import 'package:path_provider/path_provider.dart';
 import 'dart:convert';
-import 'infopages/settingspage.dart';
-import '../pages/infopages/thankyoulistpage.dart';
+import '../infopages/settingspage.dart';
+import '../infopages/thankyoulistpage.dart';
 
 class Info extends StatefulWidget {
   const Info({super.key, this.onThemeChanged});

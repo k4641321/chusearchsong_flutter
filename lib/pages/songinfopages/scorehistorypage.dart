@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import '../tools/scsorehistorypagefun.dart';
+import '../../function/songinfofun/scsorehistorypagefun.dart';
 
 class ScoreHistoryPage extends StatefulWidget {
   final int songid;

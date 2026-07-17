@@ -3,7 +3,7 @@ import 'dart:developer';
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:path_provider/path_provider.dart';
-import '../tools/fun.dart';
+import '../fun.dart';
 import 'dart:math' as math;
 import 'package:cached_network_image/cached_network_image.dart';
 //我操了，自己都快看力竭了，太石了，自己都要看不懂了
@@ -297,6 +297,8 @@ Future<List<Widget>> search(
                 CachedNetworkImage(
                   imageUrl:
                       'https://assets2.lxns.net/chunithm/jacket/${i['id']}.png',
+                  width: 75,
+                  height: 75,
                   errorWidget: (context, url, error) => Text('世界末日懒得做处理了'),
                 ),
                 // Image.network(

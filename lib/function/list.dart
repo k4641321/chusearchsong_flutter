@@ -216,6 +216,37 @@ Widget buildIfPlayDropdownMenu({
   );
 }
 
+//评级
+Widget buildRankDropdownMenu({
+  String? initialSelection,
+  ValueChanged<String?>? onSelected,
+}) {
+  return DropdownMenu<String>(
+    menuHeight: 300.0,
+    width: double.infinity,
+    initialSelection: initialSelection ?? '-1',
+    selectOnly: true,
+    onSelected: onSelected,
+    dropdownMenuEntries: const [
+      DropdownMenuEntry<String>(label: '全部', value: '-1'),
+      DropdownMenuEntry<String>(label: 'D', value: 'd'),
+      DropdownMenuEntry<String>(label: 'C', value: 'c'),
+      DropdownMenuEntry<String>(label: 'B', value: 'b'),
+      DropdownMenuEntry<String>(label: 'BB', value: 'bb'),
+      DropdownMenuEntry<String>(label: 'BBB', value: 'bbb'),
+      DropdownMenuEntry<String>(label: 'A', value: 'a'),
+      DropdownMenuEntry<String>(label: 'AA', value: 'aa'),
+      DropdownMenuEntry<String>(label: 'AAA', value: 'aaa'),
+      DropdownMenuEntry<String>(label: 'S', value: 's'),
+      DropdownMenuEntry<String>(label: 'S+', value: 'sp'),
+      DropdownMenuEntry<String>(label: 'SS', value: 'ss'),
+      DropdownMenuEntry<String>(label: 'SS+', value: 'ssp'),
+      DropdownMenuEntry<String>(label: 'SSS', value: 'sss'),
+      DropdownMenuEntry<String>(label: 'SSS+', value: 'sssp'),
+    ],
+  );
+}
+
 List<DataRow> rankList() {
   List<DataRow> rowsData = [];
   rowsData = [

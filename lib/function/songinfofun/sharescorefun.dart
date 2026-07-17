@@ -6,7 +6,7 @@ import 'package:http/http.dart';
 import 'dart:developer';
 import 'package:path_provider/path_provider.dart';
 import 'package:flutter/services.dart';
-import '../tools/request.dart';
+import '../request.dart';
 import 'package:share_plus/share_plus.dart';
 
 //此页面经过ai优化过

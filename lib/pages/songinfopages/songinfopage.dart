@@ -1,13 +1,13 @@
 import 'dart:convert';
 import 'dart:developer';
 import 'package:flutter/material.dart';
-import './musicpage.dart';
+import 'musicpage.dart';
 import 'dart:io';
 import 'package:path_provider/path_provider.dart';
 import 'package:url_launcher/url_launcher.dart';
-import '../tools/songinfopagefun.dart';
-import '../tools/fun.dart';
-import '../tools/sharescorefun.dart';
+import '../../function/songinfofun/songinfopagefun.dart';
+import '../../function/fun.dart';
+import '../../function/songinfofun/sharescorefun.dart';
 
 class SongInfoPage extends StatefulWidget {
   final Map<String, dynamic> song;

@@ -1,8 +1,8 @@
 ﻿import 'dart:io';
-import 'package:chusearchsong_flutter/tools/fun.dart';
+import 'package:chusearchsong_flutter/function/fun.dart';
 import 'package:flutter/material.dart';
 import 'package:path_provider/path_provider.dart';
-import '../tools/request.dart';
+import '../request.dart';
 import 'dart:convert';
 
 Color diffcolor({required int diffindex}) {

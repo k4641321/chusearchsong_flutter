@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import '../../tools/list.dart';
+import '../../function/list.dart';
 
 //Rating颜色
 class RatingColor extends StatelessWidget {

@@ -2,7 +2,7 @@ import 'dart:convert';
 import 'dart:developer';
 
 import 'package:flutter/material.dart';
-import '../tools/request.dart';
+import '../../function/request.dart';
 
 class RankingListPage extends StatefulWidget {
   final int songid;

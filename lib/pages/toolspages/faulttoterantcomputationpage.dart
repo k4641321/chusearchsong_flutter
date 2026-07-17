@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import '../../tools/faulttoterantcomputationfun.dart';
+import '../../function/toolsfun/faulttoterantcomputationfun.dart';
 
 class FaulttoterantcomputationPage extends StatefulWidget {
   final int totaltap;

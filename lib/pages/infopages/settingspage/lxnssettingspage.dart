@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import '../../../tools/settingspagefun.dart';
+import '../../../function/settingspagefun.dart';
 
 class LxnsSettingsPage extends StatefulWidget {
   const LxnsSettingsPage({super.key});

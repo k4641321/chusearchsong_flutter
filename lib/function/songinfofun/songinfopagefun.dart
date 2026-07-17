@@ -1,13 +1,14 @@
 import 'dart:developer';
 import 'dart:io';
 import 'dart:convert';
+import 'package:chusearchsong_flutter/function/toolsfun/searchcollectiblespagefun.dart';
 import 'package:flutter/material.dart';
 import 'package:path_provider/path_provider.dart';
-import 'request.dart';
-import '../pages/toolspages/faulttoterantcomputationpage.dart';
-import '../tools/fun.dart';
-import '../pages/scorehistorypage.dart';
-import '../pages/rankinglistpage.dart';
+import '../request.dart';
+import '../../pages/toolspages/faulttoterantcomputationpage.dart';
+import '../fun.dart';
+import '../../pages/songinfopages/scorehistorypage.dart';
+import '../../pages/songinfopages/rankinglistpage.dart';
 
 List<Widget> returnDiffTabBar({required Map song}) {
   List<Widget> result = [];
