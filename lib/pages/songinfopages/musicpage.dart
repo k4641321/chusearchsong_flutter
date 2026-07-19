@@ -146,12 +146,13 @@ class _PlayMusic extends State<PlayMusic> {
                 ),
                 const Divider(),
                 Row(
+                  mainAxisAlignment: MainAxisAlignment.start,
                   children: [
                     Expanded(
                       child: Text(
                         '  ${widget.song['title']}',
                         style: TextStyle(fontSize: 20),
-                        textAlign: TextAlign.center,
+                        // textAlign: TextAlign.center,
                       ),
                     ),
                   ],
@@ -162,7 +163,7 @@ class _PlayMusic extends State<PlayMusic> {
                       child: Text(
                         '   ${widget.song['artist']}',
                         style: TextStyle(fontSize: 15),
-                        textAlign: TextAlign.center,
+                        // textAlign: TextAlign.center,
                       ),
                     ),
                   ],

@@ -8,16 +8,20 @@ double calculatorRating({required String scorestr, required String diffstr}) {
   // } //SSS+
   // else
   if (score <= 1010000 && score >= 1009000) {
-    result = diff + 2.15 + (score - 1009000) * 0.0001;
+    result = diff + 2.15;
+    // result = diff + 2.15 + (score - 1009000) * 0.0001;
   } //SSS
   else if (score < 1009000 && score >= 1007500) {
-    result = diff + 2.0 + (score - 1007500) * 0.0001;
+    result = diff + 2.0 + (score - 1007500) / 100 * 0.01;
+    // result = diff + 2.0 + (score - 1007500) * 0.0001;
   } //SS+
   else if (score < 1007500 && score >= 1005000) {
-    result = diff + 1.5 + (score - 1005000) * 0.0002;
+    result = diff + 1.5 + (score - 1005000) / 50 * 0.01;
+    // result = diff + 1.5 + (score - 1005000) * 0.0002;
   } //SS
   else if (score < 1005000 && score >= 1000000) {
-    result = diff + 1.0 + (score - 1000000) * 0.0001;
+    result = diff + 1.0 + (score - 1000000) / 100 * 0.01;
+    // result = diff + 1.0 + (score - 1000000) * 0.0001;
   } //S+
   else if (score < 1000000 && score >= 990000) {
     result = diff + 0.6 + (score - 990000) / 250 * 0.01;

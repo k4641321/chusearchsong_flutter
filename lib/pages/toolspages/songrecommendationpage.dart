@@ -113,13 +113,14 @@ class _SongRecommendationPageState extends State<SongRecommendationPage>
     try {
       oldpage = 0;
       newpage = 0;
+      // double.parse(_pageController.text);
       if (!mounted) return;
       if (filterSongs != null) {
         if (selectedRank == '-1') {
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
               content: Text('未选择评级，将使用SSS+评级'),
-              duration: Duration(microseconds: 1000),
+              duration: Duration(seconds: 1),
             ),
           );
         }
@@ -139,6 +140,7 @@ class _SongRecommendationPageState extends State<SongRecommendationPage>
             rank: selectedRank ?? '-1',
             minRating: _minRatingController.text,
             context: context,
+            expectedScore: _preScoreController.text,
           );
         } else {
           // log('新歌');
@@ -148,6 +150,7 @@ class _SongRecommendationPageState extends State<SongRecommendationPage>
             rank: selectedRank ?? '-1',
             minRating: _minRatingController.text,
             context: context,
+            expectedScore: _preScoreController.text,
           );
         }
       }
@@ -175,12 +178,19 @@ class _SongRecommendationPageState extends State<SongRecommendationPage>
     }
   }
 
-  Future<void> init() async {
+  Future<void> init({required bool isNew}) async {
     try {
-      double result = await initminRating(isNew: false);
-      setState(() {
-        _minRatingController.text = result.toString();
-      });
+      double? result = await initminRating(isNew: isNew);
+      if (result == null) {
+        setState(() {
+          _minRatingController.text = '';
+          return;
+        });
+      } else {
+        setState(() {
+          _minRatingController.text = result.toString();
+        });
+      }
     } catch (e) {
       log('获取b50失败');
       return;
@@ -190,7 +200,7 @@ class _SongRecommendationPageState extends State<SongRecommendationPage>
   @override
   void initState() {
     super.initState();
-    init();
+    init(isNew: false);
     _tabController = TabController(length: 2, vsync: this);
     _buildAllDropdownMenus();
   }
@@ -351,9 +361,8 @@ class _SongRecommendationPageState extends State<SongRecommendationPage>
               onTap: (value) async {
                 try {
                   if (value == 0) {
-                    double result = await initminRating(isNew: false);
+                    init(isNew: false);
                     if (oldSongWidgetList.isNotEmpty) {
-                      oldpage = oldSongWidgetList.length - 1;
                       setState(() {
                         oldSongWidget = ListView.builder(
                           itemBuilder: (context, index) =>
@@ -363,13 +372,9 @@ class _SongRecommendationPageState extends State<SongRecommendationPage>
                         _pageController.text = '${oldpage + 1}';
                       });
                     }
-                    setState(() {
-                      _minRatingController.text = result.toString();
-                    });
                   } else if (value == 1) {
-                    double result = await initminRating(isNew: true);
+                    init(isNew: true);
                     if (newSongWidgetList.isNotEmpty) {
-                      newpage = newSongWidgetList.length - 1;
                       setState(() {
                         newSongWidget = ListView.builder(
                           itemBuilder: (context, index) =>
@@ -379,9 +384,6 @@ class _SongRecommendationPageState extends State<SongRecommendationPage>
                         _pageController.text = '${newpage + 1}';
                       });
                     }
-                    setState(() {
-                      _minRatingController.text = result.toString();
-                    });
                   }
                 } catch (e, strack) {
                   log('$e\n$strack');
@@ -457,7 +459,7 @@ class _SongRecommendationPageState extends State<SongRecommendationPage>
                     oldpage = int.parse(value) - 1;
                     if (oldpage < 0) {
                       oldpage = 0;
-                    } else if (oldpage > oldSongWidgetList.length) {
+                    } else if (oldpage >= oldSongWidgetList.length) {
                       oldpage = oldSongWidgetList.length - 1;
                     }
                     setState(() {
@@ -471,7 +473,7 @@ class _SongRecommendationPageState extends State<SongRecommendationPage>
                     newpage = int.parse(value) - 1;
                     if (newpage < 0) {
                       newpage = 0;
-                    } else if (newpage > newSongWidgetList.length) {
+                    } else if (newpage >= newSongWidgetList.length) {
                       newpage = newSongWidgetList.length - 1;
                     }
                     setState(() {
@@ -494,7 +496,7 @@ class _SongRecommendationPageState extends State<SongRecommendationPage>
                 // log('$page');
                 if (_tabController.index == 0) {
                   oldpage = oldpage + 1;
-                  if (oldpage > oldSongWidgetList.length) {
+                  if (oldpage >= oldSongWidgetList.length) {
                     oldpage = oldSongWidgetList.length - 1;
                   }
                   setState(() {
@@ -507,7 +509,7 @@ class _SongRecommendationPageState extends State<SongRecommendationPage>
                   });
                 } else {
                   newpage = newpage + 1;
-                  if (newpage > newSongWidgetList.length) {
+                  if (newpage >= newSongWidgetList.length) {
                     newpage = newSongWidgetList.length - 1;
                   }
                   setState(() {

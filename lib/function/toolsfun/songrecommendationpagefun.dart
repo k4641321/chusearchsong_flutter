@@ -6,54 +6,58 @@ import 'package:flutter/material.dart';
 import 'package:path_provider/path_provider.dart';
 import '../../function/toolsfun/ratingcalculatorpagefun.dart';
 
-Future<double> initminRating({required bool isNew}) async {
-  //获取b50
-  final path = await getApplicationSupportDirectory();
-  String b50str = await File("${path.path}/res/b50.json").readAsString();
-  Map<String, dynamic> b50 = jsonDecode(b50str)['data'];
-  //获取b30
-  if (isNew == false) {
-    List b30 = b50['bests'];
-    double b30min = 0;
-    //获取最低rat
+Future<double?> initminRating({required bool isNew}) async {
+  try {
+    //获取b50
+    final path = await getApplicationSupportDirectory();
+    String b50str = await File("${path.path}/res/b50.json").readAsString();
+    Map<String, dynamic> b50 = jsonDecode(b50str)['data'];
+    //获取b30
+    if (isNew == false) {
+      List b30 = b50['bests'];
+      double b30min = 0;
+      //获取最低rat
 
-    for (var i in b30) {
-      if (b30min == 0) {
-        b30min = i['rating'];
-        // log(b30min.toString());
-      } else if (b30min > i['rating']) {
-        b30min = i['rating'];
-        // log(b30min.toString());
+      for (var i in b30) {
+        if (b30min == 0) {
+          b30min = i['rating'];
+          // log(b30min.toString());
+        } else if (b30min > i['rating']) {
+          b30min = i['rating'];
+          // log(b30min.toString());
+        }
       }
-    }
 
-    // while ((mindiff - b30min) <= 0) {
-    //   mindiff += 0.1;
-    // }
-    log('最终b30最小Rating为：${b30min.toString()}');
-    return b30min;
-  } else if (isNew == true) {
-    List b30 = b50['new_bests'];
-    double b20min = 0;
-    //获取最低rat
+      // while ((mindiff - b30min) <= 0) {
+      //   mindiff += 0.1;
+      // }
+      log('最终b30最小Rating为：${b30min.toString()}');
+      return b30min;
+    } else if (isNew == true) {
+      List b30 = b50['new_bests'];
+      double b20min = 0;
+      //获取最低rat
 
-    for (var i in b30) {
-      if (b20min == 0) {
-        b20min = i['rating'];
-        // log(b30min.toString());
-      } else if (b20min > i['rating']) {
-        b20min = i['rating'];
-        // log(b30min.toString());
+      for (var i in b30) {
+        if (b20min == 0) {
+          b20min = i['rating'];
+          // log(b30min.toString());
+        } else if (b20min > i['rating']) {
+          b20min = i['rating'];
+          // log(b30min.toString());
+        }
       }
-    }
 
-    // while ((mindiff - b20min) <= 0) {
-    //   mindiff += 0.0001;
-    // }
-    log('最终b20最小Rating为：${b20min.toString()}');
-    return b20min;
-  } else {
-    return 0;
+      // while ((mindiff - b20min) <= 0) {
+      //   mindiff += 0.0001;
+      // }
+      log('最终b20最小Rating为：${b20min.toString()}');
+      return b20min;
+    } else {
+      return null;
+    }
+  } catch (e) {
+    return null;
   }
 }
 
@@ -98,11 +102,11 @@ Future<List<List<Widget>>> songRecommendation({
   required String rank,
   required String minRating,
   required BuildContext context,
+  required String expectedScore,
 }) async {
   List<Widget> songresultWidget = [];
   List<List<Widget>> songresultWidgetList = [];
   try {
-    //获取b50
     final path = await getApplicationSupportDirectory();
     //加载歌曲列表
     Map<String, dynamic> songsdata = jsonDecode(
@@ -134,12 +138,27 @@ Future<List<List<Widget>>> songRecommendation({
     List resultsongs = [];
     for (var i in filterSongs) {
       for (var j in i['difficulties']) {
-        if ((calculatorRating(
+        if (expectedScore == '' &&
+            calculatorRating(
                   scorestr: rankScore(rank: rank).toString(),
                   diffstr: j['level_value'].toString(),
-                )) >
+                ) >
                 double.parse(minRating) &&
             version.contains(j['version'])) {
+          resultsongs.add(i);
+        } else if (expectedScore != '' &&
+            calculatorRating(
+                  scorestr: rankScore(rank: rank).toString(),
+                  diffstr: j['level_value'].toString(),
+                ) >
+                double.parse(minRating) &&
+            version.contains(j['version']) &&
+            (calculatorRating(
+                      scorestr: rankScore(rank: rank).toString(),
+                      diffstr: j['level_value'].toString(),
+                    ) -
+                    double.parse(minRating)) >=
+                double.parse(expectedScore)) {
           resultsongs.add(i);
         }
       }
@@ -167,7 +186,10 @@ Future<List<List<Widget>>> songRecommendation({
             '${k['level_value']} -> ${calculatorRating(
               scorestr: rankScore(rank: rank).toString(),
               diffstr: k['level_value'].toString(),
-            ).toStringAsFixed(2)}',
+            ).toStringAsFixed(2)}(+${(calculatorRating(
+                  scorestr: rankScore(rank: rank).toString(),
+                  diffstr: k['level_value'].toString(),
+                ) - double.parse(minRating)).toStringAsFixed(2)})',
           );
         }
       }
