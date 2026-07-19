@@ -3,6 +3,14 @@ import 'package:flutter/material.dart';
 import 'dart:convert';
 import 'dart:io';
 import 'package:path_provider/path_provider.dart';
+import '../function/toolsfun/ratingcalculatorpagefun.dart';
+
+String fix2dp(double value) {
+  final truncated = (value * 100).truncate();
+  final sign = truncated < 0 ? '-' : '';
+  final abs = truncated.abs();
+  return '$sign${abs ~/ 100}.${(abs % 100).toString().padLeft(2, '0')}';
+}
 
 //加载歌曲数据
 Future<Map<String, dynamic>> loadSongs() async {
@@ -228,7 +236,7 @@ Widget buildRankDropdownMenu({
     selectOnly: true,
     onSelected: onSelected,
     dropdownMenuEntries: const [
-      DropdownMenuEntry<String>(label: '全部', value: '-1'),
+      DropdownMenuEntry<String>(label: '评级', value: '-1'),
       DropdownMenuEntry<String>(label: 'D', value: 'd'),
       DropdownMenuEntry<String>(label: 'C', value: 'c'),
       DropdownMenuEntry<String>(label: 'B', value: 'b'),
@@ -537,7 +545,13 @@ List<DataRow> ratingCalculator({
             style: TextStyle(color: const Color.fromARGB(255, 0, 136, 11)),
           ),
         ),
-        DataCell(Text('${diff + 2.15}')),
+        DataCell(
+          Text(
+            fix2dp(
+              calculatorRating(scorestr: '1010000', diffstr: diff.toString()),
+            ),
+          ),
+        ),
       ],
     ),
     DataRow(
@@ -548,7 +562,13 @@ List<DataRow> ratingCalculator({
             style: TextStyle(color: const Color.fromARGB(255, 0, 162, 255)),
           ),
         ),
-        DataCell(Text('${diff + 2.0 + 0.1}')),
+        DataCell(
+          Text(
+            fix2dp(
+              calculatorRating(scorestr: '1008500', diffstr: diff.toString()),
+            ),
+          ),
+        ),
       ],
     ),
     DataRow(
@@ -559,7 +579,13 @@ List<DataRow> ratingCalculator({
             style: TextStyle(color: const Color.fromARGB(255, 0, 162, 255)),
           ),
         ),
-        DataCell(Text('${diff + 2.0 + 0.05}')),
+        DataCell(
+          Text(
+            fix2dp(
+              calculatorRating(scorestr: '1008000', diffstr: diff.toString()),
+            ),
+          ),
+        ),
       ],
     ),
     DataRow(
@@ -570,7 +596,13 @@ List<DataRow> ratingCalculator({
             style: TextStyle(color: const Color.fromARGB(255, 0, 162, 255)),
           ),
         ),
-        DataCell(Text('${diff + 2.0 + 0.02}')),
+        DataCell(
+          Text(
+            fix2dp(
+              calculatorRating(scorestr: '1007750', diffstr: diff.toString()),
+            ),
+          ),
+        ),
       ],
     ),
     DataRow(
@@ -581,7 +613,13 @@ List<DataRow> ratingCalculator({
             style: TextStyle(color: const Color.fromARGB(255, 0, 162, 255)),
           ),
         ),
-        DataCell(Text('${diff + 2.0}')),
+        DataCell(
+          Text(
+            fix2dp(
+              calculatorRating(scorestr: '1007500', diffstr: diff.toString()),
+            ),
+          ),
+        ),
       ],
     ),
     DataRow(
@@ -592,7 +630,13 @@ List<DataRow> ratingCalculator({
             style: TextStyle(color: const Color.fromARGB(255, 255, 230, 0)),
           ),
         ),
-        DataCell(Text('${diff + 1.5 + 0.4}')),
+        DataCell(
+          Text(
+            fix2dp(
+              calculatorRating(scorestr: '1007000', diffstr: diff.toString()),
+            ),
+          ),
+        ),
       ],
     ),
     DataRow(
@@ -603,7 +647,13 @@ List<DataRow> ratingCalculator({
             style: TextStyle(color: const Color.fromARGB(255, 255, 230, 0)),
           ),
         ),
-        DataCell(Text('${diff + 1.5 + 0.2}')),
+        DataCell(
+          Text(
+            fix2dp(
+              calculatorRating(scorestr: '1006000', diffstr: diff.toString()),
+            ),
+          ),
+        ),
       ],
     ),
     DataRow(
@@ -614,7 +664,13 @@ List<DataRow> ratingCalculator({
             style: TextStyle(color: const Color.fromARGB(255, 255, 230, 0)),
           ),
         ),
-        DataCell(Text('${diff + 1.5}')),
+        DataCell(
+          Text(
+            fix2dp(
+              calculatorRating(scorestr: '1005000', diffstr: diff.toString()),
+            ),
+          ),
+        ),
       ],
     ),
     DataRow(
@@ -625,7 +681,13 @@ List<DataRow> ratingCalculator({
             style: TextStyle(color: const Color.fromARGB(255, 255, 230, 0)),
           ),
         ),
-        DataCell(Text('${diff + 1.0 + 0.03}')),
+        DataCell(
+          Text(
+            fix2dp(
+              calculatorRating(scorestr: '1003000', diffstr: diff.toString()),
+            ),
+          ),
+        ),
       ],
     ),
     DataRow(
@@ -636,7 +698,13 @@ List<DataRow> ratingCalculator({
             style: TextStyle(color: const Color.fromARGB(255, 255, 230, 0)),
           ),
         ),
-        DataCell(Text('${diff + 1.0 + 0.01}')),
+        DataCell(
+          Text(
+            fix2dp(
+              calculatorRating(scorestr: '1001000', diffstr: diff.toString()),
+            ),
+          ),
+        ),
       ],
     ),
     DataRow(
@@ -647,7 +715,13 @@ List<DataRow> ratingCalculator({
             style: TextStyle(color: const Color.fromARGB(255, 255, 230, 0)),
           ),
         ),
-        DataCell(Text('${diff + 1.0}')),
+        DataCell(
+          Text(
+            fix2dp(
+              calculatorRating(scorestr: '1000000', diffstr: diff.toString()),
+            ),
+          ),
+        ),
       ],
     ),
 
@@ -659,7 +733,13 @@ List<DataRow> ratingCalculator({
             style: TextStyle(color: Theme.of(context).colorScheme.onSurface),
           ),
         ),
-        DataCell(Text('${diff + 0.9}')),
+        DataCell(
+          Text(
+            fix2dp(
+              calculatorRating(scorestr: '997500', diffstr: diff.toString()),
+            ),
+          ),
+        ),
       ],
     ),
     DataRow(
@@ -670,7 +750,13 @@ List<DataRow> ratingCalculator({
             style: TextStyle(color: Theme.of(context).colorScheme.onSurface),
           ),
         ),
-        DataCell(Text('${diff + 0.8}')),
+        DataCell(
+          Text(
+            fix2dp(
+              calculatorRating(scorestr: '995000', diffstr: diff.toString()),
+            ),
+          ),
+        ),
       ],
     ),
     DataRow(
@@ -681,7 +767,13 @@ List<DataRow> ratingCalculator({
             style: TextStyle(color: Theme.of(context).colorScheme.onSurface),
           ),
         ),
-        DataCell(Text('${diff + 0.7}')),
+        DataCell(
+          Text(
+            fix2dp(
+              calculatorRating(scorestr: '992500', diffstr: diff.toString()),
+            ),
+          ),
+        ),
       ],
     ),
     DataRow(
@@ -692,7 +784,13 @@ List<DataRow> ratingCalculator({
             style: TextStyle(color: Theme.of(context).colorScheme.onSurface),
           ),
         ),
-        DataCell(Text('${diff + 0.6}')),
+        DataCell(
+          Text(
+            fix2dp(
+              calculatorRating(scorestr: '990000', diffstr: diff.toString()),
+            ),
+          ),
+        ),
       ],
     ),
     DataRow(
@@ -703,7 +801,13 @@ List<DataRow> ratingCalculator({
             style: TextStyle(color: Theme.of(context).colorScheme.onSurface),
           ),
         ),
-        DataCell(Text('${diff + 0.4}')),
+        DataCell(
+          Text(
+            fix2dp(
+              calculatorRating(scorestr: '985000', diffstr: diff.toString()),
+            ),
+          ),
+        ),
       ],
     ),
     DataRow(
@@ -714,7 +818,13 @@ List<DataRow> ratingCalculator({
             style: TextStyle(color: Theme.of(context).colorScheme.onSurface),
           ),
         ),
-        DataCell(Text('${diff + 0.2}')),
+        DataCell(
+          Text(
+            fix2dp(
+              calculatorRating(scorestr: '980000', diffstr: diff.toString()),
+            ),
+          ),
+        ),
       ],
     ),
     DataRow(
@@ -725,7 +835,13 @@ List<DataRow> ratingCalculator({
             style: TextStyle(color: Theme.of(context).colorScheme.onSurface),
           ),
         ),
-        DataCell(Text('${diff + 0.0}')),
+        DataCell(
+          Text(
+            fix2dp(
+              calculatorRating(scorestr: '975000', diffstr: diff.toString()),
+            ),
+          ),
+        ),
       ],
     ),
   ];

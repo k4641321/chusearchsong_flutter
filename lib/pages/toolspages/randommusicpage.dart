@@ -39,7 +39,7 @@ class _RandomMusicPageState extends State<RandomMusicPage> {
     randomcount = count;
     try {
       // 使用 await 调用异步函数
-      List<Widget> results = await search(
+      List<dynamic> resultsMap = await filter(
         searchTitle,
         genre,
         version,
@@ -50,7 +50,11 @@ class _RandomMusicPageState extends State<RandomMusicPage> {
         bpmdown,
         false,
         randomcount,
-        context,
+      );
+      if (!mounted) return;
+      List<Widget> results = await search(
+        songresultMap: resultsMap,
+        context: context,
       );
       if (!mounted) return;
       // 更新状态

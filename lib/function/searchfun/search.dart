@@ -8,7 +8,83 @@ import 'dart:math' as math;
 import 'package:cached_network_image/cached_network_image.dart';
 //我操了，自己都快看力竭了，太石了，自己都要看不懂了
 
-Future<List<Widget>> search(
+//生成组件
+Future<List<Widget>> search({
+  required List<dynamic> songresultMap,
+  required BuildContext context,
+}) async {
+  //加载曲目数据
+  final dataPath = await getApplicationSupportDirectory();
+  String jsonString = await File(
+    '${dataPath.path}/res/songs.json',
+  ).readAsString();
+  Map<String, dynamic> songData = json.decode(jsonString);
+
+  //生成组件
+  List<Widget> songresultWidget = [];
+  log('添加组件');
+  // print(songresult);
+
+  for (var i in songresultMap) {
+    List<dynamic> songInfoDiffs = [];
+    String versionname = '';
+    for (var j in songData['versions']) {
+      if (j['version'] == i['version']) {
+        versionname = j['title'];
+      }
+    }
+    for (var k in i['difficulties']) {
+      songInfoDiffs.add(k['level_value']);
+    }
+    // songresultWidget.add(const Divider());
+    songresultWidget.add(
+      InkWell(
+        // key: ValueKey(i['id']),
+        onTap: () async {
+          interSongInfo(i: i, context: context, versionname: versionname);
+        },
+
+        child: Card(
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(0.0),
+          ),
+          child: Padding(
+            padding: EdgeInsetsGeometry.all(10.0),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                CachedNetworkImage(
+                  imageUrl:
+                      'https://assets2.lxns.net/chunithm/jacket/${i['id']}.png',
+                  width: 75,
+                  height: 75,
+                  errorWidget: (context, url, error) => Text('世界末日懒得做处理了'),
+                ),
+                // Image.network(
+                //   'https://assets2.lxns.net/chunithm/jacket/${i['id']}.png',
+                //   errorBuilder: (context, error, stackTrace) => Text('图片加载失败'),
+                //   width: 55,
+                //   height: 55,
+                // ),
+                Expanded(
+                  child: Text(
+                    '${i['id']} - ${i['title']}      ${i['genre']} - $versionname  \n $songInfoDiffs',
+                    textAlign: TextAlign.center,
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+  // print(songresult);
+  log('完成');
+  return songresultWidget;
+}
+
+Future<List<dynamic>> filter(
   String title,
   String genre,
   String version,
@@ -19,7 +95,6 @@ Future<List<Widget>> search(
   int? bpmdown,
   bool isSearch,
   int? count,
-  BuildContext context,
 ) async {
   // 加载曲目数据
   final dataPath = await getApplicationSupportDirectory();
@@ -261,66 +336,5 @@ Future<List<Widget>> search(
     }
   }
 
-  //生成组件
-  List<Widget> songresultWidget = [];
-  log('添加组件');
-  // print(songresult);
-
-  for (var i in songresultMap) {
-    List<dynamic> songInfoDiffs = [];
-    String versionname = '';
-    for (var j in songData['versions']) {
-      if (j['version'] == i['version']) {
-        versionname = j['title'];
-      }
-    }
-    for (var k in i['difficulties']) {
-      songInfoDiffs.add(k['level_value']);
-    }
-    // songresultWidget.add(const Divider());
-    songresultWidget.add(
-      InkWell(
-        // key: ValueKey(i['id']),
-        onTap: () async {
-          interSongInfo(i: i, context: context, versionname: versionname);
-        },
-
-        child: Card(
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(0.0),
-          ),
-          child: Padding(
-            padding: EdgeInsetsGeometry.all(10.0),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                CachedNetworkImage(
-                  imageUrl:
-                      'https://assets2.lxns.net/chunithm/jacket/${i['id']}.png',
-                  width: 75,
-                  height: 75,
-                  errorWidget: (context, url, error) => Text('世界末日懒得做处理了'),
-                ),
-                // Image.network(
-                //   'https://assets2.lxns.net/chunithm/jacket/${i['id']}.png',
-                //   errorBuilder: (context, error, stackTrace) => Text('图片加载失败'),
-                //   width: 55,
-                //   height: 55,
-                // ),
-                Expanded(
-                  child: Text(
-                    '${i['id']} - ${i['title']}      ${i['genre']} - $versionname  \n $songInfoDiffs',
-                    textAlign: TextAlign.center,
-                  ),
-                ),
-              ],
-            ),
-          ),
-        ),
-      ),
-    );
-  }
-  // print(songresult);
-  log('完成');
-  return songresultWidget;
+  return songresultMap;
 }

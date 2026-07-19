@@ -11,12 +11,15 @@ class SongRecommendationPage extends StatefulWidget {
   State<SongRecommendationPage> createState() => _SongRecommendationPageState();
 }
 
-class _SongRecommendationPageState extends State<SongRecommendationPage> {
-  Widget oldSongWidget = CircularProgressIndicator();
-  Widget newSongWidget = CircularProgressIndicator();
+class _SongRecommendationPageState extends State<SongRecommendationPage>
+    with SingleTickerProviderStateMixin {
+  //定义所需变量
+  Widget oldSongWidget = SizedBox.shrink(); //CircularProgressIndicator();
+  Widget newSongWidget = SizedBox.shrink(); //CircularProgressIndicator();
   List<List<Widget>> oldSongWidgetList = [];
   List<List<Widget>> newSongWidgetList = [];
-  int page = 0;
+  int oldpage = 0;
+  int newpage = 0;
 
   String? selectedGenre = '-1';
   String? selectedVersion = '-1';
@@ -27,17 +30,18 @@ class _SongRecommendationPageState extends State<SongRecommendationPage> {
   int? bpmup;
   int? bpmdown;
   List<Widget> searchResults = [];
-  // Future result;
   final TextEditingController _searchController = TextEditingController();
   final TextEditingController _bpmup = TextEditingController();
   final TextEditingController _bpmdown = TextEditingController();
   final TextEditingController _pageController = TextEditingController();
+  final TextEditingController _preScoreController = TextEditingController();
+  final TextEditingController _minRatingController = TextEditingController();
+  late TabController _tabController;
 
   Widget genreDropdownMenu = DropdownMenu<String>(dropdownMenuEntries: []);
   Widget versionDropdownMenu = DropdownMenu<String>(dropdownMenuEntries: []);
 
   Future<void> _buildAllDropdownMenus() async {
-    log('1');
     Widget genreDropdownMenu1 = await buildGenreDropdownMenu(
       initialSelection: selectedGenre,
       onSelected: (String? value) {
@@ -45,7 +49,7 @@ class _SongRecommendationPageState extends State<SongRecommendationPage> {
           selectedGenre = value;
         });
         try {
-          _performSearch();
+          calculate();
         } catch (e) {
           ScaffoldMessenger.of(
             context,
@@ -60,7 +64,7 @@ class _SongRecommendationPageState extends State<SongRecommendationPage> {
           selectedVersion = value;
         });
         try {
-          _performSearch();
+          calculate();
         } catch (e) {
           ScaffoldMessenger.of(
             context,
@@ -75,17 +79,16 @@ class _SongRecommendationPageState extends State<SongRecommendationPage> {
     });
   }
 
-  Future<void> _performSearch() async {
+  Future<List<dynamic>?> _performSearch() async {
     String searchTitle = _searchController.text;
     String genre = selectedGenre ?? '-1';
     String version = selectedVersion ?? '-1';
     String difficultyDown = selectedDifficultyDown ?? '-1';
     String difficultyUp = selectedDifficultyUp ?? '-1';
     String ifPlay = selectedifPlay ?? '-1';
-    String rank = selectedRank ?? '-1';
     try {
       // 使用 await 调用异步函数
-      List<Widget> results = await search(
+      List<dynamic> resultsMap = await filter(
         searchTitle,
         genre,
         version,
@@ -94,42 +97,101 @@ class _SongRecommendationPageState extends State<SongRecommendationPage> {
         ifPlay,
         bpmup,
         bpmdown,
-        true,
+        false,
         null,
-        context,
       );
-      if (!mounted) return;
-      // 更新状态
-      setState(() {
-        searchResults = results;
-      });
+      return resultsMap;
     } catch (e) {
       log('搜索错误: $e', name: 'searchpage.dart', level: 1000);
+      return null;
       // 可以显示错误信息给用户
+    }
+  }
+
+  Future<void> calculate() async {
+    List<dynamic>? filterSongs = await _performSearch();
+    try {
+      oldpage = 0;
+      newpage = 0;
+      if (!mounted) return;
+      if (filterSongs != null) {
+        if (selectedRank == '-1') {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text('未选择评级，将使用SSS+评级'),
+              duration: Duration(microseconds: 1000),
+            ),
+          );
+        }
+        if (_minRatingController.text == '') {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text('未输入最低Rating'),
+              duration: Duration(microseconds: 1000),
+            ),
+          );
+          return;
+        }
+        if (_tabController.index == 0) {
+          oldSongWidgetList = await songRecommendation(
+            isNew: false,
+            filterSongs: filterSongs,
+            rank: selectedRank ?? '-1',
+            minRating: _minRatingController.text,
+            context: context,
+          );
+        } else {
+          // log('新歌');
+          newSongWidgetList = await songRecommendation(
+            isNew: true,
+            filterSongs: filterSongs,
+            rank: selectedRank ?? '-1',
+            minRating: _minRatingController.text,
+            context: context,
+          );
+        }
+      }
+      setState(() {
+        if (_tabController.index == 0) {
+          oldSongWidget = ListView.builder(
+            itemBuilder: (context, index) => oldSongWidgetList[oldpage][index],
+            itemCount: oldSongWidgetList[oldpage].length,
+          );
+          _pageController.text = '${oldpage + 1}';
+        } else {
+          newSongWidget = ListView.builder(
+            itemBuilder: (context, index) => newSongWidgetList[newpage][index],
+            itemCount: newSongWidgetList[newpage].length,
+          );
+          _pageController.text = '${newpage + 1}';
+        }
+      });
+      // print(oldSongWidgetList);
+    } catch (e, strack) {
+      log('$e\n$strack', name: 'songrecommendationpage.dart', level: 1000);
+      setState(() {
+        oldSongWidget = Text('错误 $e\n$strack');
+      });
     }
   }
 
   Future<void> init() async {
     try {
-      oldSongWidgetList = await oldSongRecommendation(
-        ifYueJi: false,
-        context: context,
-      );
-      // print(oldSongWidgetList);
+      double result = await initminRating(isNew: false);
       setState(() {
-        oldSongWidget = ListView.builder(
-          itemBuilder: (context, index) => oldSongWidgetList[page][index],
-          itemCount: oldSongWidgetList[page].length,
-        );
+        _minRatingController.text = result.toString();
       });
-    } catch (e, strack) {
-      log('$e\n$strack', name: 'songrecommendationpage.dart', level: 1000);
+    } catch (e) {
+      log('获取b50失败');
+      return;
     }
   }
 
   @override
   void initState() {
     super.initState();
+    init();
+    _tabController = TabController(length: 2, vsync: this);
     _buildAllDropdownMenus();
   }
 
@@ -140,15 +202,14 @@ class _SongRecommendationPageState extends State<SongRecommendationPage> {
   }
 
   @override
+  void dispose() {
+    _tabController.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
-      // floatingActionButton: FloatingActionButton(
-      //   shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(50)),
-      //   child: Icon(Icons.arrow_upward),
-      //   onPressed: () {
-      //     oldSongWidgetScrollerController.jumpTo(0);
-      //   },
-      // ),
       appBar: AppBar(title: const Text('吃分推荐')),
       body: DefaultTabController(
         length: 2,
@@ -166,11 +227,11 @@ class _SongRecommendationPageState extends State<SongRecommendationPage> {
                         selectedDifficultyDown = value;
                       });
                       try {
-                        _performSearch();
+                        calculate();
                       } catch (e) {
                         ScaffoldMessenger.of(
                           context,
-                        ).showSnackBar(SnackBar(content: Text('搜索失败，可能是数据丢失')));
+                        ).showSnackBar(SnackBar(content: Text('$e')));
                       }
                     },
                   ),
@@ -183,11 +244,11 @@ class _SongRecommendationPageState extends State<SongRecommendationPage> {
                         selectedDifficultyUp = value;
                       });
                       try {
-                        _performSearch();
+                        calculate();
                       } catch (e) {
                         ScaffoldMessenger.of(
                           context,
-                        ).showSnackBar(SnackBar(content: Text('搜索失败，可能是数据丢失')));
+                        ).showSnackBar(SnackBar(content: Text('$e')));
                       }
                     },
                   ),
@@ -203,7 +264,7 @@ class _SongRecommendationPageState extends State<SongRecommendationPage> {
                     onChanged: (value) {
                       try {
                         bpmdown = int.parse(_bpmdown.text);
-                        _performSearch();
+                        calculate();
                       } catch (e) {
                         bpmdown = null;
                         log('bpmdown不是数字');
@@ -218,7 +279,7 @@ class _SongRecommendationPageState extends State<SongRecommendationPage> {
                     onChanged: (value) {
                       try {
                         bpmup = int.parse(_bpmup.text);
-                        _performSearch();
+                        calculate();
                       } catch (e) {
                         bpmup = null;
                         log('bpmup不是数字');
@@ -233,13 +294,13 @@ class _SongRecommendationPageState extends State<SongRecommendationPage> {
                       setState(() {
                         selectedRank = value;
                       });
-                      // try {
-                      //   _performSearch();
-                      // } catch (e) {
-                      //   ScaffoldMessenger.of(
-                      //     context,
-                      //   ).showSnackBar(SnackBar(content: Text('搜索失败，可能是数据丢失')));
-                      // }
+                      try {
+                        calculate();
+                      } catch (e) {
+                        ScaffoldMessenger.of(
+                          context,
+                        ).showSnackBar(SnackBar(content: Text('$e')));
+                      }
                     },
                   ),
                 ),
@@ -252,26 +313,88 @@ class _SongRecommendationPageState extends State<SongRecommendationPage> {
                         selectedifPlay = value;
                       });
                       try {
-                        _performSearch();
+                        calculate();
                       } catch (e) {
                         ScaffoldMessenger.of(
                           context,
-                        ).showSnackBar(SnackBar(content: Text('搜索失败，可能是数据丢失')));
+                        ).showSnackBar(SnackBar(content: Text('$e')));
                       }
                     },
                   ),
                 ),
               ],
             ),
-
+            Row(
+              children: [
+                Text('最低Rating：'),
+                Expanded(child: TextField(controller: _minRatingController)),
+                Text('预吃分数：'),
+                Expanded(child: TextField(controller: _preScoreController)),
+              ],
+            ),
+            Row(
+              children: [
+                Expanded(
+                  child: TextButton(
+                    onPressed: () => calculate(),
+                    child: Text('计算'),
+                  ),
+                ),
+              ],
+            ),
             TabBar(
+              controller: _tabController,
               tabs: [
                 Tab(text: '旧歌'),
                 Tab(text: '新歌'),
               ],
+              onTap: (value) async {
+                try {
+                  if (value == 0) {
+                    double result = await initminRating(isNew: false);
+                    if (oldSongWidgetList.isNotEmpty) {
+                      oldpage = oldSongWidgetList.length - 1;
+                      setState(() {
+                        oldSongWidget = ListView.builder(
+                          itemBuilder: (context, index) =>
+                              oldSongWidgetList[oldpage][index],
+                          itemCount: oldSongWidgetList[oldpage].length,
+                        );
+                        _pageController.text = '${oldpage + 1}';
+                      });
+                    }
+                    setState(() {
+                      _minRatingController.text = result.toString();
+                    });
+                  } else if (value == 1) {
+                    double result = await initminRating(isNew: true);
+                    if (newSongWidgetList.isNotEmpty) {
+                      newpage = newSongWidgetList.length - 1;
+                      setState(() {
+                        newSongWidget = ListView.builder(
+                          itemBuilder: (context, index) =>
+                              newSongWidgetList[newpage][index],
+                          itemCount: newSongWidgetList[newpage].length,
+                        );
+                        _pageController.text = '${newpage + 1}';
+                      });
+                    }
+                    setState(() {
+                      _minRatingController.text = result.toString();
+                    });
+                  }
+                } catch (e, strack) {
+                  log('$e\n$strack');
+                  if (!context.mounted) return;
+                  // ScaffoldMessenger.of(
+                  //   context,
+                  // ).showSnackBar(SnackBar(content: Text('错误 $e')));
+                }
+              },
             ),
             Expanded(
               child: TabBarView(
+                controller: _tabController,
                 children: [
                   Center(child: oldSongWidget),
                   Center(child: newSongWidget),
@@ -286,38 +409,121 @@ class _SongRecommendationPageState extends State<SongRecommendationPage> {
         children: [
           IconButton(
             onPressed: () {
-              page = page - 1;
-              // log('$page');
-              if (page <= 0) {
-                page = 0;
+              try {
+                if (_tabController.index == 0) {
+                  oldpage = oldpage - 1;
+                  // log('$page');
+                  if (oldpage < 0) {
+                    oldpage = 0;
+                  }
+                  setState(() {
+                    oldSongWidget = ListView.builder(
+                      itemBuilder: (context, index) =>
+                          oldSongWidgetList[oldpage][index],
+                      itemCount: oldSongWidgetList[oldpage].length,
+                    );
+                    _pageController.text = '${oldpage + 1}';
+                  });
+                } else {
+                  newpage = newpage - 1;
+                  // log('$page');
+                  if (newpage < 0) {
+                    newpage = 0;
+                  }
+                  setState(() {
+                    newSongWidget = ListView.builder(
+                      itemBuilder: (context, index) =>
+                          newSongWidgetList[newpage][index],
+                      itemCount: newSongWidgetList[newpage].length,
+                    );
+                    _pageController.text = '${newpage + 1}';
+                  });
+                }
+              } catch (e) {
+                ScaffoldMessenger.of(
+                  context,
+                ).showSnackBar(SnackBar(content: Text('没了')));
               }
-              setState(() {
-                oldSongWidget = ListView.builder(
-                  itemBuilder: (context, index) =>
-                      oldSongWidgetList[page][index],
-                  itemCount: oldSongWidgetList[page].length,
-                );
-                _pageController.text = '${page + 1}';
-              });
             },
             icon: Icon(Icons.arrow_back),
           ),
-          SizedBox(width: 50, child: TextField(controller: _pageController)),
+          SizedBox(
+            width: 50,
+            child: TextField(
+              controller: _pageController,
+              onChanged: (value) {
+                try {
+                  if (_tabController.index == 0) {
+                    oldpage = int.parse(value) - 1;
+                    if (oldpage < 0) {
+                      oldpage = 0;
+                    } else if (oldpage > oldSongWidgetList.length) {
+                      oldpage = oldSongWidgetList.length - 1;
+                    }
+                    setState(() {
+                      oldSongWidget = ListView.builder(
+                        itemBuilder: (context, index) =>
+                            oldSongWidgetList[oldpage][index],
+                        itemCount: oldSongWidgetList[oldpage].length,
+                      );
+                    });
+                  } else {
+                    newpage = int.parse(value) - 1;
+                    if (newpage < 0) {
+                      newpage = 0;
+                    } else if (newpage > newSongWidgetList.length) {
+                      newpage = newSongWidgetList.length - 1;
+                    }
+                    setState(() {
+                      newSongWidget = ListView.builder(
+                        itemBuilder: (context, index) =>
+                            newSongWidgetList[newpage][index],
+                        itemCount: newSongWidgetList[newpage].length,
+                      );
+                    });
+                  }
+                } catch (e) {
+                  return;
+                }
+              },
+            ),
+          ),
           IconButton(
             onPressed: () {
-              page = page + 1;
-              // log('$page');
-              if (page >= oldSongWidgetList.length) {
-                page = oldSongWidgetList.length;
+              try {
+                // log('$page');
+                if (_tabController.index == 0) {
+                  oldpage = oldpage + 1;
+                  if (oldpage > oldSongWidgetList.length) {
+                    oldpage = oldSongWidgetList.length - 1;
+                  }
+                  setState(() {
+                    oldSongWidget = ListView.builder(
+                      itemBuilder: (context, index) =>
+                          oldSongWidgetList[oldpage][index],
+                      itemCount: oldSongWidgetList[oldpage].length,
+                    );
+                    _pageController.text = '${oldpage + 1}';
+                  });
+                } else {
+                  newpage = newpage + 1;
+                  if (newpage > newSongWidgetList.length) {
+                    newpage = newSongWidgetList.length - 1;
+                  }
+                  setState(() {
+                    newSongWidget = ListView.builder(
+                      itemBuilder: (context, index) =>
+                          newSongWidgetList[newpage][index],
+                      itemCount: newSongWidgetList[newpage].length,
+                    );
+                    _pageController.text = '${newpage + 1}';
+                  });
+                }
+              } catch (e) {
+                ScaffoldMessenger.of(
+                  context,
+                ).showSnackBar(SnackBar(content: Text('你生成完再点啊')));
               }
-              setState(() {
-                oldSongWidget = ListView.builder(
-                  itemBuilder: (context, index) =>
-                      oldSongWidgetList[page][index],
-                  itemCount: oldSongWidgetList[page].length,
-                );
-                _pageController.text = '${page + 1}';
-              });
             },
             icon: Icon(Icons.arrow_forward),
           ),

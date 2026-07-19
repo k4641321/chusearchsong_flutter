@@ -1,5 +1,8 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import '../../function/list.dart';
+import '../../function/toolsfun/ratingcalculatorpagefun.dart';
 
 //Rating计算器
 class RatingCalculator extends StatefulWidget {
@@ -80,48 +83,10 @@ class _RatingCalculatorState extends State<RatingCalculator> {
                                       String diffstr = _diffController.text;
                                       double result = 0;
                                       try {
-                                        double score = double.parse(scorestr);
-                                        double diff = double.parse(diffstr);
-
-                                        if (score > 1010000) {
-                                          throw Exception('分数输入错误');
-                                        } else if (score >= 1009000) {
-                                          result = diff + 2.15;
-                                        } else if (score < 1009000 &&
-                                            score >= 1007500) {
-                                          result =
-                                              diff +
-                                              2.0 +
-                                              (score - 1007500) / 100 * 0.01;
-                                        } else if (score < 1007500 &&
-                                            score >= 1005000) {
-                                          result =
-                                              diff +
-                                              1.5 +
-                                              (score - 1005000) / 50 * 0.01;
-                                        } else if (score < 1005000 &&
-                                            score >= 1000000) {
-                                          result =
-                                              diff +
-                                              1.0 +
-                                              (score - 1000000) / 100 * 0.01;
-                                        } else if (score < 1000000 &&
-                                            score >= 975000) {
-                                          result =
-                                              diff +
-                                              (score - 990000) / 250 * 0.01;
-                                        } else if (score < 975000 &&
-                                            score >= 925000) {
-                                          result = diff - 3.0;
-                                        } else if (score < 925000 &&
-                                            score >= 900000) {
-                                          result = diff - 5.0;
-                                        } else if (score < 900000 &&
-                                            score >= 800000) {
-                                          result = (diff - 5.0) / 2;
-                                        } else if (score < 800000) {
-                                          result = 0;
-                                        }
+                                        result = calculatorRating(
+                                          scorestr: scorestr,
+                                          diffstr: diffstr,
+                                        );
                                         _resultController.text = result
                                             .toString();
                                       } catch (e) {
