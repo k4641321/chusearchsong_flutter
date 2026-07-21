@@ -81,7 +81,7 @@ Future<List<Widget>> randomSong({
                     key: ValueKey(i['id']),
                     onTap: () async {
                       interSongInfo(
-                        i: i!,
+                        songbasedata: i!,
                         context: context,
                         versionname: versionname,
                       );
@@ -116,87 +116,19 @@ Future<List<Widget>> randomSong({
 
 //进入歌曲详情页
 Future<void> interSongInfo({
-  required Map<String, dynamic> i,
+  required Map<String, dynamic> songbasedata,
   required BuildContext context,
   required String versionname,
 }) async {
   // List<DataRow> songData = [];
-  List<Widget> songData = [];
-  Map<String, dynamic> songInfo = {};
-  List<dynamic> songInfoDiffs = [];
-  //获取谱面信息与成绩
-  try {
-    // songData = await returnSongInfo(i['id']);
-    songData = await returnDiffTabBarView(
-      song: i,
-      color: Theme.of(context).colorScheme.onSecondary,
-      context: context,
-    );
-  } catch (e) {
-    log('error $e', name: 'fun.dart', level: 1000);
-  }
-
-  try {
-    songInfo = await getSongInfo(i['id']);
-    songInfoDiffs = songInfo['difficulties'];
-  } catch (e) {
-    log('error $e', name: 'fun.dart', level: 1000);
-  }
-
+  // List<Widget> songData = [];
   List<Widget> information = [];
-  int songid = i['id'];
-  if (songInfo.isNotEmpty) {
-    if (songInfo.keys.contains('map')) {
-      information.add(
-        Text('地图: ${songInfo['map']}', style: const TextStyle(fontSize: 15)),
-      );
-    }
-    if (songInfo.keys.contains('locked')) {
-      if (songInfo['locked'] == true) {
-        information.add(Text('需解锁', style: const TextStyle(fontSize: 15)));
-      } else {
-        information.add(Text('无需解锁', style: const TextStyle(fontSize: 15)));
-      }
-    }
-    if (songInfo.keys.contains('rights')) {
-      information.add(
-        Text('版权: ${songInfo['rights']}', style: const TextStyle(fontSize: 15)),
-      );
-    }
-  } else {
-    information.add(Text('请求失败', style: const TextStyle(fontSize: 15)));
-  }
-
-  if (songInfoDiffs.isNotEmpty) {
-    final kanji = songInfoDiffs.lastWhere(
-      (d) => d.keys.contains('kanji'),
-      orElse: () => null,
-    );
-    if (kanji != null) {
-      final kanjiText = kanji['kanji'];
-      information.add(
-        Text('谱面属性: $kanjiText', style: const TextStyle(fontSize: 15)),
-      );
-    }
-
-    final star = songInfoDiffs.lastWhere(
-      (d) => d.keys.contains('star'),
-      orElse: () => null,
-    );
-    if (star != null) {
-      final starValue = star['star'];
-      information.add(
-        Text('星数: $starValue', style: const TextStyle(fontSize: 15)),
-      );
-    }
-    final originid = songInfoDiffs.lastWhere(
-      (d) => d.keys.contains('origin_id'),
-      orElse: () => null,
-    );
-    if (originid != null) {
-      songid = originid['origin_id'];
-    }
-  }
+  final difficulties = (songbasedata['difficulties'] as List?) ?? [];
+  final lastWithOrigin = difficulties.lastWhere(
+    (d) => d is Map && d.containsKey('origin_id'),
+    orElse: () => null,
+  );
+  int songid = lastWithOrigin?['origin_id'] ?? songbasedata['id'];
 
   if (information.isEmpty) {
     information.add(Text('无信息', style: const TextStyle(fontSize: 15)));
@@ -208,18 +140,20 @@ Future<void> interSongInfo({
 
   //别名加载
   if (!context.mounted) return;
-  List<Widget> alias = await returnAlias(id: i['id'], context: context);
+  List<Widget> alias = await returnAlias(
+    id: songbasedata['id'],
+    context: context,
+  );
   if (!context.mounted) return;
   await Navigator.push(
     context,
     MaterialPageRoute(
       builder: (context) => SongInfoPage(
-        song: i,
+        songbasedata: songbasedata,
         versionname: versionname,
-        rowsData: songData,
-        information: information,
+        originid: songid,
+        // information: information,
         alias: alias,
-        songid: songid,
       ),
     ),
   );
@@ -228,12 +162,42 @@ Future<void> interSongInfo({
 
 //初次启动调用的函数
 Future<void> ifres({required BuildContext context}) async {
+  //配置文件
   try {
     final directory = await getApplicationSupportDirectory();
+    if (!File('${directory.path}/config.json').existsSync()) {
+      if (!context.mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('开始创建配置文件'),
+          duration: Duration(microseconds: 500),
+        ),
+      );
+      File('${directory.path}/config.json').createSync();
+      Map<String, dynamic> config = {"theme": "light", "init": false};
+      File(
+        '${directory.path}/config.json',
+      ).writeAsStringSync(jsonEncode(config));
+    }
+  } catch (e) {
+    if (!context.mounted) return;
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(content: Text('创建失败'), duration: Duration(microseconds: 500)),
+    );
+    log('$e', name: 'main', level: 2000);
+  }
 
+  try {
+    final directory = await getApplicationSupportDirectory();
+    Map<String, dynamic> config = await jsonDecode(
+      File('${directory.path}/config.json').readAsStringSync(),
+    );
     final path = Directory('${directory.path}/res');
     if (!path.existsSync()) {
       path.createSync(recursive: true);
+    }
+    if (config['init'] == true) {
+      return;
     }
     if (!File('${path.path}/songs.json').existsSync() |
         !File('${path.path}/alias.json').existsSync() |
@@ -241,7 +205,8 @@ Future<void> ifres({required BuildContext context}) async {
         !File('${path.path}/characters.json').existsSync() |
         !File('${path.path}/icons.json').existsSync() |
         !File('${path.path}/plates.json').existsSync() |
-        !File('${path.path}/trophies.json').existsSync()) {
+        !File('${path.path}/trophies.json').existsSync() |
+        !File('${path.path}/zxzrsongs.json').existsSync()) {
       if (!context.mounted) return;
       showDialog(
         context: context,
@@ -372,7 +337,23 @@ Future<void> ifres({required BuildContext context}) async {
         SnackBar(content: Text('完成'), duration: Duration(microseconds: 500)),
       );
       log('保存到 ${path.path}/trophies.json');
+      //下载最新最热资源
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('开始下载谱面数据'),
+          duration: Duration(microseconds: 500),
+        ),
+      );
+      await savezxzrsongs();
+      if (!context.mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('完成'), duration: Duration(microseconds: 500)),
+      );
+      log('保存到 ${path.path}/zxzrsongs.json');
     }
+    //更新配置文件
+    config['init'] = true;
+    File('${directory.path}/config.json').writeAsStringSync(jsonEncode(config));
     print(directory);
   } catch (e) {
     if (!context.mounted) return;
@@ -406,30 +387,6 @@ Future<void> ifres({required BuildContext context}) async {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text('完成'), duration: Duration(microseconds: 500)),
       );
-    }
-  } catch (e) {
-    if (!context.mounted) return;
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(content: Text('创建失败'), duration: Duration(microseconds: 500)),
-    );
-    log('$e', name: 'main', level: 2000);
-  }
-
-  //配置文件
-  try {
-    final directory = await getApplicationSupportDirectory();
-    if (!File('${directory.path}/config.json').existsSync()) {
-      if (!context.mounted) return;
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text('开始创建配置文件'),
-          duration: Duration(microseconds: 500),
-        ),
-      );
-      File('${directory.path}/config.json').createSync();
-      File(
-        '${directory.path}/config.json',
-      ).writeAsStringSync('{"theme":"light"}');
     }
   } catch (e) {
     if (!context.mounted) return;
@@ -634,6 +591,19 @@ Future<void> updateData({required BuildContext context}) async {
     );
     log('保存到 ${directory.path}/config.json');
     print(directory);
+    //下载最新最热资源
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text('开始下载谱面数据'),
+        duration: Duration(microseconds: 500),
+      ),
+    );
+    await savezxzrsongs();
+    if (!context.mounted) return;
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(content: Text('完成'), duration: Duration(microseconds: 500)),
+    );
+    log('保存到 ${path.path}/zxzrsongs.json');
   } catch (e) {
     if (!context.mounted) return;
     ScaffoldMessenger.of(context).showSnackBar(

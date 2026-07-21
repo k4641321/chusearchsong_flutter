@@ -47,7 +47,7 @@ class _FavoritePageState extends State<FavoritePage> {
           key: ValueKey(i['id']),
           onTap: () async {
             await interSongInfo(
-              i: i,
+              songbasedata: i,
               context: context,
               versionname: versionname,
             );

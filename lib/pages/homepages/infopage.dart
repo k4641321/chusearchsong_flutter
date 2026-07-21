@@ -189,7 +189,7 @@ class _InfoState extends State<Info> {
                         ),
                         onTap: () => _launchUrl(context: context),
                         child: Card(
-                          color: Theme.of(context).colorScheme.primaryFixedDim,
+                          color: Theme.of(context).colorScheme.primaryContainer,
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.only(
                               topLeft: Radius.circular(10.0),
@@ -222,7 +222,7 @@ class _InfoState extends State<Info> {
                         ),
                         onTap: () => _openQQ(context: context),
                         child: Card(
-                          color: Theme.of(context).colorScheme.primaryFixedDim,
+                          color: Theme.of(context).colorScheme.primaryContainer,
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.all(
                               Radius.circular(0.0),
@@ -254,7 +254,7 @@ class _InfoState extends State<Info> {
                         ),
                         onTap: darkmodechange,
                         child: Card(
-                          color: Theme.of(context).colorScheme.primaryFixedDim,
+                          color: Theme.of(context).colorScheme.primaryContainer,
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.all(
                               Radius.circular(0.0),
@@ -291,7 +291,7 @@ class _InfoState extends State<Info> {
                           ),
                         ),
                         child: Card(
-                          color: Theme.of(context).colorScheme.primaryFixedDim,
+                          color: Theme.of(context).colorScheme.primaryContainer,
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.all(
                               Radius.circular(0.0),
@@ -325,7 +325,7 @@ class _InfoState extends State<Info> {
                           context,
                         ).showSnackBar(SnackBar(content: Text('别急，在做了'))),
                         child: Card(
-                          color: Theme.of(context).colorScheme.primaryFixedDim,
+                          color: Theme.of(context).colorScheme.primaryContainer,
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.all(
                               Radius.circular(0.0),
@@ -362,7 +362,7 @@ class _InfoState extends State<Info> {
                           ),
                         ),
                         child: Card(
-                          color: Theme.of(context).colorScheme.primaryFixedDim,
+                          color: Theme.of(context).colorScheme.primaryContainer,
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.all(
                               Radius.circular(0.0),
@@ -394,7 +394,7 @@ class _InfoState extends State<Info> {
                         ),
                         onTap: () => updateData(context: context),
                         child: Card(
-                          color: Theme.of(context).colorScheme.primaryFixedDim,
+                          color: Theme.of(context).colorScheme.primaryContainer,
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.only(
                               bottomLeft: Radius.circular(10.0),

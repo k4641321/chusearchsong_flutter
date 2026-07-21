@@ -9,6 +9,7 @@ import '../../pages/toolspages/faulttoterantcomputationpage.dart';
 import '../fun.dart';
 import '../../pages/songinfopages/scorehistorypage.dart';
 import '../../pages/songinfopages/rankinglistpage.dart';
+import './chartview.dart';
 
 List<Widget> returnDiffTabBar({required Map song}) {
   List<Widget> result = [];
@@ -118,6 +119,14 @@ Future<List<Widget>> returnDiffTabBarView({
       List<Widget> result2 = [];
       result2.add(
         InkWell(
+          onTap: () => Navigator.of(context).push(
+            MaterialPageRoute(
+              builder: (context) => ChartViewPage(
+                songid: song['id'],
+                diffindex: song2['difficulty'],
+              ),
+            ),
+          ),
           onLongPress: () => Navigator.of(context).push(
             MaterialPageRoute(
               builder: (context) => FaulttoterantcomputationPage(
@@ -230,11 +239,11 @@ Future<List<Widget>> returnDiffTabBarView({
       );
       result.add(Column(children: result2));
     }
-  } catch (e) {
+  } catch (e, strack) {
     int length = song['difficulties'].length;
     for (var i = 0; i < length; i++) {
       List<Widget> result2 = [];
-      result2.add(Row(children: [Text('获取谱面信息失败')]));
+      result2.add(Row(children: [Text('获取谱面信息失败,$e\n $strack')]));
       if (!context.mounted) {
         result.add(Column(children: result2));
         return result;
@@ -288,6 +297,55 @@ Future<List<Widget>> returnDiffTabBarView({
   return result;
 }
 
+Future<List<Widget>> returnSongInformation({required int songid}) async {
+  try {
+    List<Widget> information = [];
+    Map<String, dynamic> songInfo = {};
+    songInfo = await getSongInfo(songid);
+    if (songInfo.isNotEmpty) {
+      if (songInfo.keys.contains('map')) {
+        information.add(
+          Text('地图: ${songInfo['map']}', style: const TextStyle(fontSize: 15)),
+        );
+      }
+      if (songInfo.keys.contains('locked')) {
+        if (songInfo['locked'] == true) {
+          information.add(Text('需解锁', style: const TextStyle(fontSize: 15)));
+        } else {
+          information.add(Text('无需解锁', style: const TextStyle(fontSize: 15)));
+        }
+      }
+      if (songInfo.keys.contains('rights')) {
+        information.add(
+          Text(
+            '版权: ${songInfo['rights']}',
+            style: const TextStyle(fontSize: 15),
+          ),
+        );
+      }
+      if (information.isEmpty) {
+        information.add(Text('无'));
+      }
+      information.insert(
+        0,
+        Row(children: [Icon(Icons.info_outline), Text('其余信息')]),
+      );
+      return information;
+    } else {
+      return [
+        Row(children: [Icon(Icons.info_outline), Text('其余信息')]),
+        Text('获取其余信息失败'),
+      ];
+    }
+  } catch (e, strack) {
+    log('error $e', name: 'fun.dart', level: 1000);
+    return [
+      Row(children: [Icon(Icons.info_outline), Text('其余信息')]),
+      Text('请求失败 $e\n $strack', style: const TextStyle(fontSize: 15)),
+    ];
+  }
+}
+
 Future<List<Widget>> returnAlias({
   required int id,
   required BuildContext context,
@@ -296,7 +354,7 @@ Future<List<Widget>> returnAlias({
   try {
     final path = await getApplicationSupportDirectory();
     final aliasstr = File('${path.path}/res/alias.json').readAsStringSync();
-    Map<String, dynamic> aliasjson = json.decode(aliasstr);
+    Map<String, dynamic> aliasjson = await json.decode(aliasstr);
     List alias = aliasjson['aliases'];
     for (var i in alias) {
       if (i['song_id'] == id) {
@@ -335,21 +393,6 @@ Future<List<Widget>> returnRelatedCollectibles({
   try {
     String requestresultstr = await requestRelatedCollectibles(id: id);
     List requestresult = json.decode(requestresultstr);
-    // String type(String type) {
-    //   switch (type) {
-    //     case 'trophy':
-    //       return '称号';
-    //     case 'plate':
-    //       return '名牌版';
-    //     case 'icon':
-    //       return '头像';
-    //     case 'character':
-    //       return '角色';
-    //     default:
-    //       return '未知';
-    //   }
-    // }
-
     if (requestresult.isEmpty) {
       result.add(Text('无'));
     } else {
@@ -373,9 +416,41 @@ Future<List<Widget>> returnRelatedCollectibles({
         // log('执行');
       }
     }
-  } catch (e) {
-    result.add(Text('错误 $e'));
+  } catch (e, strack) {
+    result.add(Text('错误 $e\n $strack'));
   }
   result.insert(0, Row(children: [Icon(Icons.label), Text('关联收藏品')]));
+  return result;
+}
+
+Future<Widget> returnChartInfoAndSocre({
+  required int songid,
+  required Color color,
+  required BuildContext context,
+}) async {
+  Map<String, dynamic> songdata = await getSongInfo(songid);
+
+  if (!context.mounted) {
+    return const Text('加载失败');
+  }
+  Widget result = DefaultTabController(
+    length: songdata['difficulties'].length,
+
+    child: Column(
+      children: [
+        TabBar(tabs: returnDiffTabBar(song: songdata)),
+        SizedBox(
+          height: 700, //MediaQuery.of(context).size.height * 0.8,
+          child: TabBarView(
+            children: await returnDiffTabBarView(
+              song: songdata,
+              color: color,
+              context: context,
+            ),
+          ),
+        ),
+      ],
+    ),
+  );
   return result;
 }

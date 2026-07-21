@@ -33,7 +33,7 @@ class _MyAppState extends State<MyApp> {
     final file = File('${path.path}/config.json');
     if (await file.exists()) {
       String configStr = await file.readAsString();
-      Map<String, dynamic> config = json.decode(configStr);
+      Map<String, dynamic> config = await json.decode(configStr);
       setState(() {
         _themeMode = config['theme'] == 'dark'
             ? ThemeMode.dark
@@ -111,7 +111,7 @@ class _MyHomePageState extends State<MyHomePage> {
     return Scaffold(
       appBar: AppBar(
         title: Text(title),
-        backgroundColor: Theme.of(context).colorScheme.primaryFixedDim,
+        backgroundColor: Theme.of(context).colorScheme.primaryContainer,
       ),
       body: _pages[_currentIndex],
       bottomNavigationBar: BottomNavigationBar(
@@ -131,9 +131,9 @@ class _MyHomePageState extends State<MyHomePage> {
           });
         },
         // backgroundColor: const Color.fromARGB(255, 255, 229, 84),
-        unselectedItemColor: Theme.of(context)
-            .colorScheme
-            .primaryFixedDim, //const Color.fromARGB(255, 250, 231, 125),
+        unselectedItemColor: Theme.of(
+          context,
+        ).colorScheme.secondary, //const Color.fromARGB(255, 250, 231, 125),
         selectedItemColor: Theme.of(
           context,
         ).colorScheme.primary, //const Color.fromARGB(255, 255, 217, 0),

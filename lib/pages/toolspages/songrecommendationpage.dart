@@ -20,6 +20,7 @@ class _SongRecommendationPageState extends State<SongRecommendationPage>
   List<List<Widget>> newSongWidgetList = [];
   int oldpage = 0;
   int newpage = 0;
+  bool isMinRatingChanged = false;
 
   String? selectedGenre = '-1';
   String? selectedVersion = '-1';
@@ -337,7 +338,14 @@ class _SongRecommendationPageState extends State<SongRecommendationPage>
             Row(
               children: [
                 Text('最低Rating：'),
-                Expanded(child: TextField(controller: _minRatingController)),
+                Expanded(
+                  child: TextField(
+                    onChanged: (value) {
+                      isMinRatingChanged = true;
+                    },
+                    controller: _minRatingController,
+                  ),
+                ),
                 Text('预吃分数：'),
                 Expanded(child: TextField(controller: _preScoreController)),
               ],
@@ -360,6 +368,9 @@ class _SongRecommendationPageState extends State<SongRecommendationPage>
               ],
               onTap: (value) async {
                 try {
+                  if (isMinRatingChanged == true) {
+                    return;
+                  }
                   if (value == 0) {
                     init(isNew: false);
                     if (oldSongWidgetList.isNotEmpty) {

@@ -28,6 +28,7 @@ Future<List<Widget>> search({
   for (var i in songresultMap) {
     List<dynamic> songInfoDiffs = [];
     String versionname = '';
+    int songid = i['id'];
     for (var j in songData['versions']) {
       if (j['version'] == i['version']) {
         versionname = j['title'];
@@ -35,13 +36,20 @@ Future<List<Widget>> search({
     }
     for (var k in i['difficulties']) {
       songInfoDiffs.add(k['level_value']);
+      if ((k as Map<String, dynamic>).containsKey('origin_id')) {
+        songid = k['origin_id'];
+      }
     }
     // songresultWidget.add(const Divider());
     songresultWidget.add(
       InkWell(
         // key: ValueKey(i['id']),
         onTap: () async {
-          interSongInfo(i: i, context: context, versionname: versionname);
+          interSongInfo(
+            songbasedata: i,
+            context: context,
+            versionname: versionname,
+          );
         },
 
         child: Card(
@@ -55,7 +63,7 @@ Future<List<Widget>> search({
               children: [
                 CachedNetworkImage(
                   imageUrl:
-                      'https://assets2.lxns.net/chunithm/jacket/${i['id']}.png',
+                      'https://assets2.lxns.net/chunithm/jacket/$songid.png',
                   width: 75,
                   height: 75,
                   errorWidget: (context, url, error) => Text('世界末日懒得做处理了'),

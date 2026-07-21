@@ -153,6 +153,7 @@ Future<void> updateconfig() async {
   Map<String, dynamic> config = json.decode(configstr);
   if (!config.containsKey('map')) {
     config['map'] = 'amap';
+    config['init'] = true;
   }
   File('${path.path}/config.json').writeAsStringSync(json.encode(config));
   await saveLatestVersion();

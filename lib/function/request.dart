@@ -5,6 +5,24 @@ import 'dart:developer';
 import 'dart:io';
 import 'package:path_provider/path_provider.dart';
 
+Future<void> savezxzrsongs() async {
+  final path = await getApplicationSupportDirectory();
+  try {
+    final rawJson = await requestzxzrsongs();
+    final decoded = json.decode(rawJson);
+    await File(
+      '${path.path}/res/zxzrsongs.json',
+    ).writeAsString(json.encode(decoded), encoding: utf8);
+  } catch (e) {
+    log('$e', name: 'request.dart', level: 1000);
+  }
+}
+
+Future<String> requestzxzrsongs() async {
+  final response = await get(Uri.parse('https://chunithm.beerpsi.cc/songs'));
+  return response.body;
+}
+
 Future<void> saveLatestVersion() async {
   final path = await getApplicationSupportDirectory();
   String configstr = await File('${path.path}/config.json').readAsString();

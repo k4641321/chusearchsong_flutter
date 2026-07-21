@@ -12,9 +12,18 @@ class _SearchCollectiblesState extends State<SearchCollectiblesPage> {
   final TextEditingController _controller = TextEditingController();
   List<Widget> result = [];
   String initialSelection = 'all';
+  final ScrollController _scrollController = ScrollController();
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      floatingActionButton: FloatingActionButton(
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(50)),
+        child: Icon(Icons.arrow_upward),
+        onPressed: () async {
+          _scrollController.jumpTo(0);
+        },
+      ),
       appBar: AppBar(
         title: const Text('收藏品搜索'),
         // backgroundColor: const Color.fromARGB(255, 255, 229, 84),
@@ -83,7 +92,13 @@ class _SearchCollectiblesState extends State<SearchCollectiblesPage> {
                 ),
               ],
             ),
-            Expanded(child: ListView(children: result)),
+            Expanded(
+              child: ListView.builder(
+                controller: _scrollController,
+                itemBuilder: (context, index) => result[index],
+                itemCount: result.length,
+              ),
+            ),
           ],
         ),
       ),

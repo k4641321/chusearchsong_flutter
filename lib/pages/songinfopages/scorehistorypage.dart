@@ -25,7 +25,7 @@ class _ScoreHistoryPageState extends State<ScoreHistoryPage> {
       context: context,
       id: widget.songid,
       diffindex: widget.diffindex,
-      corlor: Theme.of(context).colorScheme.onSecondary,
+      corlor: Theme.of(context).colorScheme.secondaryContainer,
     );
     historyCardBackup = result[1];
     if (!mounted) return;

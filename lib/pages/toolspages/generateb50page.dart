@@ -120,6 +120,11 @@ class _GenerateB50PageState extends State<GenerateB50Page> {
                             );
                             final pngBytes = byteData?.buffer.asUint8List();
                             final path = await getApplicationSupportDirectory();
+                            if (!Directory('${path.path}/tmp').existsSync()) {
+                              Directory(
+                                '${path.path}/tmp',
+                              ).create(recursive: true);
+                            }
                             File(
                               '${path.path}/tmp/b50.png',
                             ).writeAsBytesSync(pngBytes!);

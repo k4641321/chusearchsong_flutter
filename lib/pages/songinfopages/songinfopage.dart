@@ -10,21 +10,19 @@ import '../../function/fun.dart';
 import '../../function/songinfofun/sharescorefun.dart';
 
 class SongInfoPage extends StatefulWidget {
-  final Map<String, dynamic> song;
+  final Map<String, dynamic> songbasedata;
   final String versionname;
-  // final List<DataRow> rowsData;
-  final List<Widget> rowsData;
-  final List<Widget> information;
-  final int songid;
+  final int originid;
   final List<Widget> alias;
+  // final List<Widget> information;
+
   const SongInfoPage({
     super.key,
-    required this.song,
+    required this.songbasedata,
     required this.versionname,
-    required this.rowsData,
-    required this.information,
+    required this.originid,
     required this.alias,
-    required this.songid,
+    // required this.information,
   });
 
   @override
@@ -34,7 +32,11 @@ class SongInfoPage extends StatefulWidget {
 class _SongInfoPageState extends State<SongInfoPage> {
   IconData icon = Icons.favorite_border;
   List<Widget> relatedCollectibles = [Text('加载中')];
-
+  List<Widget> information = [Text('加载中')];
+  Widget worldsendinformation = SizedBox.shrink();
+  Widget difficultyChartInfo = CircularProgressIndicator();
+  List<Widget> alias = [];
+  //添加收藏
   Future<void> _add() async {
     try {
       final favoriteJsonPath =
@@ -43,12 +45,12 @@ class _SongInfoPageState extends State<SongInfoPage> {
       List<dynamic> favoriteJson = json.decode(favoriteJsonStr);
       List<dynamic> willadd = [];
       final exists = favoriteJson.any(
-        (item) => item['id'] == widget.song['id'],
+        (item) => item['id'] == widget.songbasedata['id'],
       );
       if (exists) {
         log('已添加');
       } else {
-        favoriteJson.add(widget.song); // 只添加一次
+        favoriteJson.add(widget.songbasedata);
         log('添加成功');
       }
 
@@ -70,13 +72,16 @@ class _SongInfoPageState extends State<SongInfoPage> {
     }
   }
 
+  //移除收藏
   Future<void> _remove() async {
     try {
       final favoriteJsonPath =
           '${(await getApplicationSupportDirectory()).path}/files/favorite.json';
       String favoriteJsonStr = await File(favoriteJsonPath).readAsString();
       List<dynamic> favoriteJson = json.decode(favoriteJsonStr);
-      favoriteJson.removeWhere((item) => item['id'] == widget.song['id']);
+      favoriteJson.removeWhere(
+        (item) => item['id'] == widget.songbasedata['id'],
+      );
       favoriteJsonStr = json.encode(favoriteJson);
       File(favoriteJsonPath).writeAsStringSync(favoriteJsonStr);
       if (!mounted) return;
@@ -94,6 +99,7 @@ class _SongInfoPageState extends State<SongInfoPage> {
     }
   }
 
+  //收藏按钮状态
   Future<void> _buttonIcon() async {
     try {
       final favoriteJsonPath =
@@ -102,7 +108,7 @@ class _SongInfoPageState extends State<SongInfoPage> {
       List<dynamic> favoriteJson = json.decode(favoriteJsonStr) as List;
       bool isFavorite = false;
       for (var i in favoriteJson) {
-        if (i['id'] == widget.song['id']) {
+        if (i['id'] == widget.songbasedata['id']) {
           isFavorite = true;
           log('已收藏');
           break;
@@ -121,9 +127,10 @@ class _SongInfoPageState extends State<SongInfoPage> {
     }
   }
 
+  //加载收藏品
   Future<void> loadrelatedCollectibles() async {
     List<Widget> result = await returnRelatedCollectibles(
-      id: widget.song['id'],
+      id: widget.songbasedata['id'],
       context: context,
     );
     setState(() {
@@ -131,15 +138,92 @@ class _SongInfoPageState extends State<SongInfoPage> {
     });
   }
 
+  //加载歌曲其余信息
+  Future<void> loadinformation() async {
+    List<Widget> result = await returnSongInformation(
+      songid: widget.songbasedata['id'],
+    );
+    setState(() {
+      information = result;
+    });
+  }
+
+  //加载世界末日信息
+  Future<void> loadworldsendinformation({
+    required Map<String, dynamic> songbasedata,
+  }) async {
+    List<Widget> result = [];
+    List songInfoDiffs = songbasedata['difficulties'];
+    final kanji = songInfoDiffs.lastWhere(
+      (d) => d.keys.contains('kanji'),
+      orElse: () => null,
+    );
+    if (kanji != null) {
+      final kanjiText = kanji['kanji'];
+      result.add(
+        Text('谱面属性: $kanjiText', style: const TextStyle(fontSize: 15)),
+      );
+    }
+
+    final star = songInfoDiffs.lastWhere(
+      (d) => d.keys.contains('star'),
+      orElse: () => null,
+    );
+    if (star != null) {
+      final starValue = star['star'];
+      result.add(Text('星数: $starValue', style: const TextStyle(fontSize: 15)));
+    }
+    if (result.isEmpty) {
+      return;
+    } else {
+      result.insert(
+        0,
+        Row(children: [Icon(Icons.public), Text('World\'s End信息')]),
+      );
+      setState(() {
+        worldsendinformation = Row(
+          children: [
+            Expanded(
+              child: InkWell(
+                child: Card(
+                  color: Theme.of(context).colorScheme.secondaryContainer,
+                  child: Padding(
+                    padding: EdgeInsetsGeometry.all(8),
+                    child: Column(children: result),
+                  ),
+                ),
+              ),
+            ),
+          ],
+        );
+      });
+    }
+  }
+
+  //加载谱面信息与成绩
+  Future<void> loadChartInfoAndSocre() async {
+    Widget result = await returnChartInfoAndSocre(
+      songid: widget.songbasedata['id'],
+      color: Theme.of(context).colorScheme.secondaryContainer,
+      context: context,
+    );
+    setState(() {
+      difficultyChartInfo = result;
+    });
+  }
+
   @override
   void initState() {
     super.initState();
     _buttonIcon();
+    loadinformation();
   }
 
   @override
   void didChangeDependencies() {
     loadrelatedCollectibles();
+    loadworldsendinformation(songbasedata: widget.songbasedata);
+    loadChartInfoAndSocre();
     super.didChangeDependencies();
   }
 
@@ -150,14 +234,13 @@ class _SongInfoPageState extends State<SongInfoPage> {
       appBar: AppBar(
         title: InkWell(
           onLongPress: () =>
-              copytext(text: widget.song['title'], context: context),
-          child: Text('${widget.song['title']}    - 歌曲详情'),
+              copytext(text: widget.songbasedata['title'], context: context),
+          child: Text('${widget.songbasedata['title']}    - 歌曲详情'),
         ),
         actions: [
           IconButton(
             onPressed: () async {
               try {
-                // 显示加载对话框
                 if (!context.mounted) return;
                 showDialog(
                   context: context,
@@ -165,7 +248,7 @@ class _SongInfoPageState extends State<SongInfoPage> {
                   builder: (_) =>
                       const Center(child: CircularProgressIndicator()),
                 );
-                await sharescore(songdata: widget.song);
+                await sharescore(songdata: widget.songbasedata);
                 if (context.mounted) Navigator.of(context).pop();
               } catch (e) {
                 log('错误$e', name: 'songinfopage.dart', level: 1000);
@@ -201,7 +284,7 @@ class _SongInfoPageState extends State<SongInfoPage> {
               children: [
                 InkWell(
                   child: Image.network(
-                    'https://assets2.lxns.net/chunithm/jacket/${widget.songid}.png',
+                    'https://assets2.lxns.net/chunithm/jacket/${widget.originid}.png',
                     errorBuilder: (context, error, stackTrace) {
                       return const Text('图片加载失败');
                     },
@@ -210,7 +293,10 @@ class _SongInfoPageState extends State<SongInfoPage> {
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                        builder: (context) => PlayMusic(song: widget.song),
+                        builder: (context) => PlayMusic(
+                          song: widget.songbasedata,
+                          songid: widget.originid,
+                        ),
                       ),
                     );
                   },
@@ -220,7 +306,7 @@ class _SongInfoPageState extends State<SongInfoPage> {
                   onPressed: () async {
                     try {
                       final Uri url = Uri.parse(
-                        'bilibili://search?keyword=${widget.song['title']}谱面确认',
+                        'bilibili://search?keyword=${widget.songbasedata['title']}谱面确认',
                       );
                       if (await canLaunchUrl(url)) {
                         await launchUrl(url);
@@ -248,7 +334,9 @@ class _SongInfoPageState extends State<SongInfoPage> {
                     Expanded(
                       child: InkWell(
                         child: Card(
-                          color: Theme.of(context).colorScheme.onSecondary,
+                          color: Theme.of(
+                            context,
+                          ).colorScheme.secondaryContainer,
                           child: Padding(
                             padding: EdgeInsetsGeometry.all(8),
                             child: Column(
@@ -256,11 +344,11 @@ class _SongInfoPageState extends State<SongInfoPage> {
                               children: [
                                 Row(children: [Icon(Icons.info), Text('基本信息')]),
                                 Text(
-                                  '落雪id： ${widget.song['id']}',
+                                  '落雪id： ${widget.songbasedata['id']}',
                                   style: const TextStyle(fontSize: 15),
                                 ),
                                 Text(
-                                  '分类： ${widget.song['genre']}',
+                                  '分类： ${widget.songbasedata['genre']}',
                                   style: const TextStyle(fontSize: 15),
                                 ),
                                 Text(
@@ -268,16 +356,16 @@ class _SongInfoPageState extends State<SongInfoPage> {
                                   style: const TextStyle(fontSize: 15),
                                 ),
                                 Text(
-                                  'BPM:  ${widget.song['bpm']}',
+                                  'BPM:  ${widget.songbasedata['bpm']}',
                                   style: const TextStyle(fontSize: 15),
                                 ),
                                 InkWell(
                                   onLongPress: () => copytext(
-                                    text: widget.song['artist'],
+                                    text: widget.songbasedata['artist'],
                                     context: context,
                                   ),
                                   child: Text(
-                                    '曲师： ${widget.song['artist']}',
+                                    '曲师： ${widget.songbasedata['artist']}',
                                     style: const TextStyle(fontSize: 15),
                                   ),
                                 ),
@@ -294,10 +382,12 @@ class _SongInfoPageState extends State<SongInfoPage> {
                     Expanded(
                       child: InkWell(
                         child: Card(
-                          color: Theme.of(context).colorScheme.onSecondary,
+                          color: Theme.of(
+                            context,
+                          ).colorScheme.secondaryContainer,
                           child: Padding(
                             padding: EdgeInsetsGeometry.all(8),
-                            child: Column(children: widget.information),
+                            child: Column(children: information),
                           ),
                         ),
                       ),
@@ -309,7 +399,9 @@ class _SongInfoPageState extends State<SongInfoPage> {
                     Expanded(
                       child: InkWell(
                         child: Card(
-                          color: Theme.of(context).colorScheme.onSecondary,
+                          color: Theme.of(
+                            context,
+                          ).colorScheme.secondaryContainer,
                           child: Padding(
                             padding: EdgeInsetsGeometry.all(8),
                             child: Column(children: widget.alias),
@@ -324,7 +416,9 @@ class _SongInfoPageState extends State<SongInfoPage> {
                     Expanded(
                       child: InkWell(
                         child: Card(
-                          color: Theme.of(context).colorScheme.onSecondary,
+                          color: Theme.of(
+                            context,
+                          ).colorScheme.secondaryContainer,
                           child: Padding(
                             padding: EdgeInsetsGeometry.all(8),
                             child: Column(children: relatedCollectibles),
@@ -334,20 +428,8 @@ class _SongInfoPageState extends State<SongInfoPage> {
                     ),
                   ],
                 ),
-
-                DefaultTabController(
-                  length: widget.song['difficulties'].length,
-
-                  child: Column(
-                    children: [
-                      TabBar(tabs: returnDiffTabBar(song: widget.song)),
-                      SizedBox(
-                        height: 700, //MediaQuery.of(context).size.height * 0.8,
-                        child: TabBarView(children: widget.rowsData),
-                      ),
-                    ],
-                  ),
-                ),
+                worldsendinformation,
+                difficultyChartInfo,
               ],
             ),
           ),

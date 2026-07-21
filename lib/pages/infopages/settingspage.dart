@@ -30,7 +30,7 @@ class _SettingsPageState extends State<SettingsPage> {
                     Expanded(
                       child: InkWell(
                         child: Card(
-                          color: Theme.of(context).colorScheme.primaryFixedDim,
+                          color: Theme.of(context).colorScheme.primaryContainer,
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.all(
                               Radius.circular(0.0),
@@ -61,7 +61,7 @@ class _SettingsPageState extends State<SettingsPage> {
                     Expanded(
                       child: InkWell(
                         child: Card(
-                          color: Theme.of(context).colorScheme.primaryFixedDim,
+                          color: Theme.of(context).colorScheme.primaryContainer,
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.all(
                               Radius.circular(0.0),
@@ -92,7 +92,7 @@ class _SettingsPageState extends State<SettingsPage> {
                     Expanded(
                       child: InkWell(
                         child: Card(
-                          color: Theme.of(context).colorScheme.primaryFixedDim,
+                          color: Theme.of(context).colorScheme.primaryContainer,
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.all(
                               Radius.circular(0.0),

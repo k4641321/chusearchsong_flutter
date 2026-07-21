@@ -6,7 +6,8 @@ import 'package:audioplayers/audioplayers.dart';
 
 class PlayMusic extends StatefulWidget {
   final Map<String, dynamic> song;
-  const PlayMusic({super.key, required this.song});
+  final int songid;
+  const PlayMusic({super.key, required this.song, required this.songid});
 
   @override
   State<PlayMusic> createState() => _PlayMusic();
@@ -16,7 +17,7 @@ class _PlayMusic extends State<PlayMusic> {
   final _musicplayer = AudioPlayer();
   IconData button = Icons.play_arrow;
   int playerstate = 0;
-  double value = 0;
+  double songvalue = 0;
   double position = 0;
   final List<StreamSubscription> _subscription = [];
 
@@ -24,19 +25,22 @@ class _PlayMusic extends State<PlayMusic> {
   void initState() {
     super.initState();
     _loadMusic();
+    _subscriptionadd();
   }
 
   Future<void> _loadMusic() async {
     try {
       _musicplayer.setReleaseMode(ReleaseMode.stop);
       await _musicplayer.setSourceUrl(
-        'https://assets2.lxns.net/chunithm/music/${widget.song['id']}.mp3',
+        'https://assets2.lxns.net/chunithm/music/${widget.songid}.mp3',
       );
       log('加载歌曲');
       if (!mounted) return;
       _subscription.add(
         _musicplayer.onPositionChanged.listen((p) {
-          position = p.inMilliseconds.toDouble();
+          final newPos = p.inMilliseconds.toDouble();
+          position = newPos > songvalue ? songvalue : newPos;
+
           setState(() {});
         }),
       );
@@ -95,6 +99,25 @@ class _PlayMusic extends State<PlayMusic> {
     }
   }
 
+  Future<void> _subscriptionadd() async {
+    try {
+      _subscription.add(
+        _musicplayer.onDurationChanged.listen((duration) {
+          log('歌曲时长: $duration');
+          setState(() {
+            songvalue = duration.inMilliseconds.toDouble();
+            log('歌曲时长: $songvalue');
+          });
+        }),
+      );
+    } catch (e) {
+      log('$e', name: 'musicpage', level: 1000);
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text('获取歌曲时长失败')));
+    }
+  }
+
   @override
   void dispose() {
     for (var subscription in _subscription) {
@@ -109,23 +132,6 @@ class _PlayMusic extends State<PlayMusic> {
 
   @override
   Widget build(BuildContext context) {
-    try {
-      _subscription.add(
-        _musicplayer.onDurationChanged.listen((duration) {
-          // log('歌曲时长: $duration');
-          setState(() {
-            value = duration.inMilliseconds.toDouble();
-            log('歌曲时长: $value');
-          });
-        }),
-      );
-    } catch (e) {
-      log('$e', name: 'musicpage', level: 1000);
-      ScaffoldMessenger.of(
-        context,
-      ).showSnackBar(SnackBar(content: Text('获取歌曲时长失败')));
-    }
-
     return Scaffold(
       appBar: AppBar(
         title: Text('歌曲试听'),
@@ -139,7 +145,7 @@ class _PlayMusic extends State<PlayMusic> {
             child: Column(
               children: [
                 Image.network(
-                  'https://assets2.lxns.net/chunithm/jacket/${widget.song['id']}.png',
+                  'https://assets2.lxns.net/chunithm/jacket/${widget.songid}.png',
                   errorBuilder: (context, error, stackTrace) {
                     return const Text('图片加载失败');
                   },
@@ -178,12 +184,11 @@ class _PlayMusic extends State<PlayMusic> {
                     );
                     setState(() {
                       position = value;
-
                       log('$value');
                     });
                   },
                   min: 0.0,
-                  max: value,
+                  max: songvalue,
                   allowedInteraction: SliderInteraction.tapAndSlide,
                 ),
                 Row(
@@ -191,7 +196,7 @@ class _PlayMusic extends State<PlayMusic> {
                     Text('${Duration(milliseconds: position.toInt())}'),
                     Expanded(
                       child: Text(
-                        '${Duration(milliseconds: value.toInt())}',
+                        '${Duration(milliseconds: songvalue.toInt())}',
                         textAlign: TextAlign.right,
                       ),
                     ),

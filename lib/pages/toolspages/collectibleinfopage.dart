@@ -227,7 +227,7 @@ class _CollectibleInfoPageState extends State<CollectibleInfoPage> {
                   // key: ValueKey(songItem['id']),
                   onTap: () async {
                     interSongInfo(
-                      i: song,
+                      songbasedata: song,
                       context: context,
                       versionname: versionname,
                     );
@@ -252,7 +252,7 @@ class _CollectibleInfoPageState extends State<CollectibleInfoPage> {
                   // key: ValueKey(songItem['id']),
                   onTap: () async {
                     interSongInfo(
-                      i: song,
+                      songbasedata: song,
                       context: context,
                       versionname: versionname,
                     );
@@ -333,7 +333,7 @@ class _CollectibleInfoPageState extends State<CollectibleInfoPage> {
                       // key: ValueKey(songItem['id']),
                       onTap: () async {
                         interSongInfo(
-                          i: song,
+                          songbasedata: song,
                           context: context,
                           versionname: versionname,
                         );
@@ -372,7 +372,7 @@ class _CollectibleInfoPageState extends State<CollectibleInfoPage> {
                       // key: ValueKey(songItem['id']),
                       onTap: () async {
                         interSongInfo(
-                          i: song,
+                          songbasedata: song,
                           context: context,
                           versionname: versionname,
                         );

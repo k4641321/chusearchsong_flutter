@@ -198,7 +198,11 @@ Future<List<List<Widget>>> songRecommendation({
         InkWell(
           // key: ValueKey(i['id']),
           onTap: () async {
-            interSongInfo(i: i, context: context, versionname: versionname);
+            interSongInfo(
+              songbasedata: i,
+              context: context,
+              versionname: versionname,
+            );
           },
 
           child: Card(

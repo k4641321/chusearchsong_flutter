@@ -250,7 +250,7 @@ Future<Widget> generateb50Body({required BuildContext context}) async {
     children: [
       Text(
         '此B50由chusearchsong（中二查歌）生成，生成时间：${DateTime.now()}',
-        style: TextStyle(fontWeight: FontWeight.bold),
+        style: TextStyle(fontWeight: FontWeight.bold, color: Colors.black),
       ),
     ],
   );
@@ -264,8 +264,8 @@ Future<Widget> generateb50Body({required BuildContext context}) async {
   int songcount = 1;
   for (var i in b50data['bests']) {
     String songname;
-    if ((i['song_name'] as String).length > 30) {
-      songname = i['song_name'].substring(0, 30) + '...';
+    if ((i['song_name'] as String).length > 18) {
+      songname = i['song_name'].substring(0, 18) + '...';
     } else {
       songname = i['song_name'];
     }
@@ -295,7 +295,7 @@ Future<Widget> generateb50Body({required BuildContext context}) async {
           if (!context.mounted) return;
           if (songdata == null || versionname == null) return;
           await interSongInfo(
-            i: songdata,
+            songbasedata: songdata,
             context: context,
             versionname: versionname,
           );
@@ -415,91 +415,131 @@ Future<Widget> generateb50Body({required BuildContext context}) async {
   row = 0;
   for (var i in b50data['new_bests']) {
     String songname;
-    if ((i['song_name'] as String).length > 30) {
-      songname = i['song_name'].substring(0, 30) + '...';
+    if ((i['song_name'] as String).length > 18) {
+      songname = i['song_name'].substring(0, 18) + '...';
     } else {
       songname = i['song_name'];
     }
 
     b20rowbody.add(
-      SizedBox(
-        width: 292,
-        height: 225,
-        child: Padding(
-          padding: EdgeInsetsGeometry.all(8),
-          child: Card(
-            child: Column(
-              // crossAxisAlignment: CrossAxisAlignment.start,
-              // mainAxisAlignment: MainAxisAlignment.start,
-              children: [
-                Card(
-                  color: diffcolor(diffindex: i['level_index']),
-                  child: Row(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    mainAxisAlignment: MainAxisAlignment.spaceAround,
-                    children: [
-                      Padding(
-                        padding: EdgeInsetsGeometry.only(
-                          top: 6,
-                          // left: 6,
-                          bottom: 6,
-                          // right: 6,
-                        ),
-                        child: Image.network(
-                          'https://assets2.lxns.net/chunithm/jacket/${i['id']}.png',
-                          width: 135,
-                          height: 135,
-                          errorBuilder: (context, error, stackTrace) {
-                            return const Text('图片加载失败');
-                          },
-                        ),
-                      ),
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        children: [
-                          Text(
-                            '${i['level'].toString()}                  #$songcount',
-                            // style: TextStyle(fontSize: ),
-                            textAlign: TextAlign.end,
-                            style: TextStyle(color: Colors.white),
+      InkWell(
+        onTap: () async {
+          final path = await getApplicationSupportDirectory();
+          String songdatastr = await File(
+            '${path.path}/res/songs.json',
+          ).readAsString();
+          Map<String, dynamic> songsdata = jsonDecode(songdatastr);
+          Map<String, dynamic>? songdata;
+          String? versionname;
+          for (var j in songsdata['songs']) {
+            if (i['id'] == j['id']) {
+              songdata = j;
+              for (var k in songsdata['versions']) {
+                if (j['version'] == k['version']) {
+                  versionname = k['title'];
+                  break;
+                }
+              }
+              break;
+            }
+          }
+          if (!context.mounted) return;
+          if (songdata == null || versionname == null) return;
+          await interSongInfo(
+            songbasedata: songdata,
+            context: context,
+            versionname: versionname,
+          );
+        },
+        child: SizedBox(
+          width: 292,
+          height: 225,
+          child: Padding(
+            padding: EdgeInsetsGeometry.all(8),
+            child: Card(
+              child: Column(
+                // crossAxisAlignment: CrossAxisAlignment.start,
+                // mainAxisAlignment: MainAxisAlignment.start,
+                children: [
+                  Card(
+                    color: diffcolor(diffindex: i['level_index']),
+                    child: Row(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      mainAxisAlignment: MainAxisAlignment.spaceAround,
+                      children: [
+                        Padding(
+                          padding: EdgeInsetsGeometry.only(
+                            top: 6,
+                            // left: 6,
+                            bottom: 6,
+                            // right: 6,
                           ),
+                          child: Image.network(
+                            'https://assets2.lxns.net/chunithm/jacket/${i['id']}.png',
+                            width: 135,
+                            height: 135,
+                            errorBuilder: (context, error, stackTrace) {
+                              return const Text('图片加载失败');
+                            },
+                          ),
+                        ),
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          children: [
+                            Text(
+                              '${i['level'].toString()}                  #$songcount',
+                              // style: TextStyle(fontSize: ),
+                              textAlign: TextAlign.end,
+                              style: TextStyle(color: Colors.white),
+                            ),
 
-                          Text(
-                            i['score'].toString(),
-                            style: TextStyle(fontSize: 25, color: Colors.white),
-                          ),
-                          Text(
-                            'Rating: ${i['rating'].toString().substring(0, 5)}',
-                            style: TextStyle(fontSize: 15, color: Colors.white),
-                          ),
-                          Image.asset(rankImg(rank: i['rank']), height: 30),
-                          Image.asset(clearImg(clear: i['clear']), height: 18),
-                          fullcomboImg(fullcombo: i['full_combo'] ?? '') != null
-                              ? Image.asset(
-                                  fullcomboImg(fullcombo: i['full_combo'])!,
-                                  height: 18,
-                                )
-                              : SizedBox.shrink(),
-                        ],
+                            Text(
+                              i['score'].toString(),
+                              style: TextStyle(
+                                fontSize: 25,
+                                color: Colors.white,
+                              ),
+                            ),
+                            Text(
+                              'Rating: ${i['rating'].toString().substring(0, 5)}',
+                              style: TextStyle(
+                                fontSize: 15,
+                                color: Colors.white,
+                              ),
+                            ),
+                            Image.asset(rankImg(rank: i['rank']), height: 30),
+                            Image.asset(
+                              clearImg(clear: i['clear']),
+                              height: 18,
+                            ),
+                            fullcomboImg(fullcombo: i['full_combo'] ?? '') !=
+                                    null
+                                ? Image.asset(
+                                    fullcomboImg(fullcombo: i['full_combo'])!,
+                                    height: 18,
+                                  )
+                                : SizedBox.shrink(),
+                          ],
+                        ),
+                      ],
+                    ),
+                  ),
+                  Column(
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    children: [
+                      Text(
+                        songname,
+                        // maxLines: 1,
+                        style: TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.bold,
+                        ),
                       ),
                     ],
                   ),
-                ),
-                Column(
-                  mainAxisAlignment: MainAxisAlignment.end,
-                  children: [
-                    Text(
-                      songname,
-                      // maxLines: 1,
-                      style: TextStyle(
-                        fontSize: 16,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                  ],
-                ),
-              ],
+                ],
+              ),
             ),
           ),
         ),
