@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:developer';
 
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'dart:io';
 import 'package:path_provider/path_provider.dart';
@@ -20,6 +21,7 @@ class ChartViewPage extends StatefulWidget {
 
 class _ChartViewPageState extends State<ChartViewPage> {
   List<Widget> result = [CircularProgressIndicator()];
+  final ScrollController _scrollController = ScrollController();
 
   //***字符串，国内都是int，还得多写一个函数
   int returnDiffIndex(String diff) {
@@ -63,11 +65,13 @@ class _ChartViewPageState extends State<ChartViewPage> {
   Future<void> init() async {
     try {
       final path = await getApplicationSupportDirectory();
+      if (!mounted) return;
       String? charturl;
 
       String zxzrsongsdatastr = await File(
         '${path.path}/res/zxzrsongs.json',
       ).readAsString();
+      if (!mounted) return;
       List zxzrsongsdata = jsonDecode(zxzrsongsdatastr);
       List songchart = [];
       for (var i in zxzrsongsdata) {
@@ -88,6 +92,7 @@ class _ChartViewPageState extends State<ChartViewPage> {
       List chartdataurl;
       String baseurl = 'https://sdvx.in/chunithm';
       if (charturl == null) {
+        if (!mounted) return;
         setState(() {
           result = [Text('没有找到谱面')];
           return;
@@ -113,24 +118,31 @@ class _ChartViewPageState extends State<ChartViewPage> {
           'obj',
           'data${(charturllist[5] as String).replaceAll(RegExp(r'[^0-9]'), '')}${charturldiff(diffindex: widget.diffindex)}.png',
         ];
+        if (!mounted) return;
         setState(() {
           result = [
-            Image.network(
-              chartdataurl.join('/'),
-              errorBuilder: (context, error, stackTrace) =>
-                  throw Exception('图片加载失败'),
+            CachedNetworkImage(
+              imageUrl: chartdataurl.join('/'),
+              height: MediaQuery.heightOf(context),
+              fit: BoxFit.fill,
+              errorWidget: (context, error, stackTrace) =>
+                  Text('错误：$error \n $stackTrace'),
             ),
-            Image.network(
-              barurl.join('/'),
-              errorBuilder: (context, error, stackTrace) =>
-                  throw Exception('图片加载失败'),
+            CachedNetworkImage(
+              imageUrl: barurl.join('/'),
+              height: MediaQuery.heightOf(context),
+              fit: BoxFit.fill,
+              errorWidget: (context, error, stackTrace) =>
+                  Text('错误：$error \n $stackTrace'),
             ),
             Opacity(
               opacity: 0.1,
-              child: Image.network(
-                bgurl.join('/'),
-                errorBuilder: (context, error, stackTrace) =>
-                    throw Exception('图片加载失败'),
+              child: CachedNetworkImage(
+                imageUrl: bgurl.join('/'),
+                height: MediaQuery.heightOf(context),
+                fit: BoxFit.fill,
+                errorWidget: (context, error, stackTrace) =>
+                    Text('错误：$error \n $stackTrace'),
               ),
             ),
           ];
@@ -138,6 +150,7 @@ class _ChartViewPageState extends State<ChartViewPage> {
       }
     } catch (e, strack) {
       log('$e \n $strack');
+      if (!mounted) return;
       setState(() {
         result = [Text('错误：$e \n $strack')];
       });
@@ -151,6 +164,11 @@ class _ChartViewPageState extends State<ChartViewPage> {
   }
 
   @override
+  void dispose() {
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(title: Text('谱面预览')),
@@ -158,9 +176,13 @@ class _ChartViewPageState extends State<ChartViewPage> {
         minScale: 1.0,
         maxScale: 5.0,
         child: Center(
-          child: SizedBox(
-            height: MediaQuery.heightOf(context),
-            child: Stack(children: result),
+          child: Scrollbar(
+            controller: _scrollController,
+            child: SingleChildScrollView(
+              controller: _scrollController,
+              scrollDirection: Axis.horizontal,
+              child: Row(children: [Stack(children: result)]),
+            ),
           ),
         ),
       ),

@@ -272,7 +272,7 @@ class _ToolPageState extends State<ToolPage> {
                             );
                           },
                           icon: Icon(
-                            Icons.calculate_outlined,
+                            Icons.score_outlined,
                             color: Theme.of(context).colorScheme.onSurface,
                           ),
                         ),
@@ -303,7 +303,7 @@ class _ToolPageState extends State<ToolPage> {
                             ),
                           ),
                           icon: Icon(
-                            Icons.calculate_outlined,
+                            Icons.shield_outlined,
                             color: Theme.of(context).colorScheme.onSurface,
                           ),
                         ),
@@ -336,8 +336,6 @@ class _ToolPageState extends State<ToolPage> {
                   ),
                 ],
               ),
-              const Divider(),
-              Text('其他'),
               Row(
                 children: [
                   Expanded(
@@ -419,7 +417,7 @@ class _ToolPageState extends State<ToolPage> {
                             ),
                           ),
                           icon: Icon(
-                            Icons.casino_outlined,
+                            Icons.recommend_outlined,
                             color: Theme.of(context).colorScheme.onSurface,
                           ),
                         ),

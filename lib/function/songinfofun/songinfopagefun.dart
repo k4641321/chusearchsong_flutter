@@ -9,7 +9,7 @@ import '../../pages/toolspages/faulttoterantcomputationpage.dart';
 import '../fun.dart';
 import '../../pages/songinfopages/scorehistorypage.dart';
 import '../../pages/songinfopages/rankinglistpage.dart';
-import './chartview.dart';
+import '../../pages/songinfopages/chartviewpage.dart';
 
 List<Widget> returnDiffTabBar({required Map song}) {
   List<Widget> result = [];

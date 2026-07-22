@@ -7,7 +7,7 @@ import 'package:path_provider/path_provider.dart';
 import 'package:url_launcher/url_launcher.dart';
 import '../../function/songinfofun/songinfopagefun.dart';
 import '../../function/fun.dart';
-import '../../function/songinfofun/sharescorefun.dart';
+import './songshareviewpage.dart';
 
 class SongInfoPage extends StatefulWidget {
   final Map<String, dynamic> songbasedata;
@@ -202,14 +202,21 @@ class _SongInfoPageState extends State<SongInfoPage> {
 
   //加载谱面信息与成绩
   Future<void> loadChartInfoAndSocre() async {
-    Widget result = await returnChartInfoAndSocre(
-      songid: widget.songbasedata['id'],
-      color: Theme.of(context).colorScheme.secondaryContainer,
-      context: context,
-    );
-    setState(() {
-      difficultyChartInfo = result;
-    });
+    try {
+      Widget result = await returnChartInfoAndSocre(
+        songid: widget.songbasedata['id'],
+        color: Theme.of(context).colorScheme.secondaryContainer,
+        context: context,
+      );
+      setState(() {
+        difficultyChartInfo = result;
+      });
+    } catch (e, strack) {
+      log('$e \n $strack', name: 'songinfopage.dart', level: 1000);
+      setState(() {
+        difficultyChartInfo = Text('错误 $e \n $strack');
+      });
+    }
   }
 
   @override
@@ -241,18 +248,15 @@ class _SongInfoPageState extends State<SongInfoPage> {
           IconButton(
             onPressed: () async {
               try {
-                if (!context.mounted) return;
-                showDialog(
-                  context: context,
-                  barrierDismissible: false,
-                  builder: (_) =>
-                      const Center(child: CircularProgressIndicator()),
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) =>
+                        Songshareviewpage(songid: widget.songbasedata['id']),
+                  ),
                 );
-                await sharescore(songdata: widget.songbasedata);
-                if (context.mounted) Navigator.of(context).pop();
               } catch (e) {
                 log('错误$e', name: 'songinfopage.dart', level: 1000);
-                if (context.mounted) Navigator.of(context).pop();
                 if (!context.mounted) return;
                 ScaffoldMessenger.of(
                   context,

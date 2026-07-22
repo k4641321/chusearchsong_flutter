@@ -3,10 +3,10 @@ import 'dart:io';
 import 'package:path_provider/path_provider.dart';
 import '../../function/toolsfun/generateb50.dart';
 import 'package:flutter/material.dart';
-import 'dart:typed_data';
 import 'package:flutter/rendering.dart';
 import 'dart:ui' as ui;
 import 'package:file_picker/file_picker.dart';
+import 'package:share_plus/share_plus.dart';
 
 class GenerateB50Page extends StatefulWidget {
   const GenerateB50Page({super.key});
@@ -129,13 +129,22 @@ class _GenerateB50PageState extends State<GenerateB50Page> {
                               '${path.path}/tmp/b50.png',
                             ).writeAsBytesSync(pngBytes!);
                             if (!context.mounted) return;
-                            await FilePicker.saveFile(
-                              dialogTitle: '保存B50',
-                              fileName: 'b50.png',
-                              bytes: pngBytes,
-                              type: FileType.custom,
-                              allowedExtensions: ['png'],
-                            );
+                            final platform = Theme.of(context).platform;
+                            if (platform == TargetPlatform.windows) {
+                              await FilePicker.saveFile(
+                                dialogTitle: '保存B50',
+                                fileName: 'b50.png',
+                                bytes: pngBytes,
+                                type: FileType.custom,
+                                allowedExtensions: ['png'],
+                              );
+                            } else {
+                              await SharePlus.instance.share(
+                                ShareParams(
+                                  files: [XFile('${path.path}/tmp/b50.png')],
+                                ),
+                              );
+                            }
                           } catch (e) {
                             log(
                               '$e',
