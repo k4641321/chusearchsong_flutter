@@ -1,3 +1,4 @@
+import 'package:chusearchsong_flutter/function/infopagefun/infopagefun.dart';
 import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'dart:developer';
@@ -7,6 +8,7 @@ import 'package:path_provider/path_provider.dart';
 import 'dart:convert';
 import '../infopages/settingspage.dart';
 import '../infopages/thankyoulistpage.dart';
+import 'package:package_info_plus/package_info_plus.dart';
 
 class Info extends StatefulWidget {
   const Info({super.key, this.onThemeChanged});
@@ -18,55 +20,6 @@ class Info extends StatefulWidget {
 }
 
 class _InfoState extends State<Info> {
-  Future<void> _launchUrl({required BuildContext context}) async {
-    final githuburl = Uri.parse(
-      'https://github.com/k4641321/chusearchsong_flutter',
-    );
-    try {
-      if (!await launchUrl(githuburl)) {
-        if (!context.mounted) return;
-
-        throw Exception('Could not launch $githuburl');
-      }
-    } catch (e) {
-      if (!context.mounted) return;
-      ScaffoldMessenger.of(
-        context,
-      ).showSnackBar(SnackBar(content: Text('无法打开链接')));
-    }
-  }
-
-  Future<void> _openQQ({required BuildContext context}) async {
-    final Uri qqurl = Uri.parse(
-      'myqqapi://card/show_pslcard?src_type=internal&version=1&card_type=group&uin=309546141',
-    );
-    final Uri qqurl2 = Uri.parse(
-      'mqq://card/show_pslcard?src_type=internal&version=1&card_type=group&uin=309546141',
-    );
-    try {
-      if (await canLaunchUrl(qqurl)) {
-        await launchUrl(qqurl);
-        return;
-      }
-      if (!context.mounted) return;
-      ScaffoldMessenger.of(
-        context,
-      ).showSnackBar(SnackBar(content: Text('无法打开链接，尝试第二种')));
-      if (await canLaunchUrl(qqurl2)) {
-        log('尝试第二种');
-        await launchUrl(qqurl2);
-      } else if (!await canLaunchUrl(qqurl2)) {
-        throw Exception('Could not launch $qqurl2');
-      }
-    } catch (e) {
-      log('$e', name: 'infopage', level: 500);
-      if (!context.mounted) return;
-      ScaffoldMessenger.of(
-        context,
-      ).showSnackBar(SnackBar(content: Text('无法打开链接')));
-    }
-  }
-
   String darkmode = 'light';
   void darkmodechange() async {
     final path = await getApplicationSupportDirectory();
@@ -123,13 +76,33 @@ class _InfoState extends State<Info> {
     }
   }
 
+  Future<void> loadversion() async {
+    try {
+      final packageinfo = await PackageInfo.fromPlatform();
+      if (!mounted) return;
+      setState(() {
+        version = packageinfo.version;
+      });
+    } catch (e) {
+      if (!mounted) return;
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text('获取版本号失败')));
+      setState(() {
+        version = '获取失败';
+      });
+    }
+  }
+
   @override
   void initState() {
     super.initState();
     confirmdarkmode();
+    loadversion();
   }
 
   final ScrollController _controller = ScrollController();
+  String version = '加载中';
 
   @override
   Widget build(BuildContext context) {
@@ -158,7 +131,7 @@ class _InfoState extends State<Info> {
                       textAlign: TextAlign.center,
                     ),
                     Text(
-                      '当前版本号：0.13.0',
+                      '当前版本号：$version',
                       style: TextStyle(fontSize: 15),
                       textAlign: TextAlign.center,
                     ),
@@ -187,7 +160,7 @@ class _InfoState extends State<Info> {
                             topRight: Radius.circular(10.0),
                           ),
                         ),
-                        onTap: () => _launchUrl(context: context),
+                        onTap: () => launchurl(context: context),
                         child: Card(
                           color: Theme.of(context).colorScheme.primaryContainer,
                           shape: RoundedRectangleBorder(
@@ -220,7 +193,7 @@ class _InfoState extends State<Info> {
                             bottomRight: Radius.circular(10.0),
                           ),
                         ),
-                        onTap: () => _openQQ(context: context),
+                        onTap: () => openQQ(context: context),
                         child: Card(
                           color: Theme.of(context).colorScheme.primaryContainer,
                           shape: RoundedRectangleBorder(
@@ -321,9 +294,45 @@ class _InfoState extends State<Info> {
                             bottomRight: Radius.circular(10.0),
                           ),
                         ),
-                        onTap: () => ScaffoldMessenger.of(
-                          context,
-                        ).showSnackBar(SnackBar(content: Text('别急，在做了'))),
+                        onTap: () async {
+                          try {
+                            bool result = await checkforupdates();
+                            if (result) {
+                              if (!context.mounted) return;
+                              showDialog(
+                                context: context,
+                                builder: (context) => AlertDialog(
+                                  actions: [
+                                    TextButton(
+                                      onPressed: () =>
+                                          Navigator.of(context).pop(),
+                                      child: Text('取消'),
+                                    ),
+                                    TextButton(
+                                      onPressed: () async {
+                                        // 执行操作
+                                        Navigator.of(context).pop();
+                                        await lanuchdownload(context: context);
+                                      },
+                                      child: Text('确认'),
+                                    ),
+                                  ],
+                                ),
+                              );
+                            } else {
+                              if (!context.mounted) return;
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                SnackBar(content: Text('已经是最新版本')),
+                              );
+                            }
+                          } catch (e, strack) {
+                            log('$e\n$strack');
+                            if (!context.mounted) return;
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              SnackBar(content: Text('错误：$e\n$strack')),
+                            );
+                          }
+                        },
                         child: Card(
                           color: Theme.of(context).colorScheme.primaryContainer,
                           shape: RoundedRectangleBorder(

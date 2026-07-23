@@ -68,6 +68,11 @@ flutter目前是边学边写的，**有答辩代码是超级非常正常的**，
 ![zsm](zsm.png)
 
 # 更新日志
+## 2026-07-23
+- 添加了更新检查
+- 修复谱面预览无法放大
+- 歌曲分享剩下部分完成
+
 ## 2026-7-22
 - 谱面预览界面调整
 - 增加Rating趋势分享
@@ -84,7 +89,7 @@ flutter目前是边学边写的，**有答辩代码是超级非常正常的**，
 ## 2026-7-19
 - 修复了Rating计算的错误
 - 更新了吃分建议
-- 优化了B50生成机制（感谢(@ChiffonOwO)[https://github.com/ChiffonOwO/ChiffonMai] 提供的方案
+- 优化了B50生成机制（感谢[@ChiffonOwO](https://github.com/ChiffonOwO/ChiffonMai) 提供的方案
 - 修复了歌曲试听界面排版问题
 - 搜索结果添加了曲绘预览
 

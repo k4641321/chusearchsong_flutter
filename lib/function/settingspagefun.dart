@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'dart:io';
 import 'package:path_provider/path_provider.dart';
 import 'dart:convert';
+import 'package:package_info_plus/package_info_plus.dart';
 
 Future<void> savetexttranslateconfig({
   required String secretId,
@@ -150,11 +151,13 @@ Future<Map<String, dynamic>> loadlxnsconfig(BuildContext context) async {
 Future<void> updateconfig() async {
   final path = await getApplicationSupportDirectory();
   final configstr = File('${path.path}/config.json').readAsStringSync();
+  final packageinfo = await PackageInfo.fromPlatform();
   Map<String, dynamic> config = json.decode(configstr);
-  if (!config.containsKey('map')) {
+  if (!config.containsKey('map') || !config.containsKey('init')) {
     config['map'] = 'amap';
     config['init'] = true;
   }
+  config['version'] = packageinfo.version;
   File('${path.path}/config.json').writeAsStringSync(json.encode(config));
   await saveLatestVersion();
 }

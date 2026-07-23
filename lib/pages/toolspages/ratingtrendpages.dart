@@ -187,155 +187,152 @@ class _RatingTrendPagesState extends State<RatingTrendPages> {
           ),
         ],
       ),
-      body: RepaintBoundary(
-        key: _globalKey,
-        child: LayoutBuilder(
-          builder: (context, constraints) {
-            return SingleChildScrollView(
-              child: Scrollbar(
+      body: LayoutBuilder(
+        builder: (context, constraints) {
+          return SingleChildScrollView(
+            child: Scrollbar(
+              controller: _scrollController,
+              child: SingleChildScrollView(
+                scrollDirection: Axis.horizontal,
                 controller: _scrollController,
-                child: SingleChildScrollView(
-                  scrollDirection: Axis.horizontal,
-                  controller: _scrollController,
-                  child: RepaintBoundary(
-                    child: Column(
-                      children: [
-                        Row(children: [playerinfo]),
-                        SizedBox(
-                          width: chartWidth,
-                          height: constraints.maxHeight * 0.6,
-                          child: Padding(
-                            padding: const EdgeInsets.fromLTRB(8, 16, 16, 16),
-                            child: LineChart(
-                              LineChartData(
-                                minX: 0,
-                                minY: 0,
-                                maxX: widget.data1[2] as double,
-                                maxY: (widget.data1[1] as double) * 1.05,
-                                gridData: FlGridData(
-                                  show: true,
-                                  drawVerticalLine: false,
-                                  horizontalInterval: _calcInterval(
-                                    widget.data1[1] as double,
+                child: RepaintBoundary(
+                  key: _globalKey,
+                  child: Column(
+                    children: [
+                      Row(children: [playerinfo]),
+                      SizedBox(
+                        width: chartWidth,
+                        height: constraints.maxHeight * 0.6,
+                        child: Padding(
+                          padding: const EdgeInsets.fromLTRB(8, 16, 16, 16),
+                          child: LineChart(
+                            LineChartData(
+                              minX: 0,
+                              minY: 0,
+                              maxX: widget.data1[2] as double,
+                              maxY: (widget.data1[1] as double) * 1.05,
+                              gridData: FlGridData(
+                                show: true,
+                                drawVerticalLine: false,
+                                horizontalInterval: _calcInterval(
+                                  widget.data1[1] as double,
+                                ),
+                                getDrawingHorizontalLine: (value) => FlLine(
+                                  color: theme.colorScheme.outlineVariant
+                                      .withAlpha(80),
+                                  strokeWidth: 1,
+                                ),
+                              ),
+                              borderData: FlBorderData(
+                                show: true,
+                                border: Border(
+                                  bottom: BorderSide(
+                                    color: theme.colorScheme.outlineVariant,
                                   ),
-                                  getDrawingHorizontalLine: (value) => FlLine(
-                                    color: theme.colorScheme.outlineVariant
-                                        .withAlpha(80),
-                                    strokeWidth: 1,
+                                  left: BorderSide(
+                                    color: theme.colorScheme.outlineVariant,
                                   ),
                                 ),
-                                borderData: FlBorderData(
-                                  show: true,
-                                  border: Border(
-                                    bottom: BorderSide(
-                                      color: theme.colorScheme.outlineVariant,
-                                    ),
-                                    left: BorderSide(
-                                      color: theme.colorScheme.outlineVariant,
-                                    ),
-                                  ),
-                                ),
-                                lineTouchData: LineTouchData(
-                                  handleBuiltInTouches: true,
-                                  touchTooltipData: LineTouchTooltipData(
-                                    getTooltipColor: (_) =>
-                                        theme.colorScheme.inverseSurface,
-                                    getTooltipItems: (touchedSpots) {
-                                      return touchedSpots.map((spot) {
-                                        final date = dateMap[spot.x] ?? '';
-                                        return LineTooltipItem(
-                                          '$date\n${spot.y.toStringAsFixed(2)}',
-                                          TextStyle(
-                                            color: theme
-                                                .colorScheme
-                                                .onInverseSurface,
-                                            fontWeight: FontWeight.bold,
-                                            fontSize: 12,
-                                          ),
-                                        );
-                                      }).toList();
-                                    },
-                                  ),
-                                ),
-                                lineBarsData: [
-                                  LineChartBarData(
-                                    spots: spots,
-                                    isCurved: true,
-                                    curveSmoothness: 0.3,
-                                    color: primaryColor,
-                                    barWidth: 2.5,
-                                    dotData: FlDotData(
-                                      show: spots.length < 30,
-                                      getDotPainter: (spot, _, __, ___) =>
-                                          FlDotCirclePainter(
-                                            radius: 3,
-                                            color: primaryColor,
-                                            strokeWidth: 1,
-                                            strokeColor:
-                                                theme.colorScheme.surface,
-                                          ),
-                                    ),
-                                    belowBarData: BarAreaData(
-                                      show: true,
-                                      gradient: LinearGradient(
-                                        begin: Alignment.topCenter,
-                                        end: Alignment.bottomCenter,
-                                        colors: [
-                                          primaryColor.withAlpha(60),
-                                          primaryColor.withAlpha(0),
-                                        ],
-                                      ),
-                                    ),
-                                  ),
-                                ],
-                                titlesData: FlTitlesData(
-                                  topTitles: const AxisTitles(
-                                    sideTitles: SideTitles(showTitles: false),
-                                  ),
-                                  rightTitles: const AxisTitles(
-                                    sideTitles: SideTitles(showTitles: false),
-                                  ),
-                                  bottomTitles: AxisTitles(
-                                    sideTitles: SideTitles(
-                                      showTitles: true,
-                                      reservedSize: 60,
-                                      interval: 1,
-                                      getTitlesWidget:
-                                          (double value, TitleMeta meta) {
-                                            final label = dateMap[value] ?? '';
-                                            return SideTitleWidget(
-                                              meta: meta,
-                                              child: Transform.rotate(
-                                                angle: 0.785, // 45° in radians
-                                                child: Text(
-                                                  label,
-                                                  style: TextStyle(
-                                                    fontSize: 10,
-                                                    color: theme
-                                                        .colorScheme
-                                                        .onSurfaceVariant,
-                                                  ),
-                                                ),
-                                              ),
-                                            );
-                                          },
-                                    ),
-                                  ),
-                                  leftTitles: AxisTitles(
-                                    sideTitles: SideTitles(
-                                      showTitles: true,
-                                      reservedSize: 52,
-                                      interval: _calcInterval(
-                                        widget.data1[1] as double,
-                                      ),
-                                      getTitlesWidget: (value, meta) => Text(
-                                        value.toStringAsFixed(0),
-                                        style: TextStyle(
-                                          fontSize: 11,
+                              ),
+                              lineTouchData: LineTouchData(
+                                handleBuiltInTouches: true,
+                                touchTooltipData: LineTouchTooltipData(
+                                  getTooltipColor: (_) =>
+                                      theme.colorScheme.inverseSurface,
+                                  getTooltipItems: (touchedSpots) {
+                                    return touchedSpots.map((spot) {
+                                      final date = dateMap[spot.x] ?? '';
+                                      return LineTooltipItem(
+                                        '$date\n${spot.y.toStringAsFixed(2)}',
+                                        TextStyle(
                                           color: theme
                                               .colorScheme
-                                              .onSurfaceVariant,
+                                              .onInverseSurface,
+                                          fontWeight: FontWeight.bold,
+                                          fontSize: 12,
                                         ),
+                                      );
+                                    }).toList();
+                                  },
+                                ),
+                              ),
+                              lineBarsData: [
+                                LineChartBarData(
+                                  spots: spots,
+                                  isCurved: true,
+                                  curveSmoothness: 0.3,
+                                  color: primaryColor,
+                                  barWidth: 2.5,
+                                  dotData: FlDotData(
+                                    show: spots.length < 30,
+                                    getDotPainter: (spot, _, __, ___) =>
+                                        FlDotCirclePainter(
+                                          radius: 3,
+                                          color: primaryColor,
+                                          strokeWidth: 1,
+                                          strokeColor:
+                                              theme.colorScheme.surface,
+                                        ),
+                                  ),
+                                  belowBarData: BarAreaData(
+                                    show: true,
+                                    gradient: LinearGradient(
+                                      begin: Alignment.topCenter,
+                                      end: Alignment.bottomCenter,
+                                      colors: [
+                                        primaryColor.withAlpha(60),
+                                        primaryColor.withAlpha(0),
+                                      ],
+                                    ),
+                                  ),
+                                ),
+                              ],
+                              titlesData: FlTitlesData(
+                                topTitles: const AxisTitles(
+                                  sideTitles: SideTitles(showTitles: false),
+                                ),
+                                rightTitles: const AxisTitles(
+                                  sideTitles: SideTitles(showTitles: false),
+                                ),
+                                bottomTitles: AxisTitles(
+                                  sideTitles: SideTitles(
+                                    showTitles: true,
+                                    reservedSize: 60,
+                                    interval: 1,
+                                    getTitlesWidget:
+                                        (double value, TitleMeta meta) {
+                                          final label = dateMap[value] ?? '';
+                                          return SideTitleWidget(
+                                            meta: meta,
+                                            child: Transform.rotate(
+                                              angle: 0.785, // 45° in radians
+                                              child: Text(
+                                                label,
+                                                style: TextStyle(
+                                                  fontSize: 10,
+                                                  color: theme
+                                                      .colorScheme
+                                                      .onSurfaceVariant,
+                                                ),
+                                              ),
+                                            ),
+                                          );
+                                        },
+                                  ),
+                                ),
+                                leftTitles: AxisTitles(
+                                  sideTitles: SideTitles(
+                                    showTitles: true,
+                                    reservedSize: 52,
+                                    interval: _calcInterval(
+                                      widget.data1[1] as double,
+                                    ),
+                                    getTitlesWidget: (value, meta) => Text(
+                                      value.toStringAsFixed(0),
+                                      style: TextStyle(
+                                        fontSize: 11,
+                                        color:
+                                            theme.colorScheme.onSurfaceVariant,
                                       ),
                                     ),
                                   ),
@@ -344,14 +341,14 @@ class _RatingTrendPagesState extends State<RatingTrendPages> {
                             ),
                           ),
                         ),
-                      ],
-                    ),
+                      ),
+                    ],
                   ),
                 ),
               ),
-            );
-          },
-        ),
+            ),
+          );
+        },
       ),
     );
   }

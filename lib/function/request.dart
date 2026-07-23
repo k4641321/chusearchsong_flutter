@@ -5,6 +5,13 @@ import 'dart:developer';
 import 'dart:io';
 import 'package:path_provider/path_provider.dart';
 
+Future<String> requestVersion() async {
+  final response = await get(
+    Uri.parse('https://chusearchsong.4641321.xyz/version'),
+  );
+  return response.body;
+}
+
 Future<void> savezxzrsongs() async {
   final path = await getApplicationSupportDirectory();
   try {

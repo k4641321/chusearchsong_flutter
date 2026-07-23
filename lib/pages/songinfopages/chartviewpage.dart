@@ -123,15 +123,15 @@ class _ChartViewPageState extends State<ChartViewPage> {
           result = [
             CachedNetworkImage(
               imageUrl: chartdataurl.join('/'),
-              height: MediaQuery.heightOf(context),
-              fit: BoxFit.fill,
+              // height: MediaQuery.heightOf(context),
+              fit: BoxFit.none,
               errorWidget: (context, error, stackTrace) =>
                   Text('错误：$error \n $stackTrace'),
             ),
             CachedNetworkImage(
               imageUrl: barurl.join('/'),
-              height: MediaQuery.heightOf(context),
-              fit: BoxFit.fill,
+              // height: MediaQuery.heightOf(context),
+              fit: BoxFit.none,
               errorWidget: (context, error, stackTrace) =>
                   Text('错误：$error \n $stackTrace'),
             ),
@@ -139,13 +139,22 @@ class _ChartViewPageState extends State<ChartViewPage> {
               opacity: 0.1,
               child: CachedNetworkImage(
                 imageUrl: bgurl.join('/'),
-                height: MediaQuery.heightOf(context),
-                fit: BoxFit.fill,
+                // height: MediaQuery.heightOf(context),
+                fit: BoxFit.none,
                 errorWidget: (context, error, stackTrace) =>
                     Text('错误：$error \n $stackTrace'),
               ),
             ),
           ];
+          // result = [
+          //   Image.network(
+          //     chartdataurl.join('/'),
+          //     height: MediaQuery.heightOf(context),
+          //     fit: BoxFit.fill,
+          //     errorBuilder: (context, error, stackTrace) =>
+          //         Text('错误：$error \n $stackTrace'),
+          //   ),
+          // ];
         });
       }
     } catch (e, strack) {
@@ -173,18 +182,11 @@ class _ChartViewPageState extends State<ChartViewPage> {
     return Scaffold(
       appBar: AppBar(title: Text('谱面预览')),
       body: InteractiveViewer(
-        minScale: 1.0,
+        constrained: false,
+        minScale: 0.5,
         maxScale: 5.0,
-        child: Center(
-          child: Scrollbar(
-            controller: _scrollController,
-            child: SingleChildScrollView(
-              controller: _scrollController,
-              scrollDirection: Axis.horizontal,
-              child: Row(children: [Stack(children: result)]),
-            ),
-          ),
-        ),
+        boundaryMargin: EdgeInsets.all(double.infinity),
+        child: Center(child: Stack(children: result)),
       ),
     );
   }
