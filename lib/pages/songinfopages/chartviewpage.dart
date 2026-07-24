@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:developer';
 
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:chusearchsong_flutter/function/request.dart';
 import 'package:flutter/material.dart';
 import 'dart:io';
 import 'package:path_provider/path_provider.dart';
@@ -67,7 +68,9 @@ class _ChartViewPageState extends State<ChartViewPage> {
       final path = await getApplicationSupportDirectory();
       if (!mounted) return;
       String? charturl;
-
+      Map<String, dynamic> config = jsonDecode(
+        File('${path.path}/config.json').readAsStringSync(),
+      );
       String zxzrsongsdatastr = await File(
         '${path.path}/res/zxzrsongs.json',
       ).readAsString();
@@ -86,6 +89,7 @@ class _ChartViewPageState extends State<ChartViewPage> {
           break;
         }
       }
+
       //开始拆解链接，幸好有规律
       List bgurl;
       List barurl;
@@ -98,64 +102,106 @@ class _ChartViewPageState extends State<ChartViewPage> {
           return;
         });
       } else {
-        List charturllist = charturl.split('/');
-        // print(charturllist);
-        bgurl = [
-          baseurl,
-          charturllist[4],
-          'bg',
-          '${(charturllist[5] as String).replaceAll(RegExp(r'[^0-9]'), '')}bg.png',
-        ];
-        barurl = [
-          baseurl,
-          charturllist[4],
-          'bg',
-          '${(charturllist[5] as String).replaceAll(RegExp(r'[^0-9]'), '')}bar.png',
-        ];
-        chartdataurl = [
-          baseurl,
-          charturllist[4],
-          'obj',
-          'data${(charturllist[5] as String).replaceAll(RegExp(r'[^0-9]'), '')}${charturldiff(diffindex: widget.diffindex)}.png',
-        ];
-        if (!mounted) return;
-        setState(() {
-          result = [
-            CachedNetworkImage(
-              imageUrl: chartdataurl.join('/'),
-              // height: MediaQuery.heightOf(context),
-              fit: BoxFit.none,
-              errorWidget: (context, error, stackTrace) =>
-                  Text('错误：$error \n $stackTrace'),
+        if (config['chartproxy'] == true) {
+          final stopwatch = Stopwatch()..start();
+          log('使用vercel');
+          Map<String, dynamic> chartproxyresult = jsonDecode(
+            await requestproxychartdata(
+              charturl: charturl,
+              levelindex: widget.diffindex,
             ),
-            CachedNetworkImage(
-              imageUrl: barurl.join('/'),
-              // height: MediaQuery.heightOf(context),
-              fit: BoxFit.none,
-              errorWidget: (context, error, stackTrace) =>
-                  Text('错误：$error \n $stackTrace'),
-            ),
-            Opacity(
-              opacity: 0.1,
-              child: CachedNetworkImage(
-                imageUrl: bgurl.join('/'),
+          );
+          // print(chartproxyresult);
+          setState(() {
+            result = [
+              Image.memory(
+                base64Decode(chartproxyresult['chart_data']),
+                fit: BoxFit.none,
+                errorBuilder: (context, error, stackTrace) =>
+                    Text('错误：$error \n $stackTrace'),
+              ),
+              Image.memory(
+                base64Decode(chartproxyresult['bar']),
+                fit: BoxFit.none,
+                errorBuilder: (context, error, stackTrace) =>
+                    Text('错误：$error \n $stackTrace'),
+              ),
+              Opacity(
+                opacity: 0.1,
+                child: Image.memory(
+                  base64Decode(chartproxyresult['bg']),
+                  fit: BoxFit.none,
+                  errorBuilder: (context, error, stackTrace) =>
+                      Text('错误：$error \n $stackTrace'),
+                ),
+              ),
+            ];
+          });
+          stopwatch.stop();
+          log('耗时: ${stopwatch.elapsedMilliseconds}ms');
+          if (!mounted) return;
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(content: Text('耗时: ${stopwatch.elapsedMilliseconds}ms')),
+          );
+        } else {
+          log('使用默认');
+          final stopwatch = Stopwatch()..start();
+          List charturllist = charturl.split('/');
+          // print(charturllist);
+          bgurl = [
+            baseurl,
+            charturllist[4],
+            'bg',
+            '${(charturllist[5] as String).replaceAll(RegExp(r'[^0-9]'), '')}bg.png',
+          ];
+          barurl = [
+            baseurl,
+            charturllist[4],
+            'bg',
+            '${(charturllist[5] as String).replaceAll(RegExp(r'[^0-9]'), '')}bar.png',
+          ];
+          chartdataurl = [
+            baseurl,
+            charturllist[4],
+            'obj',
+            'data${(charturllist[5] as String).replaceAll(RegExp(r'[^0-9]'), '')}${charturldiff(diffindex: widget.diffindex)}.png',
+          ];
+          if (!mounted) return;
+          setState(() {
+            result = [
+              CachedNetworkImage(
+                imageUrl: chartdataurl.join('/'),
                 // height: MediaQuery.heightOf(context),
                 fit: BoxFit.none,
                 errorWidget: (context, error, stackTrace) =>
                     Text('错误：$error \n $stackTrace'),
               ),
-            ),
-          ];
-          // result = [
-          //   Image.network(
-          //     chartdataurl.join('/'),
-          //     height: MediaQuery.heightOf(context),
-          //     fit: BoxFit.fill,
-          //     errorBuilder: (context, error, stackTrace) =>
-          //         Text('错误：$error \n $stackTrace'),
-          //   ),
-          // ];
-        });
+              CachedNetworkImage(
+                imageUrl: barurl.join('/'),
+                // height: MediaQuery.heightOf(context),
+                fit: BoxFit.none,
+                errorWidget: (context, error, stackTrace) =>
+                    Text('错误：$error \n $stackTrace'),
+              ),
+              Opacity(
+                opacity: 0.1,
+                child: CachedNetworkImage(
+                  imageUrl: bgurl.join('/'),
+                  // height: MediaQuery.heightOf(context),
+                  fit: BoxFit.none,
+                  errorWidget: (context, error, stackTrace) =>
+                      Text('错误：$error \n $stackTrace'),
+                ),
+              ),
+            ];
+          });
+          stopwatch.stop();
+          log('耗时: ${stopwatch.elapsedMilliseconds}ms');
+          if (!mounted) return;
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(content: Text('耗时: ${stopwatch.elapsedMilliseconds}ms')),
+          );
+        }
       }
     } catch (e, strack) {
       log('$e \n $strack');

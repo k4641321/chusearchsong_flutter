@@ -1,3 +1,7 @@
+import 'dart:developer';
+
+import 'package:chusearchsong_flutter/function/request.dart';
+import 'package:package_info_plus/package_info_plus.dart';
 import 'theme.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -87,11 +91,52 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
+  Future<void> showChangesLog() async {
+    try {
+      final packageinfo = await PackageInfo.fromPlatform();
+      Map<String, dynamic> config = await loadConfig();
+      if (config['version'] == packageinfo.version &&
+          config['changeslogread'] == false) {
+        List requestresult = jsonDecode(await requestChangeslog());
+        Map<String, dynamic> changeslog = requestresult[0];
+        if (!mounted) return;
+        showDialog(
+          context: context,
+          builder: (context) => AlertDialog(
+            title: Text(
+              '${changeslog['title']} - ${changeslog['description']}',
+            ),
+            content: Text(
+              (changeslog['changes'] as List).join('\n').toString(),
+            ),
+          ),
+        );
+        config['changeslogread'] = true;
+        saveConfig(config);
+      }
+    } catch (e, strack) {
+      log('$e\n$strack');
+      if (!mounted) return;
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text('错误：$e\n$strack')));
+    }
+  }
+
   @override
   void initState() {
     super.initState();
-    ifres(context: context);
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      showChangesLog();
+      ifres(context: context);
+    });
   }
+
+  // @override
+  // void didChangeDependencies() {
+  //
+  //   super.didChangeDependencies();
+  // }
 
   String title = '搜索';
   int _currentIndex = 0;

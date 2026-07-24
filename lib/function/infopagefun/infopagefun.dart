@@ -59,12 +59,14 @@ Future<bool> checkforupdates() async {
   Map<String, dynamic> result = jsonDecode(await requestVersion());
   final packageinfo = await PackageInfo.fromPlatform();
   String oldversion = packageinfo.version;
+  // log(oldversion);
   String newversion = result['version'];
+  // log(newversion);
   log('开始检查');
   if (Version.parse(oldversion) <= Version.parse(newversion)) {
-    return false;
-  } else {
     return true;
+  } else {
+    return false;
   }
 }
 

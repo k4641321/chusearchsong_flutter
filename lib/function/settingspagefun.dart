@@ -153,9 +153,12 @@ Future<void> updateconfig() async {
   final configstr = File('${path.path}/config.json').readAsStringSync();
   final packageinfo = await PackageInfo.fromPlatform();
   Map<String, dynamic> config = json.decode(configstr);
-  if (!config.containsKey('map') || !config.containsKey('init')) {
-    config['map'] = 'amap';
-    config['init'] = true;
+  if (!config.containsKey('map')) config['map'] = 'amap';
+  if (!config.containsKey('init')) config['init'] = true;
+  if (!config.containsKey('chartproxy')) config['chartproxy'] = false;
+  if (!config.containsKey('changeslogread')) config['changeslogread'] = false;
+  if (packageinfo.version != config['version']) {
+    config['changeslogread'] = false;
   }
   config['version'] = packageinfo.version;
   File('${path.path}/config.json').writeAsStringSync(json.encode(config));
@@ -196,4 +199,13 @@ Future<void> saveMapConfig(String map, BuildContext context) async {
       context,
     ).showSnackBar(SnackBar(content: Text('错误，保存配置文件失败，请检查是否配置正确 $e')));
   }
+}
+
+Future<void> changeChartProxy({required bool state}) async {
+  final Directory directory = await getApplicationSupportDirectory();
+  final File file = File('${directory.path}/config.json');
+  final String configstr = await file.readAsString();
+  Map<String, dynamic> config = json.decode(configstr);
+  config['chartproxy'] = state;
+  await file.writeAsString(json.encode(config));
 }

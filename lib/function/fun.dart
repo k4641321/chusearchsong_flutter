@@ -187,6 +187,17 @@ Future<void> ifres({required BuildContext context}) async {
     log('$e', name: 'main', level: 2000);
   }
 
+  //配置更新
+  try {
+    await updateconfig();
+  } catch (e) {
+    if (!context.mounted) return;
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(content: Text('配置更新失败'), duration: Duration(microseconds: 500)),
+    );
+    log('$e', name: 'fun.dart', level: 2000);
+  }
+
   try {
     final directory = await getApplicationSupportDirectory();
     Map<String, dynamic> config = await jsonDecode(
@@ -394,17 +405,6 @@ Future<void> ifres({required BuildContext context}) async {
       SnackBar(content: Text('创建失败'), duration: Duration(microseconds: 500)),
     );
     log('$e', name: 'main', level: 2000);
-  }
-
-  //配置更新
-  try {
-    await updateconfig();
-  } catch (e) {
-    if (!context.mounted) return;
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(content: Text('配置更新失败'), duration: Duration(microseconds: 500)),
-    );
-    log('$e', name: 'fun.dart', level: 2000);
   }
 }
 
@@ -659,4 +659,18 @@ Future<Map<String, dynamic>> returnplayerinfodata() async {
   ).readAsString();
   Map<String, dynamic> scoretrendJson = json.decode(scoretrendJsonStr);
   return scoretrendJson['data'];
+}
+
+Future<Map<String, dynamic>> loadConfig() async {
+  final path = await getApplicationSupportDirectory();
+
+  String configJsonStr = await File('${path.path}/config.json').readAsString();
+  Map<String, dynamic> configJson = json.decode(configJsonStr);
+  return configJson;
+}
+
+Future<void> saveConfig(Map<String, dynamic> config) async {
+  final path = await getApplicationSupportDirectory();
+  String configJsonStr = json.encode(config);
+  await File('${path.path}/config.json').writeAsString(configJsonStr);
 }

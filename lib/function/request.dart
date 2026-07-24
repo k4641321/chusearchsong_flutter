@@ -5,9 +5,32 @@ import 'dart:developer';
 import 'dart:io';
 import 'package:path_provider/path_provider.dart';
 
+Future<String> requestChangeslog() async {
+  final response = await get(
+    Uri.parse('https://chusearchsong.4641321.xyz/api/changelog'),
+  );
+  return response.body;
+}
+
+Future<String> requestproxychartdata({
+  required String charturl,
+  required int levelindex,
+}) async {
+  final body = json.encode({"charturl": charturl, "level_index": levelindex});
+  final response = await post(
+    Uri.parse('https://chusearchsong.4641321.xyz/api/chart/'),
+    headers: {'Content-Type': 'application/json'},
+    body: body,
+  );
+  // log('status: ${response.statusCode}');
+  // log('location: ${response.headers['location']}');
+  // log('body: ${response.body}');
+  return response.body;
+}
+
 Future<String> requestVersion() async {
   final response = await get(
-    Uri.parse('https://chusearchsong.4641321.xyz/version'),
+    Uri.parse('https://chusearchsong.4641321.xyz/api/version'),
   );
   return response.body;
 }

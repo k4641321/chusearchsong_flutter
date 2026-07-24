@@ -162,7 +162,9 @@ class _InfoState extends State<Info> {
                         ),
                         onTap: () => launchurl(context: context),
                         child: Card(
-                          color: Theme.of(context).colorScheme.primaryContainer,
+                          color: Theme.of(
+                            context,
+                          ).colorScheme.primaryContainer.withAlpha(150),
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.only(
                               topLeft: Radius.circular(10.0),
@@ -195,7 +197,9 @@ class _InfoState extends State<Info> {
                         ),
                         onTap: () => openQQ(context: context),
                         child: Card(
-                          color: Theme.of(context).colorScheme.primaryContainer,
+                          color: Theme.of(
+                            context,
+                          ).colorScheme.primaryContainer.withAlpha(150),
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.all(
                               Radius.circular(0.0),
@@ -227,7 +231,9 @@ class _InfoState extends State<Info> {
                         ),
                         onTap: darkmodechange,
                         child: Card(
-                          color: Theme.of(context).colorScheme.primaryContainer,
+                          color: Theme.of(
+                            context,
+                          ).colorScheme.primaryContainer.withAlpha(150),
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.all(
                               Radius.circular(0.0),
@@ -264,7 +270,9 @@ class _InfoState extends State<Info> {
                           ),
                         ),
                         child: Card(
-                          color: Theme.of(context).colorScheme.primaryContainer,
+                          color: Theme.of(
+                            context,
+                          ).colorScheme.primaryContainer.withAlpha(150),
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.all(
                               Radius.circular(0.0),
@@ -302,6 +310,7 @@ class _InfoState extends State<Info> {
                               showDialog(
                                 context: context,
                                 builder: (context) => AlertDialog(
+                                  content: Text('发现新版本，是否前往下载？'),
                                   actions: [
                                     TextButton(
                                       onPressed: () =>
@@ -334,7 +343,9 @@ class _InfoState extends State<Info> {
                           }
                         },
                         child: Card(
-                          color: Theme.of(context).colorScheme.primaryContainer,
+                          color: Theme.of(
+                            context,
+                          ).colorScheme.primaryContainer.withAlpha(150),
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.all(
                               Radius.circular(0.0),
@@ -371,7 +382,9 @@ class _InfoState extends State<Info> {
                           ),
                         ),
                         child: Card(
-                          color: Theme.of(context).colorScheme.primaryContainer,
+                          color: Theme.of(
+                            context,
+                          ).colorScheme.primaryContainer.withAlpha(150),
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.all(
                               Radius.circular(0.0),
@@ -403,7 +416,9 @@ class _InfoState extends State<Info> {
                         ),
                         onTap: () => updateData(context: context),
                         child: Card(
-                          color: Theme.of(context).colorScheme.primaryContainer,
+                          color: Theme.of(
+                            context,
+                          ).colorScheme.primaryContainer.withAlpha(150),
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.only(
                               bottomLeft: Radius.circular(10.0),
