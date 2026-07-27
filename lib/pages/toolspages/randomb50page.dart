@@ -16,9 +16,6 @@ class Randomb50page extends StatefulWidget {
 }
 
 class _Randomb50pageState extends State<Randomb50page> {
-  final ScrollController _controller = ScrollController();
-  final ScrollController _controller2 = ScrollController();
-
   Widget image = Text('未生成或错误');
 
   @override
@@ -41,116 +38,99 @@ class _Randomb50pageState extends State<Randomb50page> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(title: Text('随机B50生成')),
-      body: Scrollbar(
-        controller: _controller,
-        child: SingleChildScrollView(
-          controller: _controller,
-          child: Center(
-            child: Column(
-              children: [
-                Text(
-                  '生成时请保证网络畅通，基本所有数据都是在线获取，使用前请配置好落雪token，没生成好点击保存按钮只会保存一张未生成的文字',
+      body: Column(
+        children: [
+          Text('生成时请保证网络畅通，基本所有数据都是在线获取，使用前请配置好落雪token，没生成好点击保存按钮只会保存一张未生成的文字'),
+          const Divider(),
+          Row(
+            children: [
+              Expanded(
+                child: TextButton(
+                  onPressed: () async {
+                    setState(() {
+                      b50Body = Text('生成中...');
+                    });
+                    try {
+                      Widget result = await randomb50Body(context: context);
+                      setState(() {
+                        b50Body = result;
+                      });
+                      if (!context.mounted) return;
+                      ScaffoldMessenger.of(
+                        context,
+                      ).showSnackBar(SnackBar(content: Text('完成')));
+                    } catch (e, strack) {
+                      log(
+                        '$e \n $strack',
+                        name: 'randomb50page.dart',
+                        level: 1000,
+                      );
+                      setState(() {
+                        b50Body = Text('生成失败 $e\n$strack');
+                      });
+                      if (!context.mounted) return;
+                      ScaffoldMessenger.of(
+                        context,
+                      ).showSnackBar(SnackBar(content: Text('生成失败')));
+                    }
+                  },
+                  child: Text('点击生成B50'),
                 ),
-                const Divider(),
-                Row(
-                  children: [
-                    Expanded(
-                      child: TextButton(
-                        onPressed: () async {
-                          setState(() {
-                            b50Body = Text('生成中...');
-                          });
-                          try {
-                            Widget result = await randomb50Body(
-                              context: context,
-                            );
-                            setState(() {
-                              b50Body = result;
-                            });
-                            if (!context.mounted) return;
-                            ScaffoldMessenger.of(
-                              context,
-                            ).showSnackBar(SnackBar(content: Text('完成')));
-                          } catch (e, strack) {
-                            log(
-                              '$e \n $strack',
-                              name: 'randomb50page.dart',
-                              level: 1000,
-                            );
-                            setState(() {
-                              b50Body = Text('生成失败 $e\n$strack');
-                            });
-                            if (!context.mounted) return;
-                            ScaffoldMessenger.of(
-                              context,
-                            ).showSnackBar(SnackBar(content: Text('生成失败')));
-                          }
-                        },
-                        child: Text('点击生成B50'),
-                      ),
-                    ),
-                  ],
+              ),
+            ],
+          ),
+          Row(
+            children: [
+              Expanded(
+                child: TextButton(
+                  onPressed: () async {
+                    try {
+                      final image = await captureWidget(_globalKey);
+                      final byteData = await image?.toByteData(format: .png);
+                      final pngBytes = byteData?.buffer.asUint8List();
+                      final path = await getApplicationSupportDirectory();
+                      if (!Directory('${path.path}/tmp').existsSync()) {
+                        Directory('${path.path}/tmp').create(recursive: true);
+                      }
+                      File(
+                        '${path.path}/tmp/randomb50.png',
+                      ).writeAsBytesSync(pngBytes!);
+                      if (!context.mounted) return;
+                      final platform = Theme.of(context).platform;
+                      if (platform == TargetPlatform.windows) {
+                        await FilePicker.saveFile(
+                          dialogTitle: '保存随机B50',
+                          fileName: 'randomb50.png',
+                          bytes: pngBytes,
+                          type: FileType.custom,
+                          allowedExtensions: ['png'],
+                        );
+                      } else {
+                        await SharePlus.instance.share(
+                          ShareParams(
+                            files: [XFile('${path.path}/tmp/randomb50.png')],
+                          ),
+                        );
+                      }
+                    } catch (e) {
+                      log('$e', name: 'randomb50page.dart', level: 1000);
+                    }
+                  },
+                  child: Text('保存B50'),
                 ),
-                Row(
-                  children: [
-                    Expanded(
-                      child: TextButton(
-                        onPressed: () async {
-                          try {
-                            final image = await captureWidget(_globalKey);
-                            final byteData = await image?.toByteData(
-                              format: .png,
-                            );
-                            final pngBytes = byteData?.buffer.asUint8List();
-                            final path = await getApplicationSupportDirectory();
-                            if (!Directory('${path.path}/tmp').existsSync()) {
-                              Directory(
-                                '${path.path}/tmp',
-                              ).create(recursive: true);
-                            }
-                            File(
-                              '${path.path}/tmp/randomb50.png',
-                            ).writeAsBytesSync(pngBytes!);
-                            if (!context.mounted) return;
-                            final platform = Theme.of(context).platform;
-                            if (platform == TargetPlatform.windows) {
-                              await FilePicker.saveFile(
-                                dialogTitle: '保存随机B50',
-                                fileName: 'randomb50.png',
-                                bytes: pngBytes,
-                                type: FileType.custom,
-                                allowedExtensions: ['png'],
-                              );
-                            } else {
-                              await SharePlus.instance.share(
-                                ShareParams(
-                                  files: [
-                                    XFile('${path.path}/tmp/randomb50.png'),
-                                  ],
-                                ),
-                              );
-                            }
-                          } catch (e) {
-                            log('$e', name: 'randomb50page.dart', level: 1000);
-                          }
-                        },
-                        child: Text('保存B50'),
-                      ),
-                    ),
-                  ],
-                ),
-                Scrollbar(
-                  controller: _controller2,
-                  child: SingleChildScrollView(
-                    scrollDirection: Axis.horizontal,
-                    controller: _controller2,
-                    child: RepaintBoundary(key: _globalKey, child: b50Body),
-                  ),
-                ),
-              ],
+              ),
+            ],
+          ),
+          Expanded(
+            child: InteractiveViewer(
+              minScale: 0.1,
+              maxScale: 5,
+              constrained: false,
+              boundaryMargin: EdgeInsets.all(double.infinity),
+              child: RepaintBoundary(key: _globalKey, child: b50Body),
             ),
           ),
-        ),
+        ],
       ),
     );
   }

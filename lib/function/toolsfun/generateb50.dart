@@ -10,7 +10,7 @@ Color diffcolor({required int diffindex}) {
     case 0:
       return Colors.green;
     case 1:
-      return Colors.blue;
+      return Colors.orange;
     case 2:
       return Colors.red;
     case 3:

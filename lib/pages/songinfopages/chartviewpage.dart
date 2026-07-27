@@ -230,7 +230,7 @@ class _ChartViewPageState extends State<ChartViewPage> {
       appBar: AppBar(title: Text('谱面预览')),
       body: InteractiveViewer(
         constrained: false,
-        minScale: 0.5,
+        minScale: 0.1,
         maxScale: 5.0,
         boundaryMargin: EdgeInsets.all(double.infinity),
         child: Center(child: Stack(children: result)),

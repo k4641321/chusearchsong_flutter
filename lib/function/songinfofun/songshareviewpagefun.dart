@@ -72,7 +72,7 @@ Future<Widget> returnSongShareView({required int songid}) async {
   }
 
   String cutartist({required String artist}) {
-    if (artist.length > 30) {
+    if (artist.length > 25) {
       return '${artist.substring(0, 25)}...';
     } else {
       return artist;
@@ -412,157 +412,168 @@ Future<Widget> returnSongShareView({required int songid}) async {
   result3.add(difftable);
 
   //成绩
-  Map<String, dynamic> songscore = jsonDecode(
-    await requestSongBests(token: await returnlxnstoken(), songid: songid),
-  );
-
-  List<DataRow> scorerow = [];
-  List<DataCell> scorecell = [
-    DataCell(
-      Padding(
-        padding: EdgeInsetsGeometry.all(8),
-        child: Text('成绩', style: TextStyle(color: Colors.black, fontSize: 30)),
-      ),
-    ),
-  ];
-  List<DataCell> scorecell2 = [
-    DataCell(
-      Padding(
-        padding: EdgeInsetsGeometry.all(8),
-        child: Text('评级', style: TextStyle(color: Colors.black, fontSize: 30)),
-      ),
-    ),
-  ];
-  List<DataColumn> scorecolumn = [DataColumn(label: Text(''))];
-
-  for (var i in songdata['difficulties']) {
-    scorecolumn.add(
-      DataColumn(
-        label: Container(
-          color: returndiffbgcolor(diffindex: i['difficulty']),
-          alignment: Alignment.center,
-          padding: EdgeInsetsGeometry.only(
-            top: 8,
-            bottom: 8,
-            left: 15,
-            right: 15,
-          ),
-          child: Text(
-            returndiffenglish(diffindex: i['difficulty']),
-            style: TextStyle(color: Colors.white, fontSize: 30),
-          ),
-        ),
-      ),
+  try {
+    Map<String, dynamic> songscore = jsonDecode(
+      await requestSongBests(token: await returnlxnstoken(), songid: songid),
     );
-    scorecell.add(
+
+    List<DataRow> scorerow = [];
+    List<DataCell> scorecell = [
       DataCell(
         Padding(
           padding: EdgeInsetsGeometry.all(8),
           child: Text(
-            '无成绩',
+            '成绩',
             style: TextStyle(color: Colors.black, fontSize: 30),
           ),
         ),
       ),
-    );
-    scorecell2.add(
+    ];
+    List<DataCell> scorecell2 = [
       DataCell(
         Padding(
           padding: EdgeInsetsGeometry.all(8),
           child: Text(
-            '无评级',
+            '评级',
             style: TextStyle(color: Colors.black, fontSize: 30),
           ),
         ),
       ),
-    );
-  }
+    ];
+    List<DataColumn> scorecolumn = [DataColumn(label: Text(''))];
 
-  scorerow.add(DataRow(cells: scorecell));
-  scorerow.add(DataRow(cells: scorecell2));
-  for (var i in songscore['data']) {
-    switch (i['level_index']) {
-      case 0:
-        scorecell[1] = DataCell(
+    for (var i in songdata['difficulties']) {
+      scorecolumn.add(
+        DataColumn(
+          label: Container(
+            color: returndiffbgcolor(diffindex: i['difficulty']),
+            alignment: Alignment.center,
+            padding: EdgeInsetsGeometry.only(
+              top: 8,
+              bottom: 8,
+              left: 15,
+              right: 15,
+            ),
+            child: Text(
+              returndiffenglish(diffindex: i['difficulty']),
+              style: TextStyle(color: Colors.white, fontSize: 30),
+            ),
+          ),
+        ),
+      );
+      scorecell.add(
+        DataCell(
           Padding(
             padding: EdgeInsetsGeometry.all(8),
             child: Text(
-              i['score'].toString(),
+              '无成绩',
               style: TextStyle(color: Colors.black, fontSize: 30),
             ),
           ),
-        );
-        scorecell2[1] = DataCell(
-          Image.asset(rankImg(rank: i['rank']), width: 125),
-        );
-      case 1:
-        scorecell[2] = DataCell(
+        ),
+      );
+      scorecell2.add(
+        DataCell(
           Padding(
             padding: EdgeInsetsGeometry.all(8),
             child: Text(
-              i['score'].toString(),
+              '无评级',
               style: TextStyle(color: Colors.black, fontSize: 30),
             ),
           ),
-        );
-        scorecell2[2] = DataCell(
-          Image.asset(rankImg(rank: i['rank']), width: 125),
-        );
-      case 2:
-        scorecell[3] = DataCell(
-          Padding(
-            padding: EdgeInsetsGeometry.all(8),
-            child: Text(
-              i['score'].toString(),
-              style: TextStyle(color: Colors.black, fontSize: 30),
-            ),
-          ),
-        );
-        scorecell2[3] = DataCell(
-          Image.asset(rankImg(rank: i['rank']), width: 125),
-        );
-      case 3:
-        scorecell[4] = DataCell(
-          Padding(
-            padding: EdgeInsetsGeometry.all(8),
-            child: Text(
-              i['score'].toString(),
-              style: TextStyle(color: Colors.black, fontSize: 30),
-            ),
-          ),
-        );
-        scorecell2[4] = DataCell(
-          Image.asset(rankImg(rank: i['rank']), width: 125),
-        );
-      case 4:
-        scorecell[5] = DataCell(
-          Padding(
-            padding: EdgeInsetsGeometry.all(8),
-            child: Text(
-              i['score'].toString(),
-              style: TextStyle(color: Colors.black, fontSize: 30),
-            ),
-          ),
-        );
-        scorecell2[5] = DataCell(
-          Image.asset(rankImg(rank: i['rank']), width: 125),
-        );
+        ),
+      );
     }
-  }
 
-  DataTable scoretable = DataTable(
-    decoration: BoxDecoration(color: Colors.white),
-    border: TableBorder.all(color: Colors.black),
-    horizontalMargin: 0,
-    columnSpacing: 0,
-    dataRowMinHeight: 0,
-    dataRowMaxHeight: 80,
-    columns: scorecolumn,
-    rows: scorerow,
-  );
-  result3.add(
-    Padding(padding: EdgeInsetsGeometry.only(top: 10), child: scoretable),
-  );
+    scorerow.add(DataRow(cells: scorecell));
+    scorerow.add(DataRow(cells: scorecell2));
+    // print(songscore['data']);
+    for (var i in songscore['data']) {
+      switch (i['level_index']) {
+        case 0:
+          scorecell[1] = DataCell(
+            Padding(
+              padding: EdgeInsetsGeometry.all(8),
+              child: Text(
+                i['score'].toString(),
+                style: TextStyle(color: Colors.black, fontSize: 30),
+              ),
+            ),
+          );
+          scorecell2[1] = DataCell(
+            Image.asset(rankImg(rank: i['rank']), width: 125),
+          );
+        case 1:
+          scorecell[2] = DataCell(
+            Padding(
+              padding: EdgeInsetsGeometry.all(8),
+              child: Text(
+                i['score'].toString(),
+                style: TextStyle(color: Colors.black, fontSize: 30),
+              ),
+            ),
+          );
+          scorecell2[2] = DataCell(
+            Image.asset(rankImg(rank: i['rank']), width: 125),
+          );
+        case 2:
+          scorecell[3] = DataCell(
+            Padding(
+              padding: EdgeInsetsGeometry.all(8),
+              child: Text(
+                i['score'].toString(),
+                style: TextStyle(color: Colors.black, fontSize: 30),
+              ),
+            ),
+          );
+          scorecell2[3] = DataCell(
+            Image.asset(rankImg(rank: i['rank']), width: 125),
+          );
+        case 3:
+          scorecell[4] = DataCell(
+            Padding(
+              padding: EdgeInsetsGeometry.all(8),
+              child: Text(
+                i['score'].toString(),
+                style: TextStyle(color: Colors.black, fontSize: 30),
+              ),
+            ),
+          );
+          scorecell2[4] = DataCell(
+            Image.asset(rankImg(rank: i['rank']), width: 125),
+          );
+        case 4:
+          scorecell[5] = DataCell(
+            Padding(
+              padding: EdgeInsetsGeometry.all(8),
+              child: Text(
+                i['score'].toString(),
+                style: TextStyle(color: Colors.black, fontSize: 30),
+              ),
+            ),
+          );
+          scorecell2[5] = DataCell(
+            Image.asset(rankImg(rank: i['rank']), width: 125),
+          );
+      }
+    }
+
+    DataTable scoretable = DataTable(
+      decoration: BoxDecoration(color: Colors.white),
+      border: TableBorder.all(color: Colors.black),
+      horizontalMargin: 0,
+      columnSpacing: 0,
+      dataRowMinHeight: 0,
+      dataRowMaxHeight: 80,
+      columns: scorecolumn,
+      rows: scorerow,
+    );
+    result3.add(
+      Padding(padding: EdgeInsetsGeometry.only(top: 10), child: scoretable),
+    );
+  } catch (e) {
+    log('无成绩');
+  }
 
   result2.add(
     Column(mainAxisAlignment: MainAxisAlignment.start, children: result3),

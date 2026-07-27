@@ -109,7 +109,7 @@ class _SongshareviewpageState extends State<Songshareviewpage> {
             Expanded(
               child: InteractiveViewer(
                 constrained: false,
-                minScale: 0.5,
+                minScale: 0.1,
                 maxScale: 3.0,
                 boundaryMargin: EdgeInsets.all(double.infinity),
                 child: RepaintBoundary(
