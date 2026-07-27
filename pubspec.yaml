@@ -16,7 +16,7 @@ publish_to: 'none' # Remove this line if you wish to publish to pub.dev
 # https://developer.apple.com/library/archive/documentation/General/Reference/InfoPlistKeyReference/Articles/CoreFoundationKeys.html
 # In Windows, build-name is used as the major, minor, and patch parts
 # of the product and file versions while build-number is used as the build suffix.
-version: 0.13.1
+version: 0.14.0
 
 environment:
   sdk: ^3.11.1
@@ -52,6 +52,7 @@ dependencies:
   html: ^0.15.6
   cached_network_image:  ^3.4.1
   package_info_plus: ^8.3.1
+  font_awesome_flutter: ^11.0.0
 
 dev_dependencies:
   flutter_test:
@@ -81,11 +82,12 @@ flutter:
     # - res/alias.json
     # - res/location.json
     - res/icon.png
+    - res/zsm.png
     # - res/maimaiproxy.json
     # - res/maimai-prober-proxy.yaml
     - res/maimaiproxy_copy.json
-    - res/fnt/
-    - res/fnt/font.zip
+    # - res/fnt/
+    # - res/fnt/font.zip
     - res/complete/
     - res/name/
     - res/rank/

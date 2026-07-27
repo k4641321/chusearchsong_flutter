@@ -139,20 +139,25 @@ Future<List<List<Widget>>> songRecommendation({
     for (var i in filterSongs) {
       for (var j in i['difficulties']) {
         if (expectedScore == '' &&
+            //大于最低Rating
             calculatorRating(
                   scorestr: rankScore(rank: rank).toString(),
                   diffstr: j['level_value'].toString(),
                 ) >
                 double.parse(minRating) &&
+            //版本号符合
             version.contains(j['version'])) {
           resultsongs.add(i);
         } else if (expectedScore != '' &&
+            //大于最低Rating
             calculatorRating(
                   scorestr: rankScore(rank: rank).toString(),
                   diffstr: j['level_value'].toString(),
                 ) >
                 double.parse(minRating) &&
+            //版本号符合
             version.contains(j['version']) &&
+            //大于预吃分数
             (calculatorRating(
                       scorestr: rankScore(rank: rank).toString(),
                       diffstr: j['level_value'].toString(),
@@ -168,6 +173,10 @@ Future<List<List<Widget>>> songRecommendation({
     // print(resultsongs);
     //构建组件
     int widgetlistcout = 0;
+    if (expectedScore == '') {
+      expectedScore = '0';
+    }
+
     for (var i in resultsongs) {
       List<dynamic> songInfoDiffs = [];
       String versionname = '';
@@ -177,11 +186,20 @@ Future<List<List<Widget>>> songRecommendation({
         }
       }
       for (var k in i['difficulties']) {
-        if ((calculatorRating(
-              scorestr: rankScore(rank: rank).toString(),
-              diffstr: k['level_value'].toString(),
-            )) >
-            double.parse(minRating)) {
+        if (
+        //大于最低Rating
+        (calculatorRating(
+                  scorestr: rankScore(rank: rank).toString(),
+                  diffstr: k['level_value'].toString(),
+                )) >
+                double.parse(minRating) &&
+            //大于预吃分数
+            calculatorRating(
+                      scorestr: rankScore(rank: rank).toString(),
+                      diffstr: k['level_value'].toString(),
+                    ) -
+                    double.parse(minRating) >=
+                double.parse(expectedScore)) {
           songInfoDiffs.add(
             '${k['level_value']} -> ${calculatorRating(
               scorestr: rankScore(rank: rank).toString(),

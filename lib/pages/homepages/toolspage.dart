@@ -14,6 +14,8 @@ import '../toolspages/ratingtrendpages.dart';
 import '../toolspages/updatescorepage.dart';
 import '../toolspages/generateb50page.dart';
 import '../toolspages/playerinfopage.dart';
+import '../toolspages/randomb50page.dart';
+import '../toolspages/levelcompletionprogresspage.dart';
 
 //主窗口
 class ToolPage extends StatefulWidget {
@@ -288,7 +290,7 @@ class _ToolPageState extends State<ToolPage> {
                       child: Card(
                         child: TextButton.icon(
                           label: Text(
-                            '容错计算',
+                            'B50生成',
                             style: TextStyle(
                               color: Theme.of(context).colorScheme.onSurface,
                             ),
@@ -296,14 +298,11 @@ class _ToolPageState extends State<ToolPage> {
                           onPressed: () => Navigator.push(
                             context,
                             MaterialPageRoute(
-                              builder: (context) =>
-                                  const FaulttoterantcomputationPage(
-                                    totaltap: 0,
-                                  ),
+                              builder: (context) => GenerateB50Page(),
                             ),
                           ),
                           icon: Icon(
-                            Icons.shield_outlined,
+                            Icons.image_outlined,
                             color: Theme.of(context).colorScheme.onSurface,
                           ),
                         ),
@@ -315,7 +314,7 @@ class _ToolPageState extends State<ToolPage> {
                       child: Card(
                         child: TextButton.icon(
                           label: Text(
-                            'B50生成',
+                            '随机B50生成',
                             style: TextStyle(
                               color: Theme.of(context).colorScheme.onSurface,
                             ),
@@ -323,7 +322,7 @@ class _ToolPageState extends State<ToolPage> {
                           onPressed: () => Navigator.push(
                             context,
                             MaterialPageRoute(
-                              builder: (context) => GenerateB50Page(),
+                              builder: (context) => Randomb50page(),
                             ),
                           ),
                           icon: Icon(
@@ -404,6 +403,33 @@ class _ToolPageState extends State<ToolPage> {
                       child: Card(
                         child: TextButton.icon(
                           label: Text(
+                            '容错计算',
+                            style: TextStyle(
+                              color: Theme.of(context).colorScheme.onSurface,
+                            ),
+                          ),
+                          onPressed: () => Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) =>
+                                  const FaulttoterantcomputationPage(
+                                    totaltap: 0,
+                                  ),
+                            ),
+                          ),
+                          icon: Icon(
+                            Icons.shield_outlined,
+                            color: Theme.of(context).colorScheme.onSurface,
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                  Expanded(
+                    child: InkWell(
+                      child: Card(
+                        child: TextButton.icon(
+                          label: Text(
                             '吃分推荐',
                             style: TextStyle(
                               color: Theme.of(context).colorScheme.onSurface,
@@ -424,6 +450,60 @@ class _ToolPageState extends State<ToolPage> {
                       ),
                     ),
                   ),
+                ],
+              ),
+              Row(
+                children: [
+                  Expanded(
+                    child: InkWell(
+                      child: Card(
+                        child: TextButton.icon(
+                          label: Text(
+                            '等级完成进度',
+                            style: TextStyle(
+                              color: Theme.of(context).colorScheme.onSurface,
+                            ),
+                          ),
+                          onPressed: () => Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) =>
+                                  LevelCompletionProgressPage(),
+                            ),
+                          ),
+                          icon: Icon(
+                            Icons.fact_check_outlined,
+                            color: Theme.of(context).colorScheme.onSurface,
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                  // Expanded(
+                  //   child: InkWell(
+                  //     child: Card(
+                  //       child: TextButton.icon(
+                  //         label: Text(
+                  //           '吃分推荐',
+                  //           style: TextStyle(
+                  //             color: Theme.of(context).colorScheme.onSurface,
+                  //           ),
+                  //         ),
+                  //         onPressed: () => Navigator.push(
+                  //           context,
+                  //           MaterialPageRoute(
+                  //             builder: (context) =>
+                  //                 const SongRecommendationPage(),
+                  //           ),
+                  //         ),
+                  //         icon: Icon(
+                  //           Icons.recommend_outlined,
+                  //           color: Theme.of(context).colorScheme.onSurface,
+                  //         ),
+                  //       ),
+                  //     ),
+                  //   ),
+                  // ),
                 ],
               ),
             ],

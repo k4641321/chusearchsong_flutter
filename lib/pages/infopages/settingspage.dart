@@ -10,7 +10,9 @@ import 'settingspage/texttranslatesettingspage.dart';
 import 'settingspage/mapsettingspage.dart';
 
 class SettingsPage extends StatefulWidget {
-  const SettingsPage({super.key});
+  final VoidCallback? onThemeChanged;
+
+  const SettingsPage({super.key, this.onThemeChanged});
 
   @override
   State<SettingsPage> createState() => _SettingsPageState();
@@ -19,6 +21,61 @@ class SettingsPage extends StatefulWidget {
 class _SettingsPageState extends State<SettingsPage> {
   final ScrollController _scrollController = ScrollController();
   bool chartproxy = false;
+  String darkmode = 'light';
+  Future<void> darkmodechange() async {
+    final path = await getApplicationSupportDirectory();
+    final config = File('${path.path}/config.json');
+    final configStr = config.readAsStringSync();
+    final configJson = json.decode(configStr);
+    if (darkmode == 'light') {
+      darkmode = 'dark';
+      try {
+        configJson['theme'] = 'dark';
+        config.writeAsStringSync(json.encode(configJson));
+      } catch (e) {
+        log('$e', name: 'infopage', level: 500);
+        if (!mounted) return;
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(SnackBar(content: Text('切换失败')));
+      }
+    } else if (darkmode == 'dark') {
+      darkmode = 'light';
+      try {
+        configJson['theme'] = 'light';
+        config.writeAsStringSync(json.encode(configJson));
+      } catch (e) {
+        log('$e', name: 'infopage', level: 500);
+        if (!mounted) return;
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(SnackBar(content: Text('切换失败')));
+      }
+    }
+    if (!mounted) return;
+    setState(() {});
+    widget.onThemeChanged?.call();
+  }
+
+  Future<void> confirmdarkmode() async {
+    final path = await getApplicationSupportDirectory();
+    try {
+      String configStr = await File('${path.path}/config.json').readAsString();
+      Map<String, dynamic> config = json.decode(configStr);
+      if (config['theme'] == 'light') {
+        darkmode = 'light';
+      } else if (config['theme'] == 'dark') {
+        darkmode = 'dark';
+      }
+      if (!mounted) return;
+      setState(() {});
+    } catch (e) {
+      if (!mounted) return;
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text('错误，配置文件不存在')));
+    }
+  }
 
   Future<void> init() async {
     final path = await getApplicationSupportDirectory();
@@ -34,6 +91,7 @@ class _SettingsPageState extends State<SettingsPage> {
   void initState() {
     super.initState();
     init();
+    confirmdarkmode();
   }
 
   @override
@@ -227,6 +285,63 @@ class _SettingsPageState extends State<SettingsPage> {
                           context,
                           MaterialPageRoute(
                             builder: (context) => LxnsSettingsPage(),
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: [
+                    Expanded(
+                      child: InkWell(
+                        onTap: darkmodechange,
+                        child: Card(
+                          color: Theme.of(
+                            context,
+                          ).colorScheme.primaryContainer.withAlpha(150),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.all(
+                              Radius.circular(0.0),
+                            ),
+                          ),
+                          child: Padding(
+                            padding: EdgeInsetsGeometry.all(10),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              children: [
+                                Padding(
+                                  padding: EdgeInsetsGeometry.only(
+                                    right: 10,
+                                    left: 5,
+                                  ),
+                                  child: Icon(Icons.brightness_4, size: 35),
+                                ),
+                                Column(
+                                  mainAxisAlignment: MainAxisAlignment.start,
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                      '主题模式',
+                                      textAlign: TextAlign.center,
+                                      style: TextStyle(
+                                        fontSize: 18,
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                    ),
+                                    Text(
+                                      '切换主题模式,当前为：$darkmode',
+                                      style: TextStyle(
+                                        color: Theme.of(
+                                          context,
+                                        ).colorScheme.onSurfaceVariant,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ],
+                            ),
                           ),
                         ),
                       ),

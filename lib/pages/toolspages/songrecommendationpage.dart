@@ -46,6 +46,7 @@ class _SongRecommendationPageState extends State<SongRecommendationPage>
     Widget genreDropdownMenu1 = await buildGenreDropdownMenu(
       initialSelection: selectedGenre,
       onSelected: (String? value) {
+        if (!context.mounted) return;
         setState(() {
           selectedGenre = value;
         });
@@ -61,6 +62,7 @@ class _SongRecommendationPageState extends State<SongRecommendationPage>
     Widget versionDropdownMenu1 = await buildVersionDropdownMenu(
       initialSelection: selectedVersion,
       onSelected: (String? value) {
+        if (!context.mounted) return;
         setState(() {
           selectedVersion = value;
         });
@@ -74,6 +76,7 @@ class _SongRecommendationPageState extends State<SongRecommendationPage>
       },
     );
     if (!mounted) return;
+    if (!context.mounted) return;
     setState(() {
       genreDropdownMenu = genreDropdownMenu1;
       versionDropdownMenu = versionDropdownMenu1;
@@ -155,6 +158,7 @@ class _SongRecommendationPageState extends State<SongRecommendationPage>
           );
         }
       }
+      if (!context.mounted) return;
       setState(() {
         if (_tabController.index == 0) {
           oldSongWidget = ListView.builder(
@@ -173,6 +177,7 @@ class _SongRecommendationPageState extends State<SongRecommendationPage>
       // print(oldSongWidgetList);
     } catch (e, strack) {
       log('$e\n$strack', name: 'songrecommendationpage.dart', level: 1000);
+      if (!context.mounted) return;
       setState(() {
         oldSongWidget = Text('错误 $e\n$strack');
       });
@@ -183,11 +188,13 @@ class _SongRecommendationPageState extends State<SongRecommendationPage>
     try {
       double? result = await initminRating(isNew: isNew);
       if (result == null) {
+        if (!context.mounted) return;
         setState(() {
           _minRatingController.text = '';
           return;
         });
       } else {
+        if (!context.mounted) return;
         setState(() {
           _minRatingController.text = result.toString();
         });
@@ -234,6 +241,7 @@ class _SongRecommendationPageState extends State<SongRecommendationPage>
                   child: buildDifficultyDownDropdownMenu(
                     initialSelection: selectedDifficultyDown,
                     onSelected: (String? value) {
+                      if (!context.mounted) return;
                       setState(() {
                         selectedDifficultyDown = value;
                       });
@@ -251,6 +259,7 @@ class _SongRecommendationPageState extends State<SongRecommendationPage>
                   child: buildDifficultyUpDropdownMenu(
                     initialSelection: selectedDifficultyUp,
                     onSelected: (String? value) {
+                      if (!context.mounted) return;
                       setState(() {
                         selectedDifficultyUp = value;
                       });
@@ -302,6 +311,7 @@ class _SongRecommendationPageState extends State<SongRecommendationPage>
                   child: buildRankDropdownMenu(
                     initialSelection: selectedRank,
                     onSelected: (String? value) {
+                      if (!context.mounted) return;
                       setState(() {
                         selectedRank = value;
                       });
@@ -320,6 +330,7 @@ class _SongRecommendationPageState extends State<SongRecommendationPage>
                   child: buildIfPlayDropdownMenu(
                     initialSelection: selectedifPlay,
                     onSelected: (String? value) {
+                      if (!context.mounted) return;
                       setState(() {
                         selectedifPlay = value;
                       });
@@ -342,12 +353,18 @@ class _SongRecommendationPageState extends State<SongRecommendationPage>
                   child: TextField(
                     onChanged: (value) {
                       isMinRatingChanged = true;
+                      calculate();
                     },
                     controller: _minRatingController,
                   ),
                 ),
                 Text('预吃分数：'),
-                Expanded(child: TextField(controller: _preScoreController)),
+                Expanded(
+                  child: TextField(
+                    controller: _preScoreController,
+                    onChanged: (value) => calculate(),
+                  ),
+                ),
               ],
             ),
             Row(
@@ -374,6 +391,7 @@ class _SongRecommendationPageState extends State<SongRecommendationPage>
                   if (value == 0) {
                     init(isNew: false);
                     if (oldSongWidgetList.isNotEmpty) {
+                      if (!context.mounted) return;
                       setState(() {
                         oldSongWidget = ListView.builder(
                           itemBuilder: (context, index) =>
@@ -386,6 +404,7 @@ class _SongRecommendationPageState extends State<SongRecommendationPage>
                   } else if (value == 1) {
                     init(isNew: true);
                     if (newSongWidgetList.isNotEmpty) {
+                      if (!context.mounted) return;
                       setState(() {
                         newSongWidget = ListView.builder(
                           itemBuilder: (context, index) =>
@@ -429,6 +448,7 @@ class _SongRecommendationPageState extends State<SongRecommendationPage>
                   if (oldpage < 0) {
                     oldpage = 0;
                   }
+                  if (!context.mounted) return;
                   setState(() {
                     oldSongWidget = ListView.builder(
                       itemBuilder: (context, index) =>
@@ -443,6 +463,7 @@ class _SongRecommendationPageState extends State<SongRecommendationPage>
                   if (newpage < 0) {
                     newpage = 0;
                   }
+                  if (!context.mounted) return;
                   setState(() {
                     newSongWidget = ListView.builder(
                       itemBuilder: (context, index) =>
@@ -473,6 +494,7 @@ class _SongRecommendationPageState extends State<SongRecommendationPage>
                     } else if (oldpage >= oldSongWidgetList.length) {
                       oldpage = oldSongWidgetList.length - 1;
                     }
+                    if (!context.mounted) return;
                     setState(() {
                       oldSongWidget = ListView.builder(
                         itemBuilder: (context, index) =>
@@ -487,6 +509,7 @@ class _SongRecommendationPageState extends State<SongRecommendationPage>
                     } else if (newpage >= newSongWidgetList.length) {
                       newpage = newSongWidgetList.length - 1;
                     }
+                    if (!context.mounted) return;
                     setState(() {
                       newSongWidget = ListView.builder(
                         itemBuilder: (context, index) =>
@@ -510,6 +533,7 @@ class _SongRecommendationPageState extends State<SongRecommendationPage>
                   if (oldpage >= oldSongWidgetList.length) {
                     oldpage = oldSongWidgetList.length - 1;
                   }
+                  if (!context.mounted) return;
                   setState(() {
                     oldSongWidget = ListView.builder(
                       itemBuilder: (context, index) =>
@@ -523,6 +547,7 @@ class _SongRecommendationPageState extends State<SongRecommendationPage>
                   if (newpage >= newSongWidgetList.length) {
                     newpage = newSongWidgetList.length - 1;
                   }
+                  if (!context.mounted) return;
                   setState(() {
                     newSongWidget = ListView.builder(
                       itemBuilder: (context, index) =>

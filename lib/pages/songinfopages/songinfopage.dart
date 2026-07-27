@@ -133,6 +133,7 @@ class _SongInfoPageState extends State<SongInfoPage> {
       id: widget.songbasedata['id'],
       context: context,
     );
+    if (!mounted) return;
     setState(() {
       relatedCollectibles = result;
     });
@@ -143,6 +144,7 @@ class _SongInfoPageState extends State<SongInfoPage> {
     List<Widget> result = await returnSongInformation(
       songid: widget.songbasedata['id'],
     );
+    if (!mounted) return;
     setState(() {
       information = result;
     });
@@ -180,6 +182,7 @@ class _SongInfoPageState extends State<SongInfoPage> {
         0,
         Row(children: [Icon(Icons.public), Text('World\'s End信息')]),
       );
+      if (!mounted) return;
       setState(() {
         worldsendinformation = Row(
           children: [
@@ -208,11 +211,13 @@ class _SongInfoPageState extends State<SongInfoPage> {
         color: Theme.of(context).colorScheme.secondaryContainer,
         context: context,
       );
+      if (!mounted) return;
       setState(() {
         difficultyChartInfo = result;
       });
     } catch (e, strack) {
       log('$e \n $strack', name: 'songinfopage.dart', level: 1000);
+      if (!mounted) return;
       setState(() {
         difficultyChartInfo = Text('错误 $e \n $strack');
       });

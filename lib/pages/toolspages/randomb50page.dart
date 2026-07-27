@@ -1,21 +1,21 @@
-﻿import 'dart:developer';
+import 'dart:developer';
 import 'dart:io';
 import 'package:path_provider/path_provider.dart';
-import '../../function/toolsfun/generateb50.dart';
+import '../../function/toolsfun/randomb50pagefun.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'dart:ui' as ui;
 import 'package:file_picker/file_picker.dart';
 import 'package:share_plus/share_plus.dart';
 
-class GenerateB50Page extends StatefulWidget {
-  const GenerateB50Page({super.key});
+class Randomb50page extends StatefulWidget {
+  const Randomb50page({super.key});
 
   @override
-  State<GenerateB50Page> createState() => _GenerateB50PageState();
+  State<Randomb50page> createState() => _Randomb50pageState();
 }
 
-class _GenerateB50PageState extends State<GenerateB50Page> {
+class _Randomb50pageState extends State<Randomb50page> {
   final ScrollController _controller = ScrollController();
   final ScrollController _controller2 = ScrollController();
 
@@ -40,7 +40,7 @@ class _GenerateB50PageState extends State<GenerateB50Page> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text('B50生成')),
+      appBar: AppBar(title: Text('随机B50生成')),
       body: Scrollbar(
         controller: _controller,
         child: SingleChildScrollView(
@@ -61,7 +61,7 @@ class _GenerateB50PageState extends State<GenerateB50Page> {
                             b50Body = Text('生成中...');
                           });
                           try {
-                            Widget result = await generateb50Body(
+                            Widget result = await randomb50Body(
                               context: context,
                             );
                             setState(() {
@@ -73,8 +73,8 @@ class _GenerateB50PageState extends State<GenerateB50Page> {
                             ).showSnackBar(SnackBar(content: Text('完成')));
                           } catch (e, strack) {
                             log(
-                              '$e',
-                              name: 'generateb50page.dart',
+                              '$e \n $strack',
+                              name: 'randomb50page.dart',
                               level: 1000,
                             );
                             setState(() {
@@ -109,14 +109,14 @@ class _GenerateB50PageState extends State<GenerateB50Page> {
                               ).create(recursive: true);
                             }
                             File(
-                              '${path.path}/tmp/b50.png',
+                              '${path.path}/tmp/randomb50.png',
                             ).writeAsBytesSync(pngBytes!);
                             if (!context.mounted) return;
                             final platform = Theme.of(context).platform;
                             if (platform == TargetPlatform.windows) {
                               await FilePicker.saveFile(
-                                dialogTitle: '保存B50',
-                                fileName: 'b50.png',
+                                dialogTitle: '保存随机B50',
+                                fileName: 'randomb50.png',
                                 bytes: pngBytes,
                                 type: FileType.custom,
                                 allowedExtensions: ['png'],
@@ -124,16 +124,14 @@ class _GenerateB50PageState extends State<GenerateB50Page> {
                             } else {
                               await SharePlus.instance.share(
                                 ShareParams(
-                                  files: [XFile('${path.path}/tmp/b50.png')],
+                                  files: [
+                                    XFile('${path.path}/tmp/randomb50.png'),
+                                  ],
                                 ),
                               );
                             }
                           } catch (e) {
-                            log(
-                              '$e',
-                              name: 'generateb50page.dart',
-                              level: 1000,
-                            );
+                            log('$e', name: 'randomb50page.dart', level: 1000);
                           }
                         },
                         child: Text('保存B50'),

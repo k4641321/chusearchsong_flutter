@@ -1,9 +1,10 @@
-﻿import 'dart:io';
+import 'dart:io';
 import 'package:chusearchsong_flutter/function/fun.dart';
 import 'package:flutter/material.dart';
 import 'package:path_provider/path_provider.dart';
 import '../request.dart';
 import 'dart:convert';
+import 'dart:math';
 
 Color diffcolor({required int diffindex}) {
   switch (diffindex) {
@@ -124,18 +125,33 @@ String? fullcomboImg({required String fullcombo}) {
   }
 }
 
-Future<Widget> generateb50Body({required BuildContext context}) async {
-  //请求b50数据
-  String b50datastr = await requestB50();
-  Map<String, dynamic> b50data = (jsonDecode(b50datastr) as Map)['data'];
+Future<Widget> randomb50Body({required BuildContext context}) async {
+  final path = await getApplicationSupportDirectory();
+  String songdatastr = await File('${path.path}/res/songs.json').readAsString();
+  Map<String, dynamic> songsdata = jsonDecode(songdatastr);
+  //请求全曲成绩数据
+  String allsocresdatastr = await requestScore(token: await returnlxnstoken());
+  List allscoredata = (jsonDecode(allsocresdatastr) as Map)['data'];
+  //开抽
+  List randomb50;
+  final random = List.from(allscoredata);
+  random.shuffle(Random());
+  randomb50 = [];
+  for (var i = 0; i < 50; i++) {
+    var score = random.removeAt(0); // 取出并移除第一个元素
+    if (score['level_index'] != 5) {
+      randomb50.add(score);
+    } else {
+      i--;
+    }
+  }
+  // print(randomb50);
   //请求玩家信息
   String playerdatastr = await requestPlayerInfo();
   Map<String, dynamic> playerdata = (jsonDecode(playerdatastr) as Map)['data'];
   //先定义所需的变量
-  List<Widget> b30body = [];
-  Widget b30 = Column(children: b30body);
-  List<Widget> b20body = [];
-  Widget b20 = Column(children: b20body);
+  List<Widget> b50body = [];
+  Widget b50 = Column(children: b50body);
   Widget title = SizedBox(
     height: 170,
     child: Row(
@@ -202,7 +218,7 @@ Future<Widget> generateb50Body({required BuildContext context}) async {
     ),
   );
   // final ScrollController _scrollController = ScrollController();
-  //b30文字
+  //b50文字
   Widget b30text = Row(
     mainAxisAlignment: MainAxisAlignment.center,
     children: [
@@ -216,28 +232,7 @@ Future<Widget> generateb50Body({required BuildContext context}) async {
             right: 20,
           ),
           child: Text(
-            'B30',
-            style: TextStyle(fontSize: 30, color: Colors.white),
-          ),
-        ),
-      ),
-    ],
-  );
-  //b20文字
-  Widget b20text = Row(
-    mainAxisAlignment: MainAxisAlignment.center,
-    children: [
-      Card(
-        color: Color.fromARGB(255, 0, 64, 99),
-        child: Padding(
-          padding: EdgeInsetsGeometry.only(
-            top: 5,
-            bottom: 5,
-            left: 20,
-            right: 20,
-          ),
-          child: Text(
-            'B20',
+            'B50',
             style: TextStyle(fontSize: 30, color: Colors.white),
           ),
         ),
@@ -249,20 +244,20 @@ Future<Widget> generateb50Body({required BuildContext context}) async {
     mainAxisAlignment: MainAxisAlignment.center,
     children: [
       Text(
-        '此B50由chusearchsong（中二查歌）生成，生成时间：${DateTime.now()}',
+        '此随机B50由chusearchsong（中二查歌）生成，生成时间：${DateTime.now()}',
         style: TextStyle(fontWeight: FontWeight.bold, color: Colors.black),
       ),
     ],
   );
-  //b30绘制
-  List<Widget> b30rowbody = [];
-  Widget b30row = Row(
+  //b50绘制
+  List<Widget> b50rowbody = [];
+  Widget b50row = Row(
     mainAxisAlignment: MainAxisAlignment.center,
-    children: b30rowbody,
+    children: b50rowbody,
   );
   int row = 0;
   int songcount = 1;
-  for (var i in b50data['bests']) {
+  for (var i in randomb50) {
     String songname;
     if ((i['song_name'] as String).length > 18) {
       songname = i['song_name'].substring(0, 18) + '...';
@@ -270,14 +265,9 @@ Future<Widget> generateb50Body({required BuildContext context}) async {
       songname = i['song_name'];
     }
 
-    b30rowbody.add(
+    b50rowbody.add(
       InkWell(
         onTap: () async {
-          final path = await getApplicationSupportDirectory();
-          String songdatastr = await File(
-            '${path.path}/res/songs.json',
-          ).readAsString();
-          Map<String, dynamic> songsdata = jsonDecode(songdatastr);
           Map<String, dynamic>? songdata;
           String? versionname;
           for (var j in songsdata['songs']) {
@@ -394,164 +384,12 @@ Future<Widget> generateb50Body({required BuildContext context}) async {
       ),
     );
     if (row == 9) {
-      b30body.add(b30row);
+      b50body.add(b50row);
       row = 0;
-      b30rowbody = [];
-      b30row = Row(
+      b50rowbody = [];
+      b50row = Row(
         mainAxisAlignment: MainAxisAlignment.center,
-        children: b30rowbody,
-      );
-    } else {
-      row++;
-    }
-    songcount++;
-  }
-  //b20绘制
-  List<Widget> b20rowbody = [];
-  Widget b20row = Row(
-    mainAxisAlignment: MainAxisAlignment.center,
-    children: b20rowbody,
-  );
-  row = 0;
-  for (var i in b50data['new_bests']) {
-    String songname;
-    if ((i['song_name'] as String).length > 18) {
-      songname = i['song_name'].substring(0, 18) + '...';
-    } else {
-      songname = i['song_name'];
-    }
-
-    b20rowbody.add(
-      InkWell(
-        onTap: () async {
-          final path = await getApplicationSupportDirectory();
-          String songdatastr = await File(
-            '${path.path}/res/songs.json',
-          ).readAsString();
-          Map<String, dynamic> songsdata = jsonDecode(songdatastr);
-          Map<String, dynamic>? songdata;
-          String? versionname;
-          for (var j in songsdata['songs']) {
-            if (i['id'] == j['id']) {
-              songdata = j;
-              for (var k in songsdata['versions']) {
-                if (j['version'] == k['version']) {
-                  versionname = k['title'];
-                  break;
-                }
-              }
-              break;
-            }
-          }
-          if (!context.mounted) return;
-          if (songdata == null || versionname == null) return;
-          await interSongInfo(
-            songbasedata: songdata,
-            context: context,
-            versionname: versionname,
-          );
-        },
-        child: SizedBox(
-          width: 292,
-          height: 225,
-          child: Padding(
-            padding: EdgeInsetsGeometry.all(8),
-            child: Card(
-              child: Column(
-                // crossAxisAlignment: CrossAxisAlignment.start,
-                // mainAxisAlignment: MainAxisAlignment.start,
-                children: [
-                  Card(
-                    color: diffcolor(diffindex: i['level_index']),
-                    child: Row(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      mainAxisAlignment: MainAxisAlignment.spaceAround,
-                      children: [
-                        Padding(
-                          padding: EdgeInsetsGeometry.only(
-                            top: 6,
-                            // left: 6,
-                            bottom: 6,
-                            // right: 6,
-                          ),
-                          child: Image.network(
-                            'https://assets2.lxns.net/chunithm/jacket/${i['id']}.png',
-                            width: 135,
-                            height: 135,
-                            errorBuilder: (context, error, stackTrace) {
-                              return const Text('图片加载失败');
-                            },
-                          ),
-                        ),
-                        Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          children: [
-                            Text(
-                              '${i['level'].toString()}                  #$songcount',
-                              // style: TextStyle(fontSize: ),
-                              textAlign: TextAlign.end,
-                              style: TextStyle(color: Colors.white),
-                            ),
-
-                            Text(
-                              i['score'].toString(),
-                              style: TextStyle(
-                                fontSize: 25,
-                                color: Colors.white,
-                              ),
-                            ),
-                            Text(
-                              'Rating: ${i['rating'].toString().length > 5 ? i['rating'].toString().substring(0, 5) : i['rating'].toString()}',
-                              style: TextStyle(
-                                fontSize: 15,
-                                color: Colors.white,
-                              ),
-                            ),
-                            Image.asset(rankImg(rank: i['rank']), height: 30),
-                            Image.asset(
-                              clearImg(clear: i['clear']),
-                              height: 18,
-                            ),
-                            fullcomboImg(fullcombo: i['full_combo'] ?? '') !=
-                                    null
-                                ? Image.asset(
-                                    fullcomboImg(fullcombo: i['full_combo'])!,
-                                    height: 18,
-                                  )
-                                : SizedBox.shrink(),
-                          ],
-                        ),
-                      ],
-                    ),
-                  ),
-                  Column(
-                    mainAxisAlignment: MainAxisAlignment.end,
-                    children: [
-                      Text(
-                        songname,
-                        // maxLines: 1,
-                        style: TextStyle(
-                          fontSize: 16,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                    ],
-                  ),
-                ],
-              ),
-            ),
-          ),
-        ),
-      ),
-    );
-    if (row == 9) {
-      b20body.add(b20row);
-      row = 0;
-      b20rowbody = [];
-      b20row = Row(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: b20rowbody,
+        children: b50rowbody,
       );
     } else {
       row++;
@@ -568,9 +406,7 @@ Future<Widget> generateb50Body({required BuildContext context}) async {
         fit: BoxFit.cover,
       ),
     ),
-    child: Center(
-      child: Column(children: [title, b30text, b30, b20text, b20, fontter]),
-    ),
+    child: Center(child: Column(children: [title, b30text, b50, fontter])),
   );
 
   return result;

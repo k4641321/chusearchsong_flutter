@@ -145,7 +145,7 @@ class _ChartViewPageState extends State<ChartViewPage> {
           );
         } else {
           log('使用默认');
-          final stopwatch = Stopwatch()..start();
+
           List charturllist = charturl.split('/');
           // print(charturllist);
           bgurl = [
@@ -168,6 +168,7 @@ class _ChartViewPageState extends State<ChartViewPage> {
           ];
           if (!mounted) return;
           setState(() {
+            // final stopwatch = Stopwatch()..start();
             result = [
               CachedNetworkImage(
                 imageUrl: chartdataurl.join('/'),
@@ -194,13 +195,13 @@ class _ChartViewPageState extends State<ChartViewPage> {
                 ),
               ),
             ];
+            // stopwatch.stop();
+            // log('耗时: ${stopwatch.elapsedMilliseconds}ms');
+            // if (!mounted) return;
+            // ScaffoldMessenger.of(context).showSnackBar(
+            //   SnackBar(content: Text('耗时: ${stopwatch.elapsedMilliseconds}ms')),
+            // );
           });
-          stopwatch.stop();
-          log('耗时: ${stopwatch.elapsedMilliseconds}ms');
-          if (!mounted) return;
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(content: Text('耗时: ${stopwatch.elapsedMilliseconds}ms')),
-          );
         }
       }
     } catch (e, strack) {

@@ -93,6 +93,7 @@ class MyHomePage extends StatefulWidget {
 class _MyHomePageState extends State<MyHomePage> {
   Future<void> showChangesLog() async {
     try {
+      final ScrollController controller = ScrollController();
       final packageinfo = await PackageInfo.fromPlatform();
       Map<String, dynamic> config = await loadConfig();
       if (config['version'] == packageinfo.version &&
@@ -106,8 +107,17 @@ class _MyHomePageState extends State<MyHomePage> {
             title: Text(
               '${changeslog['title']} - ${changeslog['description']}',
             ),
-            content: Text(
-              (changeslog['changes'] as List).join('\n').toString(),
+            content: SizedBox(
+              height: MediaQuery.heightOf(context) * 0.7,
+              child: Scrollbar(
+                controller: controller,
+                child: SingleChildScrollView(
+                  controller: controller,
+                  child: Text(
+                    (changeslog['changes'] as List).join('\n').toString(),
+                  ),
+                ),
+              ),
             ),
           ),
         );
@@ -127,16 +137,10 @@ class _MyHomePageState extends State<MyHomePage> {
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      showChangesLog();
       ifres(context: context);
+      showChangesLog();
     });
   }
-
-  // @override
-  // void didChangeDependencies() {
-  //
-  //   super.didChangeDependencies();
-  // }
 
   String title = '搜索';
   int _currentIndex = 0;
@@ -175,14 +179,8 @@ class _MyHomePageState extends State<MyHomePage> {
             }
           });
         },
-        // backgroundColor: const Color.fromARGB(255, 255, 229, 84),
-        unselectedItemColor: Theme.of(
-          context,
-        ).colorScheme.secondary, //const Color.fromARGB(255, 250, 231, 125),
-        selectedItemColor: Theme.of(
-          context,
-        ).colorScheme.primary, //const Color.fromARGB(255, 255, 217, 0),
-        // fixedColor: const Color.fromARGB(255, 255, 217, 0),
+        unselectedItemColor: Theme.of(context).colorScheme.secondary,
+        selectedItemColor: Theme.of(context).colorScheme.primary,
         items: [
           BottomNavigationBarItem(icon: Icon(Icons.search), label: '搜索'),
           BottomNavigationBarItem(icon: Icon(Icons.favorite), label: '收藏'),

@@ -5,6 +5,8 @@ import 'dart:io';
 import 'package:path_provider/path_provider.dart';
 import '../function/toolsfun/ratingcalculatorpagefun.dart';
 
+//麻痹的，开始学不知道，现在知道可以不用加<String>，来不及改了
+
 String fix2dp(double value) {
   final truncated = (value * 100).truncate();
   final sign = truncated < 0 ? '-' : '';
@@ -81,6 +83,7 @@ Future<Widget> buildVersionDropdownMenu({
     }
   } catch (e) {
     log('创建版本失败 $e 返回默认版本列表');
+
     dropdownMenuEntries = const [
       DropdownMenuEntry<String>(label: '版本', value: '-1'),
       DropdownMenuEntry<String>(label: 'CHUNITHM', value: '10000'),
@@ -133,6 +136,7 @@ Widget buildDifficultyDownDropdownMenu({
     onSelected: onSelected,
     dropdownMenuEntries: const [
       DropdownMenuEntry<String>(label: '难度下限', value: '-1'),
+      DropdownMenuEntry<String>(label: '0', value: '0'),
       DropdownMenuEntry<String>(label: '1', value: '1'),
       DropdownMenuEntry<String>(label: '2', value: '2'),
       DropdownMenuEntry<String>(label: '3', value: '3'),
@@ -175,6 +179,7 @@ Widget buildDifficultyUpDropdownMenu({
     onSelected: onSelected,
     dropdownMenuEntries: const [
       DropdownMenuEntry<String>(label: '难度上限', value: '-1'),
+      DropdownMenuEntry<String>(label: '0', value: '0'),
       DropdownMenuEntry<String>(label: '1', value: '1'),
       DropdownMenuEntry<String>(label: '2', value: '2'),
       DropdownMenuEntry<String>(label: '3', value: '3'),

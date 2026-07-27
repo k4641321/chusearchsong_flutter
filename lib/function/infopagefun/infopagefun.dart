@@ -6,7 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:url_launcher/url_launcher.dart';
 
-Future<void> launchurl({required BuildContext context}) async {
+Future<void> launchgithub({required BuildContext context}) async {
   final githuburl = Uri.parse(
     'https://github.com/k4641321/chusearchsong_flutter',
   );
@@ -74,6 +74,38 @@ Future<void> lanuchdownload({required BuildContext context}) async {
   final githuburl = Uri.parse(
     'https://github.com/k4641321/chusearchsong_flutter/releases/latest',
   );
+  try {
+    if (!await launchUrl(githuburl)) {
+      if (!context.mounted) return;
+      throw Exception('Could not launch $githuburl');
+    }
+  } catch (e) {
+    if (!context.mounted) return;
+    ScaffoldMessenger.of(
+      context,
+    ).showSnackBar(SnackBar(content: Text('无法打开链接')));
+  }
+}
+
+Future<void> lanuchhelpdocs({required BuildContext context}) async {
+  final githuburl = Uri.parse(
+    'https://blog.4641321.xyz/chusearchsong_flutter/',
+  );
+  try {
+    if (!await launchUrl(githuburl)) {
+      if (!context.mounted) return;
+      throw Exception('Could not launch $githuburl');
+    }
+  } catch (e) {
+    if (!context.mounted) return;
+    ScaffoldMessenger.of(
+      context,
+    ).showSnackBar(SnackBar(content: Text('无法打开链接')));
+  }
+}
+
+Future<void> lanuchifdian({required BuildContext context}) async {
+  final githuburl = Uri.parse('https://ifdian.net/a/k4641321');
   try {
     if (!await launchUrl(githuburl)) {
       if (!context.mounted) return;
