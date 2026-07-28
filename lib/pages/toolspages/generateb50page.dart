@@ -1,7 +1,7 @@
 ﻿import 'dart:developer';
 import 'dart:io';
 import 'package:path_provider/path_provider.dart';
-import '../../function/toolsfun/generateb50.dart';
+import '../../function/toolsfun/generateb50fun/generateb50.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'dart:ui' as ui;
@@ -33,6 +33,7 @@ class _GenerateB50PageState extends State<GenerateB50Page> {
   }
 
   Widget b50Body = Text('未生成');
+  String selectedType = 'b50';
 
   @override
   Widget build(BuildContext context) {
@@ -46,22 +47,44 @@ class _GenerateB50PageState extends State<GenerateB50Page> {
           Row(
             children: [
               Expanded(
+                child: buildTypeDropdownMenu(
+                  onSelected: (value) {
+                    selectedType = value;
+                  },
+                ),
+              ),
+            ],
+          ),
+          Row(
+            children: [
+              Expanded(
                 child: TextButton(
                   onPressed: () async {
                     setState(() {
                       b50Body = Text('生成中...');
                     });
                     try {
-                      Widget result = await generateb50Body(context: context);
+                      Widget? result = await selectb50(
+                        b50type: selectedType,
+                        context: context,
+                      );
                       setState(() {
-                        b50Body = result;
+                        if (result != null) {
+                          b50Body = result;
+                        } else {
+                          b50Body = Text('生成失败');
+                        }
                       });
                       if (!context.mounted) return;
                       ScaffoldMessenger.of(
                         context,
                       ).showSnackBar(SnackBar(content: Text('完成')));
                     } catch (e, strack) {
-                      log('$e', name: 'generateb50page.dart', level: 1000);
+                      log(
+                        '$e\n$strack',
+                        name: 'generateb50page.dart',
+                        level: 1000,
+                      );
                       setState(() {
                         b50Body = Text('生成失败 $e\n$strack');
                       });

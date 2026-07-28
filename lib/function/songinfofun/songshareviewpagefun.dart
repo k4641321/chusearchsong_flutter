@@ -3,7 +3,7 @@ import 'dart:developer';
 import 'dart:io';
 
 import 'package:chusearchsong_flutter/function/request.dart';
-import 'package:chusearchsong_flutter/function/toolsfun/generateb50.dart';
+import 'package:chusearchsong_flutter/function/toolsfun/generateb50fun/generateb50.dart';
 import 'package:flutter/material.dart';
 import 'package:path_provider/path_provider.dart';
 

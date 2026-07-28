@@ -22,7 +22,6 @@ class ChartViewPage extends StatefulWidget {
 
 class _ChartViewPageState extends State<ChartViewPage> {
   List<Widget> result = [CircularProgressIndicator()];
-  final ScrollController _scrollController = ScrollController();
 
   //***字符串，国内都是int，还得多写一个函数
   int returnDiffIndex(String diff) {

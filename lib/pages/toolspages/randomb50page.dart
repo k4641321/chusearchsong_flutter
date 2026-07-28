@@ -1,7 +1,7 @@
 import 'dart:developer';
 import 'dart:io';
 import 'package:path_provider/path_provider.dart';
-import '../../function/toolsfun/randomb50pagefun.dart';
+import '../../function/toolsfun/generateb50fun/randomb50pagefun.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'dart:ui' as ui;

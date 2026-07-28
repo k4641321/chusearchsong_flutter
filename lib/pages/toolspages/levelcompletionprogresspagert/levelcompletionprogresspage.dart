@@ -2,7 +2,8 @@ import 'dart:convert';
 import 'dart:developer';
 import 'dart:io';
 
-import 'package:chusearchsong_flutter/function/toolsfun/levelcompletionprogresspagefun.dart';
+import 'package:chusearchsong_flutter/function/toolsfun/levelcompletionprogresspagefun/levelcompletionprogresspagefun.dart';
+import 'package:chusearchsong_flutter/pages/toolspages/levelcompletionprogresspagert/sharelevelcompletionprogresspage.dart';
 import 'package:flutter/material.dart';
 import 'package:path_provider/path_provider.dart';
 
@@ -78,7 +79,23 @@ class _LevelCompletionProgressPageState
           }
         },
       ),
-      appBar: AppBar(title: Text('等级完成进度')),
+      appBar: AppBar(
+        title: Text('等级完成进度'),
+        actions: [
+          IconButton(
+            onPressed: () => Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => Sharelevelcompletionprogresspage(
+                  level: level,
+                  songsdata: songsData,
+                ),
+              ),
+            ),
+            icon: Icon(Icons.share),
+          ),
+        ],
+      ),
       body: Column(
         children: [
           buildLevelDropdownMenu(

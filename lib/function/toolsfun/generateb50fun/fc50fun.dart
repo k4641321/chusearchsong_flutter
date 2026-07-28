@@ -2,9 +2,8 @@ import 'dart:io';
 import 'package:chusearchsong_flutter/function/fun.dart';
 import 'package:flutter/material.dart';
 import 'package:path_provider/path_provider.dart';
-import '../request.dart';
+import '../../request.dart';
 import 'dart:convert';
-import 'dart:math';
 
 Color diffcolor({required int diffindex}) {
   switch (diffindex) {
@@ -125,26 +124,22 @@ String? fullcomboImg({required String fullcombo}) {
   }
 }
 
-Future<Widget> randomb50Body({required BuildContext context}) async {
+Future<Widget> fc50Body({required BuildContext context}) async {
   final path = await getApplicationSupportDirectory();
   String songdatastr = await File('${path.path}/res/songs.json').readAsString();
   Map<String, dynamic> songsdata = jsonDecode(songdatastr);
   //请求全曲成绩数据
   String allsocresdatastr = await requestScore(token: await returnlxnstoken());
   List allscoredata = (jsonDecode(allsocresdatastr) as Map)['data'];
-  //开抽
-  List randomb50;
-  final random = List.from(allscoredata);
-  random.shuffle(Random());
-  randomb50 = [];
-  for (var i = 0; i < 50; i++) {
-    var score = random.removeAt(0); // 取出并移除第一个元素
-    if (score['level_index'] != 5) {
-      randomb50.add(score);
-    } else {
-      i--;
+  //查找所有AJ成绩
+  List fcb50 = [];
+  for (var i in allscoredata) {
+    if (i['full_combo'] == 'fullcombo') {
+      fcb50.add(i);
     }
   }
+  fcb50.sort((a, b) => b['rating'].compareTo(a['rating']));
+  // print(fcb50);
   // print(randomb50);
   //请求玩家信息
   String playerdatastr = await requestPlayerInfo();
@@ -232,7 +227,7 @@ Future<Widget> randomb50Body({required BuildContext context}) async {
             right: 20,
           ),
           child: Text(
-            'B50',
+            'B30',
             style: TextStyle(fontSize: 30, color: Colors.white),
           ),
         ),
@@ -257,7 +252,7 @@ Future<Widget> randomb50Body({required BuildContext context}) async {
   );
   int row = 0;
   int songcount = 1;
-  for (var i in randomb50) {
+  for (var i in fcb50) {
     String songname;
     if ((i['song_name'] as String).length > 18) {
       songname = i['song_name'].substring(0, 18) + '...';
@@ -395,6 +390,9 @@ Future<Widget> randomb50Body({required BuildContext context}) async {
       row++;
     }
     songcount++;
+  }
+  if (b50rowbody.isNotEmpty) {
+    b50body.add(b50row);
   }
   //背景绘制
   Widget result = Container(

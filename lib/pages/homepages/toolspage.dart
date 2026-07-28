@@ -15,7 +15,7 @@ import '../toolspages/updatescorepage.dart';
 import '../toolspages/generateb50page.dart';
 import '../toolspages/playerinfopage.dart';
 import '../toolspages/randomb50page.dart';
-import '../toolspages/levelcompletionprogresspage.dart';
+import '../toolspages/levelcompletionprogresspagert/levelcompletionprogresspage.dart';
 
 //主窗口
 class ToolPage extends StatefulWidget {
@@ -290,7 +290,7 @@ class _ToolPageState extends State<ToolPage> {
                       child: Card(
                         child: TextButton.icon(
                           label: Text(
-                            'B50生成',
+                            '各种B50生成',
                             style: TextStyle(
                               color: Theme.of(context).colorScheme.onSurface,
                             ),
@@ -309,30 +309,30 @@ class _ToolPageState extends State<ToolPage> {
                       ),
                     ),
                   ),
-                  Expanded(
-                    child: InkWell(
-                      child: Card(
-                        child: TextButton.icon(
-                          label: Text(
-                            '随机B50生成',
-                            style: TextStyle(
-                              color: Theme.of(context).colorScheme.onSurface,
-                            ),
-                          ),
-                          onPressed: () => Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => Randomb50page(),
-                            ),
-                          ),
-                          icon: Icon(
-                            Icons.image_outlined,
-                            color: Theme.of(context).colorScheme.onSurface,
-                          ),
-                        ),
-                      ),
-                    ),
-                  ),
+                  // Expanded(
+                  //   child: InkWell(
+                  //     child: Card(
+                  //       child: TextButton.icon(
+                  //         label: Text(
+                  //           '随机B50生成',
+                  //           style: TextStyle(
+                  //             color: Theme.of(context).colorScheme.onSurface,
+                  //           ),
+                  //         ),
+                  //         onPressed: () => Navigator.push(
+                  //           context,
+                  //           MaterialPageRoute(
+                  //             builder: (context) => Randomb50page(),
+                  //           ),
+                  //         ),
+                  //         icon: Icon(
+                  //           Icons.image_outlined,
+                  //           color: Theme.of(context).colorScheme.onSurface,
+                  //         ),
+                  //       ),
+                  //     ),
+                  //   ),
+                  // ),
                 ],
               ),
               Row(
