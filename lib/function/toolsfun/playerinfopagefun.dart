@@ -33,7 +33,7 @@ Color returnTrophyBackgroundColor(String color) => switch (color) {
   'copper' => Colors.deepOrange.withAlpha(30),
   'silver' => Colors.grey.withAlpha(30),
   'gold' => Colors.yellow.withAlpha(30),
-  'platinum' => Colors.amber.withAlpha(30),
+  'platina' => Colors.amber.withAlpha(30),
   'rainbow' => Colors.purpleAccent.withAlpha(30),
   _ => Colors.white.withAlpha(30),
 };
@@ -43,7 +43,7 @@ Color returnTrophyColor(String color) => switch (color) {
   'copper' => Colors.deepOrange,
   'silver' => Colors.grey,
   'gold' => Colors.yellow,
-  'platinum' => Colors.amber,
+  'platina' => Colors.amber,
   'rainbow' => Colors.purpleAccent,
   _ => Colors.white,
 };

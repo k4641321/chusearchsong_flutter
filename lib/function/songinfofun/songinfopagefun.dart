@@ -297,7 +297,10 @@ Future<List<Widget>> returnDiffTabBarView({
   return result;
 }
 
-Future<List<Widget>> returnSongInformation({required int songid}) async {
+Future<List<Widget>> returnSongInformation({
+  required int songid,
+  required BuildContext context,
+}) async {
   try {
     List<Widget> information = [];
     Map<String, dynamic> songInfo = {};
@@ -317,9 +320,13 @@ Future<List<Widget>> returnSongInformation({required int songid}) async {
       }
       if (songInfo.keys.contains('rights')) {
         information.add(
-          Text(
-            '版权: ${songInfo['rights']}',
-            style: const TextStyle(fontSize: 15),
+          InkWell(
+            onLongPress: () =>
+                copytext(text: songInfo['rights'], context: context),
+            child: Text(
+              '版权: ${songInfo['rights']}',
+              style: const TextStyle(fontSize: 15),
+            ),
           ),
         );
       }

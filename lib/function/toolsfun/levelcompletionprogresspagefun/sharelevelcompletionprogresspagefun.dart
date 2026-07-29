@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:io';
 
 import 'package:chusearchsong_flutter/function/fun.dart';
 import 'package:chusearchsong_flutter/function/request.dart';
@@ -99,16 +100,27 @@ String rankImg({required String rank}) {
   }
 }
 
+String cuttitle({required String title}) {
+  if (title.length > 8) {
+    return '${title.substring(0, 8)}...';
+  } else {
+    return title;
+  }
+}
+
 Future<Widget> returnShareLevelCompletionProgressPageFun({
   required List level,
   required Map<String, dynamic> songsdata,
+  required Map<String, dynamic> allScoreData,
   required BuildContext context,
 }) async {
   double defaultheight = 1422;
-
   //请求玩家信息
   String playerdatastr = await requestPlayerInfo();
   Map<String, dynamic> playerdata = (jsonDecode(playerdatastr) as Map)['data'];
+
+  List<Widget> resultchildren = [];
+
   //表格所需变量
   int levelallcount = 0;
   int ssspcount = 0;
@@ -120,7 +132,199 @@ Future<Widget> returnShareLevelCompletionProgressPageFun({
   int aaacount = 0;
   int othercount = 0;
   int completecount = 0;
-  List<Widget> resultchildren = [
+  List resultMap = [];
+  for (var i in songsdata['songs']) {
+    for (var j in i['difficulties']) {
+      if (j['level_value'] >= level[0] && j['level_value'] <= level[1]) {
+        resultMap.add(i);
+      }
+    }
+  }
+  levelallcount = resultMap.length;
+
+  List<Widget> picturelist = [];
+  int rowcount = 0;
+  int columncount = 0;
+  for (var i in resultMap) {
+    String versionname = '';
+    String rank = '';
+    Widget rankwidget = SizedBox.shrink();
+    for (var j in songsdata['versions']) {
+      if (j['version'] == i['version']) {
+        versionname = j['title'];
+      }
+    }
+    for (var l in allScoreData['data']) {
+      if (l['level'] == returnlevelString(level: level) && i['id'] == l['id']) {
+        rank = l['rank'];
+        completecount++;
+        if (rank == 'sssp') {
+          ssspcount++;
+          rankwidget = Card(
+            margin: EdgeInsets.zero,
+            elevation: 0,
+            shape: const RoundedRectangleBorder(),
+            color: const Color.fromARGB(115, 158, 158, 158),
+            child: Image.file(
+              width: 100,
+              height: 100,
+              File(rankImg(rank: rank)),
+            ),
+          );
+        } else if (rank == 'sss') {
+          ssscount++;
+          rankwidget = Card(
+            margin: EdgeInsets.zero,
+            elevation: 0,
+            shape: const RoundedRectangleBorder(),
+            color: const Color.fromARGB(115, 158, 158, 158),
+            child: Image.file(
+              width: 100,
+              height: 100,
+              File(rankImg(rank: rank)),
+            ),
+          );
+        } else if (rank == 'ssp') {
+          sspcount++;
+          rankwidget = Card(
+            margin: EdgeInsets.zero,
+            elevation: 0,
+            shape: const RoundedRectangleBorder(),
+            color: const Color.fromARGB(115, 158, 158, 158),
+            child: Image.file(
+              width: 100,
+              height: 100,
+              File(rankImg(rank: rank)),
+            ),
+          );
+        } else if (rank == 'ss') {
+          sscount++;
+          rankwidget = Card(
+            margin: EdgeInsets.zero,
+            elevation: 0,
+            shape: const RoundedRectangleBorder(),
+            color: const Color.fromARGB(115, 158, 158, 158),
+            child: Image.file(
+              width: 100,
+              height: 100,
+              File(rankImg(rank: rank)),
+            ),
+          );
+        } else if (rank == 'sp') {
+          spcount++;
+          rankwidget = Card(
+            margin: EdgeInsets.zero,
+            elevation: 0,
+            shape: const RoundedRectangleBorder(),
+            color: const Color.fromARGB(115, 158, 158, 158),
+            child: Image.file(
+              width: 100,
+              height: 100,
+              File(rankImg(rank: rank)),
+            ),
+          );
+        } else if (rank == 's') {
+          scount++;
+          rankwidget = Card(
+            margin: EdgeInsets.zero,
+            elevation: 0,
+            shape: const RoundedRectangleBorder(),
+            color: const Color.fromARGB(115, 158, 158, 158),
+            child: Image.file(
+              width: 100,
+              height: 100,
+              File(rankImg(rank: rank)),
+            ),
+          );
+        } else if (rank == 'aaa') {
+          aaacount++;
+          rankwidget = Card(
+            margin: EdgeInsets.zero,
+            elevation: 0,
+            shape: const RoundedRectangleBorder(),
+            color: const Color.fromARGB(115, 158, 158, 158),
+            child: Image.file(
+              width: 100,
+              height: 100,
+              File(rankImg(rank: rank)),
+            ),
+          );
+        } else {
+          othercount++;
+          rankwidget = Card(
+            margin: EdgeInsets.zero,
+            elevation: 0,
+            shape: const RoundedRectangleBorder(),
+            color: const Color.fromARGB(115, 158, 158, 158),
+            child: Image.file(
+              width: 100,
+              height: 100,
+              File(rankImg(rank: rank)),
+            ),
+          );
+        }
+      }
+    }
+    picturelist.add(
+      InkWell(
+        onTap: () async {
+          interSongInfo(
+            songbasedata: i,
+            context: context,
+            versionname: versionname,
+          );
+        },
+
+        child: Card(
+          // color: Colors.white,
+          child: Column(
+            children: [
+              Padding(
+                padding: EdgeInsetsGeometry.all(4),
+                child: Stack(
+                  fit: StackFit.passthrough,
+                  children: [
+                    Image.network(
+                      'https://assets2.lxns.net/chunithm/jacket/${i['id']}.png',
+                      width: 100,
+                      height: 100,
+                      errorBuilder: (context, error, stackTrace) => Image.network(
+                        width: 100,
+                        height: 100,
+                        'https://assets2.lxns.net/chunithm/jacket/${((i['difficulties'] as List).last as Map)['origin_id']}.png',
+                        errorBuilder: (context, error, stackTrace) =>
+                            Text('错误：${error.toString()}'),
+                      ),
+                    ),
+                    rankwidget,
+                  ],
+                ),
+              ),
+              Text(cuttitle(title: i['title']), style: TextStyle(fontSize: 10)),
+            ],
+          ),
+        ),
+      ),
+    );
+    rowcount++;
+    if (rowcount == 25) {
+      resultchildren.add(
+        Row(mainAxisAlignment: MainAxisAlignment.center, children: picturelist),
+      );
+      picturelist = [];
+      rowcount = 0;
+      columncount++;
+    }
+  }
+  if (columncount == 0) {
+    resultchildren.add(
+      Row(mainAxisAlignment: MainAxisAlignment.center, children: picturelist),
+    );
+  }
+
+  //头部信息
+  resultchildren.insert(
+    0,
     Row(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
@@ -208,136 +412,132 @@ Future<Widget> returnShareLevelCompletionProgressPageFun({
             ),
           ),
         ),
-        DataTable(
-          decoration: BoxDecoration(color: Colors.white),
-          border: TableBorder.all(color: Colors.black),
-          columns: [
-            DataColumn(
-              label: Text('总数', style: TextStyle(color: Colors.black)),
-            ),
-            DataColumn(
-              label: Text('SSS+', style: TextStyle(color: Colors.black)),
-            ),
-            DataColumn(
-              label: Text('SSS', style: TextStyle(color: Colors.black)),
-            ),
-            DataColumn(
-              label: Text('SS+', style: TextStyle(color: Colors.black)),
-            ),
-            DataColumn(
-              label: Text('SS', style: TextStyle(color: Colors.black)),
-            ),
-            DataColumn(
-              label: Text('S+', style: TextStyle(color: Colors.black)),
-            ),
-            DataColumn(
-              label: Text('S', style: TextStyle(color: Colors.black)),
-            ),
-            DataColumn(
-              label: Text('AAA', style: TextStyle(color: Colors.black)),
-            ),
-            DataColumn(
-              label: Text('其他', style: TextStyle(color: Colors.black)),
-            ),
-          ],
-          rows: [
-            DataRow(
-              cells: [
-                DataCell(
-                  Text(
-                    '$completecount/$levelallcount',
-                    style: TextStyle(color: Colors.black),
+        Padding(
+          padding: EdgeInsetsGeometry.only(left: 60),
+          child: DataTable(
+            decoration: BoxDecoration(color: Colors.white),
+            border: TableBorder.all(color: Colors.black),
+            columns: [
+              DataColumn(
+                label: Text(
+                  '总数',
+                  style: TextStyle(color: Colors.black, fontSize: 20),
+                ),
+              ),
+              DataColumn(
+                label: Text(
+                  'SSS+',
+                  style: TextStyle(color: Colors.black, fontSize: 20),
+                ),
+              ),
+              DataColumn(
+                label: Text(
+                  'SSS',
+                  style: TextStyle(color: Colors.black, fontSize: 20),
+                ),
+              ),
+              DataColumn(
+                label: Text(
+                  'SS+',
+                  style: TextStyle(color: Colors.black, fontSize: 20),
+                ),
+              ),
+              DataColumn(
+                label: Text(
+                  'SS',
+                  style: TextStyle(color: Colors.black, fontSize: 20),
+                ),
+              ),
+              DataColumn(
+                label: Text(
+                  'S+',
+                  style: TextStyle(color: Colors.black, fontSize: 20),
+                ),
+              ),
+              DataColumn(
+                label: Text(
+                  'S',
+                  style: TextStyle(color: Colors.black, fontSize: 20),
+                ),
+              ),
+              DataColumn(
+                label: Text(
+                  'AAA',
+                  style: TextStyle(color: Colors.black, fontSize: 20),
+                ),
+              ),
+              DataColumn(
+                label: Text(
+                  '其他',
+                  style: TextStyle(color: Colors.black, fontSize: 20),
+                ),
+              ),
+            ],
+            rows: [
+              DataRow(
+                cells: [
+                  DataCell(
+                    Text(
+                      '$completecount/$levelallcount',
+                      style: TextStyle(color: Colors.black, fontSize: 20),
+                    ),
                   ),
-                ),
-                DataCell(
-                  Text('$ssspcount', style: TextStyle(color: Colors.black)),
-                ),
-                DataCell(
-                  Text('$ssscount', style: TextStyle(color: Colors.black)),
-                ),
-                DataCell(
-                  Text('$sspcount', style: TextStyle(color: Colors.black)),
-                ),
-                DataCell(
-                  Text('$sscount', style: TextStyle(color: Colors.black)),
-                ),
-                DataCell(
-                  Text('$spcount', style: TextStyle(color: Colors.black)),
-                ),
-                DataCell(
-                  Text('$scount', style: TextStyle(color: Colors.black)),
-                ),
-                DataCell(
-                  Text('$aaacount', style: TextStyle(color: Colors.black)),
-                ),
-                DataCell(
-                  Text('$othercount', style: TextStyle(color: Colors.black)),
-                ),
-              ],
-            ),
-          ],
+                  DataCell(
+                    Text(
+                      '$ssspcount',
+                      style: TextStyle(color: Colors.black, fontSize: 20),
+                    ),
+                  ),
+                  DataCell(
+                    Text(
+                      '$ssscount',
+                      style: TextStyle(color: Colors.black, fontSize: 20),
+                    ),
+                  ),
+                  DataCell(
+                    Text(
+                      '$sspcount',
+                      style: TextStyle(color: Colors.black, fontSize: 20),
+                    ),
+                  ),
+                  DataCell(
+                    Text(
+                      '$sscount',
+                      style: TextStyle(color: Colors.black, fontSize: 20),
+                    ),
+                  ),
+                  DataCell(
+                    Text(
+                      '$spcount',
+                      style: TextStyle(color: Colors.black, fontSize: 20),
+                    ),
+                  ),
+                  DataCell(
+                    Text(
+                      '$scount',
+                      style: TextStyle(color: Colors.black, fontSize: 20),
+                    ),
+                  ),
+                  DataCell(
+                    Text(
+                      '$aaacount',
+                      style: TextStyle(color: Colors.black, fontSize: 20),
+                    ),
+                  ),
+                  DataCell(
+                    Text(
+                      '$othercount',
+                      style: TextStyle(color: Colors.black, fontSize: 20),
+                    ),
+                  ),
+                ],
+              ),
+            ],
+          ),
         ),
       ],
     ),
-  ];
-
-  List resultMap = [];
-  for (var i in songsdata['songs']) {
-    for (var j in i['difficulties']) {
-      if (j['level_value'] >= level[0] && j['level_value'] <= level[1]) {
-        resultMap.add(i);
-      }
-    }
-  }
-  levelallcount = resultMap.length;
-
-  List<Widget> picturelist = [];
-  int rowcount = 0;
-  int columncount = 0;
-  for (var i in resultMap) {
-    String versionname = '';
-    for (var j in songsdata['versions']) {
-      if (j['version'] == i['version']) {
-        versionname = j['title'];
-      }
-    }
-    picturelist.add(
-      InkWell(
-        onTap: () async {
-          interSongInfo(
-            songbasedata: i,
-            context: context,
-            versionname: versionname,
-          );
-        },
-
-        child: Padding(
-          padding: EdgeInsetsGeometry.all(4),
-          child: Image.network(
-            'https://assets2.lxns.net/chunithm/jacket/${i['id']}.png',
-            width: 100,
-            height: 100,
-            errorBuilder: (context, error, stackTrace) => Image.network(
-              width: 100,
-              height: 100,
-              'https://assets2.lxns.net/chunithm/jacket/${((i['difficulties'] as List).last as Map)['origin_id']}.png',
-              errorBuilder: (context, error, stackTrace) =>
-                  Text('错误：${error.toString()}'),
-            ),
-          ),
-        ),
-      ),
-    );
-    rowcount++;
-    if (rowcount == 27) {
-      resultchildren.add(
-        Row(mainAxisAlignment: MainAxisAlignment.center, children: picturelist),
-      );
-      picturelist = [];
-      rowcount = 0;
-      columncount++;
-    }
-  }
+  );
 
   //底部信息
   resultchildren.add(
@@ -354,7 +554,7 @@ Future<Widget> returnShareLevelCompletionProgressPageFun({
 
   //我操了，怎么那么多歌，1422高度都装不下
   if (columncount > 10) {
-    defaultheight = defaultheight + 100 * (columncount - 10);
+    defaultheight = defaultheight + 200 * (columncount - 10);
   }
   Widget result = Container(
     width: 2948,

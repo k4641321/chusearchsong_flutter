@@ -6,7 +6,11 @@ next:
   text: '分数计算'
   link: '/helper/function/tools/scorecalculation'
 ---
+
 # 单曲Rating计算器
+> [!NOTE]
+> 2026-07-19 已严肃查证正确的Rating计算方式，目前可以是最正确的计算
+
 ![单曲Rating计算器](./image/屏幕截图%202026-06-27%20224357.png)
 ![单曲Rating计算器2](./image/屏幕截图%202026-06-27%20224405.png)
 ## 按定数算

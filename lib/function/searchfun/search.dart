@@ -66,14 +66,8 @@ Future<List<Widget>> search({
                       'https://assets2.lxns.net/chunithm/jacket/$songid.png',
                   width: 75,
                   height: 75,
-                  errorWidget: (context, url, error) => Text('世界末日懒得做处理了'),
+                  errorWidget: (context, url, error) => Text('加载失败'),
                 ),
-                // Image.network(
-                //   'https://assets2.lxns.net/chunithm/jacket/${i['id']}.png',
-                //   errorBuilder: (context, error, stackTrace) => Text('图片加载失败'),
-                //   width: 55,
-                //   height: 55,
-                // ),
                 Expanded(
                   child: Text(
                     '${i['id']} - ${i['title']}      ${i['genre']} - $versionname  \n $songInfoDiffs',

@@ -2,6 +2,10 @@
 prev:
   text: '随机歌曲'
   link: '/helper/function/tools/randommusic'
+
+next:
+  text: '歌曲推荐'
+  link: '/helper/function/tools/songrecommendation'
 ---
 # 更新成绩
 > [!WARNING]

@@ -10,13 +10,12 @@ hero:
     - theme: brand
       text: 帮助文档
       link: helper/index
-    # - theme: alt
-    #   text: API Examples
-    #   link: /api-examples
-
+    - theme: alt
+      text: 项目官网
+      link: https://chusearchsong.4641321.xyz/
 features:
   - title: 未来的计划
-    details: 成绩曲线图
+    details: 我不知道，想不出来了
   # - title: Feature B
   #   details: Lorem ipsum dolor sit amet, consectetur adipiscing elit
   # - title: Feature C

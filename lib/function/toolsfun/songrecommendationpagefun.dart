@@ -1,6 +1,7 @@
 import 'dart:developer';
 import 'dart:io';
 import 'dart:convert';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:chusearchsong_flutter/function/fun.dart';
 import 'package:flutter/material.dart';
 import 'package:path_provider/path_provider.dart';
@@ -180,12 +181,16 @@ Future<List<List<Widget>>> songRecommendation({
     for (var i in resultsongs) {
       List<dynamic> songInfoDiffs = [];
       String versionname = '';
+      int songid = i['id'];
       for (var j in songsdata['versions']) {
         if (j['version'] == i['version']) {
           versionname = j['title'];
         }
       }
       for (var k in i['difficulties']) {
+        if ((k as Map<String, dynamic>).containsKey('origin_id')) {
+          songid = k['origin_id'];
+        }
         if (
         //大于最低Rating
         (calculatorRating(
@@ -232,12 +237,13 @@ Future<List<List<Widget>>> songRecommendation({
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  // Image.network(
-                  //   'https://assets2.lxns.net/chunithm/jacket/${i['id']}.png',
-                  //   errorBuilder: (context, error, stackTrace) => Text('图片加载失败'),
-                  //   width: 55,
-                  //   height: 55,
-                  // ),
+                  CachedNetworkImage(
+                    imageUrl:
+                        'https://assets2.lxns.net/chunithm/jacket/$songid.png',
+                    width: 75,
+                    height: 75,
+                    errorWidget: (context, url, error) => Text('加载失败'),
+                  ),
                   Expanded(
                     child: Text(
                       '${i['id']} - ${i['title']}      ${i['genre']} - $versionname  \n $songInfoDiffs',

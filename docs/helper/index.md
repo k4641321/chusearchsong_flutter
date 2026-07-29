@@ -5,12 +5,13 @@ next:
 ---
 
 # chusearchosng(中二查歌)
+![GitHub Downloads (all assets, all releases)](https://img.shields.io/github/downloads/k4641321/chusearchsong_flutter/total?style=for-the-badge)![GitHub Actions Workflow Status](https://img.shields.io/github/actions/workflow/status/k4641321/chusearchsong_flutter/flutter.yml?style=for-the-badge) ![GitHub Release](https://img.shields.io/github/v/release/k4641321/chusearchsong_flutter?include_prereleases&style=for-the-badge) ![GitHub Repo stars](https://img.shields.io/github/stars/k4641321/chusearchsong_flutter?style=for-the-badge)
 ## 这是什么？
 这是作者在使用了Python toga，Python Kivy后，迫不得以转为Flutter写的一个关于**中二节奏**的工具
 > [!WARNING]
 > 我并不是专业的，只是业余兴趣，边学边写，目前是使用AI进行辅助开发，**有答辩代码是非常正常的**
 
-## 它能做什么？
+# 功能
 - [x] 基本查歌
 - [x] 分类查歌
 - [x] 版本查歌
@@ -34,9 +35,15 @@ next:
 - [x] B50生成
 - [x] 成绩分享
 - [x] 收藏品进度
-- [ ] 成绩曲线图
-  
-以及更多...仍在更新中
+- [x] 成绩曲线图
+- [x] 曲目与收藏品关联
+- [x] 排行榜
+- [x] 吃分建议
+- [x] 谱面预览
+- [x] Rating趋势分享
+- [X] 等级完成进度
+- [X] 各种奇奇怪怪的B50生成
+*...more...*
 
 ## 支持平台？
 | 平台 | 状态 | 系统要求|

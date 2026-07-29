@@ -244,7 +244,9 @@ Future<Widget> fc50Body({required BuildContext context}) async {
       ),
     ],
   );
+
   //b50绘制
+  int total = 0;
   List<Widget> b50rowbody = [];
   Widget b50row = Row(
     mainAxisAlignment: MainAxisAlignment.center,
@@ -253,6 +255,7 @@ Future<Widget> fc50Body({required BuildContext context}) async {
   int row = 0;
   int songcount = 1;
   for (var i in fcb50) {
+    if (total > 50) break;
     String songname;
     if ((i['song_name'] as String).length > 18) {
       songname = i['song_name'].substring(0, 18) + '...';
@@ -390,6 +393,7 @@ Future<Widget> fc50Body({required BuildContext context}) async {
       row++;
     }
     songcount++;
+    total++;
   }
   if (b50rowbody.isNotEmpty) {
     b50body.add(b50row);

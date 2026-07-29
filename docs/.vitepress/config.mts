@@ -37,6 +37,8 @@ export default defineConfig({
                   { text: 'B50生成', link: '/helper/function/tools/generateb50/' },
                   { text: '随机歌曲', link: '/helper/function/tools/randommusic/' },
                   { text: '更新成绩', link: '/helper/function/tools/updatescore/' },
+                  { text: '歌曲推荐', link: '/helper/function/tools/songrecommendation/' },
+                  { text: '等级完成进度', link: '/helper/function/tools/levelcompletionprogress/' },
                 ]
               },
             ]

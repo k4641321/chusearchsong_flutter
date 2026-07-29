@@ -1,11 +1,15 @@
 import 'dart:convert';
 import 'dart:developer';
+import 'dart:ui' as ui;
 
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:chusearchsong_flutter/function/request.dart';
+import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 import 'dart:io';
 import 'package:path_provider/path_provider.dart';
+import 'package:share_plus/share_plus.dart';
 
 class ChartViewPage extends StatefulWidget {
   final int songid;
@@ -114,7 +118,7 @@ class _ChartViewPageState extends State<ChartViewPage> {
           setState(() {
             result = [
               Image.memory(
-                base64Decode(chartproxyresult['chart_data']),
+                base64Decode(chartproxyresult['bg']),
                 fit: BoxFit.none,
                 errorBuilder: (context, error, stackTrace) =>
                     Text('错误：$error \n $stackTrace'),
@@ -125,14 +129,11 @@ class _ChartViewPageState extends State<ChartViewPage> {
                 errorBuilder: (context, error, stackTrace) =>
                     Text('错误：$error \n $stackTrace'),
               ),
-              Opacity(
-                opacity: 0.1,
-                child: Image.memory(
-                  base64Decode(chartproxyresult['bg']),
-                  fit: BoxFit.none,
-                  errorBuilder: (context, error, stackTrace) =>
-                      Text('错误：$error \n $stackTrace'),
-                ),
+              Image.memory(
+                base64Decode(chartproxyresult['chart_data']),
+                fit: BoxFit.none,
+                errorBuilder: (context, error, stackTrace) =>
+                    Text('错误：$error \n $stackTrace'),
               ),
             ];
           });
@@ -170,7 +171,7 @@ class _ChartViewPageState extends State<ChartViewPage> {
             // final stopwatch = Stopwatch()..start();
             result = [
               CachedNetworkImage(
-                imageUrl: chartdataurl.join('/'),
+                imageUrl: bgurl.join('/'),
                 // height: MediaQuery.heightOf(context),
                 fit: BoxFit.none,
                 errorWidget: (context, error, stackTrace) =>
@@ -183,15 +184,12 @@ class _ChartViewPageState extends State<ChartViewPage> {
                 errorWidget: (context, error, stackTrace) =>
                     Text('错误：$error \n $stackTrace'),
               ),
-              Opacity(
-                opacity: 0.1,
-                child: CachedNetworkImage(
-                  imageUrl: bgurl.join('/'),
-                  // height: MediaQuery.heightOf(context),
-                  fit: BoxFit.none,
-                  errorWidget: (context, error, stackTrace) =>
-                      Text('错误：$error \n $stackTrace'),
-                ),
+              CachedNetworkImage(
+                imageUrl: chartdataurl.join('/'),
+                // height: MediaQuery.heightOf(context),
+                fit: BoxFit.none,
+                errorWidget: (context, error, stackTrace) =>
+                    Text('错误：$error \n $stackTrace'),
               ),
             ];
             // stopwatch.stop();
@@ -212,6 +210,13 @@ class _ChartViewPageState extends State<ChartViewPage> {
     }
   }
 
+  Future<ui.Image?> captureWidget(GlobalKey key) async {
+    final boundary =
+        key.currentContext?.findRenderObject() as RenderRepaintBoundary?;
+    if (boundary == null) return null;
+    return await boundary.toImage(pixelRatio: 1.0); // pixelRatio 控制清晰度
+  }
+
   @override
   void initState() {
     super.initState();
@@ -223,16 +228,68 @@ class _ChartViewPageState extends State<ChartViewPage> {
     super.dispose();
   }
 
+  final GlobalKey _globalKey = GlobalKey();
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text('谱面预览')),
+      appBar: AppBar(
+        title: Text('谱面预览'),
+        actions: [
+          IconButton(
+            icon: Icon(Icons.share),
+            onPressed: () async {
+              try {
+                ScaffoldMessenger.of(
+                  context,
+                ).showSnackBar(SnackBar(content: Text('正在生成，请不要重复点击')));
+                final image = await captureWidget(_globalKey);
+                final byteData = await image?.toByteData(format: .png);
+                final pngBytes = byteData?.buffer.asUint8List();
+                final path = await getApplicationSupportDirectory();
+                if (!Directory('${path.path}/tmp').existsSync()) {
+                  Directory('${path.path}/tmp').create(recursive: true);
+                }
+                File('${path.path}/tmp/chart.png').writeAsBytesSync(pngBytes!);
+                if (!context.mounted) return;
+                final platform = Theme.of(context).platform;
+                if (platform == TargetPlatform.windows) {
+                  await FilePicker.saveFile(
+                    dialogTitle: '保存谱面',
+                    fileName: 'chart.png',
+                    bytes: pngBytes,
+                    type: FileType.custom,
+                    allowedExtensions: ['png'],
+                  );
+                } else {
+                  await SharePlus.instance.share(
+                    ShareParams(files: [XFile('${path.path}/tmp/chart.png')]),
+                  );
+                }
+              } catch (e) {
+                log('$e', name: 'generateb50page.dart', level: 1000);
+              }
+            },
+          ),
+        ],
+      ),
       body: InteractiveViewer(
         constrained: false,
         minScale: 0.1,
         maxScale: 5.0,
         boundaryMargin: EdgeInsets.all(double.infinity),
-        child: Center(child: Stack(children: result)),
+        child: Center(
+          child: RepaintBoundary(
+            key: _globalKey,
+            child: Card(
+              margin: EdgeInsets.all(0),
+              elevation: 0,
+              shape: const RoundedRectangleBorder(),
+              color: Colors.black,
+              child: Stack(children: result),
+            ),
+          ),
+        ),
       ),
     );
   }

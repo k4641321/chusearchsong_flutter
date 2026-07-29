@@ -3,7 +3,7 @@ import 'dart:developer';
 import 'dart:io';
 
 import 'package:chusearchsong_flutter/function/toolsfun/levelcompletionprogresspagefun/levelcompletionprogresspagefun.dart';
-import 'package:chusearchsong_flutter/pages/toolspages/levelcompletionprogresspagert/sharelevelcompletionprogresspage.dart';
+import 'package:chusearchsong_flutter/pages/toolspages/levelcompletionprogresspage/sharelevelcompletionprogresspage.dart';
 import 'package:flutter/material.dart';
 import 'package:path_provider/path_provider.dart';
 
@@ -15,7 +15,7 @@ class LevelCompletionProgressPage extends StatefulWidget {
 
 class _LevelCompletionProgressPageState
     extends State<LevelCompletionProgressPage> {
-  List level = [0, 1.9];
+  List level = [1, 1.9];
   Widget result = CircularProgressIndicator();
   final ScrollController _scrollController = ScrollController();
   late Map<String, dynamic> songsData;
@@ -89,6 +89,7 @@ class _LevelCompletionProgressPageState
                 builder: (context) => Sharelevelcompletionprogresspage(
                   level: level,
                   songsdata: songsData,
+                  allScoreData: allScoreData,
                 ),
               ),
             ),

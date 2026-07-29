@@ -85,7 +85,7 @@ Future<Widget> returnSongShareView({required int songid}) async {
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
         Card(
-          color: const Color.fromARGB(255, 101, 180, 255),
+          color: const Color.fromARGB(205, 254, 254, 254),
           child: Padding(
             padding: EdgeInsetsGeometry.only(
               left: 20,

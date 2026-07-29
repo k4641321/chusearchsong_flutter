@@ -15,7 +15,7 @@ import '../toolspages/updatescorepage.dart';
 import '../toolspages/generateb50page.dart';
 import '../toolspages/playerinfopage.dart';
 import '../toolspages/randomb50page.dart';
-import '../toolspages/levelcompletionprogresspagert/levelcompletionprogresspage.dart';
+import '../toolspages/levelcompletionprogresspage/levelcompletionprogresspage.dart';
 
 //主窗口
 class ToolPage extends StatefulWidget {
