@@ -178,7 +178,7 @@ class _SongInfoPageState extends State<SongInfoPage> {
               returnChartInfoAndSocre(
                 songid: widget.songdata['id'],
                 charts: widget.songdata['charts'],
-                color: Theme.of(context).colorScheme.primaryContainer,
+                color: Theme.of(context).colorScheme.secondaryContainer,
                 context: context,
               ),
             ],
