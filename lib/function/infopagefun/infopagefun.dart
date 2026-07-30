@@ -63,7 +63,7 @@ Future<bool> checkforupdates() async {
   String newversion = result['version'];
   // log(newversion);
   log('开始检查');
-  if (Version.parse(oldversion) <= Version.parse(newversion)) {
+  if (Version.parse(oldversion) < Version.parse(newversion)) {
     return true;
   } else {
     return false;

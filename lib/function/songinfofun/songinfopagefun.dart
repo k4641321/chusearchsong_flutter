@@ -143,7 +143,7 @@ Future<List<Widget>> returnDiffTabBarView({
                   Row(children: [Icon(Icons.queue_music), Text('谱面信息')]),
                   InkWell(
                     onLongPress: () => copytext(
-                      text: song2['note_designer'],
+                      text: song2['note_designer'].toString(),
                       context: context,
                     ),
                     child: Text(
@@ -369,7 +369,7 @@ Future<List<Widget>> returnAlias({
         for (var j in songalias) {
           result.add(
             InkWell(
-              onLongPress: () => copytext(text: j, context: context),
+              onLongPress: () => copytext(text: j.toString(), context: context),
               child: Text('$j'),
             ),
           );

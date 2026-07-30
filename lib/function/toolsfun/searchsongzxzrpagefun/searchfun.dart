@@ -1,9 +1,9 @@
 import 'dart:convert';
 import 'dart:developer';
 import 'dart:io';
+import 'package:chusearchsong_flutter/pages/toolspages/searchsongzxzrpage/songinfopage.dart';
 import 'package:flutter/material.dart';
 import 'package:path_provider/path_provider.dart';
-import '../fun.dart';
 import 'dart:math' as math;
 import 'package:cached_network_image/cached_network_image.dart';
 //我操了，自己都快看力竭了，太石了，自己都要看不懂了
@@ -13,13 +13,6 @@ Future<List<Widget>> search({
   required List<dynamic> songresultMap,
   required BuildContext context,
 }) async {
-  //加载曲目数据
-  final dataPath = await getApplicationSupportDirectory();
-  String jsonString = await File(
-    '${dataPath.path}/res/songs.json',
-  ).readAsString();
-  Map<String, dynamic> songData = json.decode(jsonString);
-
   //生成组件
   List<Widget> songresultWidget = [];
   log('添加组件');
@@ -27,30 +20,17 @@ Future<List<Widget>> search({
 
   for (var i in songresultMap) {
     List<dynamic> songInfoDiffs = [];
-    String versionname = '';
-    int songid = i['id'];
-    for (var j in songData['versions']) {
-      if (j['version'] == i['version']) {
-        versionname = j['title'];
-      }
-    }
-    for (var k in i['difficulties']) {
-      songInfoDiffs.add(k['level_value']);
-      if ((k as Map<String, dynamic>).containsKey('origin_id')) {
-        songid = k['origin_id'];
-      }
-    }
     // songresultWidget.add(const Divider());
+    for (var j in i['charts']) {
+      songInfoDiffs.add(j['const']);
+    }
     songresultWidget.add(
       InkWell(
         // key: ValueKey(i['id']),
-        onTap: () async {
-          interSongInfo(
-            songbasedata: i,
-            context: context,
-            versionname: versionname,
-          );
-        },
+        onTap: () => Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => SongInfoPage(songdata: i)),
+        ),
 
         child: Card(
           shape: RoundedRectangleBorder(
@@ -62,15 +42,14 @@ Future<List<Widget>> search({
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 CachedNetworkImage(
-                  imageUrl:
-                      'https://assets2.lxns.net/chunithm/jacket/$songid.png',
+                  imageUrl: i['jacket_url'],
                   width: 75,
                   height: 75,
                   errorWidget: (context, url, error) => Text('加载失败'),
                 ),
                 Expanded(
                   child: Text(
-                    '${i['id']} - ${i['title']}      ${i['genre']} - $versionname  \n $songInfoDiffs',
+                    '${i['id']} - ${i['title']}      ${i['genre']} - ${i['version']}  \n $songInfoDiffs',
                     textAlign: TextAlign.center,
                   ),
                 ),
@@ -101,27 +80,9 @@ Future<List<dynamic>> filter(
   // 加载曲目数据
   final dataPath = await getApplicationSupportDirectory();
   String jsonString = await File(
-    '${dataPath.path}/res/songs.json',
+    '${dataPath.path}/res/zxzrsongs.json',
   ).readAsString();
-  Map<String, dynamic> songData = json.decode(jsonString);
-
-  //加载别名
-  String aliasString = await File(
-    '${dataPath.path}/res/alias.json',
-  ).readAsString();
-  Map<String, dynamic> aliasData = json.decode(aliasString);
-
-  //加载游玩记录
-  List playhistory = [];
-  try {
-    String playhistorystr = await File(
-      '${dataPath.path}/res/allscore.json',
-    ).readAsString();
-    Map<String, dynamic> playhistoryjson = json.decode(playhistorystr);
-    playhistory = playhistoryjson['data'];
-  } catch (e) {
-    log('无游玩记录文件');
-  }
+  List songData = json.decode(jsonString);
 
   log(
     '$title $genre $version $difficultydown $difficultyup $ifplay $bpmup $bpmdown',
@@ -141,7 +102,7 @@ Future<List<dynamic>> filter(
     log('未选择条件');
     return [];
   }
-  for (var i in songData['songs']) {
+  for (var i in songData) {
     if (i['title'].toLowerCase().contains(title.toLowerCase())) {
       // log('匹配');
       songresult.add(i['id']);
@@ -150,7 +111,7 @@ Future<List<dynamic>> filter(
 
   //曲师筛选
 
-  for (var i in songData['songs']) {
+  for (var i in songData) {
     if (i['artist'].toLowerCase().contains(title.toLowerCase())) {
       // log('曲师匹配 ${i['artist']}');
       songresult.add(i['id']);
@@ -160,7 +121,7 @@ Future<List<dynamic>> filter(
   //id筛选
   try {
     int.parse(title);
-    for (var i in songData['songs']) {
+    for (var i in songData) {
       if (i['id'].toString().contains(title)) {
         songresult.add(i['id']);
       }
@@ -171,12 +132,10 @@ Future<List<dynamic>> filter(
 
   //别名筛选
   // Set<Map<String, dynamic>> aliasresult = {};
-  for (var i in aliasData['aliases']) {
-    for (var j in i['aliases']) {
-      if (j.toLowerCase().contains(title.toLowerCase())) {
-        songresult.add(i['song_id']);
-        break;
-      }
+  for (var i in songData) {
+    if ((i['aliases'] as List).contains(title.toLowerCase())) {
+      songresult.add(i['id']);
+      break;
     }
   }
 
@@ -189,8 +148,8 @@ Future<List<dynamic>> filter(
     } else if (bpmup == null && bpmdown != null) {
       bpmup = 9999;
     }
-    for (var i in songData['songs']) {
-      if (!(i['bpm'] <= bpmup && i['bpm'] >= bpmdown)) {
+    for (var i in songData) {
+      if (!(i['bpm']['mode'] <= bpmup && i['bpm']['mode'] >= bpmdown)) {
         songresult.remove(i['id']);
       }
     }
@@ -200,82 +159,33 @@ Future<List<dynamic>> filter(
   if (title == '') {
     log('跳过谱师筛选');
   } else {
-    for (var i in songData['songs']) {
-      for (var j in i['difficulties']) {
-        if (j['note_designer'].toLowerCase().contains(title.toLowerCase())) {
+    for (var i in songData) {
+      for (var j in i['charts']) {
+        if (j['charter'].toLowerCase().contains(title.toLowerCase())) {
           songresult.add(i['id']);
         }
       }
     }
   }
 
-  //筛选游玩记录
-  if (ifplay == '-1') {
-    log('跳过游玩记录筛选');
-  } else if (ifplay == '1') {
-    //已游玩
-    log('已游玩');
-    List<int> songresult5 = [];
-    List playhistoryid = [];
-    for (var i in playhistory) {
-      if (!playhistoryid.contains(i['id'])) {
-        playhistoryid.add(i['id']);
-      }
-    }
-
-    for (var i in songresult) {
-      if (playhistoryid.contains(i)) {
-        songresult5.add(i);
-      }
-    }
-    songresult = songresult5.toSet();
-  } else if (ifplay == '0') {
-    //未游玩
-    log('未游玩');
-    List<int> songresult5 = [];
-    List playhistoryid = [];
-    for (var i in playhistory) {
-      if (!playhistoryid.contains(i['id'])) {
-        playhistoryid.add(i['id']);
-      }
-    }
-    for (var i in songresult) {
-      if (!playhistoryid.contains(i)) {
-        songresult5.add(i);
-      }
-    }
-    songresult = songresult5.toSet();
-  }
-
   List songresultMap = [];
   for (var i in songresult) {
-    for (var j in songData['songs']) {
+    for (var j in songData) {
       if (i == j['id']) {
         songresultMap.add(j);
       }
     }
   }
+
   //筛选流派
   if (genre == '-1') {
     log('跳过流派');
   } else {
     List songresult2 = [];
-    try {
-      int genreId = int.parse(genre);
-      for (var j in songData['genres']) {
-        if (j['id'] == genreId) {
-          genre = j['genre'];
-          break;
-        }
+    for (var i in songresultMap) {
+      if (i['genre'] == genre) {
+        songresult2.add(i);
       }
-
-      for (var i in songresultMap) {
-        if (i['genre'] == genre) {
-          songresult2.add(i);
-        }
-      }
-    } catch (e) {
-      log('error $e', name: 'search.dart', level: 1000);
     }
     songresultMap = songresult2;
   }
@@ -286,7 +196,7 @@ Future<List<dynamic>> filter(
   } else {
     List songresult3 = [];
     for (var i in songresultMap) {
-      if (i['version'] == int.parse(version)) {
+      if (i['version'] == version) {
         songresult3.add(i);
       }
     }
@@ -302,9 +212,9 @@ Future<List<dynamic>> filter(
     }
     List songresult4 = [];
     for (var i in songresultMap) {
-      for (var j in i['difficulties']) {
-        if (double.parse(difficultydown) <= j['level_value'] &&
-            j['level_value'] <= double.parse(difficultyup)) {
+      for (var j in i['charts']) {
+        if (double.parse(difficultydown) <= j['const'] &&
+            j['const'] <= double.parse(difficultyup)) {
           songresult4.add(i);
           break;
         }
@@ -326,7 +236,7 @@ Future<List<dynamic>> filter(
         resultIds.add(idlist[randomId]);
       }
       List randomresult = [];
-      for (var i in songData['songs']) {
+      for (var i in songData) {
         for (var j in resultIds) {
           if (i['id'] == j) {
             randomresult.add(i);

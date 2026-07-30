@@ -2,7 +2,7 @@ import 'dart:developer';
 import 'dart:io';
 import 'dart:ui' as ui;
 
-import 'package:chusearchsong_flutter/function/songinfofun/songshareviewpagefun.dart';
+import 'package:chusearchsong_flutter/function/toolsfun/searchsongzxzrpagefun/shareviewpagefun.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
@@ -10,9 +10,9 @@ import 'package:path_provider/path_provider.dart';
 import 'package:share_plus/share_plus.dart';
 
 class Songshareviewpage extends StatefulWidget {
-  final int songid;
+  final Map<String, dynamic> songdata;
 
-  const Songshareviewpage({super.key, required this.songid});
+  const Songshareviewpage({super.key, required this.songdata});
 
   @override
   State<Songshareviewpage> createState() => _SongshareviewpageState();
@@ -23,7 +23,7 @@ class _SongshareviewpageState extends State<Songshareviewpage> {
 
   Future<void> loadWidget() async {
     try {
-      Widget result = await returnSongShareView(songid: widget.songid);
+      Widget result = returnSongShareView(songdata: widget.songdata);
       setState(() {
         children = result;
       });
@@ -78,14 +78,14 @@ class _SongshareviewpageState extends State<Songshareviewpage> {
                           Directory('${path.path}/tmp').create(recursive: true);
                         }
                         File(
-                          '${path.path}/tmp/songinfoandscore.png',
+                          '${path.path}/tmp/zxzrsongshare.png',
                         ).writeAsBytesSync(pngBytes!);
                         if (!context.mounted) return;
                         final platform = Theme.of(context).platform;
                         if (platform == TargetPlatform.windows) {
                           await FilePicker.saveFile(
                             dialogTitle: '保存单曲信息与成绩',
-                            fileName: 'songinfoandscore.png',
+                            fileName: 'zxzrsongshare.png',
                             bytes: pngBytes,
                             type: FileType.custom,
                             allowedExtensions: ['png'],
@@ -94,7 +94,7 @@ class _SongshareviewpageState extends State<Songshareviewpage> {
                           await SharePlus.instance.share(
                             ShareParams(
                               files: [
-                                XFile('${path.path}/tmp/songinfoandscore.png'),
+                                XFile('${path.path}/tmp/zxzrsongshare.png'),
                               ],
                             ),
                           );

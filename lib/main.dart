@@ -1,5 +1,6 @@
 import 'dart:developer';
 
+import 'package:chusearchsong_flutter/function/infopagefun/infopagefun.dart';
 import 'package:chusearchsong_flutter/function/request.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'theme.dart';
@@ -91,6 +92,18 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
+  Future<void> chechupdate() async {
+    try {
+      await checkforupdates();
+    } catch (e, strack) {
+      log('#e\n$strack');
+      if (!mounted) return;
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text('错误$e\n$strack')));
+    }
+  }
+
   Future<void> showChangesLog() async {
     try {
       final ScrollController controller = ScrollController();
@@ -139,6 +152,7 @@ class _MyHomePageState extends State<MyHomePage> {
     WidgetsBinding.instance.addPostFrameCallback((_) {
       ifres(context: context);
       showChangesLog();
+      chechupdate();
     });
   }
 

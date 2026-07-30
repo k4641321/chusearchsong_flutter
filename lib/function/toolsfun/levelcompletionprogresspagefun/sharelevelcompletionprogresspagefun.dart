@@ -149,9 +149,15 @@ Future<Widget> returnShareLevelCompletionProgressPageFun({
     String versionname = '';
     String rank = '';
     Widget rankwidget = SizedBox.shrink();
+    late double diff;
     for (var j in songsdata['versions']) {
       if (j['version'] == i['version']) {
         versionname = j['title'];
+      }
+    }
+    for (var l in i['difficulties']) {
+      if (l['level_value'] >= level[0] && l['level_value'] <= level[1]) {
+        diff = l['level_value'].toDouble();
       }
     }
     for (var l in allScoreData['data']) {
@@ -165,11 +171,7 @@ Future<Widget> returnShareLevelCompletionProgressPageFun({
             elevation: 0,
             shape: const RoundedRectangleBorder(),
             color: const Color.fromARGB(115, 158, 158, 158),
-            child: Image.file(
-              width: 100,
-              height: 100,
-              File(rankImg(rank: rank)),
-            ),
+            child: Image.asset(width: 100, height: 100, rankImg(rank: rank)),
           );
         } else if (rank == 'sss') {
           ssscount++;
@@ -178,11 +180,7 @@ Future<Widget> returnShareLevelCompletionProgressPageFun({
             elevation: 0,
             shape: const RoundedRectangleBorder(),
             color: const Color.fromARGB(115, 158, 158, 158),
-            child: Image.file(
-              width: 100,
-              height: 100,
-              File(rankImg(rank: rank)),
-            ),
+            child: Image.asset(width: 100, height: 100, rankImg(rank: rank)),
           );
         } else if (rank == 'ssp') {
           sspcount++;
@@ -191,11 +189,7 @@ Future<Widget> returnShareLevelCompletionProgressPageFun({
             elevation: 0,
             shape: const RoundedRectangleBorder(),
             color: const Color.fromARGB(115, 158, 158, 158),
-            child: Image.file(
-              width: 100,
-              height: 100,
-              File(rankImg(rank: rank)),
-            ),
+            child: Image.asset(width: 100, height: 100, rankImg(rank: rank)),
           );
         } else if (rank == 'ss') {
           sscount++;
@@ -204,11 +198,7 @@ Future<Widget> returnShareLevelCompletionProgressPageFun({
             elevation: 0,
             shape: const RoundedRectangleBorder(),
             color: const Color.fromARGB(115, 158, 158, 158),
-            child: Image.file(
-              width: 100,
-              height: 100,
-              File(rankImg(rank: rank)),
-            ),
+            child: Image.asset(width: 100, height: 100, rankImg(rank: rank)),
           );
         } else if (rank == 'sp') {
           spcount++;
@@ -217,11 +207,7 @@ Future<Widget> returnShareLevelCompletionProgressPageFun({
             elevation: 0,
             shape: const RoundedRectangleBorder(),
             color: const Color.fromARGB(115, 158, 158, 158),
-            child: Image.file(
-              width: 100,
-              height: 100,
-              File(rankImg(rank: rank)),
-            ),
+            child: Image.asset(width: 100, height: 100, rankImg(rank: rank)),
           );
         } else if (rank == 's') {
           scount++;
@@ -230,11 +216,7 @@ Future<Widget> returnShareLevelCompletionProgressPageFun({
             elevation: 0,
             shape: const RoundedRectangleBorder(),
             color: const Color.fromARGB(115, 158, 158, 158),
-            child: Image.file(
-              width: 100,
-              height: 100,
-              File(rankImg(rank: rank)),
-            ),
+            child: Image.asset(width: 100, height: 100, rankImg(rank: rank)),
           );
         } else if (rank == 'aaa') {
           aaacount++;
@@ -243,11 +225,7 @@ Future<Widget> returnShareLevelCompletionProgressPageFun({
             elevation: 0,
             shape: const RoundedRectangleBorder(),
             color: const Color.fromARGB(115, 158, 158, 158),
-            child: Image.file(
-              width: 100,
-              height: 100,
-              File(rankImg(rank: rank)),
-            ),
+            child: Image.asset(width: 100, height: 100, rankImg(rank: rank)),
           );
         } else {
           othercount++;
@@ -256,11 +234,7 @@ Future<Widget> returnShareLevelCompletionProgressPageFun({
             elevation: 0,
             shape: const RoundedRectangleBorder(),
             color: const Color.fromARGB(115, 158, 158, 158),
-            child: Image.file(
-              width: 100,
-              height: 100,
-              File(rankImg(rank: rank)),
-            ),
+            child: Image.asset(width: 100, height: 100, rankImg(rank: rank)),
           );
         }
       }
@@ -300,7 +274,10 @@ Future<Widget> returnShareLevelCompletionProgressPageFun({
                   ],
                 ),
               ),
-              Text(cuttitle(title: i['title']), style: TextStyle(fontSize: 10)),
+              Text(
+                '${cuttitle(title: i['title'])}\n$diff',
+                style: TextStyle(fontSize: 10),
+              ),
             ],
           ),
         ),
@@ -553,8 +530,8 @@ Future<Widget> returnShareLevelCompletionProgressPageFun({
   );
 
   //我操了，怎么那么多歌，1422高度都装不下
-  if (columncount > 10) {
-    defaultheight = defaultheight + 200 * (columncount - 10);
+  if (columncount > 8) {
+    defaultheight = defaultheight + 200 * (columncount - 8);
   }
   Widget result = Container(
     width: 2948,

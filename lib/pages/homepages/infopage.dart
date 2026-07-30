@@ -1,4 +1,5 @@
 import 'package:chusearchsong_flutter/function/infopagefun/infopagefun.dart';
+import 'package:chusearchsong_flutter/pages/infopages/changeslogpage.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -328,6 +329,56 @@ class _InfoState extends State<Info> {
                                     Icon(Icons.volunteer_activism),
                                     Text(
                                       '赞助作者',
+                                      textAlign: TextAlign.center,
+                                      style: TextStyle(
+                                        fontSize: 20,
+                                        color: Theme.of(
+                                          context,
+                                        ).colorScheme.onSurface,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                    Row(
+                      children: [
+                        Expanded(
+                          child: InkWell(
+                            customBorder: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.only(
+                                bottomLeft: Radius.circular(10.0),
+                                bottomRight: Radius.circular(10.0),
+                              ),
+                            ),
+                            onTap: () async {
+                              Navigator.of(context).push(
+                                MaterialPageRoute(
+                                  builder: (context) => Changeslogpage(),
+                                ),
+                              );
+                            },
+                            child: Card(
+                              color: Theme.of(
+                                context,
+                              ).colorScheme.primaryContainer.withAlpha(150),
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.all(
+                                  Radius.circular(0.0),
+                                ),
+                              ),
+                              child: Padding(
+                                padding: const EdgeInsets.all(10),
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    Icon(Icons.update),
+                                    Text(
+                                      '更新日志',
                                       textAlign: TextAlign.center,
                                       style: TextStyle(
                                         fontSize: 20,

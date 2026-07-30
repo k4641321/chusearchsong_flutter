@@ -1,0 +1,190 @@
+import 'package:chusearchsong_flutter/function/fun.dart';
+import 'package:flutter/material.dart';
+import 'dart:developer';
+import '../../../function/toolsfun/searchsongzxzrpagefun/songinfopagefun.dart';
+import './songshareviewpage.dart';
+
+class SongInfoPage extends StatefulWidget {
+  final Map<String, dynamic> songdata;
+
+  const SongInfoPage({super.key, required this.songdata});
+
+  @override
+  State<SongInfoPage> createState() => _SongInfoPageState();
+}
+
+class _SongInfoPageState extends State<SongInfoPage> {
+  final ScrollController _scrollController = ScrollController();
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: InkWell(
+          onLongPress: () =>
+              copytext(text: widget.songdata['title'], context: context),
+          child: Text('${widget.songdata['title']}    - 歌曲详情'),
+        ),
+        actions: [
+          IconButton(
+            onPressed: () async {
+              try {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) =>
+                        Songshareviewpage(songdata: widget.songdata),
+                  ),
+                );
+              } catch (e) {
+                log('错误$e', name: 'songinfopage.dart', level: 1000);
+                if (!context.mounted) return;
+                ScaffoldMessenger.of(
+                  context,
+                ).showSnackBar(SnackBar(content: Text('分享失败')));
+              }
+            },
+            icon: Icon(Icons.share),
+          ),
+        ],
+      ),
+      body: Scrollbar(
+        controller: _scrollController,
+        child: SingleChildScrollView(
+          controller: _scrollController,
+          child: Column(
+            // mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Center(
+                child: Image.network(
+                  height: 350,
+                  width: 350,
+                  fit: BoxFit.cover,
+                  widget.songdata['jacket_url'],
+                  errorBuilder: (context, error, stackTrace) {
+                    return const Text('图片加载失败');
+                  },
+                ),
+              ),
+              Row(
+                children: [
+                  Expanded(
+                    child: InkWell(
+                      child: Card(
+                        color: Theme.of(context).colorScheme.secondaryContainer,
+                        child: Padding(
+                          padding: EdgeInsetsGeometry.all(8),
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                            children: [
+                              Row(children: [Icon(Icons.info), Text('基本信息')]),
+                              InkWell(
+                                onLongPress: () => copytext(
+                                  text: widget.songdata['id'].toString(),
+                                  context: context,
+                                ),
+                                child: Text(
+                                  'id： ${widget.songdata['id']}',
+                                  style: const TextStyle(fontSize: 15),
+                                ),
+                              ),
+                              InkWell(
+                                onLongPress: () => copytext(
+                                  text: widget.songdata['genre'],
+                                  context: context,
+                                ),
+                                child: Text(
+                                  '分类： ${widget.songdata['genre']}',
+                                  style: const TextStyle(fontSize: 15),
+                                ),
+                              ),
+                              InkWell(
+                                onLongPress: () => copytext(
+                                  text: widget.songdata['version'],
+                                  context: context,
+                                ),
+                                child: Text(
+                                  '版本： ${widget.songdata['version']}',
+                                  style: const TextStyle(fontSize: 15),
+                                ),
+                              ),
+                              Text(
+                                'BPM:  ${widget.songdata['bpm']}',
+                                style: const TextStyle(fontSize: 15),
+                              ),
+                              InkWell(
+                                onLongPress: () => copytext(
+                                  text: widget.songdata['artist'],
+                                  context: context,
+                                ),
+                                child: Text(
+                                  '曲师： ${widget.songdata['artist']}',
+                                  style: const TextStyle(fontSize: 15),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+              Row(
+                children: [
+                  Expanded(
+                    child: InkWell(
+                      child: Card(
+                        color: Theme.of(context).colorScheme.secondaryContainer,
+                        child: Padding(
+                          padding: EdgeInsetsGeometry.all(8),
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                            children: [
+                              Row(
+                                children: [
+                                  Icon(Icons.info_outline),
+                                  Text('其余信息'),
+                                ],
+                              ),
+                              InkWell(
+                                onLongPress: () => copytext(
+                                  context: context,
+                                  text: widget.songdata['chunirec_id']
+                                      .toString(),
+                                ),
+                                child: Text(
+                                  'Chunirec id：${widget.songdata['chunirec_id']}',
+                                  style: const TextStyle(fontSize: 15),
+                                ),
+                              ),
+                              Text(
+                                '上线时间：${widget.songdata['release_date']}',
+                                style: const TextStyle(fontSize: 15),
+                              ),
+                              Text(
+                                '上线状态：国际服：${widget.songdata['availability']['intl']} 日服：${widget.songdata['availability']['intl']}',
+                                style: const TextStyle(fontSize: 15),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+              returanAlias(alias: widget.songdata['aliases'], context: context),
+              returnChartInfoAndSocre(
+                songid: widget.songdata['id'],
+                charts: widget.songdata['charts'],
+                color: Theme.of(context).colorScheme.primaryContainer,
+                context: context,
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}

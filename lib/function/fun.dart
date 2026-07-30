@@ -193,7 +193,7 @@ Future<void> ifres({required BuildContext context}) async {
   } catch (e) {
     if (!context.mounted) return;
     ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(content: Text('配置更新失败'), duration: Duration(microseconds: 500)),
+      SnackBar(content: Text('配置更新失败'), duration: Duration(microseconds: 5000)),
     );
     log('$e', name: 'fun.dart', level: 2000);
   }

@@ -2,6 +2,10 @@
 prev:
   text: '吃分推荐'
   link: '/helper/function/tools/songrecommendation'
+
+next:
+  text: 'Over Power计算'
+  link: '/helper/function/tools/overpowercalculation'
 ---
 
 # 歌曲完成进度

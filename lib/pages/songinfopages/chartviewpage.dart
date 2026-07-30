@@ -120,20 +120,26 @@ class _ChartViewPageState extends State<ChartViewPage> {
               Image.memory(
                 base64Decode(chartproxyresult['bg']),
                 fit: BoxFit.none,
-                errorBuilder: (context, error, stackTrace) =>
-                    Text('错误：$error \n $stackTrace'),
+                errorBuilder: (context, error, stackTrace) => Text(
+                  '错误：$error \n $stackTrace',
+                  style: TextStyle(color: Colors.white),
+                ),
               ),
               Image.memory(
                 base64Decode(chartproxyresult['bar']),
                 fit: BoxFit.none,
-                errorBuilder: (context, error, stackTrace) =>
-                    Text('错误：$error \n $stackTrace'),
+                errorBuilder: (context, error, stackTrace) => Text(
+                  '错误：$error \n $stackTrace',
+                  style: TextStyle(color: Colors.white),
+                ),
               ),
               Image.memory(
                 base64Decode(chartproxyresult['chart_data']),
                 fit: BoxFit.none,
-                errorBuilder: (context, error, stackTrace) =>
-                    Text('错误：$error \n $stackTrace'),
+                errorBuilder: (context, error, stackTrace) => Text(
+                  '错误：$error \n $stackTrace',
+                  style: TextStyle(color: Colors.white),
+                ),
               ),
             ];
           });
@@ -174,22 +180,28 @@ class _ChartViewPageState extends State<ChartViewPage> {
                 imageUrl: bgurl.join('/'),
                 // height: MediaQuery.heightOf(context),
                 fit: BoxFit.none,
-                errorWidget: (context, error, stackTrace) =>
-                    Text('错误：$error \n $stackTrace'),
+                errorWidget: (context, error, stackTrace) => Text(
+                  '错误：$error \n $stackTrace',
+                  style: TextStyle(color: Colors.white),
+                ),
               ),
               CachedNetworkImage(
                 imageUrl: barurl.join('/'),
                 // height: MediaQuery.heightOf(context),
                 fit: BoxFit.none,
-                errorWidget: (context, error, stackTrace) =>
-                    Text('错误：$error \n $stackTrace'),
+                errorWidget: (context, error, stackTrace) => Text(
+                  '错误：$error \n $stackTrace',
+                  style: TextStyle(color: Colors.white),
+                ),
               ),
               CachedNetworkImage(
                 imageUrl: chartdataurl.join('/'),
                 // height: MediaQuery.heightOf(context),
                 fit: BoxFit.none,
-                errorWidget: (context, error, stackTrace) =>
-                    Text('错误：$error \n $stackTrace'),
+                errorWidget: (context, error, stackTrace) => Text(
+                  '错误：$error \n $stackTrace',
+                  style: TextStyle(color: Colors.white),
+                ),
               ),
             ];
             // stopwatch.stop();
@@ -205,7 +217,9 @@ class _ChartViewPageState extends State<ChartViewPage> {
       log('$e \n $strack');
       if (!mounted) return;
       setState(() {
-        result = [Text('错误：$e \n $strack')];
+        result = [
+          Text('错误：$e \n $strack', style: TextStyle(color: Colors.white)),
+        ];
       });
     }
   }

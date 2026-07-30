@@ -1,3 +1,6 @@
+import 'package:chusearchsong_flutter/pages/toolspages/overpowercalculationpage.dart';
+import 'package:chusearchsong_flutter/pages/toolspages/ratingcalculationmethodpage.dart';
+import 'package:chusearchsong_flutter/pages/toolspages/searchsongzxzrpage/searchsongzxzrpage.dart';
 import 'package:chusearchsong_flutter/pages/toolspages/songrecommendationpage.dart';
 import 'package:chusearchsong_flutter/function/fun.dart';
 import '../../function/toolsfun/ratingtrendpagefun.dart';
@@ -14,7 +17,6 @@ import '../toolspages/ratingtrendpages.dart';
 import '../toolspages/updatescorepage.dart';
 import '../toolspages/generateb50page.dart';
 import '../toolspages/playerinfopage.dart';
-import '../toolspages/randomb50page.dart';
 import '../toolspages/levelcompletionprogresspage/levelcompletionprogresspage.dart';
 
 //主窗口
@@ -227,6 +229,37 @@ class _ToolPageState extends State<ToolPage> {
                   ),
                 ],
               ),
+              Row(
+                children: [
+                  Expanded(
+                    child: InkWell(
+                      child: Card(
+                        child: TextButton.icon(
+                          onPressed: () async {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) =>
+                                    Ratingcalculationmethodpage(),
+                              ),
+                            );
+                          },
+                          icon: Icon(
+                            Icons.functions_outlined,
+                            color: Theme.of(context).colorScheme.onSurface,
+                          ),
+                          label: Text(
+                            'Rating计算方式',
+                            style: TextStyle(
+                              color: Theme.of(context).colorScheme.onSurface,
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
               const Divider(),
               Text('工具'),
               Row(
@@ -309,30 +342,30 @@ class _ToolPageState extends State<ToolPage> {
                       ),
                     ),
                   ),
-                  // Expanded(
-                  //   child: InkWell(
-                  //     child: Card(
-                  //       child: TextButton.icon(
-                  //         label: Text(
-                  //           '随机B50生成',
-                  //           style: TextStyle(
-                  //             color: Theme.of(context).colorScheme.onSurface,
-                  //           ),
-                  //         ),
-                  //         onPressed: () => Navigator.push(
-                  //           context,
-                  //           MaterialPageRoute(
-                  //             builder: (context) => Randomb50page(),
-                  //           ),
-                  //         ),
-                  //         icon: Icon(
-                  //           Icons.image_outlined,
-                  //           color: Theme.of(context).colorScheme.onSurface,
-                  //         ),
-                  //       ),
-                  //     ),
-                  //   ),
-                  // ),
+                  Expanded(
+                    child: InkWell(
+                      child: Card(
+                        child: TextButton.icon(
+                          label: Text(
+                            '最新最热查歌',
+                            style: TextStyle(
+                              color: Theme.of(context).colorScheme.onSurface,
+                            ),
+                          ),
+                          onPressed: () => Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => Searchsongzxzrpage(),
+                            ),
+                          ),
+                          icon: Icon(
+                            Icons.search_outlined,
+                            color: Theme.of(context).colorScheme.onSurface,
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
                 ],
               ),
               Row(
@@ -479,31 +512,31 @@ class _ToolPageState extends State<ToolPage> {
                       ),
                     ),
                   ),
-                  // Expanded(
-                  //   child: InkWell(
-                  //     child: Card(
-                  //       child: TextButton.icon(
-                  //         label: Text(
-                  //           '吃分推荐',
-                  //           style: TextStyle(
-                  //             color: Theme.of(context).colorScheme.onSurface,
-                  //           ),
-                  //         ),
-                  //         onPressed: () => Navigator.push(
-                  //           context,
-                  //           MaterialPageRoute(
-                  //             builder: (context) =>
-                  //                 const SongRecommendationPage(),
-                  //           ),
-                  //         ),
-                  //         icon: Icon(
-                  //           Icons.recommend_outlined,
-                  //           color: Theme.of(context).colorScheme.onSurface,
-                  //         ),
-                  //       ),
-                  //     ),
-                  //   ),
-                  // ),
+                  Expanded(
+                    child: InkWell(
+                      child: Card(
+                        child: TextButton.icon(
+                          label: Text(
+                            'Over Power计算',
+                            style: TextStyle(
+                              color: Theme.of(context).colorScheme.onSurface,
+                            ),
+                          ),
+                          onPressed: () => Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) =>
+                                  const Overpowercalculationpage(),
+                            ),
+                          ),
+                          icon: Icon(
+                            Icons.rocket_launch,
+                            color: Theme.of(context).colorScheme.onSurface,
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
                 ],
               ),
             ],

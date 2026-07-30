@@ -164,7 +164,11 @@ class _SongInfoPageState extends State<SongInfoPage> {
     if (kanji != null) {
       final kanjiText = kanji['kanji'];
       result.add(
-        Text('谱面属性: $kanjiText', style: const TextStyle(fontSize: 15)),
+        InkWell(
+          onLongPress: () =>
+              copytext(text: kanjiText.toString(), context: context),
+          child: Text('谱面属性: $kanjiText', style: const TextStyle(fontSize: 15)),
+        ),
       );
     }
 
@@ -294,6 +298,9 @@ class _SongInfoPageState extends State<SongInfoPage> {
               children: [
                 InkWell(
                   child: Image.network(
+                    height: 350,
+                    width: 350,
+                    fit: BoxFit.cover,
                     'https://assets2.lxns.net/chunithm/jacket/${widget.originid}.png',
                     errorBuilder: (context, error, stackTrace) {
                       return const Text('图片加载失败');
@@ -311,20 +318,88 @@ class _SongInfoPageState extends State<SongInfoPage> {
                     );
                   },
                 ),
-
                 TextButton(
                   onPressed: () async {
                     try {
+                      String selectdiff = '';
+                      List<Widget> difflist = [];
+                      for (var i in widget.songbasedata['difficulties']) {
+                        switch (i['difficulty']) {
+                          case 0:
+                            difflist.add(
+                              ListTile(
+                                title: Text('Basic'),
+                                onTap: () => Navigator.of(context).pop('Basic'),
+                              ),
+                            );
+                          case 1:
+                            difflist.add(
+                              ListTile(
+                                title: Text('Advanced'),
+                                onTap: () =>
+                                    Navigator.of(context).pop('Advanced'),
+                              ),
+                            );
+                          case 2:
+                            difflist.add(
+                              ListTile(
+                                title: Text('Expert'),
+                                onTap: () =>
+                                    Navigator.of(context).pop('Expert'),
+                              ),
+                            );
+                          case 3:
+                            difflist.add(
+                              ListTile(
+                                title: Text('Master'),
+                                onTap: () =>
+                                    Navigator.of(context).pop('Master'),
+                              ),
+                            );
+                          case 4:
+                            difflist.add(
+                              ListTile(
+                                title: Text('Ultimate'),
+                                onTap: () =>
+                                    Navigator.of(context).pop('Ultimate'),
+                              ),
+                            );
+                          case 5:
+                            difflist.add(
+                              ListTile(
+                                title: Text('World\'s End'),
+                                onTap: () =>
+                                    Navigator.of(context).pop('World\'s End'),
+                              ),
+                            );
+                        }
+                      }
+
+                      selectdiff = await showDialog(
+                        context: context,
+                        builder: (context) {
+                          return AlertDialog(
+                            title: Text('选择难度'),
+                            content: SizedBox(
+                              height: 300,
+                              child: Column(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: difflist,
+                              ),
+                            ),
+                          );
+                        },
+                      );
                       final Uri url = Uri.parse(
-                        'bilibili://search?keyword=${widget.songbasedata['title']}谱面确认',
+                        'bilibili://search?keyword=${widget.songbasedata['title']} $selectdiff 谱面确认',
                       );
                       if (await canLaunchUrl(url)) {
                         await launchUrl(url);
                       } else if (!await canLaunchUrl(url)) {
                         throw Exception('Could not launch $url');
                       }
-                    } catch (e) {
-                      log('错误', name: 'songinfopage', level: 1000);
+                    } catch (e, strack) {
+                      log('$e\n$strack', name: 'songinfopage', level: 1000);
                       if (!context.mounted) return;
                       ScaffoldMessenger.of(
                         context,
@@ -353,17 +428,36 @@ class _SongInfoPageState extends State<SongInfoPage> {
                               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                               children: [
                                 Row(children: [Icon(Icons.info), Text('基本信息')]),
-                                Text(
-                                  '落雪id： ${widget.songbasedata['id']}',
-                                  style: const TextStyle(fontSize: 15),
+                                InkWell(
+                                  onLongPress: () => copytext(
+                                    context: context,
+                                    text: widget.songbasedata['id'],
+                                  ),
+                                  child: Text(
+                                    '落雪id： ${widget.songbasedata['id']}',
+                                    style: const TextStyle(fontSize: 15),
+                                  ),
                                 ),
-                                Text(
-                                  '分类： ${widget.songbasedata['genre']}',
-                                  style: const TextStyle(fontSize: 15),
+                                InkWell(
+                                  onLongPress: () => copytext(
+                                    context: context,
+                                    text: widget.songbasedata['genre']
+                                        .toString(),
+                                  ),
+                                  child: Text(
+                                    '分类： ${widget.songbasedata['genre']}',
+                                    style: const TextStyle(fontSize: 15),
+                                  ),
                                 ),
-                                Text(
-                                  '版本： ${widget.versionname}',
-                                  style: const TextStyle(fontSize: 15),
+                                InkWell(
+                                  onLongPress: () => copytext(
+                                    text: widget.versionname,
+                                    context: context,
+                                  ),
+                                  child: Text(
+                                    '版本： ${widget.versionname}',
+                                    style: const TextStyle(fontSize: 15),
+                                  ),
                                 ),
                                 Text(
                                   'BPM:  ${widget.songbasedata['bpm']}',
@@ -371,7 +465,8 @@ class _SongInfoPageState extends State<SongInfoPage> {
                                 ),
                                 InkWell(
                                   onLongPress: () => copytext(
-                                    text: widget.songbasedata['artist'],
+                                    text: widget.songbasedata['artist']
+                                        .toString(),
                                     context: context,
                                   ),
                                   child: Text(

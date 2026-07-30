@@ -39,6 +39,8 @@ export default defineConfig({
                   { text: '更新成绩', link: '/helper/function/tools/updatescore/' },
                   { text: '歌曲推荐', link: '/helper/function/tools/songrecommendation/' },
                   { text: '等级完成进度', link: '/helper/function/tools/levelcompletionprogress/' },
+                  { text: 'Over Power计算', link: '/helper/function/tools/overpowercalculation/' },
+                  { text: '最新最热查歌', link: '/helper/function/tools/zxzrsearchsong/' },
                 ]
               },
             ]
