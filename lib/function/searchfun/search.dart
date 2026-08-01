@@ -464,23 +464,26 @@ Future<List<dynamic>> filter(
   }
 
   //筛选难度
-  if (difficultydown == '-1' && difficultyup == '-1') {
-    log('跳过难度');
-  } else {
-    if (difficultyup == '-1') {
-      difficultyup = '17';
-    }
-    List songresult4 = [];
-    for (var i in songresultMap) {
-      for (var j in i['difficulties']) {
-        if (double.parse(difficultydown) <= j['level_value'] &&
-            j['level_value'] <= double.parse(difficultyup)) {
-          songresult4.add(i);
-          break;
+  if (double.tryParse(difficultydown) != null &&
+      double.tryParse(difficultyup) != null) {
+    if (difficultydown == '-1' && difficultyup == '-1') {
+      log('跳过难度');
+    } else {
+      if (difficultyup == '-1') {
+        difficultyup = '17';
+      }
+      List songresult4 = [];
+      for (var i in songresultMap) {
+        for (var j in i['difficulties']) {
+          if (double.parse(difficultydown) <= j['level_value'] &&
+              j['level_value'] <= double.parse(difficultyup)) {
+            songresult4.add(i);
+            break;
+          }
         }
       }
+      songresultMap = songresult4;
     }
-    songresultMap = songresult4;
   }
 
   if (isSearch == false) {

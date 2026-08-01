@@ -25,8 +25,12 @@ class _SearchPageState extends State<SearchPage> {
   final TextEditingController _bpmup = TextEditingController();
   final TextEditingController _bpmdown = TextEditingController();
   final ScrollController _scrollController = ScrollController();
+  final TextEditingController _difficultydown = TextEditingController();
+  final TextEditingController _difficultyup = TextEditingController();
+  bool _ready = false;
 
   Future<void> _performSearch() async {
+    if (!_ready) return;
     String searchTitle = _searchController.text;
     String genre = selectedGenre ?? '-1';
     String version = selectedVersion ?? '-1';
@@ -55,13 +59,11 @@ class _SearchPageState extends State<SearchPage> {
         context: context,
       );
       if (!mounted) return;
-      // 更新状态
       setState(() {
         searchResults = results;
       });
-    } catch (e) {
-      log('搜索错误: $e', name: 'searchpage.dart', level: 1000);
-      // 可以显示错误信息给用户
+    } catch (e, strack) {
+      log('搜索错误: $e\n$strack', name: 'searchpage.dart', level: 1000);
     }
   }
 
@@ -105,10 +107,38 @@ class _SearchPageState extends State<SearchPage> {
     });
   }
 
+  void _onDifficultyUpInput() {
+    log('自定义难度上限');
+    if (double.tryParse(_difficultyup.text) != null) {
+      selectedDifficultyUp = double.tryParse(_difficultyup.text).toString();
+    }
+    _performSearch();
+  }
+
+  void _onDifficultyDownInput() {
+    log('自定义难度下限');
+    if (double.tryParse(_difficultydown.text) != null) {
+      selectedDifficultyDown = double.tryParse(_difficultydown.text).toString();
+    }
+    _performSearch();
+  }
+
   @override
   void initState() {
     super.initState();
     _buildAllDropdownMenus();
+    _difficultyup.addListener(_onDifficultyUpInput);
+    _difficultydown.addListener(_onDifficultyDownInput);
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _ready = true;
+    });
+  }
+
+  @override
+  void dispose() {
+    _difficultyup.removeListener(_onDifficultyUpInput);
+    _difficultydown.removeListener(_onDifficultyDownInput);
+    super.dispose();
   }
 
   @override
@@ -170,6 +200,7 @@ class _SearchPageState extends State<SearchPage> {
                     Expanded(child: versionDropdownMenu),
                     Expanded(
                       child: buildDifficultyDownDropdownMenu(
+                        ccontroller: _difficultydown,
                         initialSelection: selectedDifficultyDown,
                         onSelected: (String? value) {
                           setState(() {
@@ -187,6 +218,7 @@ class _SearchPageState extends State<SearchPage> {
                     ),
                     Expanded(
                       child: buildDifficultyUpDropdownMenu(
+                        ccontroller: _difficultyup,
                         initialSelection: selectedDifficultyUp,
                         onSelected: (String? value) {
                           setState(() {

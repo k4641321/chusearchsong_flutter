@@ -358,7 +358,8 @@ Future<List<dynamic>> filter(
     List songresult4 = [];
     for (var i in songresultMap) {
       for (var j in i['charts']) {
-        if (double.parse(difficultydown) <= j['const'] &&
+        if (j['const'] != null &&
+            double.parse(difficultydown) <= j['const'] &&
             j['const'] <= double.parse(difficultyup)) {
           songresult4.add(i);
           break;

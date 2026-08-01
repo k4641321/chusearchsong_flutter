@@ -235,15 +235,12 @@ class _SongInfoPageState extends State<SongInfoPage> {
   void initState() {
     super.initState();
     _buttonIcon();
-    loadinformation();
-  }
-
-  @override
-  void didChangeDependencies() {
-    loadrelatedCollectibles();
-    loadworldsendinformation(songbasedata: widget.songbasedata);
-    loadChartInfoAndSocre();
-    super.didChangeDependencies();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      loadinformation();
+      loadrelatedCollectibles();
+      loadworldsendinformation(songbasedata: widget.songbasedata);
+      loadChartInfoAndSocre();
+    });
   }
 
   @override

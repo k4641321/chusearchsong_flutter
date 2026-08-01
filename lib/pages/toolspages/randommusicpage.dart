@@ -26,8 +26,12 @@ class _RandomMusicPageState extends State<RandomMusicPage> {
   List<Widget> songResult = [Text('待抽取')];
   final TextEditingController _controller = TextEditingController();
   final ScrollController _scrollController = ScrollController();
+  final TextEditingController _difficultydown = TextEditingController();
+  final TextEditingController _difficultyup = TextEditingController();
+  bool _ready = false;
 
   Future<void> _performSearch() async {
+    if (!_ready) return;
     String searchTitle = _searchController.text;
     String genre = selectedGenre ?? '-1';
     String version = selectedVersion ?? '-1';
@@ -94,10 +98,38 @@ class _RandomMusicPageState extends State<RandomMusicPage> {
     });
   }
 
+  void _onDifficultyUpInput() {
+    log('自定义难度上限');
+    if (double.tryParse(_difficultyup.text) != null) {
+      selectedDifficultyUp = double.tryParse(_difficultyup.text).toString();
+    }
+    _performSearch();
+  }
+
+  void _onDifficultyDownInput() {
+    log('自定义难度下限');
+    if (double.tryParse(_difficultydown.text) != null) {
+      selectedDifficultyDown = double.tryParse(_difficultydown.text).toString();
+    }
+    _performSearch();
+  }
+
   @override
   void initState() {
     super.initState();
     _buildAllDropdownMenus();
+    _difficultyup.addListener(_onDifficultyUpInput);
+    _difficultydown.addListener(_onDifficultyDownInput);
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _ready = true;
+    });
+  }
+
+  @override
+  void dispose() {
+    _difficultyup.removeListener(_onDifficultyUpInput);
+    _difficultydown.removeListener(_onDifficultyDownInput);
+    super.dispose();
   }
 
   @override
@@ -193,6 +225,7 @@ class _RandomMusicPageState extends State<RandomMusicPage> {
                   Expanded(child: versionDropdownMenu),
                   Expanded(
                     child: buildDifficultyDownDropdownMenu(
+                      ccontroller: _difficultydown,
                       initialSelection: selectedDifficultyDown,
                       onSelected: (String? value) {
                         setState(() {
@@ -203,6 +236,7 @@ class _RandomMusicPageState extends State<RandomMusicPage> {
                   ),
                   Expanded(
                     child: buildDifficultyUpDropdownMenu(
+                      ccontroller: _difficultyup,
                       initialSelection: selectedDifficultyUp,
                       onSelected: (String? value) {
                         setState(() {

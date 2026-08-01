@@ -308,7 +308,14 @@ Future<List<Widget>> returnSongInformation({
     if (songInfo.isNotEmpty) {
       if (songInfo.keys.contains('map')) {
         information.add(
-          Text('地图: ${songInfo['map']}', style: const TextStyle(fontSize: 15)),
+          InkWell(
+            onLongPress: () =>
+                copytext(text: songInfo['map'], context: context),
+            child: Text(
+              '地图: ${songInfo['map']}',
+              style: const TextStyle(fontSize: 15),
+            ),
+          ),
         );
       }
       if (songInfo.keys.contains('locked')) {

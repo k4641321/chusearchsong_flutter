@@ -1,5 +1,6 @@
 import 'dart:developer';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'dart:convert';
 import 'dart:io';
 import 'package:path_provider/path_provider.dart';
@@ -125,6 +126,7 @@ Future<Widget> buildVersionDropdownMenu({
 
 // 难度下限
 Widget buildDifficultyDownDropdownMenu({
+  required TextEditingController ccontroller,
   String? initialSelection,
   ValueChanged<String?>? onSelected,
 }) {
@@ -132,8 +134,12 @@ Widget buildDifficultyDownDropdownMenu({
     menuHeight: 300.0,
     width: double.infinity,
     initialSelection: initialSelection ?? '-1',
-    selectOnly: true,
+    selectOnly: false,
+    inputFormatters: [
+      FilteringTextInputFormatter.allow(RegExp(r'^\d+\.?\d{0,}')),
+    ],
     onSelected: onSelected,
+    controller: ccontroller,
     dropdownMenuEntries: const [
       DropdownMenuEntry<String>(label: '难度下限', value: '-1'),
       DropdownMenuEntry<String>(label: '0', value: '0'),
@@ -168,6 +174,7 @@ Widget buildDifficultyDownDropdownMenu({
 
 // 难度上限
 Widget buildDifficultyUpDropdownMenu({
+  required TextEditingController ccontroller,
   String? initialSelection,
   ValueChanged<String?>? onSelected,
 }) {
@@ -175,8 +182,12 @@ Widget buildDifficultyUpDropdownMenu({
     menuHeight: 300.0,
     width: double.infinity,
     initialSelection: initialSelection ?? '-1',
-    selectOnly: true,
+    selectOnly: false,
+    inputFormatters: [
+      FilteringTextInputFormatter.allow(RegExp(r'^\d+\.?\d{0,}')),
+    ],
     onSelected: onSelected,
+    controller: ccontroller,
     dropdownMenuEntries: const [
       DropdownMenuEntry<String>(label: '难度上限', value: '-1'),
       DropdownMenuEntry<String>(label: '0', value: '0'),

@@ -3,6 +3,7 @@ import 'package:chusearchsong_flutter/pages/toolspages/ratingcalculationmethodpa
 import 'package:chusearchsong_flutter/pages/toolspages/searchsongzxzrpage/searchsongzxzrpage.dart';
 import 'package:chusearchsong_flutter/pages/toolspages/songrecommendationpage.dart';
 import 'package:chusearchsong_flutter/function/fun.dart';
+import 'package:chusearchsong_flutter/pages/toolspages/viewallgradespage.dart';
 import '../../function/toolsfun/ratingtrendpagefun.dart';
 import '../toolspages/ratingcalculatorpage.dart';
 import 'package:flutter/material.dart';
@@ -527,6 +528,34 @@ class _ToolPageState extends State<ToolPage> {
                             MaterialPageRoute(
                               builder: (context) =>
                                   const Overpowercalculationpage(),
+                            ),
+                          ),
+                          icon: Icon(
+                            Icons.rocket_launch,
+                            color: Theme.of(context).colorScheme.onSurface,
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+              Row(
+                children: [
+                  Expanded(
+                    child: InkWell(
+                      child: Card(
+                        child: TextButton.icon(
+                          label: Text(
+                            '所有成绩查看',
+                            style: TextStyle(
+                              color: Theme.of(context).colorScheme.onSurface,
+                            ),
+                          ),
+                          onPressed: () => Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => const Viewallgradespage(),
                             ),
                           ),
                           icon: Icon(
