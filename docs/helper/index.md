@@ -18,6 +18,7 @@ next:
 - [x] 别名查歌
 - [x] 曲师查歌
 - [x] 定数筛选
+- [x] 音符数量筛选
 - [x] 歌曲详情
 - [x] 曲绘预览
 - [x] 收藏夹
@@ -48,15 +49,16 @@ next:
 *...more...*
 
 ## 支持平台？
-| 平台 | 状态 | 系统要求|
+| 平台 | 状态 | 备注|
 |---|---|---|
 | Windows| 支持 | Windows 10+|
-| macOS | 没计划 | |
+| macOS | 没计划 | 太贵了，还没设备 |
 | Linux | 支持 | 软件0.7.0前完全兼容，后面不知道|
 | Android | 支持 | Android 7.0+ |
-| Web | 半支持 | |
-| iOS | 没计划 | |
+| Web | 半支持 | 只有基础工具能用了|
+| iOS | 没计划 | 太贵了，还没设备 |
 
 ## 考虑帮助作者开发？
 欢迎大神入群指导*＜(´・ω・)っ 309546141
 差评开发中，如有Bug，请提Issue，我会非常感谢你的
+![Static Badge](https://img.shields.io/badge/%E7%82%B9%E5%87%BB%E8%B7%B3%E8%BD%AC-%23B300FF?style=for-the-badge&logo=afdian&logoColor=%23B300FF&label=%E4%BD%BF%E7%94%A8%E7%88%B1%E5%8F%91%E7%94%B5&link=https%3A%2F%2Fifdian.net%2Fa%2Fk4641321)  

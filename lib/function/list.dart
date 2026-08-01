@@ -229,6 +229,24 @@ Widget buildIfPlayDropdownMenu({
   );
 }
 
+//是否游玩
+Widget buildSpecialFilterDropdownMenu({
+  int? initialSelection,
+  ValueChanged<int?>? onSelected,
+}) {
+  return DropdownMenu<int>(
+    menuHeight: 300.0,
+    width: double.infinity,
+    initialSelection: initialSelection ?? 0,
+    selectOnly: true,
+    onSelected: onSelected,
+    dropdownMenuEntries: const [
+      DropdownMenuEntry<int>(label: '不启用特殊筛选', value: 0),
+      DropdownMenuEntry<int>(label: '启用特殊筛选', value: 1),
+    ],
+  );
+}
+
 //评级
 Widget buildRankDropdownMenu({
   String? initialSelection,

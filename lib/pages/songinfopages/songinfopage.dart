@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'dart:developer';
+import 'package:chusearchsong_flutter/function/texttranslate.dart';
 import 'package:flutter/material.dart';
 import 'musicpage.dart';
 import 'dart:io';
@@ -36,6 +37,7 @@ class _SongInfoPageState extends State<SongInfoPage> {
   Widget worldsendinformation = SizedBox.shrink();
   Widget difficultyChartInfo = CircularProgressIndicator();
   List<Widget> alias = [];
+  Widget translationtext = SizedBox.shrink();
   //添加收藏
   Future<void> _add() async {
     try {
@@ -414,6 +416,33 @@ class _SongInfoPageState extends State<SongInfoPage> {
                     textAlign: TextAlign.center,
                   ),
                 ),
+                TextButton(
+                  onPressed: () async {
+                    try {
+                      String result = await translateText(
+                        sourceText: widget.songbasedata['title'],
+                        context: context,
+                      );
+                      if (!context.mounted) return;
+                      setState(() {
+                        translationtext = Text(result);
+                      });
+                    } catch (e, strack) {
+                      log('$e\n$strack', name: 'songinfopage', level: 1000);
+                      if (!context.mounted) return;
+                      ScaffoldMessenger.of(
+                        context,
+                      ).showSnackBar(SnackBar(content: Text('翻译失败')));
+                    }
+                  },
+                  child: Text(
+                    '翻译歌曲标题',
+                    style: TextStyle(
+                      color: Theme.of(context).colorScheme.onSurface,
+                    ),
+                  ),
+                ),
+                translationtext,
                 Row(
                   children: [
                     Expanded(

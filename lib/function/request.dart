@@ -5,6 +5,31 @@ import 'dart:developer';
 import 'dart:io';
 import 'package:path_provider/path_provider.dart';
 
+Future<String> requestuscount() async {
+  final response = await get(
+    Uri.parse('https://chusearchsong.4641321.xyz/api/usecount'),
+  );
+  return response.body;
+}
+
+Future<String> requestAnnouncement() async {
+  final response = await get(
+    Uri.parse('https://chusearchsong.4641321.xyz/api/announcement'),
+  );
+  return response.body;
+}
+
+Future<Map<String, dynamic>> readconfig() async {
+  final path = await getApplicationSupportDirectory();
+  String configstr = await File('${path.path}/config.json').readAsString();
+  return json.decode(configstr);
+}
+
+Future<void> saveconfig(Map<String, dynamic> config) async {
+  final path = await getApplicationSupportDirectory();
+  await File('${path.path}/config.json').writeAsString(json.encode(config));
+}
+
 Future<String> requestChangeslog() async {
   final response = await get(
     Uri.parse('https://chusearchsong.4641321.xyz/api/changelog'),

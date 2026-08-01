@@ -12,17 +12,22 @@ class Changeslogpage extends StatefulWidget {
 
 class _ChangeslogpageState extends State<Changeslogpage> {
   Widget body = CircularProgressIndicator();
+  List<Widget> changesloglist = [];
+  List<Widget> announcementlist = [];
+
+  int show = 0;
 
   Future<void> init() async {
     try {
       List changeslog = await jsonDecode(await requestChangeslog());
-      List<Widget> resultlist = [];
+      List announcement = await jsonDecode(await requestAnnouncement());
+
       for (var i in changeslog) {
         List changes = [];
         for (var j in i['changes']) {
           changes.add(j);
         }
-        resultlist.add(
+        changesloglist.add(
           Card(
             child: Padding(
               padding: EdgeInsetsGeometry.all(8),
@@ -42,8 +47,29 @@ class _ChangeslogpageState extends State<Changeslogpage> {
           ),
         );
       }
+      for (var i in announcement) {
+        announcementlist.add(
+          Card(
+            child: Padding(
+              padding: EdgeInsetsGeometry.all(8),
+              child: Column(
+                children: [
+                  Text(
+                    '${i['title']}',
+                    style: TextStyle(fontSize: 25, fontWeight: FontWeight.bold),
+                  ),
+                  const Divider(),
+                  Text('${i['date']}', style: TextStyle(fontSize: 20)),
+                  const Divider(),
+                  Text('${i['content']}', style: TextStyle(fontSize: 15)),
+                ],
+              ),
+            ),
+          ),
+        );
+      }
       setState(() {
-        body = ListView(children: resultlist);
+        body = ListView(children: changesloglist);
       });
     } catch (e, strack) {
       setState(() {
@@ -61,7 +87,25 @@ class _ChangeslogpageState extends State<Changeslogpage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text('更新日志')),
+      appBar: AppBar(
+        title: Text('更新日志与公告'),
+        actions: [
+          IconButton(
+            icon: Icon(Icons.swap_horiz),
+            onPressed: () {
+              setState(() {
+                if (show == 0) {
+                  show = 1;
+                  body = ListView(children: announcementlist);
+                } else {
+                  show = 0;
+                  body = ListView(children: changesloglist);
+                }
+              });
+            },
+          ),
+        ],
+      ),
       body: Center(child: body),
     );
   }

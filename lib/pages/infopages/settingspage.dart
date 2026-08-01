@@ -2,7 +2,7 @@ import 'dart:convert';
 import 'dart:developer';
 import 'dart:io';
 
-import 'package:chusearchsong_flutter/function/settingspagefun.dart';
+import 'package:chusearchsong_flutter/function/infopagefun/settingspagefun.dart';
 import 'package:flutter/material.dart';
 import 'package:path_provider/path_provider.dart';
 import 'settingspage/lxnssettingspage.dart';
@@ -21,7 +21,9 @@ class SettingsPage extends StatefulWidget {
 class _SettingsPageState extends State<SettingsPage> {
   final ScrollController _scrollController = ScrollController();
   bool chartproxy = false;
+  bool autocheckupdate = false;
   String darkmode = 'light';
+
   Future<void> darkmodechange() async {
     final path = await getApplicationSupportDirectory();
     final config = File('${path.path}/config.json');
@@ -78,13 +80,26 @@ class _SettingsPageState extends State<SettingsPage> {
   }
 
   Future<void> init() async {
-    final path = await getApplicationSupportDirectory();
-    Map<String, dynamic> config = jsonDecode(
-      await File('${path.path}/config.json').readAsString(),
-    );
-    setState(() {
-      chartproxy = config['chartproxy'];
-    });
+    try {
+      final path = await getApplicationSupportDirectory();
+      Map<String, dynamic> config = jsonDecode(
+        await File('${path.path}/config.json').readAsString(),
+      );
+      setState(() {
+        chartproxy = config['chartproxy'];
+        if (!config.containsKey('autocheckupdate')) {
+          return;
+        } else {
+          autocheckupdate = config['autocheckupdate'];
+        }
+      });
+    } catch (e, strack) {
+      log('$e\n$strack', name: 'settingspage.dart', level: 1000);
+      if (!mounted) return;
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text('错误：$e\$strack')));
+    }
   }
 
   @override
@@ -281,10 +296,69 @@ class _SettingsPageState extends State<SettingsPage> {
                             ),
                           ),
                         ),
-                        onTap: () => Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => LxnsSettingsPage(),
+                      ),
+                    ),
+                  ],
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: [
+                    Expanded(
+                      child: InkWell(
+                        child: Card(
+                          color: Theme.of(
+                            context,
+                          ).colorScheme.primaryContainer.withAlpha(150),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.all(
+                              Radius.circular(0.0),
+                            ),
+                          ),
+                          child: Padding(
+                            padding: EdgeInsetsGeometry.all(5),
+                            child: Row(
+                              children: [
+                                Padding(
+                                  padding: EdgeInsetsGeometry.only(left: 10),
+                                  child: Icon(Icons.update_outlined, size: 35),
+                                ),
+                                Expanded(
+                                  child: SwitchListTile(
+                                    title: Text('自动检查更新'),
+                                    subtitle: Text('启动时是否自动检查更新'),
+                                    value: autocheckupdate,
+                                    onChanged: (value) async {
+                                      try {
+                                        setState(() => autocheckupdate = value);
+                                        final path =
+                                            await getApplicationSupportDirectory();
+                                        Map<String, dynamic> config =
+                                            jsonDecode(
+                                              await File(
+                                                '${path.path}/config.json',
+                                              ).readAsString(),
+                                            );
+                                        config['autocheckupdate'] =
+                                            autocheckupdate;
+                                        await File(
+                                          '${path.path}/config.json',
+                                        ).writeAsString(jsonEncode(config));
+                                      } catch (e, strack) {
+                                        log('$e\n$strack');
+                                        if (!context.mounted) return;
+                                        ScaffoldMessenger.of(
+                                          context,
+                                        ).showSnackBar(
+                                          SnackBar(
+                                            content: Text('错误：$e\n$strack'),
+                                          ),
+                                        );
+                                      }
+                                    },
+                                  ),
+                                ),
+                              ],
+                            ),
                           ),
                         ),
                       ),

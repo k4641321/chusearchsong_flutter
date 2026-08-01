@@ -16,6 +16,7 @@ class _SearchPageState extends State<SearchPage> {
   String? selectedDifficultyDown = '-1';
   String? selectedDifficultyUp = '-1';
   String? selectedifPlay = '-1';
+  int? selectedSpecialFilter = 0;
   int? bpmup;
   int? bpmdown;
   List<Widget> searchResults = [];
@@ -46,6 +47,7 @@ class _SearchPageState extends State<SearchPage> {
         bpmdown,
         true,
         null,
+        selectedSpecialFilter,
       );
       if (!mounted) return;
       List<Widget> results = await search(
@@ -243,6 +245,23 @@ class _SearchPageState extends State<SearchPage> {
                         onSelected: (String? value) {
                           setState(() {
                             selectedifPlay = value;
+                          });
+                          try {
+                            _performSearch();
+                          } catch (e) {
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              SnackBar(content: Text('搜索失败，可能是数据丢失')),
+                            );
+                          }
+                        },
+                      ),
+                    ),
+                    Expanded(
+                      child: buildSpecialFilterDropdownMenu(
+                        initialSelection: selectedSpecialFilter,
+                        onSelected: (int? value) {
+                          setState(() {
+                            selectedSpecialFilter = value;
                           });
                           try {
                             _performSearch();

@@ -44,7 +44,8 @@ export default defineConfig({
                 ]
               },
             ]
-          }
+          },
+          { text: '常见问题', link: '/question/' },
         ]
       }
     ],

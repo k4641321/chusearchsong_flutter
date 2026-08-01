@@ -64,20 +64,30 @@ Future<bool> checkforupdates() async {
   // log(newversion);
   log('开始检查');
   if (Version.parse(oldversion) < Version.parse(newversion)) {
+    log('发现新版本');
     return true;
   } else {
+    log('已是最新版本');
     return false;
   }
 }
 
 Future<void> lanuchdownload({required BuildContext context}) async {
-  final githuburl = Uri.parse(
-    'https://github.com/k4641321/chusearchsong_flutter/releases/latest',
-  );
   try {
-    if (!await launchUrl(githuburl)) {
-      if (!context.mounted) return;
-      throw Exception('Could not launch $githuburl');
+    try {
+      Uri githuburl = jsonDecode(await requestVersion())['download_url'];
+      if (!await launchUrl(githuburl)) {
+        if (!context.mounted) return;
+        throw Exception('Could not launch $githuburl');
+      }
+    } catch (e) {
+      Uri githuburl = Uri.parse(
+        'https://github.com/k4641321/chusearchsong_flutter/releases/latest',
+      );
+      if (!await launchUrl(githuburl)) {
+        if (!context.mounted) return;
+        throw Exception('Could not launch $githuburl');
+      }
     }
   } catch (e) {
     if (!context.mounted) return;

@@ -1,33 +1,26 @@
-import 'dart:convert';
-import 'dart:developer';
-import 'dart:io';
-
-import 'package:chusearchsong_flutter/function/request.dart';
-import 'package:chusearchsong_flutter/function/toolsfun/generateb50fun/generateb50.dart';
 import 'package:flutter/material.dart';
-import 'package:path_provider/path_provider.dart';
 
 Widget returnSongShareView({required Map<String, dynamic> songdata}) {
   List<Widget> result = [];
 
-  String returndiffenglish({required int diffindex}) {
-    switch (diffindex) {
-      case 0:
-        return 'BASIC';
-      case 1:
-        return 'ADVANCED';
-      case 2:
-        return 'EXPERT';
-      case 3:
-        return 'MASTER';
-      case 4:
-        return 'ULTIMATE';
-      case 5:
-        return 'WORLD\'S END';
-      default:
-        return 'ERROR';
-    }
-  }
+  // String returndiffenglish({required int diffindex}) {
+  //   switch (diffindex) {
+  //     case 0:
+  //       return 'BASIC';
+  //     case 1:
+  //       return 'ADVANCED';
+  //     case 2:
+  //       return 'EXPERT';
+  //     case 3:
+  //       return 'MASTER';
+  //     case 4:
+  //       return 'ULTIMATE';
+  //     case 5:
+  //       return 'WORLD\'S END';
+  //     default:
+  //       return 'ERROR';
+  //   }
+  // }
 
   Color returndiffbgcolor({required String diffindex}) {
     switch (diffindex) {

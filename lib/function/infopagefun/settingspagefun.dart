@@ -1,5 +1,5 @@
 import 'dart:developer';
-import 'request.dart';
+import '../request.dart';
 import 'package:flutter/material.dart';
 import 'dart:io';
 import 'package:path_provider/path_provider.dart';
@@ -153,15 +153,28 @@ Future<void> updateconfig() async {
   final configstr = File('${path.path}/config.json').readAsStringSync();
   final packageinfo = await PackageInfo.fromPlatform();
   Map<String, dynamic> config = json.decode(configstr);
+  //地图配置
   if (!config.containsKey('map')) config['map'] = 'amap';
+  //初始化
   if (!config.containsKey('init')) config['init'] = true;
+  //谱面加速
   if (!config.containsKey('chartproxy')) config['chartproxy'] = false;
+  //更新日志
   if (!config.containsKey('changeslogread')) config['changeslogread'] = false;
+  //版本号
   if (packageinfo.version != config['version']) {
     config['changeslogread'] = false;
   }
   config['version'] = packageinfo.version;
+  //公告
+  if (!config.containsKey('announcement')) {
+    config['announcement'] = {};
+    config['announcement']['date'] = '0000-01-01';
+    config['announcement']['read'] = false;
+  }
   File('${path.path}/config.json').writeAsStringSync(json.encode(config));
+
+  //最新版本获取
   await saveLatestVersion();
 }
 

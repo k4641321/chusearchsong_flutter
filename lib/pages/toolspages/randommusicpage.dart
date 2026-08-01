@@ -50,6 +50,7 @@ class _RandomMusicPageState extends State<RandomMusicPage> {
         bpmdown,
         false,
         randomcount,
+        0,
       );
       if (!mounted) return;
       List<Widget> results = await search(

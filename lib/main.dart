@@ -2,6 +2,7 @@ import 'dart:developer';
 
 import 'package:chusearchsong_flutter/function/infopagefun/infopagefun.dart';
 import 'package:chusearchsong_flutter/function/request.dart';
+import 'package:intl/intl.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'theme.dart';
 import 'package:flutter/material.dart';
@@ -92,11 +93,61 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
+  Future<void> postusecount() async {
+    try {
+      String result = await requestuscount();
+      log(result);
+    } catch (e, strack) {
+      log('$e\n$strack');
+    }
+  }
+
+  Future<void> showannouncement() async {
+    try {
+      final fmt = DateFormat('yyyy-MM-dd');
+      Map<String, dynamic> config = await loadConfig();
+      List announcement = jsonDecode(await requestAnnouncement());
+      if (fmt
+          .parse(config['announcement']['date'])
+          .isBefore(fmt.parse(announcement[0]['date']))) {
+        log('有新的公告');
+        if (!mounted) return;
+        await showDialog(
+          context: context,
+          builder: (context) => AlertDialog(
+            title: Text(announcement[0]['title']),
+            content: Text(announcement[0]['content']),
+          ),
+        );
+        config['announcement']['date'] = announcement[0]['date'];
+        config['announcement']['read'] = true;
+        saveConfig(config);
+      } else {
+        log('没有新的公告');
+      }
+    } catch (e, strack) {
+      log('$e\n$strack');
+      if (!mounted) return;
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text('错误$e\n$strack')));
+    }
+  }
+
   Future<void> chechupdate() async {
     try {
-      await checkforupdates();
+      Map<String, dynamic> config = await loadConfig();
+      if (!config.containsKey('autocheckupdate')) {
+        log('跳过更新检查');
+        return;
+      }
+      if (config['autocheckupdate'] == true) {
+        await checkforupdates();
+      } else {
+        return;
+      }
     } catch (e, strack) {
-      log('#e\n$strack');
+      log('$e\n$strack');
       if (!mounted) return;
       ScaffoldMessenger.of(
         context,
@@ -149,10 +200,12 @@ class _MyHomePageState extends State<MyHomePage> {
   @override
   void initState() {
     super.initState();
+    // postusecount();
     WidgetsBinding.instance.addPostFrameCallback((_) {
       ifres(context: context);
       showChangesLog();
       chechupdate();
+      showannouncement();
     });
   }
 

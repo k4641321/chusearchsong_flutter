@@ -18,6 +18,8 @@ class ThankYouListPage extends StatelessWidget {
             const Divider(),
             Text('宇文夕阳\n为不支持动态配色的设备测试提供帮助'),
             const Divider(),
+            Text('耄耋鱼鱼\n为搜索筛选提供建议'),
+            const Divider(),
             Text('以及使用这个软件的你'),
           ],
         ),

@@ -376,9 +376,9 @@ class _InfoState extends State<Info> {
                                 child: Row(
                                   mainAxisAlignment: MainAxisAlignment.center,
                                   children: [
-                                    Icon(Icons.update),
+                                    Icon(Icons.newspaper),
                                     Text(
-                                      '更新日志',
+                                      '更新日志与公告',
                                       textAlign: TextAlign.center,
                                       style: TextStyle(
                                         fontSize: 20,

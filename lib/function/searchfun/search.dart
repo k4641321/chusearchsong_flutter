@@ -97,6 +97,7 @@ Future<List<dynamic>> filter(
   int? bpmdown,
   bool isSearch,
   int? count,
+  int? specialfilter,
 ) async {
   // 加载曲目数据
   final dataPath = await getApplicationSupportDirectory();
@@ -124,7 +125,7 @@ Future<List<dynamic>> filter(
   }
 
   log(
-    '$title $genre $version $difficultydown $difficultyup $ifplay $bpmup $bpmdown',
+    '$title $genre $version $difficultydown $difficultyup $ifplay $bpmup $bpmdown $specialfilter',
   );
 
   //初步筛选
@@ -207,6 +208,175 @@ Future<List<dynamic>> filter(
         }
       }
     }
+  }
+
+  if (specialfilter == 1) {
+    try {
+      List songData = json.decode(
+        File('${dataPath.path}/res/zxzrsongs.json').readAsStringSync(),
+      );
+      //特殊筛选
+      //谱面音符总数量
+      if (title.split(' ')[0] == '\$total') {
+        log('特殊筛选音符总量');
+        if (title.split(' ').length == 2) {
+          for (var i in songData) {
+            for (var j in i['charts']) {
+              if (j['notecounts']['total'] ==
+                  int.tryParse(title.split(' ')[1])) {
+                songresult.add(i['id']);
+              }
+            }
+          }
+        } else if (title.split(' ').length == 3 && title.split(' ')[2] != '') {
+          log('特殊筛选音符总量');
+          for (var i in songData) {
+            for (var j in i['charts']) {
+              if (j['notecounts']['total'] >=
+                      int.tryParse(title.split(' ')[1]) &&
+                  j['notecounts']['total'] <=
+                      int.tryParse(title.split(' ')[2])) {
+                songresult.add(i['id']);
+              }
+            }
+          }
+        }
+      }
+
+      //Tap数量
+      if (title.split(' ')[0] == '\$tap') {
+        log('特殊筛选音符Tap');
+        if (title.split(' ').length == 2) {
+          for (var i in songData) {
+            for (var j in i['charts']) {
+              if (j['notecounts']['tap'] == int.tryParse(title.split(' ')[1])) {
+                songresult.add(i['id']);
+              }
+            }
+          }
+        } else if (title.split(' ').length == 3 && title.split(' ')[2] != '') {
+          log('特殊筛选音符Tap');
+          for (var i in songData) {
+            for (var j in i['charts']) {
+              if (j['notecounts']['tap'] >= int.tryParse(title.split(' ')[1]) &&
+                  j['notecounts']['tap'] <= int.tryParse(title.split(' ')[2])) {
+                songresult.add(i['id']);
+              }
+            }
+          }
+        }
+      }
+
+      //Hold数量
+      if (title.split(' ')[0] == '\$hold') {
+        log('特殊筛选音符Tap');
+        if (title.split(' ').length == 2) {
+          for (var i in songData) {
+            for (var j in i['charts']) {
+              if (j['notecounts']['hold'] ==
+                  int.tryParse(title.split(' ')[1])) {
+                songresult.add(i['id']);
+              }
+            }
+          }
+        } else if (title.split(' ').length == 3 && title.split(' ')[2] != '') {
+          log('特殊筛选音符Tap');
+          for (var i in songData) {
+            for (var j in i['charts']) {
+              if (j['notecounts']['hold'] >=
+                      int.tryParse(title.split(' ')[1]) &&
+                  j['notecounts']['hold'] <=
+                      int.tryParse(title.split(' ')[2])) {
+                songresult.add(i['id']);
+              }
+            }
+          }
+        }
+      }
+
+      //Slide数量
+      if (title.split(' ')[0] == '\$slide') {
+        log('特殊筛选音符Slide');
+        if (title.split(' ').length == 2) {
+          for (var i in songData) {
+            for (var j in i['charts']) {
+              if (j['notecounts']['slide'] ==
+                  int.tryParse(title.split(' ')[1])) {
+                songresult.add(i['id']);
+              }
+            }
+          }
+        } else if (title.split(' ').length == 3 && title.split(' ')[2] != '') {
+          log('特殊筛选音符Slide');
+          for (var i in songData) {
+            for (var j in i['charts']) {
+              if (j['notecounts']['slide'] >=
+                      int.tryParse(title.split(' ')[1]) &&
+                  j['notecounts']['slide'] <=
+                      int.tryParse(title.split(' ')[2])) {
+                songresult.add(i['id']);
+              }
+            }
+          }
+        }
+      }
+
+      //Air数量
+      if (title.split(' ')[0] == '\$air') {
+        log('特殊筛选音符Air');
+        if (title.split(' ').length == 2) {
+          for (var i in songData) {
+            for (var j in i['charts']) {
+              if (j['notecounts']['air'] == int.tryParse(title.split(' ')[1])) {
+                songresult.add(i['id']);
+              }
+            }
+          }
+        } else if (title.split(' ').length == 3 && title.split(' ')[2] != '') {
+          log('特殊筛选音符Air');
+          for (var i in songData) {
+            for (var j in i['charts']) {
+              if (j['notecounts']['air'] >= int.tryParse(title.split(' ')[1]) &&
+                  j['notecounts']['air'] <= int.tryParse(title.split(' ')[2])) {
+                songresult.add(i['id']);
+              }
+            }
+          }
+        }
+      }
+
+      //Flick数量
+      if (title.split(' ')[0] == '\$flick') {
+        log('特殊筛选音符Flick');
+        if (title.split(' ').length == 2) {
+          for (var i in songData) {
+            for (var j in i['charts']) {
+              if (j['notecounts']['flick'] ==
+                  int.tryParse(title.split(' ')[1])) {
+                songresult.add(i['id']);
+              }
+            }
+          }
+        } else if (title.split(' ').length == 3 && title.split(' ')[2] != '') {
+          log('特殊筛选音符Air');
+          for (var i in songData) {
+            for (var j in i['charts']) {
+              if (j['notecounts']['flick'] >=
+                      int.tryParse(title.split(' ')[1]) &&
+                  j['notecounts']['flick'] <=
+                      int.tryParse(title.split(' ')[2])) {
+                songresult.add(i['id']);
+              }
+            }
+          }
+        }
+      }
+    } catch (e, strack) {
+      log('特殊筛选失败');
+      log('$e \n$strack', name: 'search.dart', level: 1000);
+    }
+  } else {
+    log('跳过特殊筛选');
   }
 
   //筛选游玩记录

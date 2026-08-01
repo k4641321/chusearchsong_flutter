@@ -8,7 +8,7 @@ import '../pages/songinfopages/songinfopage.dart';
 import 'dart:math' as math;
 import 'songinfofun/songinfopagefun.dart';
 import 'package:flutter/services.dart';
-import 'settingspagefun.dart';
+import 'infopagefun/settingspagefun.dart';
 
 //Rating趋势
 Future<List> returnscoretrendlist() async {
@@ -190,12 +190,12 @@ Future<void> ifres({required BuildContext context}) async {
   //配置更新
   try {
     await updateconfig();
-  } catch (e) {
+  } catch (e, strack) {
     if (!context.mounted) return;
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(content: Text('配置更新失败'), duration: Duration(microseconds: 5000)),
     );
-    log('$e', name: 'fun.dart', level: 2000);
+    log('$e\n$strack', name: 'fun.dart', level: 2000);
   }
 
   try {
@@ -362,7 +362,7 @@ Future<void> ifres({required BuildContext context}) async {
       );
       log('保存到 ${path.path}/zxzrsongs.json');
     }
-    //更新配置文件
+
     config['init'] = true;
     File('${directory.path}/config.json').writeAsStringSync(jsonEncode(config));
     print(directory);

@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'dart:io';
 import 'package:path_provider/path_provider.dart';
@@ -32,6 +33,7 @@ class _FavoritePageState extends State<FavoritePage> {
     for (var i in favoriteJson) {
       List<dynamic> songInfoDiffs = [];
       String versionname = '';
+      int songid = i['id'];
       for (var j in songData['versions']) {
         if (j['version'] == i['version']) {
           versionname = j['title'];
@@ -39,6 +41,9 @@ class _FavoritePageState extends State<FavoritePage> {
       }
       for (var k in i['difficulties']) {
         songInfoDiffs.add(k['level_value']);
+        if ((k as Map<String, dynamic>).containsKey('origin_id')) {
+          songid = k['origin_id'];
+        }
       }
 
       // songresultWidget.add(const Divider());
@@ -60,9 +65,23 @@ class _FavoritePageState extends State<FavoritePage> {
             ),
             child: Padding(
               padding: EdgeInsetsGeometry.all(10.0),
-              child: Text(
-                '${i['id']} - ${i['title']}      ${i['genre']} - $versionname\n$songInfoDiffs',
-                textAlign: TextAlign.center,
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  CachedNetworkImage(
+                    imageUrl:
+                        'https://assets2.lxns.net/chunithm/jacket/$songid.png',
+                    width: 75,
+                    height: 75,
+                    errorWidget: (context, url, error) => Text('加载失败'),
+                  ),
+                  Expanded(
+                    child: Text(
+                      '${i['id']} - ${i['title']}      ${i['genre']} - $versionname  \n $songInfoDiffs',
+                      textAlign: TextAlign.center,
+                    ),
+                  ),
+                ],
               ),
             ),
           ),
