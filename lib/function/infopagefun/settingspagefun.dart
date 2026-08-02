@@ -171,6 +171,7 @@ Future<void> updateconfig() async {
     config['announcement'] = {};
     config['announcement']['date'] = '0000-01-01';
     config['announcement']['read'] = false;
+    config['announcement']['value'] = 0;
   }
   File('${path.path}/config.json').writeAsStringSync(json.encode(config));
 

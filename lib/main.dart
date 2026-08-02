@@ -104,12 +104,10 @@ class _MyHomePageState extends State<MyHomePage> {
 
   Future<void> showannouncement() async {
     try {
-      final fmt = DateFormat('yyyy-MM-dd');
       Map<String, dynamic> config = await loadConfig();
       List announcement = jsonDecode(await requestAnnouncement());
-      if (fmt
-          .parse(config['announcement']['date'])
-          .isBefore(fmt.parse(announcement[0]['date']))) {
+      config['announcement']['value'] ?? 0;
+      if (config['announcement']['value'] < announcement[0]['value']) {
         log('有新的公告');
         if (!mounted) return;
         await showDialog(
@@ -120,6 +118,7 @@ class _MyHomePageState extends State<MyHomePage> {
           ),
         );
         config['announcement']['date'] = announcement[0]['date'];
+        config['announcement']['value'] = announcement[0]['value'];
         config['announcement']['read'] = true;
         saveConfig(config);
       } else {
