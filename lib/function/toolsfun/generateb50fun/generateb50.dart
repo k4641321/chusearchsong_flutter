@@ -157,6 +157,10 @@ Future<Widget> generateb50Body({required BuildContext context}) async {
   Widget b30 = Column(children: b30body);
   List<Widget> b20body = [];
   Widget b20 = Column(children: b20body);
+  double trophywidth = 525;
+  if (playerdata['trophy']['name'].length > 17) {
+    trophywidth = trophywidth + (playerdata['trophy']['name'].length - 17) * 10;
+  }
   Widget title = SizedBox(
     height: 170,
     child: Row(
@@ -165,7 +169,8 @@ Future<Widget> generateb50Body({required BuildContext context}) async {
         Padding(
           padding: EdgeInsetsGeometry.only(left: 55),
           child: SizedBox(
-            width: 525,
+            width: trophywidth,
+            // 525,
             height: 225,
             child: Card(
               child: Row(
@@ -186,7 +191,7 @@ Future<Widget> generateb50Body({required BuildContext context}) async {
                             bottom: 5,
                           ),
                           child: Text(
-                            '${playerdata['trophy']['name']}',
+                            playerdata['trophy']['name'],
                             style: TextStyle(color: Colors.black),
                           ),
                         ),

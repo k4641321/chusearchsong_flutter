@@ -531,7 +531,7 @@ class _ToolPageState extends State<ToolPage> {
                             ),
                           ),
                           icon: Icon(
-                            Icons.rocket_launch,
+                            Icons.rocket_launch_outlined,
                             color: Theme.of(context).colorScheme.onSurface,
                           ),
                         ),
@@ -559,7 +559,7 @@ class _ToolPageState extends State<ToolPage> {
                             ),
                           ),
                           icon: Icon(
-                            Icons.rocket_launch,
+                            Icons.view_list_outlined,
                             color: Theme.of(context).colorScheme.onSurface,
                           ),
                         ),

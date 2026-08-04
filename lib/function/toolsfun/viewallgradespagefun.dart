@@ -1,11 +1,8 @@
-import 'dart:convert';
 import 'dart:developer';
-import 'dart:io';
-
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:chusearchsong_flutter/function/fun.dart';
 import 'package:flutter/material.dart';
-import 'package:marquee/marquee.dart';
-import 'package:path_provider/path_provider.dart';
+import 'generateb50fun/generateb50.dart';
 
 Color returnColor(int score) {
   if (score >= 1009000) {
@@ -25,14 +22,167 @@ Color returnColor(int score) {
   }
 }
 
-Widget returnScoreList({
+String returnDiffName(int diff) {
+  switch (diff) {
+    case 0:
+      return 'Basic';
+    case 1:
+      return 'Advanced';
+    case 2:
+      return 'Expert';
+    case 3:
+      return 'Master';
+    case 4:
+      return 'ULtimate';
+    case 5:
+      return 'World\'s End';
+    default:
+      return '未知';
+  }
+}
+
+//为了前面好看，后面只能再麻烦一点了（
+String? returnfullcombo(String fc) {
+  switch (fc) {
+    case 'fc':
+      return 'fullcombo';
+    case 'aj':
+      return 'alljustice';
+    case 'ajc':
+      return 'alljusticecritical';
+    default:
+      return null;
+  }
+}
+
+List<List<Widget>> returnScoreList({
   required List allscoredata,
   required Map<String, dynamic> songsdata,
   required BuildContext context,
+  required String sortingmethod,
+  required int? versionfilter,
+  required double levelfilterdown,
+  required double levelfilterup,
+  required int levelindexfilter,
+  required int scoredownfilter,
+  required int scoreupfilter,
+  required String fcfilter,
 }) {
   List<Widget> scorewidgetlist = [];
+  List<List<Widget>> scorewidgetlistresult = [];
+  List filtersongs = allscoredata;
 
-  for (var i in allscoredata) {
+  //排序方式
+  if (sortingmethod == '默认') {
+    log('跳过排序方式');
+  } else {
+    switch (sortingmethod) {
+      case 'Rating':
+        filtersongs.sort((a, b) => b['rating'].compareTo(a['rating']));
+        break;
+      case '超越之力':
+        filtersongs.sort(
+          (a, b) => (b['over_power'] ?? 0).compareTo(a['over_power'] ?? 0),
+        );
+        break;
+      case '分数':
+        filtersongs.sort((a, b) => b['score'].compareTo(a['score']));
+        break;
+      case '定数':
+        filtersongs.sort((a, b) {
+          double alevel = 0;
+          double blevel = 0;
+          for (var j in songsdata['songs']) {
+            if (a['id'] == j['id']) {
+              for (var k in j['difficulties']) {
+                if (a['level_index'] == k['difficulty']) {
+                  alevel = k['level_value'].toDouble();
+                }
+              }
+            }
+            if (b['id'] == j['id']) {
+              for (var k in j['difficulties']) {
+                if (b['level_index'] == k['difficulty']) {
+                  blevel = k['level_value'].toDouble();
+                }
+              }
+            }
+          }
+          return blevel.compareTo(alevel);
+        });
+        break;
+    }
+  }
+
+  //版本筛选
+  if (versionfilter == null) {
+    log('跳过版本筛选');
+  } else {
+    List versionfilterresult = [];
+    for (var i in filtersongs) {
+      for (var j in songsdata['songs']) {
+        if (i['id'] == j['id'] && j['version'] == versionfilter) {
+          versionfilterresult.add(i);
+        }
+      }
+    }
+    filtersongs = versionfilterresult;
+  }
+
+  // 定数筛选
+  List levelfilterresult = [];
+  for (var i in filtersongs) {
+    for (var j in songsdata['songs']) {
+      for (var k in j['difficulties']) {
+        if (i['id'] == j['id'] &&
+            k['difficulty'] == i['level_index'] &&
+            k['level_value'] >= levelfilterdown &&
+            k['level_value'] <= levelfilterup) {
+          levelfilterresult.add(i);
+        }
+      }
+    }
+  }
+  filtersongs = levelfilterresult;
+
+  //难度筛选
+  if (levelindexfilter == -1) {
+    log('跳过难度筛选');
+  } else {
+    List levelindexfilterresult = [];
+    for (var i in filtersongs) {
+      if (i['level_index'] == levelindexfilter) {
+        levelindexfilterresult.add(i);
+      }
+    }
+    filtersongs = levelindexfilterresult;
+  }
+
+  //分数筛选
+  List scorefilterresult = [];
+  for (var i in filtersongs) {
+    if (i['score'] >= scoredownfilter && i['score'] <= scoreupfilter) {
+      scorefilterresult.add(i);
+    }
+  }
+  filtersongs = scorefilterresult;
+
+  //连击筛选
+  if (fcfilter == 'all') {
+    log('跳过连击筛选');
+  } else {
+    List fcfilterresult = [];
+    for (var i in filtersongs) {
+      if (i['full_combo'] == returnfullcombo(fcfilter)) {
+        fcfilterresult.add(i);
+      }
+    }
+    filtersongs = fcfilterresult;
+  }
+
+  //生成组件
+  int count = 0;
+  for (var i in filtersongs) {
     int songid = i['id'];
     List<dynamic> songInfoDiffs = [];
     String versionname = '';
@@ -45,7 +195,9 @@ Widget returnScoreList({
         }
         for (var k in j['difficulties']) {
           if (i['level_index'] == k['difficulty']) {
-            songInfoDiffs.add(k['level_value']);
+            songInfoDiffs.add(
+              '${returnDiffName(i['level_index'])} - ${k['level_value']}',
+            );
           }
         }
         for (var k in songsdata['versions']) {
@@ -55,10 +207,16 @@ Widget returnScoreList({
         }
         scorewidgetlist.add(
           InkWell(
+            onTap: () => interSongInfo(
+              songbasedata: j,
+              context: context,
+              versionname: versionname,
+            ),
             child: Card(
               child: Padding(
                 padding: EdgeInsetsGeometry.all(8),
                 child: Row(
+                  mainAxisSize: MainAxisSize.min,
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     CachedNetworkImage(
@@ -72,11 +230,14 @@ Widget returnScoreList({
                       child: Column(
                         mainAxisSize: MainAxisSize.min,
                         children: [
-                          SingleChildScrollView(
-                            scrollDirection: Axis.horizontal,
-                            child: Text(
-                              '${j['id']} - ${j['title']}      ${j['genre']} - $versionname  \n $songInfoDiffs',
-                              textAlign: TextAlign.center,
+                          Text(
+                            '${j['id']} - ${j['title']}      ${j['genre']} - $versionname',
+                            textAlign: TextAlign.center,
+                          ),
+                          Text(
+                            '$songInfoDiffs',
+                            style: TextStyle(
+                              color: diffcolor(diffindex: i['level_index']),
                             ),
                           ),
                           Text(
@@ -94,12 +255,18 @@ Widget returnScoreList({
         );
       }
     }
+    count++;
+    if (count == 10) {
+      scorewidgetlistresult.add(scorewidgetlist);
+      scorewidgetlist = [];
+      count = 0;
+    }
+  }
+  if (scorewidgetlist.length <= 10) {
+    scorewidgetlistresult.add(scorewidgetlist);
   }
 
-  return ListView.builder(
-    itemBuilder: (context, index) => scorewidgetlist[index],
-    itemCount: scorewidgetlist.length,
-  );
+  return scorewidgetlistresult;
 }
 
 Map<String, dynamic> returnScoreData(List scoredata) {

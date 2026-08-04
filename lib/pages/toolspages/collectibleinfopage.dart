@@ -27,8 +27,11 @@ class _CollectibleInfoPageState extends State<CollectibleInfoPage> {
   List<Widget> result = [];
   String translate = '';
   Map<String, dynamic> newdata = {};
-
+  String charatext = '';
+  Widget trancharatext = SizedBox.shrink();
+  //加载其余信息
   Future<void> otherinfo({required String type}) async {
+    //返回英文难度列表，称号使用
     List returnEnglishDiff({
       required List difficulties,
       required bool isComplete,
@@ -79,6 +82,7 @@ class _CollectibleInfoPageState extends State<CollectibleInfoPage> {
     }
 
     newdata = widget.data;
+    //检侧是不是称号
     if (type == 'trophy') {
       try {
         String trophyprogressstr = await requestTrendProgress(
@@ -103,6 +107,7 @@ class _CollectibleInfoPageState extends State<CollectibleInfoPage> {
         ),
       );
 
+      //检测有没有要求
       if (newdata.keys.contains('required')) {
         List<String> difficulties = [];
         Map<String, dynamic> requiredList = newdata['required'][0];
@@ -137,7 +142,7 @@ class _CollectibleInfoPageState extends State<CollectibleInfoPage> {
             textAlign: TextAlign.center,
           ),
         );
-
+        //full_chain要求
         if (requiredList.keys.contains('full_chain')) {
           String fullchain;
           switch (requiredList['full_chain']) {
@@ -156,6 +161,7 @@ class _CollectibleInfoPageState extends State<CollectibleInfoPage> {
             ),
           );
         }
+        //full_combo要求
         if (requiredList.keys.contains('full_combo')) {
           String fullcombo;
           switch (requiredList['full_combo']) {
@@ -177,6 +183,7 @@ class _CollectibleInfoPageState extends State<CollectibleInfoPage> {
           );
         }
 
+        //评级要求
         if (requiredList.keys.contains('rank')) {
           String rank;
           rank = requiredList['rank'];
@@ -189,6 +196,7 @@ class _CollectibleInfoPageState extends State<CollectibleInfoPage> {
           );
         }
 
+        //曲目要求
         if (requiredList.keys.contains('songs')) {
           List<dynamic> songs = requiredList['songs'];
           //加载曲目
@@ -278,6 +286,7 @@ class _CollectibleInfoPageState extends State<CollectibleInfoPage> {
           }
           result.add(const Divider());
 
+          //最后的信息构建组件
           if (newdata.containsKey('required')) {
             List allsongrequiredlist = newdata['required'];
             List allsongrequired = [];
@@ -441,6 +450,71 @@ class _CollectibleInfoPageState extends State<CollectibleInfoPage> {
           }
         }
       }
+    } else if (type == 'character') {
+      final path = await getApplicationSupportDirectory();
+      List segacharadata = jsonDecode(
+        File('${path.path}/res/segachara.json').readAsStringSync(),
+      );
+      for (var i in segacharadata) {
+        if (i['name'] == widget.data['name']) {
+          result.add(
+            Text(
+              '画师：${i['artist']}',
+              style: TextStyle(fontSize: 20),
+              textAlign: TextAlign.center,
+            ),
+          );
+          result.add(
+            Text(
+              '所属地图：${i['ctg_name']}',
+              style: TextStyle(fontSize: 20),
+              textAlign: TextAlign.center,
+            ),
+          );
+          result.add(
+            Text(
+              '日服上线时间：${i['release']}',
+              style: TextStyle(fontSize: 20),
+              textAlign: TextAlign.center,
+            ),
+          );
+          result.add(
+            Text(
+              '介绍：${(i['text'] as List).join('\n')}',
+              style: TextStyle(fontSize: 20),
+              textAlign: TextAlign.center,
+            ),
+          );
+          result.add(
+            TextButton(
+              onPressed: () async {
+                String translate = await translateText(
+                  sourceText: charatext,
+                  context: context,
+                );
+                setState(() {
+                  trancharatext = Text(translate);
+                });
+              },
+              child: Text('翻译介绍'),
+            ),
+          );
+          result.add(trancharatext);
+          result.add(
+            Image.network(
+              'https://chunithm.sega.jp/storage/chara/${i['page']}/illustration/${i['id']}.png',
+              errorBuilder: (context, error, stackTrace) => Text('立绘加载失败'),
+            ),
+            // InteractiveViewer(
+            //   maxScale: 5.0,
+            //   minScale: 0.1,
+            //   child:
+            // ),
+          );
+
+          charatext = (i['text'] as List).join('\n');
+        }
+      }
     }
     if (!mounted) return;
     setState(() {
@@ -487,6 +561,7 @@ class _CollectibleInfoPageState extends State<CollectibleInfoPage> {
   @override
   void dispose() {
     _controller.dispose();
+    if (!mounted) return;
     super.dispose();
   }
 

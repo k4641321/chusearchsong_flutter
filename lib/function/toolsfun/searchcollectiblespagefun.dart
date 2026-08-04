@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:chusearchsong_flutter/pages/toolspages/collectibleinfopage.dart';
 import 'package:flutter/material.dart';
 import 'dart:io';
@@ -49,6 +50,19 @@ Future<List<Widget>> searchCollectibles({
         child: Text('${data['id']} - ${data['name']} - $type'),
       );
     } else {
+      Widget image = SizedBox.shrink();
+      if (entype != 'trophy') {
+        double width = 75;
+        if (entype == 'plate') {
+          width = 150;
+        }
+        image = CachedNetworkImage(
+          width: width,
+          imageUrl:
+              'https://assets2.lxns.net/chunithm/$entype/${data['id']}.png',
+          errorWidget: (context, url, error) => SizedBox.shrink(),
+        );
+      }
       return Row(
         children: [
           Expanded(
@@ -66,9 +80,17 @@ Future<List<Widget>> searchCollectibles({
               child: Card(
                 child: Padding(
                   padding: const EdgeInsets.all(8.0),
-                  child: Text(
-                    '${data['id']} - ${data['name']} - $type',
-                    textAlign: TextAlign.center,
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceAround,
+                    children: [
+                      image,
+                      Expanded(
+                        child: Text(
+                          '${data['id']} - ${data['name']} - $type',
+                          textAlign: TextAlign.center,
+                        ),
+                      ),
+                    ],
                   ),
                 ),
               ),

@@ -68,10 +68,12 @@ class _ChangeslogpageState extends State<Changeslogpage> {
           ),
         );
       }
+      if (!mounted) return;
       setState(() {
         body = ListView(children: changesloglist);
       });
     } catch (e, strack) {
+      if (!mounted) return;
       setState(() {
         body = Text('错误$e\n$strack');
       });

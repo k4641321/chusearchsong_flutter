@@ -22,6 +22,8 @@ class ThankYouListPage extends StatelessWidget {
             const Divider(),
             Text('Namis_0322\n为搜索筛选提供精确到小数的建议'),
             const Divider(),
+            Text('3GHV3R.4NY1\n发现了各种B50生成称号超出范围的Bug'),
+            const Divider(),
             Text('以及使用这个软件的你'),
           ],
         ),

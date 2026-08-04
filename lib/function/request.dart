@@ -5,6 +5,26 @@ import 'dart:developer';
 import 'dart:io';
 import 'package:path_provider/path_provider.dart';
 
+Future<void> saveSegaCharaData() async {
+  final path = await getApplicationSupportDirectory();
+  try {
+    final rawJson = await requestSegaCharaData();
+    final decoded = json.decode(rawJson);
+    await File(
+      '${path.path}/res/segachara.json',
+    ).writeAsString(json.encode(decoded), encoding: utf8);
+  } catch (e) {
+    log('$e', name: 'request.dart', level: 1000);
+  }
+}
+
+Future<String> requestSegaCharaData() async {
+  final response = await get(
+    Uri.parse('https://chunithm.sega.jp/storage/json/chara.json'),
+  );
+  return response.body;
+}
+
 Future<String> requestuscount() async {
   final response = await get(
     Uri.parse('https://chusearchsong.4641321.xyz/api/usecount'),

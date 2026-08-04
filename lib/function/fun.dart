@@ -217,14 +217,15 @@ Future<void> ifres({required BuildContext context}) async {
         !File('${path.path}/icons.json').existsSync() |
         !File('${path.path}/plates.json').existsSync() |
         !File('${path.path}/trophies.json').existsSync() |
-        !File('${path.path}/zxzrsongs.json').existsSync()) {
+        !File('${path.path}/zxzrsongs.json').existsSync() |
+        !File('${path.path}/segachara.json').existsSync()) {
       if (!context.mounted) return;
       showDialog(
         context: context,
         builder: (context) {
           return AlertDialog(
             title: Text('提示'),
-            content: Text('初次启动，将下载数据，并创建必要文件'),
+            content: Text('初次启动，将下载数据，并创建必要文件\n推荐前往关于界面阅读使用文档了解隐藏操作'),
             actions: [
               TextButton(
                 onPressed: () {
@@ -361,6 +362,19 @@ Future<void> ifres({required BuildContext context}) async {
         SnackBar(content: Text('完成'), duration: Duration(microseconds: 500)),
       );
       log('保存到 ${path.path}/zxzrsongs.json');
+      //下载sega角色数据
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('开始sega角色数据'),
+          duration: Duration(microseconds: 500),
+        ),
+      );
+      await saveSegaCharaData();
+      if (!context.mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('完成'), duration: Duration(microseconds: 500)),
+      );
+      log('保存到 ${path.path}/segachara.json');
     }
 
     config['init'] = true;
@@ -604,6 +618,19 @@ Future<void> updateData({required BuildContext context}) async {
       SnackBar(content: Text('完成'), duration: Duration(microseconds: 500)),
     );
     log('保存到 ${path.path}/zxzrsongs.json');
+    //下载sega角色数据
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text('开始sega角色数据'),
+        duration: Duration(microseconds: 500),
+      ),
+    );
+    await saveSegaCharaData();
+    if (!context.mounted) return;
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(content: Text('完成'), duration: Duration(microseconds: 500)),
+    );
+    log('保存到 ${path.path}/segachara.json');
   } catch (e) {
     if (!context.mounted) return;
     ScaffoldMessenger.of(context).showSnackBar(

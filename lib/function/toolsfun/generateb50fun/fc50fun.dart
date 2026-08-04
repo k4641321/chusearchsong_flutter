@@ -144,6 +144,10 @@ Future<Widget> fc50Body({required BuildContext context}) async {
   //请求玩家信息
   String playerdatastr = await requestPlayerInfo();
   Map<String, dynamic> playerdata = (jsonDecode(playerdatastr) as Map)['data'];
+  double trophywidth = 525;
+  if (playerdata['trophy']['name'].length > 17) {
+    trophywidth = trophywidth + (playerdata['trophy']['name'].length - 17) * 10;
+  }
   //先定义所需的变量
   List<Widget> b50body = [];
   Widget b50 = Column(children: b50body);
@@ -155,7 +159,7 @@ Future<Widget> fc50Body({required BuildContext context}) async {
         Padding(
           padding: EdgeInsetsGeometry.only(left: 55),
           child: SizedBox(
-            width: 525,
+            width: trophywidth,
             height: 225,
             child: Card(
               child: Row(

@@ -286,7 +286,7 @@ class _SongRecommendationPageState extends State<SongRecommendationPage>
                     ),
                     onChanged: (value) {
                       try {
-                        _performSearch();
+                        calculate();
                       } catch (e) {
                         ScaffoldMessenger.of(
                           context,
@@ -299,7 +299,7 @@ class _SongRecommendationPageState extends State<SongRecommendationPage>
                 IconButton(
                   onPressed: () {
                     try {
-                      _performSearch();
+                      calculate();
                     } catch (e) {
                       ScaffoldMessenger.of(
                         context,

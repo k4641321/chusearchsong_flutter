@@ -344,7 +344,7 @@ List<DataRow> rankList() {
             style: TextStyle(color: const Color.fromARGB(255, 225, 0, 255)),
           ),
         ),
-        DataCell(Text('990000~99999')),
+        DataCell(Text('990000~999999')),
       ],
     ),
     DataRow(
@@ -355,7 +355,7 @@ List<DataRow> rankList() {
             style: TextStyle(color: const Color.fromARGB(255, 225, 0, 255)),
           ),
         ),
-        DataCell(Text('975000~98999')),
+        DataCell(Text('975000~989999')),
       ],
     ),
     DataRow(

@@ -29,7 +29,7 @@ Color returnRatingBackgroundColor(double rating) => switch (rating) {
 };
 
 Color returnTrophyBackgroundColor(String color) => switch (color) {
-  'normal' => Colors.white.withAlpha(30),
+  'normal' => Colors.blueGrey.withAlpha(30),
   'copper' => Colors.deepOrange.withAlpha(30),
   'silver' => Colors.grey.withAlpha(30),
   'gold' => Colors.yellow.withAlpha(30),
