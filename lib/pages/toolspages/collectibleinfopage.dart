@@ -28,7 +28,7 @@ class _CollectibleInfoPageState extends State<CollectibleInfoPage> {
   String translate = '';
   Map<String, dynamic> newdata = {};
   String charatext = '';
-  Widget trancharatext = SizedBox.shrink();
+  Widget charatranwidget = SizedBox.shrink();
   //加载其余信息
   Future<void> otherinfo({required String type}) async {
     //返回英文难度列表，称号使用
@@ -457,6 +457,25 @@ class _CollectibleInfoPageState extends State<CollectibleInfoPage> {
       );
       for (var i in segacharadata) {
         if (i['name'] == widget.data['name']) {
+          setState(() {
+            charatranwidget = TextButton(
+              onPressed: () async {
+                String translate2 = await translateText(
+                  sourceText: charatext,
+                  context: context,
+                );
+                setState(() {
+                  translate = translate2;
+                });
+              },
+              child: Text(
+                '翻译介绍',
+                style: TextStyle(
+                  color: Theme.of(context).colorScheme.onSurface,
+                ),
+              ),
+            );
+          });
           result.add(
             Text(
               '画师：${i['artist']}',
@@ -485,21 +504,6 @@ class _CollectibleInfoPageState extends State<CollectibleInfoPage> {
               textAlign: TextAlign.center,
             ),
           );
-          result.add(
-            TextButton(
-              onPressed: () async {
-                String translate = await translateText(
-                  sourceText: charatext,
-                  context: context,
-                );
-                setState(() {
-                  trancharatext = Text(translate);
-                });
-              },
-              child: Text('翻译介绍'),
-            ),
-          );
-          result.add(trancharatext);
           result.add(
             Image.network(
               'https://chunithm.sega.jp/storage/chara/${i['page']}/illustration/${i['id']}.png',
@@ -683,6 +687,7 @@ class _CollectibleInfoPageState extends State<CollectibleInfoPage> {
                         ),
                       ),
                     ),
+                    charatranwidget,
                   ],
                 ),
                 InkWell(

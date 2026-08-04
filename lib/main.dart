@@ -2,7 +2,6 @@ import 'dart:developer';
 
 import 'package:chusearchsong_flutter/function/infopagefun/infopagefun.dart';
 import 'package:chusearchsong_flutter/function/request.dart';
-import 'package:intl/intl.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'theme.dart';
 import 'package:flutter/material.dart';
