@@ -140,7 +140,30 @@ class _MyHomePageState extends State<MyHomePage> {
         return;
       }
       if (config['autocheckupdate'] == true) {
-        await checkforupdates();
+        bool result = await checkforupdates();
+        if (result) {
+          if (!mounted) return;
+          showDialog(
+            context: context,
+            builder: (context) => AlertDialog(
+              content: Text('发现新版本，是否前往下载？'),
+              actions: [
+                TextButton(
+                  onPressed: () => Navigator.of(context).pop(),
+                  child: Text('取消'),
+                ),
+                TextButton(
+                  onPressed: () async {
+                    // 执行操作
+                    Navigator.of(context).pop();
+                    await lanuchdownload(context: context);
+                  },
+                  child: Text('确认'),
+                ),
+              ],
+            ),
+          );
+        }
       } else {
         return;
       }
