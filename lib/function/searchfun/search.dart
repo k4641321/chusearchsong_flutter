@@ -211,161 +211,93 @@ Future<List<dynamic>> filter(
   }
 
   if (specialfilter == 1) {
+    List songData = json.decode(
+      File('${dataPath.path}/res/zxzrsongs.json').readAsStringSync(),
+    );
     try {
-      List songData = json.decode(
-        File('${dataPath.path}/res/zxzrsongs.json').readAsStringSync(),
-      );
-      //特殊筛选
-      //谱面音符总数量
-      if (title.split(' ')[0] == '\$total') {
-        log('特殊筛选音符总量');
-        if (title.split(' ').length == 2) {
-          for (var i in songData) {
-            for (var j in i['charts']) {
-              if (j['notecounts']['total'] ==
-                  int.tryParse(title.split(' ')[1])) {
-                songresult.add(i['id']);
+      //多种音符组合筛选
+      if (title.contains('|')) {
+        log('多种组合筛选');
+        List notetypelist = title.split('|');
+        List listtobefiltered = [];
+        //筛选出正确的要筛选的音符种类
+        for (var i in notetypelist) {
+          if ([
+            '\$total',
+            '\$tap',
+            '\$hold',
+            '\$slide',
+            '\$air',
+            '\$flick',
+          ].contains(title.split(' ')[0])) {
+            listtobefiltered.add(i);
+          }
+        }
+        // int listtobefilteredcount = listtobefiltered.length;
+        for (var song in songData) {
+          for (var chart in song['charts']) {
+            // 检查这一张谱面是否满足 listtobefiltered 里的所有条件
+            bool allMatch = listtobefiltered.every((cond) {
+              String notetype = cond.split(' ')[0].replaceAll('\$', '');
+              int? noteCount = chart['notecounts'][notetype];
+              if (noteCount == null) return false;
+
+              if (cond.split(' ').length == 2) {
+                return noteCount == int.tryParse(cond.split(' ')[1]);
+              } else if (int.tryParse(cond.split(' ')[1]) != null &&
+                  int.tryParse(cond.split(' ')[2]) != null) {
+                return noteCount >= int.parse(cond.split(' ')[1]) &&
+                    noteCount <= int.parse(cond.split(' ')[2]);
+              } else {
+                return false;
               }
+            });
+
+            if (allMatch) {
+              songresult.add(song['id']);
+              break; // 这首歌已匹配，不用再看其他谱面
             }
           }
-        } else if (title.split(' ').length == 3 && title.split(' ')[2] != '') {
+        }
+      } else {
+        //特殊筛选
+        if ([
+          '\$total',
+          '\$tap',
+          '\$hold',
+          '\$slide',
+          '\$air',
+          '\$flick',
+        ].contains(title.split(' ')[0])) {
           log('特殊筛选音符总量');
-          for (var i in songData) {
-            for (var j in i['charts']) {
-              if (j['notecounts']['total'] >=
-                      int.tryParse(title.split(' ')[1]) &&
-                  j['notecounts']['total'] <=
-                      int.tryParse(title.split(' ')[2])) {
-                songresult.add(i['id']);
+          String notetype = title.split(' ')[0].replaceAll('\$', '');
+          if (title.split(' ').length == 2) {
+            for (var i in songData) {
+              for (var j in i['charts']) {
+                if (j['notecounts'][notetype] ==
+                    int.tryParse(title.split(' ')[1])) {
+                  songresult.add(i['id']);
+                }
               }
             }
-          }
-        }
-      }
-
-      //Tap数量
-      if (title.split(' ')[0] == '\$tap') {
-        log('特殊筛选音符Tap');
-        if (title.split(' ').length == 2) {
-          for (var i in songData) {
-            for (var j in i['charts']) {
-              if (j['notecounts']['tap'] == int.tryParse(title.split(' ')[1])) {
-                songresult.add(i['id']);
-              }
-            }
-          }
-        } else if (title.split(' ').length == 3 && title.split(' ')[2] != '') {
-          log('特殊筛选音符Tap');
-          for (var i in songData) {
-            for (var j in i['charts']) {
-              if (j['notecounts']['tap'] >= int.tryParse(title.split(' ')[1]) &&
-                  j['notecounts']['tap'] <= int.tryParse(title.split(' ')[2])) {
-                songresult.add(i['id']);
-              }
-            }
-          }
-        }
-      }
-
-      //Hold数量
-      if (title.split(' ')[0] == '\$hold') {
-        log('特殊筛选音符Tap');
-        if (title.split(' ').length == 2) {
-          for (var i in songData) {
-            for (var j in i['charts']) {
-              if (j['notecounts']['hold'] ==
-                  int.tryParse(title.split(' ')[1])) {
-                songresult.add(i['id']);
-              }
-            }
-          }
-        } else if (title.split(' ').length == 3 && title.split(' ')[2] != '') {
-          log('特殊筛选音符Tap');
-          for (var i in songData) {
-            for (var j in i['charts']) {
-              if (j['notecounts']['hold'] >=
-                      int.tryParse(title.split(' ')[1]) &&
-                  j['notecounts']['hold'] <=
-                      int.tryParse(title.split(' ')[2])) {
-                songresult.add(i['id']);
-              }
-            }
-          }
-        }
-      }
-
-      //Slide数量
-      if (title.split(' ')[0] == '\$slide') {
-        log('特殊筛选音符Slide');
-        if (title.split(' ').length == 2) {
-          for (var i in songData) {
-            for (var j in i['charts']) {
-              if (j['notecounts']['slide'] ==
-                  int.tryParse(title.split(' ')[1])) {
-                songresult.add(i['id']);
-              }
-            }
-          }
-        } else if (title.split(' ').length == 3 && title.split(' ')[2] != '') {
-          log('特殊筛选音符Slide');
-          for (var i in songData) {
-            for (var j in i['charts']) {
-              if (j['notecounts']['slide'] >=
-                      int.tryParse(title.split(' ')[1]) &&
-                  j['notecounts']['slide'] <=
-                      int.tryParse(title.split(' ')[2])) {
-                songresult.add(i['id']);
-              }
-            }
-          }
-        }
-      }
-
-      //Air数量
-      if (title.split(' ')[0] == '\$air') {
-        log('特殊筛选音符Air');
-        if (title.split(' ').length == 2) {
-          for (var i in songData) {
-            for (var j in i['charts']) {
-              if (j['notecounts']['air'] == int.tryParse(title.split(' ')[1])) {
-                songresult.add(i['id']);
-              }
-            }
-          }
-        } else if (title.split(' ').length == 3 && title.split(' ')[2] != '') {
-          log('特殊筛选音符Air');
-          for (var i in songData) {
-            for (var j in i['charts']) {
-              if (j['notecounts']['air'] >= int.tryParse(title.split(' ')[1]) &&
-                  j['notecounts']['air'] <= int.tryParse(title.split(' ')[2])) {
-                songresult.add(i['id']);
-              }
-            }
-          }
-        }
-      }
-
-      //Flick数量
-      if (title.split(' ')[0] == '\$flick') {
-        log('特殊筛选音符Flick');
-        if (title.split(' ').length == 2) {
-          for (var i in songData) {
-            for (var j in i['charts']) {
-              if (j['notecounts']['flick'] ==
-                  int.tryParse(title.split(' ')[1])) {
-                songresult.add(i['id']);
-              }
-            }
-          }
-        } else if (title.split(' ').length == 3 && title.split(' ')[2] != '') {
-          log('特殊筛选音符Air');
-          for (var i in songData) {
-            for (var j in i['charts']) {
-              if (j['notecounts']['flick'] >=
-                      int.tryParse(title.split(' ')[1]) &&
-                  j['notecounts']['flick'] <=
-                      int.tryParse(title.split(' ')[2])) {
-                songresult.add(i['id']);
+          } else if (title.split(' ').length == 3 &&
+              title.split(' ')[2] != '' &&
+              [
+                '\$total',
+                '\$tap',
+                '\$hold',
+                '\$slide',
+                '\$air',
+                '\$flick',
+              ].contains(title.split(' ')[0])) {
+            for (var i in songData) {
+              for (var j in i['charts']) {
+                if (j['notecounts'][notetype] >=
+                        int.tryParse(title.split(' ')[1]) &&
+                    j['notecounts'][notetype] <=
+                        int.tryParse(title.split(' ')[2])) {
+                  songresult.add(i['id']);
+                }
               }
             }
           }

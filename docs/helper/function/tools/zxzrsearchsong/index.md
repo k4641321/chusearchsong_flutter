@@ -2,6 +2,10 @@
 prev:
   text: 'Over Power计算'
   link: '/helper/function/tools/overpowercalculation'
+
+next:
+  text: '所有成绩查看'
+  link: '/helper/function/tools/viewallgrades'
 ---
 
 # 最新最热查歌

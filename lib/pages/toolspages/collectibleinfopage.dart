@@ -451,73 +451,77 @@ class _CollectibleInfoPageState extends State<CollectibleInfoPage> {
         }
       }
     } else if (type == 'character') {
-      final path = await getApplicationSupportDirectory();
-      List segacharadata = jsonDecode(
-        File('${path.path}/res/segachara.json').readAsStringSync(),
-      );
-      for (var i in segacharadata) {
-        if (i['name'] == widget.data['name']) {
-          setState(() {
-            charatranwidget = TextButton(
-              onPressed: () async {
-                String translate2 = await translateText(
-                  sourceText: charatext,
-                  context: context,
-                );
-                setState(() {
-                  translate = translate2;
-                });
-              },
-              child: Text(
-                '翻译介绍',
-                style: TextStyle(
-                  color: Theme.of(context).colorScheme.onSurface,
+      try {
+        final path = await getApplicationSupportDirectory();
+        List segacharadata = jsonDecode(
+          File('${path.path}/res/segachara.json').readAsStringSync(),
+        );
+        for (var i in segacharadata) {
+          if (i['name'] == widget.data['name']) {
+            setState(() {
+              charatranwidget = TextButton(
+                onPressed: () async {
+                  String translate2 = await translateText(
+                    sourceText: charatext,
+                    context: context,
+                  );
+                  setState(() {
+                    translate = translate2;
+                  });
+                },
+                child: Text(
+                  '翻译介绍',
+                  style: TextStyle(
+                    color: Theme.of(context).colorScheme.onSurface,
+                  ),
                 ),
+              );
+            });
+            result.add(
+              Text(
+                '画师：${i['artist']}',
+                style: TextStyle(fontSize: 20),
+                textAlign: TextAlign.center,
               ),
             );
-          });
-          result.add(
-            Text(
-              '画师：${i['artist']}',
-              style: TextStyle(fontSize: 20),
-              textAlign: TextAlign.center,
-            ),
-          );
-          result.add(
-            Text(
-              '所属地图：${i['ctg_name']}',
-              style: TextStyle(fontSize: 20),
-              textAlign: TextAlign.center,
-            ),
-          );
-          result.add(
-            Text(
-              '日服上线时间：${i['release']}',
-              style: TextStyle(fontSize: 20),
-              textAlign: TextAlign.center,
-            ),
-          );
-          result.add(
-            Text(
-              '介绍：${(i['text'] as List).join('\n')}',
-              style: TextStyle(fontSize: 20),
-              textAlign: TextAlign.center,
-            ),
-          );
-          result.add(
-            Image.network(
-              'https://chunithm.sega.jp/storage/chara/${i['page']}/illustration/${i['id']}.png',
-              errorBuilder: (context, error, stackTrace) => Text('立绘加载失败'),
-            ),
-            // InteractiveViewer(
-            //   maxScale: 5.0,
-            //   minScale: 0.1,
-            //   child:
-            // ),
-          );
+            result.add(
+              Text(
+                '所属地图：${i['ctg_name']}',
+                style: TextStyle(fontSize: 20),
+                textAlign: TextAlign.center,
+              ),
+            );
+            result.add(
+              Text(
+                '日服上线时间：${i['release']}',
+                style: TextStyle(fontSize: 20),
+                textAlign: TextAlign.center,
+              ),
+            );
+            result.add(
+              Text(
+                '介绍：${(i['text'] as List).join('\n')}',
+                style: TextStyle(fontSize: 20),
+                textAlign: TextAlign.center,
+              ),
+            );
+            result.add(
+              Image.network(
+                'https://chunithm.sega.jp/storage/chara/${i['page']}/illustration/${i['id']}.png',
+                errorBuilder: (context, error, stackTrace) => Text('立绘加载失败'),
+              ),
+              // InteractiveViewer(
+              //   maxScale: 5.0,
+              //   minScale: 0.1,
+              //   child:
+              // ),
+            );
 
-          charatext = (i['text'] as List).join('\n');
+            charatext = (i['text'] as List).join('\n');
+          }
         }
+      } catch (e) {
+        result.add(Text('未找到官方角色文件，可能缺失，请手动更新数据 $e'));
       }
     }
     if (!mounted) return;

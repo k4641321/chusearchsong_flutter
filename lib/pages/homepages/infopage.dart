@@ -1,5 +1,6 @@
 import 'package:chusearchsong_flutter/function/infopagefun/infopagefun.dart';
 import 'package:chusearchsong_flutter/pages/infopages/changeslogpage.dart';
+import 'package:chusearchsong_flutter/pages/infopages/sponsoredauthorpage.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -309,9 +310,12 @@ class _InfoState extends State<Info> {
                                 bottomRight: Radius.circular(10.0),
                               ),
                             ),
-                            onTap: () async {
-                              await lanuchifdian(context: context);
-                            },
+                            onTap: () => Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => Sponsoredauthorpage(),
+                              ),
+                            ),
                             child: Card(
                               color: Theme.of(
                                 context,

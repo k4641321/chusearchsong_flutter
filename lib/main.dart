@@ -105,8 +105,8 @@ class _MyHomePageState extends State<MyHomePage> {
     try {
       Map<String, dynamic> config = await loadConfig();
       List announcement = jsonDecode(await requestAnnouncement());
-      config['announcement']['value'] ?? 0;
-      if (config['announcement']['value'] < announcement[0]['value']) {
+      int value = config['announcement']['value'] ?? 0;
+      if (value < announcement[0]['value']) {
         log('有新的公告');
         if (!mounted) return;
         await showDialog(

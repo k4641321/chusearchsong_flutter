@@ -15,7 +15,7 @@ hero:
       link: https://chusearchsong.4641321.xyz/
 features:
   - title: 未来的计划
-    details: 我不知道，想不出来了
+    details: 友人对战
   # - title: Feature B
   #   details: Lorem ipsum dolor sit amet, consectetur adipiscing elit
   # - title: Feature C

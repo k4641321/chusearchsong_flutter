@@ -18,8 +18,7 @@ export default defineConfig({
         text: '帮助文档',
         items: [
           { text: '主页', link: '/helper/' },
-          {
-            text: '功能介绍', link: '/helper/function/', items: [
+          {text: '功能介绍', link: '/helper/function/', items: [
               { text: '搜索歌曲', link: '/helper/function/search/' },
               { text: '歌曲详情', link: '/helper/function/songinfo/' },
               { text: '收藏', link: '/helper/function/favorite/' },
@@ -41,6 +40,7 @@ export default defineConfig({
                   { text: '等级完成进度', link: '/helper/function/tools/levelcompletionprogress/' },
                   { text: 'Over Power计算', link: '/helper/function/tools/overpowercalculation/' },
                   { text: '最新最热查歌', link: '/helper/function/tools/zxzrsearchsong/' },
+                  { text: '所有成绩查看', link: '/helper/function/tools/viewallgrades/' },
                 ]
               },
             ]
