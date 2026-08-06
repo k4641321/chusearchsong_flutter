@@ -153,6 +153,13 @@ Future<Widget> generateb50Body({required BuildContext context}) async {
   String playerdatastr = await requestPlayerInfo();
   Map<String, dynamic> playerdata = (jsonDecode(playerdatastr) as Map)['data'];
   //先定义所需的变量
+  Widget characterimage = SizedBox.shrink();
+  if (playerdata['character'] != null) {
+    characterimage = Image.network(
+      'https://assets2.lxns.net/chunithm/character/${playerdata['character']['id']}.png',
+      errorBuilder: (context, error, stackTrace) => Text('错误 $error'),
+    );
+  }
   List<Widget> b30body = [];
   Widget b30 = Column(children: b30body);
   List<Widget> b20body = [];
@@ -214,11 +221,7 @@ Future<Widget> generateb50Body({required BuildContext context}) async {
                       ),
                     ],
                   ),
-                  Image.network(
-                    'https://assets2.lxns.net/chunithm/character/${playerdata['character']['id']}.png',
-                    width: 175,
-                    height: 175,
-                  ),
+                  characterimage,
                 ],
               ),
             ),

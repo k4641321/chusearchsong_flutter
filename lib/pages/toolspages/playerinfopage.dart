@@ -13,6 +13,20 @@ class PlayerInfoPage extends StatefulWidget {
 class _PlayerInfoPageState extends State<PlayerInfoPage> {
   final ScrollController _controller = ScrollController();
   final ScrollController _rowcontroller = ScrollController();
+  Widget characterimage = SizedBox.shrink();
+
+  @override
+  void initState() {
+    super.initState();
+    if (widget.playerdata['character'] != null) {
+      setState(() {
+        characterimage = Image.network(
+          'https://assets2.lxns.net/chunithm/character/${widget.playerdata['character']['id']}.png',
+          errorBuilder: (context, error, stackTrace) => Text('错误 $error'),
+        );
+      });
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -33,11 +47,7 @@ class _PlayerInfoPageState extends State<PlayerInfoPage> {
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        Image.network(
-                          'https://assets2.lxns.net/chunithm/character/${widget.playerdata['character']['id']}.png',
-                          errorBuilder: (context, error, stackTrace) =>
-                              Text('错误 $error'),
-                        ),
+                        characterimage,
                         Column(
                           children: [
                             Container(
@@ -82,7 +92,7 @@ class _PlayerInfoPageState extends State<PlayerInfoPage> {
                                 Image.network(
                                   'https://maimai.lxns.net/assets/chunithm/class_emblem/medal/${widget.playerdata['class_emblem']['medal']}.webp',
                                   errorBuilder: (context, error, stackTrace) =>
-                                      Text('错误 $error'),
+                                      SizedBox.shrink(),
                                   width: 50,
                                 ),
                               ],

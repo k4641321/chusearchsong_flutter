@@ -155,6 +155,13 @@ Future<Widget> randomb50Body({required BuildContext context}) async {
   }
   //先定义所需的变量
   List<Widget> b50body = [];
+  Widget characterimage = SizedBox.shrink();
+  if (playerdata['character'] != null) {
+    characterimage = Image.network(
+      'https://assets2.lxns.net/chunithm/character/${playerdata['character']['id']}.png',
+      errorBuilder: (context, error, stackTrace) => Text('错误 $error'),
+    );
+  }
   Widget b50 = Column(children: b50body);
   Widget title = SizedBox(
     height: 170,
@@ -208,11 +215,7 @@ Future<Widget> randomb50Body({required BuildContext context}) async {
                       ),
                     ],
                   ),
-                  Image.network(
-                    'https://assets2.lxns.net/chunithm/character/${playerdata['character']['id']}.png',
-                    width: 175,
-                    height: 175,
-                  ),
+                  characterimage,
                 ],
               ),
             ),

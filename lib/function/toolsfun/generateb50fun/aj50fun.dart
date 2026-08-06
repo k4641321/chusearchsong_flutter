@@ -148,6 +148,14 @@ Future<Widget> aj50Body({required BuildContext context}) async {
     trophywidth = trophywidth + (playerdata['trophy']['name'].length - 17) * 10;
   }
   //先定义所需的变量
+
+  Widget characterimage = SizedBox.shrink();
+  if (playerdata['character'] != null) {
+    characterimage = Image.network(
+      'https://assets2.lxns.net/chunithm/character/${playerdata['character']['id']}.png',
+      errorBuilder: (context, error, stackTrace) => Text('错误 $error'),
+    );
+  }
   List<Widget> b50body = [];
   Widget b50 = Column(children: b50body);
   Widget title = SizedBox(
@@ -202,11 +210,7 @@ Future<Widget> aj50Body({required BuildContext context}) async {
                       ),
                     ],
                   ),
-                  Image.network(
-                    'https://assets2.lxns.net/chunithm/character/${playerdata['character']['id']}.png',
-                    width: 175,
-                    height: 175,
-                  ),
+                  characterimage,
                 ],
               ),
             ),

@@ -24,6 +24,8 @@ class ThankYouListPage extends StatelessWidget {
             const Divider(),
             Text('3GHV3R.4NY1\n发现了各种B50生成称号超出范围的Bug'),
             const Divider(),
+            Text('𝓨𝓾𝓻𝓲𝓬𝓲𝓪\n发现了在角色为null时无法生成B50与无法查看玩家信息'),
+            const Divider(),
             Text('以及使用这个软件的你'),
           ],
         ),
