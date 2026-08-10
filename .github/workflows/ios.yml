@@ -26,10 +26,16 @@ jobs:
 
       - name: Build iOS (unsigned)
         run: |
-          flutter build ipa --no-codesign --release
+          flutter build ios --release --no-codesign
+          cd build/ios/iphoneos
+          mkdir Payload
+          cp -r Runner.app Payload/
+          zip -r unsigned.ipa Payload/
+          rm -rf Payload
 
       - name: Upload unsigned .ipa
         uses: actions/upload-artifact@v4
         with:
           name: unsigned-ipa
-          path: build/ios/ipa/*.ipa
+          path: build/ios/iphoneos/unsigned.ipa
+        #   retention-days: 7
