@@ -105,7 +105,12 @@ class _MyHomePageState extends State<MyHomePage> {
     try {
       Map<String, dynamic> config = await loadConfig();
       List announcement = jsonDecode(await requestAnnouncement());
-      int value = config['announcement']['value'] ?? 0;
+      int value;
+      if (!config.containsKey('announcement')) {
+        value = 0;
+      } else {
+        value = config['announcement']['value'] ?? 0;
+      }
       if (value < announcement[0]['value']) {
         log('有新的公告');
         if (!mounted) return;
@@ -222,8 +227,8 @@ class _MyHomePageState extends State<MyHomePage> {
   void initState() {
     super.initState();
     // postusecount();
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      ifres(context: context);
+    WidgetsBinding.instance.addPostFrameCallback((_) async {
+      await ifres(context: context);
       showChangesLog();
       chechupdate();
       showannouncement();

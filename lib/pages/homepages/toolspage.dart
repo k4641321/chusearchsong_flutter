@@ -1,3 +1,4 @@
+import 'package:chusearchsong_flutter/pages/toolspages/levelcompletionprogresspage/friendbattlepage.dart';
 import 'package:chusearchsong_flutter/pages/toolspages/overpowercalculationpage.dart';
 import 'package:chusearchsong_flutter/pages/toolspages/ratingcalculationmethodpage.dart';
 import 'package:chusearchsong_flutter/pages/toolspages/searchsongzxzrpage/searchsongzxzrpage.dart';
@@ -556,6 +557,30 @@ class _ToolPageState extends State<ToolPage> {
                             context,
                             MaterialPageRoute(
                               builder: (context) => const Viewallgradespage(),
+                            ),
+                          ),
+                          icon: Icon(
+                            Icons.view_list_outlined,
+                            color: Theme.of(context).colorScheme.onSurface,
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                  Expanded(
+                    child: InkWell(
+                      child: Card(
+                        child: TextButton.icon(
+                          label: Text(
+                            '友人对战',
+                            style: TextStyle(
+                              color: Theme.of(context).colorScheme.onSurface,
+                            ),
+                          ),
+                          onPressed: () => Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => const FriendBattlePage(),
                             ),
                           ),
                           icon: Icon(
