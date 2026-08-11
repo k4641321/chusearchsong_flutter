@@ -1,10 +1,6 @@
 name: iOS Build (Unsigned)
 
 on:
-  push:
-    branches: [main]
-  pull_request:
-    branches: [main]
   workflow_dispatch:  # 允许手动触发
 
 jobs:

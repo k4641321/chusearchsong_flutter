@@ -1,0 +1,36 @@
+name: macOS Build
+
+on:
+  workflow_dispatch:
+
+jobs:
+  build-macos:
+    runs-on: macos-latest
+
+    steps:
+      - name: 检出代码
+        uses: actions/checkout@v4
+
+      - name: 安装 Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          channel: 'stable'
+          cache: true
+
+      - name: 获取依赖
+        run: flutter pub get
+
+      - name: 构建 macOS（无签名）
+        run: flutter build macos --release --no-codesign
+
+      - name: 创建 DMG 镜像
+        run: |
+          APP_PATH="build/macos/Build/Products/Release/chusearchsong_flutter.app"
+          DMG_NAME="chusearchsong-macos.dmg"
+          hdiutil create -volname "chusearchsong" -srcfolder "$APP_PATH" -ov -format UDZO "$DMG_NAME"
+
+      - name: 上传构建产物
+        uses: actions/upload-artifact@v4
+        with:
+          name: chusearchsong-macos
+          path: chusearchsong-macos.dmg

@@ -1,4 +1,4 @@
-import 'package:chusearchsong_flutter/pages/toolspages/levelcompletionprogresspage/friendbattlepage.dart';
+import 'package:chusearchsong_flutter/pages/toolspages/friendbattlepage.dart';
 import 'package:chusearchsong_flutter/pages/toolspages/overpowercalculationpage.dart';
 import 'package:chusearchsong_flutter/pages/toolspages/ratingcalculationmethodpage.dart';
 import 'package:chusearchsong_flutter/pages/toolspages/searchsongzxzrpage/searchsongzxzrpage.dart';
@@ -584,7 +584,7 @@ class _ToolPageState extends State<ToolPage> {
                             ),
                           ),
                           icon: Icon(
-                            Icons.view_list_outlined,
+                            Icons.sports_kabaddi_outlined,
                             color: Theme.of(context).colorScheme.onSurface,
                           ),
                         ),

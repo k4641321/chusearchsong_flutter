@@ -1,14 +1,10 @@
-# chusearchsong_flutter
+# chusearchsong_flutter（中二查歌）
 
-### 是的是的，又是一个新框架，kivy貌似因为库的问题本地构建不成功，转为flutter了，气笑了
+> 是的是的，又是一个新框架，kivy貌似因为库的问题本地构建不成功，转为flutter了，气笑了
 
 ## 此项目为[chusearchsong](https://github.com/k4641321/chusearchsong) flutter的重构版
 
-# 中二查歌
 ![GitHub Downloads (all assets, all releases)](https://img.shields.io/github/downloads/k4641321/chusearchsong_flutter/total?style=for-the-badge) ![GitHub Actions Workflow Status](https://img.shields.io/github/actions/workflow/status/k4641321/chusearchsong_flutter/flutter.yml?style=for-the-badge) ![GitHub Release](https://img.shields.io/github/v/release/k4641321/chusearchsong_flutter?include_prereleases&style=for-the-badge) ![GitHub Repo stars](https://img.shields.io/github/stars/k4641321/chusearchsong_flutter?style=for-the-badge)
-
-
-
 
 一个使用flutter框架写的中二节奏查歌软件，歌曲数据来源于落雪咖啡屋，初次启动会下载数据保存在本地，可以离线使用
 
@@ -72,8 +68,8 @@ flutter目前是边学边写的，**有答辩代码是超级非常正常的**，
 # 赞助
 赏杯奶茶钱呗(  
 ![Static Badge](https://img.shields.io/badge/%E7%82%B9%E5%87%BB%E8%B7%B3%E8%BD%AC-%23B300FF?style=for-the-badge&logo=afdian&logoColor=%23B300FF&label=%E4%BD%BF%E7%94%A8%E7%88%B1%E5%8F%91%E7%94%B5&link=https%3A%2F%2Fifdian.net%2Fa%2Fk4641321)  
-<!-- 或者使用微信赞赏码
-![zsm](zsm.png) -->
+或者使用微信赞赏码
+![zsm](zsm.png)
 
 # 更新日志
 越来越多了，集合到一个文件里了

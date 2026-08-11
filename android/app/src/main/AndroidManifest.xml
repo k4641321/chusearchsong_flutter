@@ -4,7 +4,7 @@
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE_SPECIAL_USE"/>
     <uses-permission android:name="android.permission.BIND_VPN_SERVICE"/>
     <application
-        android:label="chusearchsong_flutter"
+        android:label="中二查歌"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher">
         <activity

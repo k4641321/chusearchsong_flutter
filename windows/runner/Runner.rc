@@ -90,12 +90,12 @@ BEGIN
         BLOCK "040904e4"
         BEGIN
             VALUE "CompanyName", "com.k4641321" "\0"
-            VALUE "FileDescription", "chusearchsong_flutter" "\0"
+            VALUE "FileDescription", "中二查歌" "\0"
             VALUE "FileVersion", VERSION_AS_STRING "\0"
-            VALUE "InternalName", "chusearchsong_flutter" "\0"
+            VALUE "InternalName", "中二查歌" "\0"
             VALUE "LegalCopyright", "Copyright (C) 2026 k4641321. All rights reserved." "\0"
-            VALUE "OriginalFilename", "chusearchsong_flutter.exe" "\0"
-            VALUE "ProductName", "chusearchsong_flutter" "\0"
+            VALUE "OriginalFilename", "中二查歌.exe" "\0"
+            VALUE "ProductName", "中二查歌" "\0"
             VALUE "ProductVersion", VERSION_AS_STRING "\0"
         END
     END

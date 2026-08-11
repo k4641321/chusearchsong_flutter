@@ -1,0 +1,43 @@
+name: Linux Build
+
+on:
+  workflow_dispatch:
+
+jobs:
+  build-linux:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: 检出代码
+        uses: actions/checkout@v4
+
+      - name: 安装 Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          channel: 'stable'
+          cache: true
+
+      - name: 安装 Linux 依赖
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y cmake clang ninja-build pkg-config libgtk-3-dev liblzma-dev
+
+      - name: 获取依赖
+        run: flutter pub get
+
+      - name: 启用 Linux 桌面支持
+        run: flutter config --enable-linux-desktop
+
+      - name: 构建 Linux
+        run: flutter build linux --release
+
+      - name: 打包为 tar.gz
+        run: |
+          cd build/linux/x64/release/bundle
+          tar -czf ../../../../../chusearchsong-linux-x64.tar.gz *
+
+      - name: 上传构建产物
+        uses: actions/upload-artifact@v4
+        with:
+          name: chusearchsong-linux-x64
+          path: chusearchsong-linux-x64.tar.gz

@@ -5,6 +5,45 @@ import 'dart:developer';
 import 'dart:io';
 import 'package:path_provider/path_provider.dart';
 
+Future<String> requestotherPlayerInfo(int friendcode) async {
+  final uri = Uri.parse(
+    'https://chusearchsong.4641321.xyz/api/playerinfo?friendcode=$friendcode',
+  );
+  final response = await get(uri);
+  return response.body;
+}
+
+Future<String> loadSongsData() async {
+  final path = await getApplicationSupportDirectory();
+  return File('${path.path}/res/songs.json').readAsString();
+}
+
+Future<String> finduploadallscore(int friendcode) async {
+  final uri = Uri.parse(
+    'https://chusearchsong.4641321.xyz/api/finduploadallscore/$friendcode',
+  );
+  final response = await get(uri);
+  // print(response.body);
+  return response.body;
+}
+
+Future<String> uploadplayerscore() async {
+  final uri = Uri.parse('https://chusearchsong.4641321.xyz/api/uploadallscore');
+  List score = jsonDecode(
+    await requestScore(token: await returnlxnstoken()),
+  )['data'];
+  Map<String, dynamic> playerdata = jsonDecode(
+    await requestPlayerInfo(),
+  )['data'];
+
+  final response = await post(
+    uri,
+    headers: {'Content-Type': 'application/json'},
+    body: jsonEncode({'friendcode': playerdata['friend_code'], 'data': score}),
+  );
+  return response.body;
+}
+
 Future<void> saveSegaCharaData() async {
   final path = await getApplicationSupportDirectory();
   try {

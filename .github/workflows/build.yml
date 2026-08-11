@@ -1,0 +1,216 @@
+name: Build All Platforms
+
+on:
+  push:
+    branches: [main, master]
+    tags:
+      - 'v*'
+  pull_request:
+    branches: [main, master]
+  workflow_dispatch:
+
+jobs:
+  # ============ Linux ============
+  build-linux:
+    runs-on: ubuntu-latest
+    steps:
+      - name: 检出代码
+        uses: actions/checkout@v4
+
+      - name: 安装 Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          channel: 'stable'
+          cache: true
+
+      - name: 安装 Linux 依赖
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y cmake clang ninja-build pkg-config libgtk-3-dev liblzma-dev
+
+      - name: 获取依赖
+        run: flutter pub get
+
+      - name: 构建 Linux
+        run: flutter build linux --release
+
+      - name: 打包为 tar.gz
+        run: |
+          cd build/linux/x64/release/bundle
+          tar -czf ../../../../../chusearchsong-linux-x64.tar.gz *
+
+      - name: 上传产物
+        uses: actions/upload-artifact@v4
+        with:
+          name: chusearchsong-linux-x64
+          path: chusearchsong-linux-x64.tar.gz
+
+  # ============ macOS ============
+  build-macos:
+    runs-on: macos-latest
+    steps:
+      - name: 检出代码
+        uses: actions/checkout@v4
+
+      - name: 安装 Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          channel: 'stable'
+          cache: true
+
+      - name: 获取依赖
+        run: flutter pub get
+
+      - name: 构建 macOS（无签名）
+        run: flutter build macos --release --no-codesign
+
+      - name: 创建 DMG
+        run: |
+          APP_PATH="build/macos/Build/Products/Release/chusearchsong_flutter.app"
+          hdiutil create -volname "chusearchsong" -srcfolder "$APP_PATH" -ov -format UDZO chusearchsong-macos.dmg
+
+      - name: 上传产物
+        uses: actions/upload-artifact@v4
+        with:
+          name: chusearchsong-macos
+          path: chusearchsong-macos.dmg
+
+  # ============ Windows ============
+  build-windows:
+    runs-on: windows-latest
+    steps:
+      - name: 检出代码
+        uses: actions/checkout@v4
+
+      - name: 安装 Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          channel: 'stable'
+          cache: true
+
+      - name: 获取依赖
+        run: flutter pub get
+
+      - name: 构建 Windows
+        run: flutter build windows --release
+
+      - name: 打包为 zip
+        run: Compress-Archive -Path build\windows\x64\runner\Release\* -DestinationPath chusearchsong-windows-x64.zip
+
+      - name: 上传产物
+        uses: actions/upload-artifact@v4
+        with:
+          name: chusearchsong-windows-x64
+          path: chusearchsong-windows-x64.zip
+
+  # ============ iOS ============
+  build-ios:
+    runs-on: macos-latest
+    steps:
+      - name: 检出代码
+        uses: actions/checkout@v4
+
+      - name: 安装 Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          channel: 'stable'
+          cache: true
+
+      - name: 获取依赖
+        run: flutter pub get
+
+      - name: 构建 iOS（无签名）
+        run: |
+          flutter build ios --release --no-codesign
+          cd build/ios/iphoneos
+          mkdir Payload
+          cp -r Runner.app Payload/
+          zip -r unsigned.ipa Payload/
+          rm -rf Payload
+
+      - name: 上传产物
+        uses: actions/upload-artifact@v4
+        with:
+          name: chusearchsong-ios-unsigned
+          path: build/ios/iphoneos/unsigned.ipa
+
+  # ============ Android ============
+  build-android:
+    runs-on: ubuntu-latest
+    steps:
+      - name: 检出代码
+        uses: actions/checkout@v4
+
+      - name: 安装 Java
+        uses: actions/setup-java@v4
+        with:
+          java-version: '17'
+          distribution: 'temurin'
+
+      - name: 安装 Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          channel: 'stable'
+          cache: true
+
+      - name: 获取依赖
+        run: flutter pub get
+
+      - name: 创建签名文件
+        run: |
+          echo "${{ secrets.KEYSTORE_FILE }}" | base64 --decode > android/app/upload-keystore.jks
+
+      - name: 构建 APK（分 ABI）
+        env:
+          KEY_ALIAS: ${{ secrets.KEY_ALIAS }}
+          KEY_PASSWORD: ${{ secrets.KEY_PASSWORD }}
+          KEYSTORE_PASSWORD: ${{ secrets.KEYSTORE_PASSWORD }}
+          KEYSTORE_FILE_PATH: upload-keystore.jks
+        run: flutter build apk --release --split-per-abi
+
+      - name: 构建 AAB
+        env:
+          KEY_ALIAS: ${{ secrets.KEY_ALIAS }}
+          KEY_PASSWORD: ${{ secrets.KEY_PASSWORD }}
+          KEYSTORE_PASSWORD: ${{ secrets.KEYSTORE_PASSWORD }}
+          KEYSTORE_FILE_PATH: upload-keystore.jks
+        run: flutter build appbundle --release
+
+      - name: 上传 APK
+        uses: actions/upload-artifact@v4
+        with:
+          name: chusearchsong-android-apk
+          path: build/app/outputs/flutter-apk/app-*-release.apk
+
+      - name: 上传 AAB
+        uses: actions/upload-artifact@v4
+        with:
+          name: chusearchsong-android-aab
+          path: build/app/outputs/bundle/release/app-release.aab
+
+  # ============ 发布到 Release 草稿 ============
+  release:
+    needs: [build-linux, build-macos, build-windows, build-ios, build-android]
+    runs-on: ubuntu-latest
+    if: github.event_name != 'pull_request'
+    steps:
+      - name: 下载所有产物
+        uses: actions/download-artifact@v4
+        with:
+          path: artifacts
+
+      - name: 列出产物
+        run: ls -R artifacts/
+
+      - name: 发布到 Release（草稿）
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: latest-build
+          draft: true
+          files: |
+            artifacts/chusearchsong-linux-x64/chusearchsong-linux-x64.tar.gz
+            artifacts/chusearchsong-macos/chusearchsong-macos.dmg
+            artifacts/chusearchsong-windows-x64/chusearchsong-windows-x64.zip
+            artifacts/chusearchsong-ios-unsigned/unsigned.ipa
+            artifacts/chusearchsong-android-apk/*.apk
+            artifacts/chusearchsong-android-aab/*.aab
