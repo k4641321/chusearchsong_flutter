@@ -15,13 +15,18 @@ jobs:
         uses: subosito/flutter-action@v2
         with:
           channel: 'stable'
+          flutter-version: '3.41.9'
           cache: true
 
       - name: 获取依赖
         run: flutter pub get
 
       - name: 构建 macOS（无签名）
-        run: flutter build macos --release --no-codesign
+        run: flutter build macos --release
+        env:
+          CODE_SIGNING_ALLOWED: 'NO'
+          CODE_SIGNING_REQUIRED: 'NO'
+          CODE_SIGN_IDENTITY: '-'
 
       - name: 创建 DMG 镜像
         run: |
