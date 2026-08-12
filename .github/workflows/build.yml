@@ -21,7 +21,7 @@ jobs:
         uses: subosito/flutter-action@v2
         with:
           channel: 'stable'
-          flutter-version: '3.41.9'
+          flutter-version: '3.47.0'
           cache: true
 
       - name: 安装 Linux 依赖
@@ -58,7 +58,7 @@ jobs:
         uses: subosito/flutter-action@v2
         with:
           channel: 'stable'
-          flutter-version: '3.41.9'
+          flutter-version: '3.47.0'
           cache: true
 
       - name: 获取依赖
@@ -93,7 +93,7 @@ jobs:
         uses: subosito/flutter-action@v2
         with:
           channel: 'stable'
-          flutter-version: '3.41.9'
+          flutter-version: '3.47.0'
           cache: true
 
       - name: 获取依赖
@@ -122,7 +122,7 @@ jobs:
         uses: subosito/flutter-action@v2
         with:
           channel: 'stable'
-          flutter-version: '3.41.9'
+          flutter-version: '3.47.0'
           cache: true
 
       - name: 获取依赖
@@ -160,7 +160,7 @@ jobs:
         uses: subosito/flutter-action@v2
         with:
           channel: 'stable'
-          flutter-version: '3.41.9'
+          flutter-version: '3.47.0'
           cache: true
 
       - name: 获取依赖
