@@ -73,7 +73,8 @@ jobs:
 
       - name: 创建 DMG
         run: |
-          APP_PATH="build/macos/Build/Products/Release/chusearchsong_flutter.app"
+          APP_PATH=$(find build/macos/Build/Products/Release -maxdepth 1 -type d -name "*.app" -print -quit)
+          echo "找到应用: $APP_PATH"
           hdiutil create -volname "chusearchsong" -srcfolder "$APP_PATH" -ov -format UDZO chusearchsong-macos.dmg
 
       - name: 上传产物
