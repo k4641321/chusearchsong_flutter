@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:chusearchsong_flutter/function/toolsfun/playerinfopagefun.dart';
 import 'package:chusearchsong_flutter/pages/toolspages/collectibleinfopage.dart';
 import 'package:flutter/material.dart';
 import 'dart:io';
@@ -47,7 +48,16 @@ Future<List<Widget>> searchCollectibles({
             ),
           );
         },
-        child: Text('${data['id']} - ${data['name']} - $type'),
+        child: Container(
+          decoration: BoxDecoration(
+            color: returnTrophyBackgroundColor(data['color']),
+            border: Border.all(color: returnTrophyColor(data['color'])),
+            borderRadius: BorderRadius.all(Radius.circular(15)),
+          ),
+          padding: EdgeInsets.all(4),
+
+          child: Text('${data['id']} - ${data['name']} - $type'),
+        ),
       );
     } else {
       Widget image = SizedBox.shrink();

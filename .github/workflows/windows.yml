@@ -10,12 +10,6 @@ jobs:
     steps:
     - uses: actions/checkout@v4
     
-    - name: Set up Java
-      uses: actions/setup-java@v4
-      with:
-        java-version: '17'
-        distribution: 'temurin'
-    
     - name: Set up Flutter
       uses: subosito/flutter-action@v2
       with:
@@ -35,10 +29,3 @@ jobs:
       with:
         name: windows-build
         path: build\windows\x64\runner\Release
-    
-    # 注意：以下 AAB 上传步骤是 Android 产物，与 Windows 无关，建议移除或正确指定 Windows 产物
-    - name: Upload AAB
-      uses: actions/upload-artifact@v4
-      with:
-        name: release-bundle
-        path: build/app/outputs/bundle/release/app-release.aab  # 此路径在 Windows 构建中不存在，会失败

@@ -38,6 +38,7 @@ class _SongInfoPageState extends State<SongInfoPage> {
   Widget difficultyChartInfo = CircularProgressIndicator();
   List<Widget> alias = [];
   Widget translationtext = SizedBox.shrink();
+
   //添加收藏
   Future<void> _add() async {
     try {
@@ -146,6 +147,7 @@ class _SongInfoPageState extends State<SongInfoPage> {
     List<Widget> result = await returnSongInformation(
       songid: widget.songbasedata['id'],
       context: context,
+      color: Theme.of(context).colorScheme.primary,
     );
     if (!mounted) return;
     setState(() {
@@ -169,7 +171,22 @@ class _SongInfoPageState extends State<SongInfoPage> {
         InkWell(
           onLongPress: () =>
               copytext(text: kanjiText.toString(), context: context),
-          child: Text('谱面属性: $kanjiText', style: const TextStyle(fontSize: 15)),
+          child: Row(
+            children: [
+              Icon(
+                Icons.tune,
+                size: 18,
+                color: Theme.of(context).colorScheme.primary,
+              ),
+              SizedBox(width: 4),
+              SizedBox(
+                width: 80,
+                child: Text('谱面属性: ', style: const TextStyle(fontSize: 15)),
+              ),
+              SizedBox(width: 50),
+              Expanded(child: Text(kanjiText)),
+            ],
+          ),
         ),
       );
     }
@@ -180,31 +197,59 @@ class _SongInfoPageState extends State<SongInfoPage> {
     );
     if (star != null) {
       final starValue = star['star'];
-      result.add(Text('星数: $starValue', style: const TextStyle(fontSize: 15)));
+      result.add(
+        Row(
+          children: [
+            Icon(
+              Icons.star,
+              size: 18,
+              color: Theme.of(context).colorScheme.primary,
+            ),
+            SizedBox(width: 4),
+            SizedBox(
+              width: 80,
+              child: Text('星数:', style: const TextStyle(fontSize: 15)),
+            ),
+            SizedBox(width: 50),
+            Expanded(child: Text(starValue.toString())),
+          ],
+        ),
+      );
     }
     if (result.isEmpty) {
       return;
     } else {
+      result.insert(0, SizedBox(height: 10));
       result.insert(
         0,
-        Row(children: [Icon(Icons.public), Text('World\'s End信息')]),
+        Row(
+          children: [
+            Text(
+              'World\'s End信息',
+              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+            ),
+          ],
+        ),
       );
       if (!mounted) return;
       setState(() {
-        worldsendinformation = Row(
-          children: [
-            Expanded(
-              child: InkWell(
-                child: Card(
-                  color: Theme.of(context).colorScheme.secondaryContainer,
-                  child: Padding(
-                    padding: EdgeInsetsGeometry.all(8),
-                    child: Column(children: result),
+        worldsendinformation = Padding(
+          padding: EdgeInsetsGeometry.all(10),
+          child: Row(
+            children: [
+              Expanded(
+                child: InkWell(
+                  child: Card(
+                    color: Theme.of(context).colorScheme.secondaryContainer,
+                    child: Padding(
+                      padding: EdgeInsetsGeometry.all(8),
+                      child: Column(children: result),
+                    ),
                   ),
                 ),
               ),
-            ),
-          ],
+            ],
+          ),
         );
       });
     }
@@ -246,77 +291,89 @@ class _SongInfoPageState extends State<SongInfoPage> {
   @override
   Widget build(BuildContext context) {
     final ScrollController controller = ScrollController();
+    final bool isDark = Theme.of(context).brightness == Brightness.dark;
     return Scaffold(
-      appBar: AppBar(
-        title: InkWell(
-          onLongPress: () =>
-              copytext(text: widget.songbasedata['title'], context: context),
-          child: Text('${widget.songbasedata['title']}    - 歌曲详情'),
-        ),
-        actions: [
-          IconButton(
-            onPressed: () async {
-              try {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) =>
-                        Songshareviewpage(songid: widget.songbasedata['id']),
-                  ),
-                );
-              } catch (e) {
-                log('错误$e', name: 'songinfopage.dart', level: 1000);
-                if (!context.mounted) return;
-                ScaffoldMessenger.of(
-                  context,
-                ).showSnackBar(SnackBar(content: Text('分享失败')));
-              }
-            },
-            icon: Icon(Icons.share),
-          ),
-          IconButton(
-            onPressed: () async {
-              if (icon == Icons.favorite_border) {
-                _add();
-              } else if (icon == Icons.favorite) {
-                _remove();
-              }
-            },
-            icon: Icon(icon),
-          ),
-        ],
-      ),
-      body: Scrollbar(
+      // appBar: AppBar(
+      //   title: InkWell(
+      //     onLongPress: () =>
+      //         copytext(text: widget.songbasedata['title'], context: context),
+      //     child: Text('${widget.songbasedata['title']}    - 歌曲详情'),
+      //   ),
+
+      // ),
+      body: CustomScrollView(
         controller: controller,
-        interactive: true,
-        child: SingleChildScrollView(
-          controller: controller,
-          child: Center(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                InkWell(
-                  child: Image.network(
-                    height: 350,
-                    width: 350,
-                    fit: BoxFit.cover,
-                    'https://assets2.lxns.net/chunithm/jacket/${widget.originid}.png',
-                    errorBuilder: (context, error, stackTrace) {
-                      return const Text('图片加载失败');
-                    },
-                  ),
-                  onTap: () {
+        slivers: [
+          SliverAppBar(
+            expandedHeight: 350,
+            pinned: true,
+            title: autoMarqueeText(widget.songbasedata['title']),
+            flexibleSpace: FlexibleSpaceBar(
+              background: InkWell(
+                child: Image.network(
+                  height: 350,
+                  width: 350,
+                  color: isDark
+                      ? Colors.black.withValues(alpha: 0.3)
+                      : Colors.white.withValues(alpha: 0.3),
+                  colorBlendMode: isDark ? BlendMode.darken : BlendMode.lighten,
+                  fit: BoxFit.contain,
+                  'https://assets2.lxns.net/chunithm/jacket/${widget.originid}.png',
+                  errorBuilder: (context, error, stackTrace) {
+                    return const Text('图片加载失败');
+                  },
+                ),
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => PlayMusic(
+                        song: widget.songbasedata,
+                        songid: widget.originid,
+                      ),
+                    ),
+                  );
+                },
+              ),
+            ),
+            actions: [
+              IconButton(
+                onPressed: () async {
+                  try {
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                        builder: (context) => PlayMusic(
-                          song: widget.songbasedata,
-                          songid: widget.originid,
+                        builder: (context) => Songshareviewpage(
+                          songid: widget.songbasedata['id'],
                         ),
                       ),
                     );
-                  },
-                ),
+                  } catch (e) {
+                    log('错误$e', name: 'songinfopage.dart', level: 1000);
+                    if (!context.mounted) return;
+                    ScaffoldMessenger.of(
+                      context,
+                    ).showSnackBar(SnackBar(content: Text('分享失败')));
+                  }
+                },
+                icon: Icon(Icons.share),
+              ),
+              IconButton(
+                onPressed: () async {
+                  if (icon == Icons.favorite_border) {
+                    _add();
+                  } else if (icon == Icons.favorite) {
+                    _remove();
+                  }
+                },
+                icon: Icon(icon),
+              ),
+            ],
+          ),
+          SliverToBoxAdapter(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
                 TextButton(
                   onPressed: () async {
                     try {
@@ -440,131 +497,334 @@ class _SongInfoPageState extends State<SongInfoPage> {
                   ),
                 ),
                 translationtext,
-                Row(
-                  children: [
-                    Expanded(
-                      child: InkWell(
-                        child: Card(
-                          color: Theme.of(
-                            context,
-                          ).colorScheme.secondaryContainer,
-                          child: Padding(
-                            padding: EdgeInsetsGeometry.all(8),
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                              children: [
-                                Row(children: [Icon(Icons.info), Text('基本信息')]),
-                                InkWell(
-                                  onLongPress: () => copytext(
-                                    context: context,
-                                    text: widget.songbasedata['id'],
+                Padding(
+                  padding: EdgeInsetsGeometry.all(10),
+                  child: Row(
+                    children: [
+                      Expanded(
+                        child: InkWell(
+                          child: Card(
+                            color: Theme.of(
+                              context,
+                            ).colorScheme.secondaryContainer,
+                            child: Padding(
+                              padding: EdgeInsetsGeometry.all(8),
+                              child: Column(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceEvenly,
+                                children: [
+                                  Row(
+                                    children: [
+                                      Text(
+                                        '基本信息',
+                                        style: TextStyle(
+                                          fontSize: 18,
+                                          fontWeight: FontWeight.bold,
+                                        ),
+                                        textAlign: TextAlign.left,
+                                      ),
+                                    ],
                                   ),
-                                  child: Text(
-                                    '落雪id： ${widget.songbasedata['id']}',
-                                    style: const TextStyle(fontSize: 15),
+                                  SizedBox(height: 10),
+                                  InkWell(
+                                    onLongPress: () => copytext(
+                                      context: context,
+                                      text: widget.songbasedata['id']
+                                          .toString(),
+                                    ),
+                                    child: Row(
+                                      children: [
+                                        Icon(
+                                          Icons.numbers,
+                                          size: 18,
+                                          color: Theme.of(
+                                            context,
+                                          ).colorScheme.primary,
+                                        ),
+                                        SizedBox(width: 4),
+                                        SizedBox(
+                                          width: 80,
+                                          child: const Text(
+                                            '落雪id：',
+                                            style: TextStyle(fontSize: 15),
+                                          ),
+                                        ),
+                                        SizedBox(width: 50),
+                                        Expanded(
+                                          child: Text(
+                                            '${widget.songbasedata['id']}',
+                                            style: const TextStyle(
+                                              fontSize: 15,
+                                            ),
+                                          ),
+                                        ),
+                                      ],
+                                    ),
                                   ),
-                                ),
-                                InkWell(
-                                  onLongPress: () => copytext(
-                                    context: context,
-                                    text: widget.songbasedata['genre']
-                                        .toString(),
+                                  const Divider(),
+                                  InkWell(
+                                    onLongPress: () => copytext(
+                                      context: context,
+                                      text: widget.songbasedata['title']
+                                          .toString(),
+                                    ),
+                                    child: Row(
+                                      children: [
+                                        Icon(
+                                          Icons.music_note,
+                                          size: 18,
+                                          color: Theme.of(
+                                            context,
+                                          ).colorScheme.primary,
+                                        ),
+                                        SizedBox(width: 4),
+                                        SizedBox(
+                                          width: 80,
+                                          child: const Text(
+                                            '曲名：',
+                                            style: TextStyle(fontSize: 15),
+                                          ),
+                                        ),
+                                        SizedBox(width: 50),
+                                        Expanded(
+                                          child: Text(
+                                            '${widget.songbasedata['title']}',
+                                            style: const TextStyle(
+                                              fontSize: 15,
+                                            ),
+                                          ),
+                                        ),
+                                      ],
+                                    ),
                                   ),
-                                  child: Text(
-                                    '分类： ${widget.songbasedata['genre']}',
-                                    style: const TextStyle(fontSize: 15),
+                                  const Divider(),
+                                  InkWell(
+                                    onLongPress: () => copytext(
+                                      context: context,
+                                      text: widget.songbasedata['genre']
+                                          .toString(),
+                                    ),
+                                    child: Row(
+                                      children: [
+                                        Icon(
+                                          Icons.category,
+                                          size: 18,
+                                          color: Theme.of(
+                                            context,
+                                          ).colorScheme.primary,
+                                        ),
+                                        SizedBox(width: 4),
+                                        SizedBox(
+                                          width: 80,
+                                          child: const Text(
+                                            '分类：',
+                                            style: TextStyle(fontSize: 15),
+                                          ),
+                                        ),
+                                        SizedBox(width: 50),
+                                        Expanded(
+                                          child: Text(
+                                            '${widget.songbasedata['genre']}',
+                                            style: const TextStyle(
+                                              fontSize: 15,
+                                            ),
+                                          ),
+                                        ),
+                                      ],
+                                    ),
                                   ),
-                                ),
-                                InkWell(
-                                  onLongPress: () => copytext(
-                                    text: widget.versionname,
-                                    context: context,
+                                  const Divider(),
+                                  InkWell(
+                                    onLongPress: () => copytext(
+                                      text: widget.versionname.toString(),
+                                      context: context,
+                                    ),
+                                    child: Row(
+                                      children: [
+                                        Icon(
+                                          Icons.update,
+                                          size: 18,
+                                          color: Theme.of(
+                                            context,
+                                          ).colorScheme.primary,
+                                        ),
+                                        SizedBox(width: 4),
+                                        SizedBox(
+                                          width: 80,
+                                          child: Text(
+                                            '版本：',
+                                            style: const TextStyle(
+                                              fontSize: 15,
+                                            ),
+                                          ),
+                                        ),
+                                        SizedBox(width: 50),
+                                        Expanded(
+                                          child: Text(widget.versionname),
+                                        ),
+                                      ],
+                                    ),
                                   ),
-                                  child: Text(
-                                    '版本： ${widget.versionname}',
-                                    style: const TextStyle(fontSize: 15),
+                                  const Divider(),
+                                  InkWell(
+                                    onLongPress: () => copytext(
+                                      text: widget.songbasedata['bpm']
+                                          .toString(),
+                                      context: context,
+                                    ),
+                                    child: Row(
+                                      children: [
+                                        Icon(
+                                          Icons.speed,
+                                          size: 18,
+                                          color: Theme.of(
+                                            context,
+                                          ).colorScheme.primary,
+                                        ),
+                                        SizedBox(width: 4),
+                                        SizedBox(
+                                          width: 80,
+                                          child: Text(
+                                            'BPM：',
+                                            style: const TextStyle(
+                                              fontSize: 15,
+                                            ),
+                                          ),
+                                        ),
+                                        SizedBox(width: 50),
+                                        Expanded(
+                                          child: Text(
+                                            '${widget.songbasedata['bpm']}',
+                                            style: const TextStyle(
+                                              fontSize: 15,
+                                            ),
+                                          ),
+                                        ),
+                                      ],
+                                    ),
                                   ),
-                                ),
-                                Text(
-                                  'BPM:  ${widget.songbasedata['bpm']}',
-                                  style: const TextStyle(fontSize: 15),
-                                ),
-                                InkWell(
-                                  onLongPress: () => copytext(
-                                    text: widget.songbasedata['artist']
-                                        .toString(),
-                                    context: context,
+                                  const Divider(),
+                                  InkWell(
+                                    onLongPress: () => copytext(
+                                      text: widget.songbasedata['artist']
+                                          .toString(),
+                                      context: context,
+                                    ),
+                                    child: Row(
+                                      children: [
+                                        Icon(
+                                          Icons.person,
+                                          size: 18,
+                                          color: Theme.of(
+                                            context,
+                                          ).colorScheme.primary,
+                                        ),
+                                        SizedBox(width: 4),
+                                        SizedBox(
+                                          width: 80,
+                                          child: Text(
+                                            '曲师：',
+                                            style: const TextStyle(
+                                              fontSize: 15,
+                                            ),
+                                          ),
+                                        ),
+                                        SizedBox(width: 50),
+                                        Expanded(
+                                          child: Text(
+                                            ' ${widget.songbasedata['artist']}',
+                                            style: const TextStyle(
+                                              fontSize: 15,
+                                            ),
+                                          ),
+                                        ),
+                                      ],
+                                    ),
                                   ),
-                                  child: Text(
-                                    '曲师： ${widget.songbasedata['artist']}',
-                                    style: const TextStyle(fontSize: 15),
-                                  ),
-                                ),
-                              ],
+                                ],
+                              ),
                             ),
                           ),
                         ),
                       ),
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
-                Row(
-                  children: [
-                    Expanded(
-                      child: InkWell(
-                        child: Card(
-                          color: Theme.of(
-                            context,
-                          ).colorScheme.secondaryContainer,
-                          child: Padding(
-                            padding: EdgeInsetsGeometry.all(8),
-                            child: Column(children: information),
+                Padding(
+                  padding: EdgeInsetsGeometry.all(10),
+                  child: Row(
+                    children: [
+                      Expanded(
+                        child: InkWell(
+                          child: Card(
+                            color: Theme.of(
+                              context,
+                            ).colorScheme.secondaryContainer,
+                            child: Padding(
+                              padding: EdgeInsetsGeometry.all(8),
+                              child: Column(children: information),
+                            ),
                           ),
                         ),
                       ),
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
-                Row(
-                  children: [
-                    Expanded(
-                      child: InkWell(
-                        child: Card(
-                          color: Theme.of(
-                            context,
-                          ).colorScheme.secondaryContainer,
-                          child: Padding(
-                            padding: EdgeInsetsGeometry.all(8),
-                            child: Column(children: widget.alias),
+                Padding(
+                  padding: EdgeInsetsGeometry.all(10),
+                  child: Row(
+                    children: [
+                      Expanded(
+                        child: InkWell(
+                          child: Card(
+                            color: Theme.of(
+                              context,
+                            ).colorScheme.secondaryContainer,
+                            child: Padding(
+                              padding: EdgeInsetsGeometry.all(8),
+                              child: Wrap(
+                                alignment: WrapAlignment.center,
+                                spacing: 10,
+                                children: widget.alias,
+                              ),
+                            ),
                           ),
                         ),
                       ),
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
-                Row(
-                  children: [
-                    Expanded(
-                      child: InkWell(
-                        child: Card(
-                          color: Theme.of(
-                            context,
-                          ).colorScheme.secondaryContainer,
-                          child: Padding(
-                            padding: EdgeInsetsGeometry.all(8),
-                            child: Column(children: relatedCollectibles),
+                Padding(
+                  padding: EdgeInsetsGeometry.all(10),
+                  child: Row(
+                    children: [
+                      Expanded(
+                        child: InkWell(
+                          child: Card(
+                            color: Theme.of(
+                              context,
+                            ).colorScheme.secondaryContainer,
+                            child: Padding(
+                              padding: EdgeInsetsGeometry.all(8),
+                              child: Wrap(
+                                alignment: WrapAlignment.center,
+                                spacing: 10,
+                                runSpacing: 5,
+                                children: relatedCollectibles,
+                              ),
+                            ),
                           ),
                         ),
                       ),
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
                 worldsendinformation,
                 difficultyChartInfo,
               ],
             ),
           ),
-        ),
+        ],
       ),
     );
   }

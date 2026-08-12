@@ -143,6 +143,7 @@ Future<void> interSongInfo({
   List<Widget> alias = await returnAlias(
     id: songbasedata['id'],
     context: context,
+    color: Theme.of(context).colorScheme.primary,
   );
   if (!context.mounted) return;
   await Navigator.push(

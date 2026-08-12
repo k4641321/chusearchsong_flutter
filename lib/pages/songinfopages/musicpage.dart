@@ -104,6 +104,7 @@ class _PlayMusic extends State<PlayMusic> {
       _subscription.add(
         _musicplayer.onDurationChanged.listen((duration) {
           log('歌曲时长: $duration');
+          if (!mounted) return;
           setState(() {
             songvalue = duration.inMilliseconds.toDouble();
             log('歌曲时长: $songvalue');
@@ -125,6 +126,7 @@ class _PlayMusic extends State<PlayMusic> {
     }
     _subscription.clear();
     _musicplayer.dispose();
+    if (!mounted) return;
     super.dispose();
   }
 

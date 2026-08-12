@@ -45,13 +45,16 @@ class _FriendBattlePageState extends State<FriendBattlePage> {
 
   Future<void> init() async {
     try {
+      if (!mounted) return;
       setState(() {
         _isLoading = true;
       });
+      if (!mounted) return;
       setState(() {
         _loadingText = '加载曲目...';
       });
       songsdata = jsonDecode(await loadSongsData());
+      if (!mounted) return;
       setState(() {
         _loadingText = '上传玩家成绩...';
       });
@@ -60,6 +63,7 @@ class _FriendBattlePageState extends State<FriendBattlePage> {
         await requestScore(token: await returnlxnstoken()),
       )['data'];
       if (uploadresult['Sucess'] == true) {
+        if (!mounted) return;
         setState(() {
           _loadingText = '成功';
           _isLoading = false;
@@ -70,6 +74,7 @@ class _FriendBattlePageState extends State<FriendBattlePage> {
           context,
         ).showSnackBar(SnackBar(content: Text('成功')));
       } else {
+        if (!mounted) return;
         setState(() {
           _loadingText = '失败';
         });
@@ -141,6 +146,7 @@ class _FriendBattlePageState extends State<FriendBattlePage> {
       newfriendcode = int.parse(friendcodeController.text);
       if (friendcode != newfriendcode) {
         final path = await getApplicationSupportDirectory();
+        if (!mounted) return;
         setState(() {
           _isLoading = true;
           _loadingText = '请求好友数据...';
@@ -148,12 +154,14 @@ class _FriendBattlePageState extends State<FriendBattlePage> {
         friendscore =
             jsonDecode(await finduploadallscore(newfriendcode))['allscore'] ??
             (throw Exception('没有找到该玩家的数据'));
+        if (!mounted) return;
         setState(() {
           _loadingText = '请求我的数据...';
         });
         myscore = jsonDecode(
           File('${path.path}/res/allscore.json').readAsStringSync(),
         )['data'];
+        if (!mounted) return;
         setState(() {
           _loadingText = '请求好友信息...';
         });
@@ -162,6 +170,7 @@ class _FriendBattlePageState extends State<FriendBattlePage> {
               await requestotherPlayerInfo(newfriendcode),
             )['data']['rating'] ??
             (throw Exception('没有找到该玩家的数据'));
+        if (!mounted) return;
         setState(() {
           _loadingText = '请求我的信息...';
         });
@@ -170,6 +179,7 @@ class _FriendBattlePageState extends State<FriendBattlePage> {
         )['data']['rating'];
         friendcode = newfriendcode;
       }
+      if (!mounted) return;
       setState(() {
         _loadingText = '比较...';
       });
@@ -177,7 +187,7 @@ class _FriendBattlePageState extends State<FriendBattlePage> {
         myscore: myscore,
         friendscore: friendscore,
       );
-
+      if (!mounted) return;
       setState(() {
         win = briefvs['win'];
         lose = briefvs['lose'];
@@ -195,6 +205,7 @@ class _FriendBattlePageState extends State<FriendBattlePage> {
         _isLoading = false;
       });
     } catch (e, strack) {
+      if (!mounted) return;
       setState(() {
         _isLoading = false;
       });
@@ -217,8 +228,21 @@ class _FriendBattlePageState extends State<FriendBattlePage> {
   }
 
   @override
+  void dispose() {
+    if (!mounted) return;
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
+      floatingActionButton: FloatingActionButton(
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(50)),
+        child: Icon(Icons.arrow_upward),
+        onPressed: () {
+          _scrollController.jumpTo(0);
+        },
+      ),
       appBar: AppBar(title: const Text("友人对战")),
       body: Scrollbar(
         controller: _scrollController,
@@ -415,7 +439,9 @@ class _FriendBattlePageState extends State<FriendBattlePage> {
                       style: ButtonStyle(),
                       child: Text(
                         '全部',
-                        style: TextStyle(color: Theme.of(context).primaryColor),
+                        style: TextStyle(
+                          color: Theme.of(context).colorScheme.primary,
+                        ),
                       ),
                     ),
                   ),
@@ -442,6 +468,12 @@ class _FriendBattlePageState extends State<FriendBattlePage> {
                       ),
                     ),
                   ),
+                ],
+              ),
+            ),
+            SliverToBoxAdapter(
+              child: Row(
+                children: [
                   Expanded(
                     child: TextButton(
                       onPressed: () {
@@ -487,12 +519,7 @@ class _FriendBattlePageState extends State<FriendBattlePage> {
                         vs();
                       },
                       style: ButtonStyle(),
-                      child: Text(
-                        'WL',
-                        style: TextStyle(
-                          color: Theme.of(context).colorScheme.primary,
-                        ),
-                      ),
+                      child: Text('WL', style: TextStyle(color: Colors.grey)),
                     ),
                   ),
                 ],

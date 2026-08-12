@@ -3,6 +3,7 @@ import 'dart:io';
 import 'dart:convert';
 import 'package:chusearchsong_flutter/function/toolsfun/searchcollectiblespagefun.dart';
 import 'package:flutter/material.dart';
+import 'package:marquee/marquee.dart';
 import 'package:path_provider/path_provider.dart';
 import '../request.dart';
 import '../../pages/toolspages/faulttoterantcomputationpage.dart';
@@ -17,19 +18,19 @@ List<Widget> returnDiffTabBar({required Map song}) {
   for (var i in diff) {
     switch (i['difficulty']) {
       case 0:
-        result.add(const Text('Basic'));
+        result.add(const Text('BAS'));
         break;
       case 1:
-        result.add(const Text('Advanced'));
+        result.add(const Text('ADV'));
         break;
       case 2:
-        result.add(const Text('Expert'));
+        result.add(const Text('EXP'));
         break;
       case 3:
-        result.add(const Text('Master'));
+        result.add(const Text('MAS'));
         break;
       case 4:
-        result.add(const Text('ULtima'));
+        result.add(const Text('ULT'));
         break;
       case 5:
         result.add(const Text('World\'s End'));
@@ -74,7 +75,18 @@ Future<Widget> returnscore({
                 padding: EdgeInsetsGeometry.all(8),
                 child: Column(
                   children: [
-                    Row(children: [Icon(Icons.star), Text('历史成绩')]),
+                    Row(
+                      children: [
+                        Icon(Icons.star),
+                        Text(
+                          '历史成绩',
+                          style: TextStyle(
+                            fontSize: 18,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ],
+                    ),
                     Text('Score:   ${j['score']}'),
                     const Divider(),
                     Text('Rating:   ${j['rating']}'),
@@ -140,7 +152,18 @@ Future<List<Widget>> returnDiffTabBarView({
               padding: EdgeInsetsGeometry.all(8),
               child: Column(
                 children: [
-                  Row(children: [Icon(Icons.queue_music), Text('谱面信息')]),
+                  Row(
+                    children: [
+                      Icon(Icons.queue_music),
+                      Text(
+                        '谱面信息',
+                        style: TextStyle(
+                          fontSize: 18,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ],
+                  ),
                   InkWell(
                     onLongPress: () => copytext(
                       text: song2['note_designer'].toString(),
@@ -300,6 +323,7 @@ Future<List<Widget>> returnDiffTabBarView({
 Future<List<Widget>> returnSongInformation({
   required int songid,
   required BuildContext context,
+  required Color color,
 }) async {
   try {
     List<Widget> information = [];
@@ -307,32 +331,81 @@ Future<List<Widget>> returnSongInformation({
     songInfo = await getSongInfo(songid);
     if (songInfo.isNotEmpty) {
       if (songInfo.keys.contains('map')) {
+        information.add(const Divider());
         information.add(
           InkWell(
             onLongPress: () =>
                 copytext(text: songInfo['map'], context: context),
-            child: Text(
-              '地图: ${songInfo['map']}',
-              style: const TextStyle(fontSize: 15),
+            child: Row(
+              children: [
+                Icon(Icons.map, size: 18, color: color),
+                SizedBox(width: 4),
+                SizedBox(
+                  width: 100,
+                  child: const Text('所属地图: ', style: TextStyle(fontSize: 15)),
+                ),
+                SizedBox(width: 50),
+                Expanded(
+                  child: Text(
+                    songInfo['map'],
+                    style: const TextStyle(fontSize: 15),
+                  ),
+                ),
+              ],
             ),
           ),
         );
       }
       if (songInfo.keys.contains('locked')) {
+        late String iflock;
+        late IconData lockicon;
         if (songInfo['locked'] == true) {
-          information.add(Text('需解锁', style: const TextStyle(fontSize: 15)));
+          iflock = '需解锁';
+          lockicon = Icons.lock;
         } else {
-          information.add(Text('无需解锁', style: const TextStyle(fontSize: 15)));
+          iflock = '无需解锁';
+          lockicon = Icons.lock_open;
         }
+        information.add(const Divider());
+        information.add(
+          Row(
+            children: [
+              Icon(lockicon, size: 18, color: color),
+              SizedBox(width: 4),
+              SizedBox(
+                width: 100,
+                child: const Text('是否需要解锁: ', style: TextStyle(fontSize: 15)),
+              ),
+              SizedBox(width: 50),
+              Expanded(
+                child: Text(iflock, style: const TextStyle(fontSize: 15)),
+              ),
+            ],
+          ),
+        );
       }
       if (songInfo.keys.contains('rights')) {
+        information.add(const Divider());
         information.add(
           InkWell(
             onLongPress: () =>
                 copytext(text: songInfo['rights'], context: context),
-            child: Text(
-              '版权: ${songInfo['rights']}',
-              style: const TextStyle(fontSize: 15),
+            child: Row(
+              children: [
+                Icon(Icons.copyright, size: 18, color: color),
+                SizedBox(width: 4),
+                SizedBox(
+                  width: 80,
+                  child: const Text('版权: ', style: TextStyle(fontSize: 15)),
+                ),
+                SizedBox(width: 50),
+                Expanded(
+                  child: Text(
+                    '${songInfo['rights']}',
+                    style: const TextStyle(fontSize: 15),
+                  ),
+                ),
+              ],
             ),
           ),
         );
@@ -340,29 +413,53 @@ Future<List<Widget>> returnSongInformation({
       if (information.isEmpty) {
         information.add(Text('无'));
       }
+      information.insert(0, SizedBox(height: 10));
       information.insert(
         0,
-        Row(children: [Icon(Icons.info_outline), Text('其余信息')]),
+        Row(
+          children: [
+            Text(
+              '其余信息',
+              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+            ),
+          ],
+        ),
       );
       return information;
     } else {
       return [
-        Row(children: [Icon(Icons.info_outline), Text('其余信息')]),
+        Row(
+          children: [
+            Text(
+              '其余信息',
+              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+            ),
+          ],
+        ),
         Text('获取其余信息失败'),
       ];
     }
   } catch (e, strack) {
     log('error $e', name: 'fun.dart', level: 1000);
     return [
-      Row(children: [Icon(Icons.info_outline), Text('其余信息')]),
+      Row(
+        children: [
+          Text(
+            '其余信息',
+            style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+          ),
+        ],
+      ),
       Text('请求失败 $e\n $strack', style: const TextStyle(fontSize: 15)),
     ];
   }
 }
 
+//别名
 Future<List<Widget>> returnAlias({
   required int id,
   required BuildContext context,
+  required Color color,
 }) async {
   List<Widget> result = [];
   try {
@@ -377,7 +474,14 @@ Future<List<Widget>> returnAlias({
           result.add(
             InkWell(
               onLongPress: () => copytext(text: j.toString(), context: context),
-              child: Text('$j'),
+              child: Container(
+                padding: EdgeInsets.all(4),
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(15),
+                  border: Border.all(color: color),
+                ),
+                child: Text('$j'),
+              ),
             ),
           );
           // result.add(const Divider());
@@ -387,11 +491,29 @@ Future<List<Widget>> returnAlias({
     if (result.isEmpty) {
       result.add(Text('无'));
     }
-    result.insert(0, Row(children: [Icon(Icons.label), Text('别名')]));
+    result.insert(0, SizedBox(height: 10));
+    result.insert(
+      0,
+      Row(
+        children: [
+          Text(
+            '别名',
+            style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+          ),
+        ],
+      ),
+    );
   } catch (e) {
     log('$e', name: 'songinfopagefun.dart', level: 1000);
     result = [
-      Row(children: [Icon(Icons.label), Text('别名')]),
+      Row(
+        children: [
+          Text(
+            '别名',
+            style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+          ),
+        ],
+      ),
       Text('获取别名失败'),
     ];
   }
@@ -412,7 +534,15 @@ Future<List<Widget>> returnRelatedCollectibles({
     } else {
       if (!context.mounted) {
         result = [
-          Row(children: [Icon(Icons.label), Text('关联收藏品')]),
+          Row(
+            children: [
+              Text(
+                '关联收藏品',
+                style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+              ),
+            ],
+          ),
+          SizedBox(height: 10),
           const Divider(),
           Text('无'),
         ];
@@ -433,7 +563,18 @@ Future<List<Widget>> returnRelatedCollectibles({
   } catch (e, strack) {
     result.add(Text('错误 $e\n $strack'));
   }
-  result.insert(0, Row(children: [Icon(Icons.label), Text('关联收藏品')]));
+  result.insert(0, SizedBox(height: 10));
+  result.insert(
+    0,
+    Row(
+      children: [
+        Text(
+          '关联收藏品',
+          style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+        ),
+      ],
+    ),
+  );
   return result;
 }
 
@@ -468,3 +609,51 @@ Future<Widget> returnChartInfoAndSocre({
   );
   return result;
 }
+
+Widget autoMarqueeText(String text) {
+  return LayoutBuilder(
+    builder: (context, constraints) {
+      final String titleText = text;
+      final TextStyle titleStyle =
+          Theme.of(context).appBarTheme.titleTextStyle ??
+          const TextStyle(fontWeight: FontWeight.bold);
+
+      // 测量文字实际宽度
+      final TextPainter painter = TextPainter(
+        text: TextSpan(text: titleText, style: titleStyle),
+        maxLines: 1,
+        textDirection: TextDirection.ltr,
+      )..layout();
+      final bool isOverflow = painter.width > constraints.maxWidth;
+
+      return SizedBox(
+        height: kToolbarHeight,
+        child: isOverflow
+            ? Marquee(
+                text: titleText,
+                style: titleStyle,
+                velocity: 40, // 滚动速度
+                blankSpace: 50, // 首尾间隔
+                pauseAfterRound: const Duration(seconds: 1),
+              )
+            : Center(
+                child: Text(
+                  titleText,
+                  style: titleStyle,
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                ),
+              ),
+      );
+    },
+  );
+}
+
+// Widget returnappropriateimagewidget({
+//   required BuildContext context,
+//   required String url,
+// }) {
+//   if (MediaQuery.of(context).size.width > MediaQuery.of(context).size.height) {
+//     return
+//   }
+// }
