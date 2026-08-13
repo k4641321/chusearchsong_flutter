@@ -232,7 +232,7 @@ class _MyHomePageState extends State<MyHomePage> {
       showChangesLog();
       chechupdate();
       showannouncement();
-      // postusecount();
+      postusecount();
     });
   }
 
