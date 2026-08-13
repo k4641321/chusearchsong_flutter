@@ -207,6 +207,9 @@ jobs:
       contents: write   # 允许 GITHUB_TOKEN 创建/更新 Release
     if: github.event_name != 'pull_request'
     steps:
+      - name: 检出代码
+        uses: actions/checkout@v4
+
       - name: 下载所有产物
         uses: actions/download-artifact@v4
         with:
@@ -215,15 +218,31 @@ jobs:
       - name: 列出产物
         run: ls -R artifacts/
 
+      - name: 提取版本号并重命名产物
+        run: |
+          VERSION=$(grep '^version:' pubspec.yaml | sed 's/version:[[:space:]]*//')
+          echo "版本号: $VERSION"
+          mkdir -p dist
+          cp artifacts/chusearchsong-linux-x64/chusearchsong-linux-x64.tar.gz dist/chusearchsong-linux-x64-v${VERSION}.tar.gz
+          cp artifacts/chusearchsong-macos/chusearchsong-macos.dmg dist/chusearchsong-macos-v${VERSION}.dmg
+          cp artifacts/chusearchsong-windows-x64/chusearchsong-windows-x64.zip dist/chusearchsong-windows-x64-v${VERSION}.zip
+          cp artifacts/chusearchsong-ios-unsigned/unsigned.ipa dist/chusearchsong-ios-unsigned-v${VERSION}.ipa
+          for f in artifacts/chusearchsong-android-apk/*.apk; do
+            [ -e "$f" ] || continue
+            base=$(basename "$f" .apk)
+            cp "$f" "dist/${base}-v${VERSION}.apk"
+          done
+          for f in artifacts/chusearchsong-android-aab/*.aab; do
+            [ -e "$f" ] || continue
+            base=$(basename "$f" .aab)
+            cp "$f" "dist/${base}-v${VERSION}.aab"
+          done
+          echo "重命名后的产物:"
+          ls -R dist/
+
       - name: 发布到 Release（草稿）
         uses: softprops/action-gh-release@v2
         with:
           tag_name: latest-build
           draft: true
-          files: |
-            artifacts/chusearchsong-linux-x64/chusearchsong-linux-x64.tar.gz
-            artifacts/chusearchsong-macos/chusearchsong-macos.dmg
-            artifacts/chusearchsong-windows-x64/chusearchsong-windows-x64.zip
-            artifacts/chusearchsong-ios-unsigned/unsigned.ipa
-            artifacts/chusearchsong-android-apk/*.apk
-            artifacts/chusearchsong-android-aab/*.aab
+          files: dist/*

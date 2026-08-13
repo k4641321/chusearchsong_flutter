@@ -97,7 +97,8 @@ class _Randomb50pageState extends State<Randomb50page> {
                       ).writeAsBytesSync(pngBytes!);
                       if (!context.mounted) return;
                       final platform = Theme.of(context).platform;
-                      if (platform == TargetPlatform.windows) {
+                      if (platform == TargetPlatform.windows ||
+                          platform == TargetPlatform.linux) {
                         await FilePicker.saveFile(
                           dialogTitle: '保存随机B50',
                           fileName: 'randomb50.png',

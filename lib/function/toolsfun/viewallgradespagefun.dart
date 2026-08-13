@@ -184,7 +184,7 @@ List<List<Widget>> returnScoreList({
   int count = 0;
   for (var i in filtersongs) {
     int songid = i['id'];
-    List<dynamic> songInfoDiffs = [];
+    List<Widget> songInfoDiffs = [];
     String versionname = '';
     for (var j in songsdata['songs']) {
       if (i['id'] == j['id']) {
@@ -196,13 +196,34 @@ List<List<Widget>> returnScoreList({
         for (var k in j['difficulties']) {
           if (i['level_index'] == k['difficulty']) {
             songInfoDiffs.add(
-              '${returnDiffName(i['level_index'])} - ${k['level_value']}',
+              Card(
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadiusGeometry.all(Radius.circular(5)),
+                ),
+                color: diffcolor(diffindex: k['difficulty']),
+                child: Padding(
+                  padding: EdgeInsetsGeometry.only(
+                    left: 8,
+                    right: 8,
+                    top: 3,
+                    bottom: 3,
+                  ),
+
+                  child: Text(
+                    '${returnDiffName(i['level_index'])} - ${k['level_value']}',
+                    style: TextStyle(color: Colors.white),
+                  ),
+                ),
+              ),
             );
           }
         }
         for (var k in songsdata['versions']) {
           if (k['version'] == j['version']) {
             versionname = k['title'];
+            if (versionname != 'CHUNITHM') {
+              versionname = versionname.replaceAll('CHUNITHM', '');
+            }
           }
         }
         scorewidgetlist.add(
@@ -219,33 +240,146 @@ List<List<Widget>> returnScoreList({
                   mainAxisSize: MainAxisSize.min,
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    CachedNetworkImage(
-                      imageUrl:
-                          'https://assets2.lxns.net/chunithm/jacket/$songid.png',
-                      width: 75,
-                      height: 75,
-                      errorWidget: (context, url, error) => Text('加载失败'),
+                    Column(
+                      children: [
+                        Padding(
+                          padding: EdgeInsetsGeometry.only(right: 0),
+                          child: CachedNetworkImage(
+                            imageUrl:
+                                'https://assets2.lxns.net/chunithm/jacket/$songid.png',
+                            width: 95,
+                            height: 95,
+                            errorWidget: (context, url, error) => Text('加载失败'),
+                          ),
+                        ),
+                        Wrap(children: songInfoDiffs),
+                      ],
                     ),
                     Expanded(
-                      child: Column(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          Text(
-                            '${j['id']} - ${j['title']}      ${j['genre']} - $versionname',
-                            textAlign: TextAlign.center,
-                          ),
-                          Text(
-                            '$songInfoDiffs',
-                            style: TextStyle(
-                              color: diffcolor(diffindex: i['level_index']),
+                      child: Padding(
+                        padding: EdgeInsetsGeometry.only(left: 10),
+                        child: Column(
+                          children: [
+                            Row(
+                              children: [
+                                Expanded(
+                                  child: Text(
+                                    '${j['title']}',
+                                    overflow: TextOverflow.ellipsis,
+                                    style: TextStyle(
+                                      fontSize: 20,
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  ),
+                                ),
+                              ],
                             ),
-                          ),
-                          Text(
-                            '成绩：${i['score']} | Rating：${i['rating']} | 评级：${(i['rank'] as String).replaceAll('p', '+')}',
-                            style: TextStyle(color: returnColor(i['score'])),
-                          ),
-                        ],
+                            Row(
+                              children: [
+                                Expanded(
+                                  child: Text(
+                                    '${j['artist']}',
+                                    overflow: TextOverflow.ellipsis,
+                                  ),
+                                ),
+                              ],
+                            ),
+                            Row(
+                              children: [
+                                Expanded(
+                                  child: Text(
+                                    '#${j['id']}   ${j['genre']} - $versionname',
+                                    overflow: TextOverflow.ellipsis,
+                                  ),
+                                ),
+                              ],
+                            ),
+                            Text(
+                              '成绩：${i['score']} | Rating：${i['rating']} | 评级：${(i['rank'] as String).replaceAll('p', '+')}',
+                              style: TextStyle(color: returnColor(i['score'])),
+                            ),
+                            // Wrap(
+                            //   children: [
+                            //     Card(
+                            //       color: returnColor(i['score']),
+                            //       child: Padding(
+                            //         padding: EdgeInsetsGeometry.only(
+                            //           left: 8,
+                            //           right: 8,
+                            //           top: 3,
+                            //           bottom: 3,
+                            //         ),
+                            //         child: Text(
+                            //           '成绩:：${i['score']}',
+                            //           style: TextStyle(
+                            //             color: Colors.white,
+                            //             fontSize: 10,
+                            //           ),
+                            //         ),
+                            //       ),
+                            //     ),
+                            //     Card(
+                            //       color: returnRatingColor(
+                            //         i['rating'].toDouble(),
+                            //       ),
+                            //       child: Padding(
+                            //         padding: EdgeInsetsGeometry.only(
+                            //           left: 8,
+                            //           right: 8,
+                            //           top: 3,
+                            //           bottom: 3,
+                            //         ),
+                            //         child: Text(
+                            //           'Rating：${i['rating']}',
+                            //           style: TextStyle(
+                            //             color: Colors.white,
+                            //             fontSize: 10,
+                            //           ),
+                            //         ),
+                            //       ),
+                            //     ),
+                            //     Card(
+                            //       color: returnColor(i['score']),
+                            //       child: Padding(
+                            //         padding: EdgeInsetsGeometry.only(
+                            //           left: 8,
+                            //           right: 8,
+                            //           top: 3,
+                            //           bottom: 3,
+                            //         ),
+                            //         child: Text(
+                            //           '评级：${(i['rank'] as String).replaceAll('p', '+')}',
+                            //           style: TextStyle(
+                            //             color: Colors.white,
+                            //             fontSize: 10,
+                            //           ),
+                            //         ),
+                            //       ),
+                            //     ),
+                            //   ],
+                            // ),
+                          ],
+                        ),
                       ),
+                      // Column(
+                      //   mainAxisSize: MainAxisSize.min,
+                      //   children: [
+                      //     Text(
+                      //       '${j['id']} - ${j['title']}      ${j['genre']} - $versionname',
+                      //       textAlign: TextAlign.center,
+                      //     ),
+                      //     Text(
+                      //       '$songInfoDiffs',
+                      //       style: TextStyle(
+                      //         color: diffcolor(diffindex: i['level_index']),
+                      //       ),
+                      //     ),
+                      //     Text(
+                      //       '成绩：${i['score']} | Rating：${i['rating']} | 评级：${(i['rank'] as String).replaceAll('p', '+')}',
+                      //       style: TextStyle(color: returnColor(i['score'])),
+                      //     ),
+                      //   ],
+                      // ),
                     ),
                   ],
                 ),

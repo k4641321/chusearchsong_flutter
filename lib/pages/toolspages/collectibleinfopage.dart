@@ -1,11 +1,14 @@
 import 'dart:developer';
 
+import 'package:cached_network_image/cached_network_image.dart';
+import 'package:chusearchsong_flutter/function/toolsfun/collectibleinfopagefun.dart';
 import 'package:flutter/material.dart';
 import '../../function/fun.dart';
 import 'dart:io';
 import 'package:path_provider/path_provider.dart';
 import 'dart:convert';
 import '../../function/texttranslate.dart';
+import '../../function/toolsfun/generateb50fun/generateb50.dart';
 import '../../function/toolsfun/playerinfopagefun.dart';
 import '../../function/request.dart';
 
@@ -31,56 +34,6 @@ class _CollectibleInfoPageState extends State<CollectibleInfoPage> {
   Widget charatranwidget = SizedBox.shrink();
   //加载其余信息
   Future<void> otherinfo({required String type}) async {
-    //返回英文难度列表，称号使用
-    List returnEnglishDiff({
-      required List difficulties,
-      required bool isComplete,
-      List<String>? requireddifficulties,
-    }) {
-      List result = [];
-      if (isComplete == true) {
-        for (var i in difficulties) {
-          switch (i) {
-            case 0:
-              result.add('BASIC');
-            case 1:
-              result.add('ADVANCED');
-            case 2:
-              result.add('EXPERT');
-            case 3:
-              result.add('MASTER');
-            case 4:
-              difficulties.add('ULTIMATE');
-            case 5:
-              difficulties.add('Worlds\'End');
-            default:
-              result.add('未知');
-          }
-        }
-      } else if (isComplete == false && requireddifficulties != null) {
-        result = requireddifficulties;
-        for (var i in difficulties) {
-          switch (i) {
-            case 0:
-              result.remove('BASIC');
-            case 1:
-              result.remove('ADVANCED');
-            case 2:
-              result.remove('EXPERT');
-            case 3:
-              result.remove('MASTER');
-            case 4:
-              result.remove('ULTIMATE');
-            case 5:
-              result.remove('Worlds\'End');
-            default:
-              result = ['未知'];
-          }
-        }
-      }
-      return result;
-    }
-
     newdata = widget.data;
     //检侧是不是称号
     if (type == 'trophy') {
@@ -106,350 +59,6 @@ class _CollectibleInfoPageState extends State<CollectibleInfoPage> {
           textAlign: TextAlign.center,
         ),
       );
-
-      //检测有没有要求
-      if (newdata.keys.contains('required')) {
-        List<String> difficulties = [];
-        Map<String, dynamic> requiredList = newdata['required'][0];
-        List<Widget> songList = [];
-        if (requiredList['difficulties'].isEmpty) {
-          difficulties.add('任意难度');
-        } else {
-          for (var i in requiredList['difficulties']) {
-            // print('$i, $i.runtimeType');
-            switch (i) {
-              case 0:
-                difficulties.add('BASIC');
-              case 1:
-                difficulties.add('ADVANCED');
-              case 2:
-                difficulties.add('EXPERT');
-              case 3:
-                difficulties.add('MASTER');
-              case 4:
-                difficulties.add('ULTIMATE');
-              case 5:
-                difficulties.add('Worlds\'End');
-              default:
-                difficulties.add('未知');
-            }
-          }
-        }
-        result.add(
-          Text(
-            '需求: \n难度: ${difficulties.toString()}',
-            style: const TextStyle(fontSize: 20),
-            textAlign: TextAlign.center,
-          ),
-        );
-        //full_chain要求
-        if (requiredList.keys.contains('full_chain')) {
-          String fullchain;
-          switch (requiredList['full_chain']) {
-            case 'fullchain':
-              fullchain = '铂Full Chain';
-            case 'fullchain2':
-              fullchain = '金Full Chain';
-            default:
-              fullchain = '无';
-          }
-          result.add(
-            Text(
-              'Full Chain要求: $fullchain',
-              style: const TextStyle(fontSize: 20),
-              textAlign: TextAlign.center,
-            ),
-          );
-        }
-        //full_combo要求
-        if (requiredList.keys.contains('full_combo')) {
-          String fullcombo;
-          switch (requiredList['full_combo']) {
-            case 'alljusticecritical':
-              fullcombo = 'AJC';
-            case 'alljustice':
-              fullcombo = 'ALL JUSTICE';
-            case 'fullcombo':
-              fullcombo = 'FULL COMBO';
-            default:
-              fullcombo = '无';
-          }
-          result.add(
-            Text(
-              'Full Combo要求: $fullcombo',
-              style: const TextStyle(fontSize: 20),
-              textAlign: TextAlign.center,
-            ),
-          );
-        }
-
-        //评级要求
-        if (requiredList.keys.contains('rank')) {
-          String rank;
-          rank = requiredList['rank'];
-          result.add(
-            Text(
-              'rank要求: $rank',
-              style: const TextStyle(fontSize: 20),
-              textAlign: TextAlign.center,
-            ),
-          );
-        }
-
-        //曲目要求
-        if (requiredList.keys.contains('songs')) {
-          List<dynamic> songs = requiredList['songs'];
-          //加载曲目
-          final dataPath = await getApplicationSupportDirectory();
-          String jsonString = await File(
-            '${dataPath.path}/res/songs.json',
-          ).readAsString();
-          Map<String, dynamic> songData = json.decode(jsonString);
-          result.add(
-            Text(
-              '关联曲目: ',
-              style: const TextStyle(fontSize: 20),
-              textAlign: TextAlign.center,
-            ),
-          );
-          //获取曲目信息
-          for (var songItem in songs) {
-            Map<String, dynamic> song = {};
-            for (var j in songData['songs']) {
-              if (j['id'] == songItem['id']) {
-                song = j;
-                break;
-              }
-            }
-            //获取版本名
-            String versionname = '';
-            for (var j in songData['versions']) {
-              if (j['version'] == song['version']) {
-                versionname = j['title'];
-              }
-            }
-
-            if (songs.length > 4) {
-              songList.add(
-                InkWell(
-                  // key: ValueKey(songItem['id']),
-                  onTap: () async {
-                    interSongInfo(
-                      songbasedata: song,
-                      context: context,
-                      versionname: versionname,
-                    );
-                  },
-                  child: Card(
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(0.0),
-                    ),
-                    child: Padding(
-                      padding: EdgeInsetsGeometry.all(10.0),
-                      child: Text(
-                        '${song['id']} - ${song['title']}      ${song['genre']} - $versionname',
-                        textAlign: TextAlign.center,
-                      ),
-                    ),
-                  ),
-                ),
-              );
-            } else {
-              result.add(
-                InkWell(
-                  // key: ValueKey(songItem['id']),
-                  onTap: () async {
-                    interSongInfo(
-                      songbasedata: song,
-                      context: context,
-                      versionname: versionname,
-                    );
-                  },
-                  child: Card(
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(0.0),
-                    ),
-                    child: Padding(
-                      padding: EdgeInsetsGeometry.all(10.0),
-                      child: Text(
-                        '${song['id']} - ${song['title']}      ${song['genre']} - $versionname',
-                        textAlign: TextAlign.center,
-                      ),
-                    ),
-                  ),
-                ),
-              );
-            }
-          }
-          if (songList.isNotEmpty) {
-            result.add(_buildSongListSection(songList));
-          }
-          result.add(const Divider());
-
-          //最后的信息构建组件
-          if (newdata.containsKey('required')) {
-            List allsongrequiredlist = newdata['required'];
-            List allsongrequired = [];
-            int songcount = 0;
-            for (var i in allsongrequiredlist) {
-              if (i.containsKey('songs')) {
-                allsongrequired = i['songs'];
-                songcount = allsongrequired.length;
-              }
-              if (i.containsKey('completed')) {
-                if (i['completed'] == true) {
-                  result.add(
-                    Text(
-                      '总完成状态: 完成 $songcount/$songcount',
-                      style: const TextStyle(fontSize: 20),
-                      textAlign: TextAlign.center,
-                    ),
-                  );
-                } else if (i['completed'] == false) {
-                  result.add(
-                    Text(
-                      '总完成状态: 未完成',
-                      style: const TextStyle(fontSize: 20),
-                      textAlign: TextAlign.center,
-                    ),
-                  );
-                }
-              }
-            }
-            List<Widget> uncompletedsongs = [];
-            List<Widget> completedsongs = [];
-            int completedsongscount = 0;
-            if (allsongrequired.isNotEmpty) {
-              for (var i in allsongrequired) {
-                if (i['completed'] == true) {
-                  completedsongscount++;
-                  Map<String, dynamic> song = {};
-                  for (var j in songData['songs']) {
-                    if (j['id'] == i['id']) {
-                      song = j;
-                      break;
-                    }
-                  }
-                  //获取版本名
-                  String versionname = '';
-                  for (var j in songData['versions']) {
-                    if (j['version'] == song['version']) {
-                      versionname = j['title'];
-                    }
-                  }
-                  completedsongs.add(
-                    InkWell(
-                      // key: ValueKey(songItem['id']),
-                      onTap: () async {
-                        interSongInfo(
-                          songbasedata: song,
-                          context: context,
-                          versionname: versionname,
-                        );
-                      },
-                      child: Card(
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(0.0),
-                        ),
-                        child: Padding(
-                          padding: EdgeInsetsGeometry.all(10.0),
-                          child: Text(
-                            '${song['id']} - ${song['title']}      ${song['genre']} - $versionname\n${returnEnglishDiff(difficulties: i['completed_difficulties'], isComplete: true)}',
-                            textAlign: TextAlign.center,
-                          ),
-                        ),
-                      ),
-                    ),
-                  );
-                } else if (i['completed'] == false) {
-                  Map<String, dynamic> song = {};
-                  for (var j in songData['songs']) {
-                    if (j['id'] == i['id']) {
-                      song = j;
-                      break;
-                    }
-                  }
-                  //获取版本名
-                  String versionname = '';
-                  for (var j in songData['versions']) {
-                    if (j['version'] == song['version']) {
-                      versionname = j['title'];
-                    }
-                  }
-                  uncompletedsongs.add(
-                    InkWell(
-                      // key: ValueKey(songItem['id']),
-                      onTap: () async {
-                        interSongInfo(
-                          songbasedata: song,
-                          context: context,
-                          versionname: versionname,
-                        );
-                      },
-                      child: Card(
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(0.0),
-                        ),
-                        child: Padding(
-                          padding: EdgeInsetsGeometry.all(10.0),
-                          child: Text(
-                            '${song['id']} - ${song['title']}      ${song['genre']} - $versionname\n${returnEnglishDiff(difficulties: i['completed_difficulties'], isComplete: false, requireddifficulties: difficulties)}',
-                            textAlign: TextAlign.center,
-                          ),
-                        ),
-                      ),
-                    ),
-                  );
-                }
-              }
-
-              if (completedsongs.length > 4) {
-                result.add(
-                  Text(
-                    '已完成歌曲曲目 $completedsongscount/$songcount',
-                    style: const TextStyle(fontSize: 18),
-                    textAlign: TextAlign.center,
-                  ),
-                );
-                result.add(_buildSongListSection(completedsongs));
-              } else if (completedsongs.isNotEmpty) {
-                result.add(
-                  Text(
-                    '已完成歌曲曲目 $completedsongscount/$songcount',
-                    style: const TextStyle(fontSize: 18),
-                    textAlign: TextAlign.center,
-                  ),
-                );
-                for (var i in completedsongs) {
-                  result.add(i);
-                }
-              }
-
-              if (uncompletedsongs.length > 4) {
-                result.add(
-                  Text(
-                    '未完成歌曲曲目 ${songcount - completedsongscount}/$songcount',
-                    style: const TextStyle(fontSize: 18),
-                    textAlign: TextAlign.center,
-                  ),
-                );
-                result.add(_buildSongListSection(uncompletedsongs));
-              } else if (uncompletedsongs.isNotEmpty) {
-                result.add(
-                  Text(
-                    '未完成歌曲曲目 ${songcount - completedsongscount}/$songcount',
-                    style: const TextStyle(fontSize: 18),
-                    textAlign: TextAlign.center,
-                  ),
-                );
-                for (var i in uncompletedsongs) {
-                  result.add(i);
-                }
-              }
-            }
-          }
-        }
-      }
     } else if (type == 'character') {
       try {
         final path = await getApplicationSupportDirectory();
@@ -524,6 +133,456 @@ class _CollectibleInfoPageState extends State<CollectibleInfoPage> {
         result.add(Text('未找到官方角色文件，可能缺失，请手动更新数据 $e'));
       }
     }
+
+    //检测有没有要求
+    if (newdata.keys.contains('required')) {
+      List<String> difficulties = [];
+      Map<String, dynamic> requiredList = newdata['required'][0];
+      List<Widget> songList = [];
+      if (requiredList['difficulties'].isEmpty) {
+        difficulties.add('任意难度');
+      } else {
+        for (var i in requiredList['difficulties']) {
+          // print('$i, $i.runtimeType');
+          switch (i) {
+            case 0:
+              difficulties.add('BASIC');
+            case 1:
+              difficulties.add('ADVANCED');
+            case 2:
+              difficulties.add('EXPERT');
+            case 3:
+              difficulties.add('MASTER');
+            case 4:
+              difficulties.add('ULTIMATE');
+            case 5:
+              difficulties.add('Worlds\'End');
+            default:
+              difficulties.add('未知');
+          }
+        }
+      }
+      result.add(
+        Text(
+          '需求: \n难度: ${difficulties.toString()}',
+          style: const TextStyle(fontSize: 20),
+          textAlign: TextAlign.center,
+        ),
+      );
+      //full_chain要求
+      if (requiredList.keys.contains('full_chain')) {
+        String fullchain;
+        switch (requiredList['full_chain']) {
+          case 'fullchain':
+            fullchain = '铂Full Chain';
+          case 'fullchain2':
+            fullchain = '金Full Chain';
+          default:
+            fullchain = '无';
+        }
+        result.add(
+          Text(
+            'Full Chain要求: $fullchain',
+            style: const TextStyle(fontSize: 20),
+            textAlign: TextAlign.center,
+          ),
+        );
+      }
+      //full_combo要求
+      if (requiredList.keys.contains('full_combo')) {
+        String fullcombo;
+        switch (requiredList['full_combo']) {
+          case 'alljusticecritical':
+            fullcombo = 'AJC';
+          case 'alljustice':
+            fullcombo = 'ALL JUSTICE';
+          case 'fullcombo':
+            fullcombo = 'FULL COMBO';
+          default:
+            fullcombo = '无';
+        }
+        result.add(
+          Text(
+            'Full Combo要求: $fullcombo',
+            style: const TextStyle(fontSize: 20),
+            textAlign: TextAlign.center,
+          ),
+        );
+      }
+
+      //评级要求
+      if (requiredList.keys.contains('rank')) {
+        String rank;
+        rank = requiredList['rank'];
+        result.add(
+          Text(
+            'rank要求: $rank',
+            style: const TextStyle(fontSize: 20),
+            textAlign: TextAlign.center,
+          ),
+        );
+      }
+
+      //曲目要求
+      if (requiredList.keys.contains('songs')) {
+        List<dynamic> songs = requiredList['songs'];
+        //加载曲目
+        final dataPath = await getApplicationSupportDirectory();
+        String jsonString = await File(
+          '${dataPath.path}/res/songs.json',
+        ).readAsString();
+        Map<String, dynamic> songData = json.decode(jsonString);
+        result.add(
+          Text(
+            '关联曲目: ',
+            style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+            textAlign: TextAlign.start,
+          ),
+        );
+        //获取曲目信息
+        for (var songItem in songs) {
+          Map<String, dynamic> song = {};
+
+          for (var j in songData['songs']) {
+            if (j['id'] == songItem['id']) {
+              song = j;
+              // print(j['difficulties']);
+              break;
+            }
+          }
+          //获取版本名
+          String versionname = '';
+          for (var j in songData['versions']) {
+            if (j['version'] == song['version']) {
+              versionname = j['title'];
+              if (versionname != 'CHUNITHM') {
+                versionname = versionname.replaceAll('CHUNITHM', '');
+              }
+            }
+          }
+          if (songs.length > 4) {
+            if (!mounted) return;
+            songList.add(
+              returnSongCard(
+                songbasedata: song,
+                versionname: versionname,
+                context: context,
+              ),
+            );
+          } else {
+            if (!mounted) return;
+            songList.add(
+              returnSongCard(
+                songbasedata: song,
+                versionname: versionname,
+                context: context,
+              ),
+            );
+          }
+        }
+        if (songList.isNotEmpty) {
+          result.add(_buildSongListSection(songList));
+        }
+        result.add(const Divider());
+
+        //最后的信息构建组件
+        if (newdata.containsKey('required')) {
+          List allsongrequiredlist = newdata['required'];
+          List allsongrequired = [];
+          int songcount = 0;
+          for (var i in allsongrequiredlist) {
+            if (i.containsKey('songs')) {
+              allsongrequired = i['songs'];
+              songcount = allsongrequired.length;
+            }
+            if (i.containsKey('completed')) {
+              if (i['completed'] == true) {
+                result.add(
+                  Text(
+                    '总完成状态: 完成 $songcount/$songcount',
+                    style: const TextStyle(fontSize: 20),
+                    textAlign: TextAlign.center,
+                  ),
+                );
+              } else if (i['completed'] == false) {
+                result.add(
+                  Text(
+                    '总完成状态: 未完成',
+                    style: const TextStyle(fontSize: 20),
+                    textAlign: TextAlign.center,
+                  ),
+                );
+              }
+            }
+          }
+          List<Widget> uncompletedsongs = [];
+          List<Widget> completedsongs = [];
+          int completedsongscount = 0;
+          if (allsongrequired.isNotEmpty) {
+            for (var i in allsongrequired) {
+              if (i['completed'] == true) {
+                completedsongscount++;
+                List<Widget> songInfoDiffs = [];
+                int originid = i['id'];
+                Map<String, dynamic> song = {};
+                for (var j in songData['songs']) {
+                  if (j['id'] == i['id']) {
+                    song = j;
+                    if (((j['difficulties'] as List).last as Map).containsKey(
+                      'origin_id',
+                    )) {
+                      originid = j['difficulties'].last['origin_id'];
+                    }
+                    break;
+                  }
+                }
+                //获取版本名
+                String versionname = '';
+                for (var j in songData['versions']) {
+                  if (j['version'] == song['version']) {
+                    versionname = j['title'];
+                  }
+                }
+                //难度完成情况
+                songInfoDiffs.addAll(
+                  returnEnglishDiff(
+                    difficulties: i['completed_difficulties'],
+                    isComplete: true,
+                  ),
+                );
+                completedsongs.add(
+                  InkWell(
+                    // key: ValueKey(songItem['id']),
+                    onTap: () async {
+                      interSongInfo(
+                        songbasedata: song,
+                        context: context,
+                        versionname: versionname,
+                      );
+                    },
+                    child: Card(
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(0.0),
+                      ),
+                      child: Padding(
+                        padding: EdgeInsetsGeometry.all(10.0),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Padding(
+                              padding: EdgeInsetsGeometry.only(right: 10),
+                              child: CachedNetworkImage(
+                                imageUrl:
+                                    'https://assets2.lxns.net/chunithm/jacket/$originid.png',
+                                width: 95,
+                                height: 95,
+                                errorWidget: (context, url, error) =>
+                                    Text('加载失败'),
+                              ),
+                            ),
+                            Expanded(
+                              child: Column(
+                                children: [
+                                  Row(
+                                    children: [
+                                      Expanded(
+                                        child: Text(
+                                          '${song['title']}',
+                                          overflow: TextOverflow.ellipsis,
+                                          style: TextStyle(
+                                            fontSize: 20,
+                                            fontWeight: FontWeight.bold,
+                                          ),
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                  Row(
+                                    children: [
+                                      Expanded(
+                                        child: Text(
+                                          '${song['artist']}',
+                                          overflow: TextOverflow.ellipsis,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                  Row(
+                                    children: [
+                                      Expanded(
+                                        child: Text(
+                                          '#${song['id']}   ${song['genre']} - $versionname',
+                                          overflow: TextOverflow.ellipsis,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                  Wrap(children: songInfoDiffs),
+                                ],
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ),
+                );
+              } else if (i['completed'] == false) {
+                Map<String, dynamic> song = {};
+                List<Widget> songInfoDiffs = [];
+                int originid = i['id'];
+                for (var j in songData['songs']) {
+                  if (j['id'] == i['id']) {
+                    song = j;
+                    if (((j['difficulties'] as List).last as Map).containsKey(
+                      'origin_id',
+                    )) {
+                      originid = j['difficulties'].last['origin_id'];
+                    }
+                    break;
+                  }
+                }
+                //获取版本名
+                String versionname = '';
+                for (var j in songData['versions']) {
+                  if (j['version'] == song['version']) {
+                    versionname = j['title'];
+                  }
+                }
+                songInfoDiffs.addAll(
+                  returnEnglishDiff(
+                    difficulties: i['completed_difficulties'],
+                    isComplete: false,
+                    requireddifficulties: requiredList['difficulties'],
+                  ),
+                );
+                uncompletedsongs.add(
+                  InkWell(
+                    // key: ValueKey(songItem['id']),
+                    onTap: () async {
+                      interSongInfo(
+                        songbasedata: song,
+                        context: context,
+                        versionname: versionname,
+                      );
+                    },
+                    child: Card(
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(0.0),
+                      ),
+                      child: Padding(
+                        padding: EdgeInsetsGeometry.all(10.0),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Padding(
+                              padding: EdgeInsetsGeometry.only(right: 10),
+                              child: CachedNetworkImage(
+                                imageUrl:
+                                    'https://assets2.lxns.net/chunithm/jacket/$originid.png',
+                                width: 95,
+                                height: 95,
+                                errorWidget: (context, url, error) =>
+                                    Text('加载失败'),
+                              ),
+                            ),
+                            Expanded(
+                              child: Column(
+                                children: [
+                                  Row(
+                                    children: [
+                                      Expanded(
+                                        child: Text(
+                                          '${song['title']}',
+                                          overflow: TextOverflow.ellipsis,
+                                          style: TextStyle(
+                                            fontSize: 20,
+                                            fontWeight: FontWeight.bold,
+                                          ),
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                  Row(
+                                    children: [
+                                      Expanded(
+                                        child: Text(
+                                          '${song['artist']}',
+                                          overflow: TextOverflow.ellipsis,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                  Row(
+                                    children: [
+                                      Expanded(
+                                        child: Text(
+                                          '#${song['id']}   ${song['genre']} - $versionname',
+                                          overflow: TextOverflow.ellipsis,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                  Wrap(children: songInfoDiffs),
+                                ],
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ),
+                );
+              }
+            }
+
+            if (completedsongs.length > 4) {
+              result.add(
+                Text(
+                  '已完成歌曲曲目 $completedsongscount/$songcount',
+                  style: const TextStyle(fontSize: 18),
+                  textAlign: TextAlign.center,
+                ),
+              );
+              result.add(_buildSongListSection(completedsongs));
+            } else if (completedsongs.isNotEmpty) {
+              result.add(
+                Text(
+                  '已完成歌曲曲目 $completedsongscount/$songcount',
+                  style: const TextStyle(fontSize: 18),
+                  textAlign: TextAlign.center,
+                ),
+              );
+              for (var i in completedsongs) {
+                result.add(i);
+              }
+            }
+
+            if (uncompletedsongs.length > 4) {
+              result.add(
+                Text(
+                  '未完成歌曲曲目 ${songcount - completedsongscount}/$songcount',
+                  style: const TextStyle(fontSize: 18),
+                  textAlign: TextAlign.center,
+                ),
+              );
+              result.add(_buildSongListSection(uncompletedsongs));
+            } else if (uncompletedsongs.isNotEmpty) {
+              result.add(
+                Text(
+                  '未完成歌曲曲目 ${songcount - completedsongscount}/$songcount',
+                  style: const TextStyle(fontSize: 18),
+                  textAlign: TextAlign.center,
+                ),
+              );
+              for (var i in uncompletedsongs) {
+                result.add(i);
+              }
+            }
+          }
+        }
+      }
+    }
     if (!mounted) return;
     setState(() {
       otherinfowidget = result;
@@ -577,7 +636,7 @@ class _CollectibleInfoPageState extends State<CollectibleInfoPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('${newdata['name']} - 收藏品信息'),
+        title: Text('收藏品信息'),
         // backgroundColor: const Color.fromARGB(255, 255, 229, 84),
       ),
       body: CustomScrollView(
@@ -618,24 +677,116 @@ class _CollectibleInfoPageState extends State<CollectibleInfoPage> {
                     );
                   },
                 ),
-                Text(
-                  '落雪id: ${newdata['id']}',
-                  style: const TextStyle(fontSize: 20),
-                ),
-                InkWell(
-                  onLongPress: () =>
-                      copytext(text: newdata['name'], context: context),
-                  child: Text(
-                    '名称: ${newdata['name']}',
-                    style: const TextStyle(fontSize: 20),
-                  ),
-                ),
-                InkWell(
-                  onLongPress: () =>
-                      copytext(text: newdata['description'], context: context),
-                  child: Text(
-                    '描述: ${newdata['description']}',
-                    style: const TextStyle(fontSize: 20),
+                Padding(
+                  padding: EdgeInsetsGeometry.all(10),
+                  child: Card(
+                    color: Theme.of(context).colorScheme.secondaryContainer,
+                    child: Padding(
+                      padding: EdgeInsetsGeometry.all(8),
+                      child: Column(
+                        children: [
+                          Row(
+                            children: [
+                              Text(
+                                '基础信息',
+                                style: const TextStyle(
+                                  fontSize: 20,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                                textAlign: TextAlign.start,
+                              ),
+                            ],
+                          ),
+                          const Divider(),
+                          Row(
+                            children: [
+                              Icon(
+                                Icons.numbers,
+                                size: 18,
+                                color: Theme.of(context).colorScheme.primary,
+                              ),
+                              SizedBox(width: 4),
+                              SizedBox(
+                                width: 80,
+                                child: const Text(
+                                  '落雪id：',
+                                  style: TextStyle(fontSize: 15),
+                                ),
+                              ),
+                              SizedBox(width: 50),
+                              Expanded(
+                                child: Text(
+                                  '${newdata['id']}',
+                                  style: const TextStyle(fontSize: 15),
+                                ),
+                              ),
+                            ],
+                          ),
+                          const Divider(),
+                          InkWell(
+                            onLongPress: () => copytext(
+                              text: newdata['name'],
+                              context: context,
+                            ),
+                            child: Row(
+                              children: [
+                                Icon(
+                                  Icons.label,
+                                  size: 18,
+                                  color: Theme.of(context).colorScheme.primary,
+                                ),
+                                SizedBox(width: 4),
+                                SizedBox(
+                                  width: 80,
+                                  child: const Text(
+                                    '名称：',
+                                    style: TextStyle(fontSize: 15),
+                                  ),
+                                ),
+                                SizedBox(width: 50),
+                                Expanded(
+                                  child: Text(
+                                    '${newdata['name']}',
+                                    style: const TextStyle(fontSize: 15),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                          const Divider(),
+                          InkWell(
+                            onLongPress: () => copytext(
+                              text: newdata['description'],
+                              context: context,
+                            ),
+                            child: Row(
+                              children: [
+                                Icon(
+                                  Icons.description,
+                                  size: 18,
+                                  color: Theme.of(context).colorScheme.primary,
+                                ),
+                                SizedBox(width: 4),
+                                SizedBox(
+                                  width: 80,
+                                  child: const Text(
+                                    '描述：',
+                                    style: TextStyle(fontSize: 15),
+                                  ),
+                                ),
+                                SizedBox(width: 50),
+                                Expanded(
+                                  child: Text(
+                                    '${newdata['description']}',
+                                    style: const TextStyle(fontSize: 15),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
                   ),
                 ),
                 Row(

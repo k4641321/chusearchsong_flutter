@@ -90,8 +90,8 @@ Future<List<Widget>> search({
                   child: CachedNetworkImage(
                     imageUrl:
                         'https://assets2.lxns.net/chunithm/jacket/$songid.png',
-                    width: 75,
-                    height: 75,
+                    width: 95,
+                    height: 95,
                     errorWidget: (context, url, error) => Text('加载失败'),
                   ),
                 ),
@@ -126,7 +126,7 @@ Future<List<Widget>> search({
                         children: [
                           Expanded(
                             child: Text(
-                              '${i['genre']} - $versionname',
+                              '#${i['id']}   ${i['genre']} - $versionname',
                               overflow: TextOverflow.ellipsis,
                             ),
                           ),

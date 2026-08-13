@@ -5,6 +5,7 @@ import 'package:path_provider/path_provider.dart';
 import 'dart:convert';
 import '../../function/fun.dart';
 import '../../function/favoritepagefun.dart';
+import '../../function/toolsfun/generateb50fun/generateb50.dart';
 
 class FavoritePage extends StatefulWidget {
   const FavoritePage({super.key});
@@ -31,7 +32,7 @@ class _FavoritePageState extends State<FavoritePage> {
     ).readAsString();
     Map<String, dynamic> songData = json.decode(jsonString);
     for (var i in favoriteJson) {
-      List<dynamic> songInfoDiffs = [];
+      List<Widget> songInfoDiffs = [];
       String versionname = '';
       int songid = i['id'];
       for (var j in songData['versions']) {
@@ -40,7 +41,27 @@ class _FavoritePageState extends State<FavoritePage> {
         }
       }
       for (var k in i['difficulties']) {
-        songInfoDiffs.add(k['level_value']);
+        songInfoDiffs.add(
+          Card(
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadiusGeometry.all(Radius.circular(5)),
+            ),
+            color: diffcolor(diffindex: k['difficulty']),
+            child: Padding(
+              padding: EdgeInsetsGeometry.only(
+                left: 8,
+                right: 8,
+                top: 3,
+                bottom: 3,
+              ),
+
+              child: Text(
+                k['level_value'].toString(),
+                style: TextStyle(color: Colors.white),
+              ),
+            ),
+          ),
+        );
         if ((k as Map<String, dynamic>).containsKey('origin_id')) {
           songid = k['origin_id'];
         }
@@ -49,16 +70,15 @@ class _FavoritePageState extends State<FavoritePage> {
       // songresultWidget.add(const Divider());
       favoriteResults.add(
         InkWell(
-          key: ValueKey(i['id']),
+          // key: ValueKey(i['id']),
           onTap: () async {
-            await interSongInfo(
+            interSongInfo(
               songbasedata: i,
               context: context,
               versionname: versionname,
             );
-            if (!mounted) return;
-            _returnfavoriteResults();
           },
+
           child: Card(
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(0.0),
@@ -68,17 +88,55 @@ class _FavoritePageState extends State<FavoritePage> {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  CachedNetworkImage(
-                    imageUrl:
-                        'https://assets2.lxns.net/chunithm/jacket/$songid.png',
-                    width: 75,
-                    height: 75,
-                    errorWidget: (context, url, error) => Text('加载失败'),
+                  Padding(
+                    padding: EdgeInsetsGeometry.only(right: 10),
+                    child: CachedNetworkImage(
+                      imageUrl:
+                          'https://assets2.lxns.net/chunithm/jacket/$songid.png',
+                      width: 95,
+                      height: 95,
+                      errorWidget: (context, url, error) => Text('加载失败'),
+                    ),
                   ),
                   Expanded(
-                    child: Text(
-                      '${i['id']} - ${i['title']}      ${i['genre']} - $versionname  \n $songInfoDiffs',
-                      textAlign: TextAlign.center,
+                    child: Column(
+                      children: [
+                        Row(
+                          children: [
+                            Expanded(
+                              child: Text(
+                                '${i['title']}',
+                                overflow: TextOverflow.ellipsis,
+                                style: TextStyle(
+                                  fontSize: 20,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                        Row(
+                          children: [
+                            Expanded(
+                              child: Text(
+                                '${i['artist']}',
+                                overflow: TextOverflow.ellipsis,
+                              ),
+                            ),
+                          ],
+                        ),
+                        Row(
+                          children: [
+                            Expanded(
+                              child: Text(
+                                '#${i['id']}   ${i['genre']} - $versionname',
+                                overflow: TextOverflow.ellipsis,
+                              ),
+                            ),
+                          ],
+                        ),
+                        Wrap(children: songInfoDiffs),
+                      ],
                     ),
                   ),
                 ],

@@ -18,22 +18,24 @@ List<Widget> returnDiffTabBar({required Map song}) {
   for (var i in diff) {
     switch (i['difficulty']) {
       case 0:
-        result.add(const Text('BAS'));
+        result.add(const Text('BAS', style: TextStyle(color: Colors.green)));
         break;
       case 1:
-        result.add(const Text('ADV'));
+        result.add(const Text('ADV', style: TextStyle(color: Colors.orange)));
         break;
       case 2:
-        result.add(const Text('EXP'));
+        result.add(const Text('EXP', style: TextStyle(color: Colors.red)));
         break;
       case 3:
-        result.add(const Text('MAS'));
+        result.add(const Text('MAS', style: TextStyle(color: Colors.purple)));
         break;
       case 4:
         result.add(const Text('ULT'));
         break;
       case 5:
-        result.add(const Text('World\'s End'));
+        result.add(
+          const Text('World\'s End', style: TextStyle(color: Colors.pink)),
+        );
         break;
       default:
         result.add(const Text('Unknown'));
@@ -69,40 +71,43 @@ Future<Widget> returnscore({
                     ScoreHistoryPage(songid: song, diffindex: i),
               ),
             ),
-            child: Card(
-              color: corlor,
-              child: Padding(
-                padding: EdgeInsetsGeometry.all(8),
-                child: Column(
-                  children: [
-                    Row(
-                      children: [
-                        Icon(Icons.star),
-                        Text(
-                          '历史成绩',
-                          style: TextStyle(
-                            fontSize: 18,
-                            fontWeight: FontWeight.bold,
+            child: Padding(
+              padding: EdgeInsetsGeometry.all(10),
+              child: Card(
+                color: corlor,
+                child: Padding(
+                  padding: EdgeInsetsGeometry.all(8),
+                  child: Column(
+                    children: [
+                      Row(
+                        children: [
+                          Icon(Icons.star),
+                          Text(
+                            '历史成绩',
+                            style: TextStyle(
+                              fontSize: 18,
+                              fontWeight: FontWeight.bold,
+                            ),
                           ),
-                        ),
-                      ],
-                    ),
-                    Text('Score:   ${j['score']}'),
-                    const Divider(),
-                    Text('Rating:   ${j['rating']}'),
-                    const Divider(),
-                    Text('Over_power:   ${j['over_power']}'),
-                    const Divider(),
-                    Text('Clear:   ${j['clear']}'),
-                    const Divider(),
-                    Text('Full Combo:   ${j['full_combo']}'),
-                    const Divider(),
-                    Text('Full Chain:   ${j['full_chain']}'),
-                    const Divider(),
-                    Text(
-                      'Rank:   ${(j['rank'] as String).replaceFirst('p', '+')}',
-                    ),
-                  ],
+                        ],
+                      ),
+                      Text('Score:   ${j['score']}'),
+                      const Divider(),
+                      Text('Rating:   ${j['rating']}'),
+                      const Divider(),
+                      Text('Over_power:   ${j['over_power']}'),
+                      const Divider(),
+                      Text('Clear:   ${j['clear']}'),
+                      const Divider(),
+                      Text('Full Combo:   ${j['full_combo']}'),
+                      const Divider(),
+                      Text('Full Chain:   ${j['full_chain']}'),
+                      const Divider(),
+                      Text(
+                        'Rank:   ${(j['rank'] as String).replaceFirst('p', '+')}',
+                      ),
+                    ],
+                  ),
                 ),
               ),
             ),
@@ -146,70 +151,73 @@ Future<List<Widget>> returnDiffTabBarView({
               ),
             ),
           ),
-          child: Card(
-            color: color,
-            child: Padding(
-              padding: EdgeInsetsGeometry.all(8),
-              child: Column(
-                children: [
-                  Row(
-                    children: [
-                      Icon(Icons.queue_music),
-                      Text(
-                        '谱面信息',
-                        style: TextStyle(
-                          fontSize: 18,
-                          fontWeight: FontWeight.bold,
+          child: Padding(
+            padding: EdgeInsetsGeometry.all(10),
+            child: Card(
+              color: color,
+              child: Padding(
+                padding: EdgeInsetsGeometry.all(8),
+                child: Column(
+                  children: [
+                    Row(
+                      children: [
+                        Icon(Icons.queue_music),
+                        Text(
+                          '谱面信息',
+                          style: TextStyle(
+                            fontSize: 18,
+                            fontWeight: FontWeight.bold,
+                          ),
                         ),
+                      ],
+                    ),
+                    InkWell(
+                      onLongPress: () => copytext(
+                        text: song2['note_designer'].toString(),
+                        context: context,
                       ),
-                    ],
-                  ),
-                  InkWell(
-                    onLongPress: () => copytext(
-                      text: song2['note_designer'].toString(),
-                      context: context,
+                      child: Text(
+                        '谱师:       ${song2['note_designer']}',
+                        textAlign: TextAlign.start,
+                      ),
                     ),
-                    child: Text(
-                      '谱师:       ${song2['note_designer']}',
-                      textAlign: TextAlign.start,
+                    const Divider(),
+                    Text(
+                      '定数:      ${song2['level_value']}',
+                      style: TextStyle(fontSize: 15),
                     ),
-                  ),
-                  const Divider(),
-                  Text(
-                    '定数:      ${song2['level_value']}',
-                    style: TextStyle(fontSize: 15),
-                  ),
-                  const Divider(),
-                  Text(
-                    'Total:      ${song2['notes']['total']}',
-                    style: TextStyle(fontSize: 15),
-                  ),
-                  const Divider(),
-                  Text(
-                    'Tap:      ${song2['notes']['tap']}',
-                    style: TextStyle(fontSize: 15),
-                  ),
-                  const Divider(),
-                  Text(
-                    'Hold:      ${song2['notes']['hold']}',
-                    style: TextStyle(fontSize: 15),
-                  ),
-                  const Divider(),
-                  Text(
-                    'Slide:      ${song2['notes']['slide']}',
-                    style: TextStyle(fontSize: 15),
-                  ),
-                  const Divider(),
-                  Text(
-                    'Air:       ${song2['notes']['air']}',
-                    style: TextStyle(fontSize: 15),
-                  ),
-                  const Divider(),
-                  Text(
-                    'Flick:       ${song2['notes']['flick']}',
-                    style: TextStyle(fontSize: 15),
-                  ),
-                ],
+                    const Divider(),
+                    Text(
+                      'Total:      ${song2['notes']['total']}',
+                      style: TextStyle(fontSize: 15),
+                    ),
+                    const Divider(),
+                    Text(
+                      'Tap:      ${song2['notes']['tap']}',
+                      style: TextStyle(fontSize: 15),
+                    ),
+                    const Divider(),
+                    Text(
+                      'Hold:      ${song2['notes']['hold']}',
+                      style: TextStyle(fontSize: 15),
+                    ),
+                    const Divider(),
+                    Text(
+                      'Slide:      ${song2['notes']['slide']}',
+                      style: TextStyle(fontSize: 15),
+                    ),
+                    const Divider(),
+                    Text(
+                      'Air:       ${song2['notes']['air']}',
+                      style: TextStyle(fontSize: 15),
+                    ),
+                    const Divider(),
+                    Text(
+                      'Flick:       ${song2['notes']['flick']}',
+                      style: TextStyle(fontSize: 15),
+                    ),
+                  ],
+                ),
               ),
             ),
           ),

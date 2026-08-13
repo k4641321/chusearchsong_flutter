@@ -443,7 +443,7 @@ List<DataRow> rankList() {
             style: TextStyle(color: const Color.fromARGB(255, 97, 97, 97)),
           ),
         ),
-        DataCell(Text('000000~549999')),
+        DataCell(Text('000000~449999')),
       ],
     ),
   ];

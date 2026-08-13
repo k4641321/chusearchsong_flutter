@@ -35,8 +35,12 @@ Color diffcolor({required int diffindex}) {
       return Colors.red;
     case 3:
       return Colors.purple;
-    default:
+    case 4:
       return Colors.black;
+    case 5:
+      return Colors.pink;
+    default:
+      return Colors.white;
   }
 }
 

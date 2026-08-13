@@ -145,7 +145,14 @@ class _ViewallgradespageState extends State<Viewallgradespage> {
                             child: Column(
                               children: [
                                 Text('总谱面数'),
-                                Text(totalchart.toString()),
+                                Text(
+                                  totalchart.toString(),
+                                  style: TextStyle(
+                                    color: Theme.of(
+                                      context,
+                                    ).colorScheme.primary,
+                                  ),
+                                ),
                               ],
                             ),
                           ),
@@ -163,7 +170,14 @@ class _ViewallgradespageState extends State<Viewallgradespage> {
                             child: Column(
                               children: [
                                 Text('SSS+'),
-                                Text(ssspcount.toString()),
+                                Text(
+                                  ssspcount.toString(),
+                                  style: TextStyle(
+                                    color: Theme.of(
+                                      context,
+                                    ).colorScheme.primary,
+                                  ),
+                                ),
                               ],
                             ),
                           ),
@@ -181,7 +195,14 @@ class _ViewallgradespageState extends State<Viewallgradespage> {
                             child: Column(
                               children: [
                                 Text('SSS'),
-                                Text(ssscount.toString()),
+                                Text(
+                                  ssscount.toString(),
+                                  style: TextStyle(
+                                    color: Theme.of(
+                                      context,
+                                    ).colorScheme.primary,
+                                  ),
+                                ),
                               ],
                             ),
                           ),
@@ -201,7 +222,13 @@ class _ViewallgradespageState extends State<Viewallgradespage> {
                               bottom: 8,
                             ),
                             child: Column(
-                              children: [Text('FC'), Text(fccount.toString())],
+                              children: [
+                                Text('FC'),
+                                Text(
+                                  fccount.toString(),
+                                  style: TextStyle(color: Colors.blue),
+                                ),
+                              ],
                             ),
                           ),
                         ),
@@ -216,7 +243,13 @@ class _ViewallgradespageState extends State<Viewallgradespage> {
                               bottom: 8,
                             ),
                             child: Column(
-                              children: [Text('AJ'), Text(ajcount.toString())],
+                              children: [
+                                Text('AJ'),
+                                Text(
+                                  ajcount.toString(),
+                                  style: TextStyle(color: Colors.orange),
+                                ),
+                              ],
                             ),
                           ),
                         ),
@@ -233,7 +266,10 @@ class _ViewallgradespageState extends State<Viewallgradespage> {
                             child: Column(
                               children: [
                                 Text('AJC'),
-                                Text(ajccount.toString()),
+                                Text(
+                                  ajccount.toString(),
+                                  style: TextStyle(color: Colors.yellow),
+                                ),
                               ],
                             ),
                           ),

@@ -26,6 +26,8 @@ class ThankYouListPage extends StatelessWidget {
             const Divider(),
             Text('𝓨𝓾𝓻𝓲𝓬𝓲𝓪\n发现了在角色为null时无法生成B50与无法查看玩家信息'),
             const Divider(),
+            Text('fu\n发现了在等级划分与判定的输入错误'),
+            const Divider(),
             Text('以及使用这个软件的你'),
           ],
         ),

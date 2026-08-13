@@ -1,4 +1,6 @@
 import 'dart:developer';
+import 'package:url_launcher/url_launcher.dart';
+
 import '../request.dart';
 import 'package:flutter/material.dart';
 import 'dart:io';
@@ -222,4 +224,16 @@ Future<void> changeChartProxy({required bool state}) async {
   Map<String, dynamic> config = json.decode(configstr);
   config['chartproxy'] = state;
   await file.writeAsString(json.encode(config));
+}
+
+Future<void> openlxnsprofile() async {
+  launchUrl(Uri.parse('https://maimai.lxns.net/user/profile?tab=thirdparty'));
+}
+
+Future<void> openlxnsAuthorization() async {
+  launchUrl(
+    Uri.parse(
+      'https://maimai.lxns.net/oauth/authorize?response_type=code&client_id=522e68e2-c7eb-4a46-b55d-2e8331297ced&redirect_uri=urn%3Aietf%3Awg%3Aoauth%3A2.0%3Aoob&scope=read_user_token',
+    ),
+  );
 }

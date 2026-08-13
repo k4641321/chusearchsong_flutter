@@ -5,6 +5,14 @@ import 'dart:developer';
 import 'dart:io';
 import 'package:path_provider/path_provider.dart';
 
+Future<String> requestOAuthCallbackToken(String code) async {
+  final uri = Uri.parse(
+    'https://chusearchsong.4641321.xyz/api/oauth/callback?code=$code',
+  );
+  final response = await get(uri);
+  return response.body;
+}
+
 Future<String> requestotherPlayerInfo(int friendcode) async {
   final uri = Uri.parse(
     'https://chusearchsong.4641321.xyz/api/playerinfo?friendcode=$friendcode',

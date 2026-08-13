@@ -38,6 +38,7 @@ Future<List<Widget>> searchCollectibles({
         break;
     }
     if (isSonginfo == true) {
+      // print('$data');
       return InkWell(
         onTap: () async {
           Navigator.push(

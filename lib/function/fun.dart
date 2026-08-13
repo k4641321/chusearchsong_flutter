@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:path_provider/path_provider.dart';
 import 'dart:convert';
@@ -9,6 +10,7 @@ import 'dart:math' as math;
 import 'songinfofun/songinfopagefun.dart';
 import 'package:flutter/services.dart';
 import 'infopagefun/settingspagefun.dart';
+import 'toolsfun/generateb50fun/generateb50.dart';
 
 //Rating趋势
 Future<List> returnscoretrendlist() async {
@@ -701,4 +703,113 @@ Future<void> saveConfig(Map<String, dynamic> config) async {
   final path = await getApplicationSupportDirectory();
   String configJsonStr = json.encode(config);
   await File('${path.path}/config.json').writeAsString(configJsonStr);
+}
+
+Widget returnSongCard({
+  required Map<String, dynamic> songbasedata,
+  required String versionname,
+  required BuildContext context,
+}) {
+  int originid = songbasedata['id'];
+  List<Widget> songInfoDiffs = [];
+  if (((songbasedata['difficulties'] as List).last as Map).containsKey(
+    'origin_id',
+  )) {
+    originid = songbasedata['difficulties'].last['origin_id'];
+  }
+  for (var k in songbasedata['difficulties']) {
+    songInfoDiffs.add(
+      Card(
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadiusGeometry.all(Radius.circular(5)),
+        ),
+        color: diffcolor(diffindex: k['difficulty']),
+        child: Padding(
+          padding: EdgeInsetsGeometry.only(
+            left: 8,
+            right: 8,
+            top: 3,
+            bottom: 3,
+          ),
+
+          child: Text(
+            k['level_value'].toString(),
+            style: TextStyle(color: Colors.white),
+          ),
+        ),
+      ),
+    );
+  }
+  return InkWell(
+    // key: ValueKey(songItem['id']),
+    onTap: () async {
+      interSongInfo(
+        songbasedata: songbasedata,
+        context: context,
+        versionname: versionname,
+      );
+    },
+    child: Card(
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(0.0)),
+      child: Padding(
+        padding: EdgeInsetsGeometry.all(10.0),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Padding(
+              padding: EdgeInsetsGeometry.only(right: 10),
+              child: CachedNetworkImage(
+                imageUrl:
+                    'https://assets2.lxns.net/chunithm/jacket/$originid.png',
+                width: 95,
+                height: 95,
+                errorWidget: (context, url, error) => Text('加载失败'),
+              ),
+            ),
+            Expanded(
+              child: Column(
+                children: [
+                  Row(
+                    children: [
+                      Expanded(
+                        child: Text(
+                          '${songbasedata['title']}',
+                          overflow: TextOverflow.ellipsis,
+                          style: TextStyle(
+                            fontSize: 20,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                  Row(
+                    children: [
+                      Expanded(
+                        child: Text(
+                          '${songbasedata['artist']}',
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                      ),
+                    ],
+                  ),
+                  Row(
+                    children: [
+                      Expanded(
+                        child: Text(
+                          '#${songbasedata['id']}   ${songbasedata['genre']} - $versionname',
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                      ),
+                    ],
+                  ),
+                  Wrap(children: songInfoDiffs),
+                ],
+              ),
+            ),
+          ],
+        ),
+      ),
+    ),
+  );
 }

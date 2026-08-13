@@ -6,6 +6,7 @@ import 'package:chusearchsong_flutter/function/fun.dart';
 import 'package:flutter/material.dart';
 import 'package:path_provider/path_provider.dart';
 import '../../function/toolsfun/ratingcalculatorpagefun.dart';
+import 'generateb50fun/generateb50.dart';
 
 Future<double?> initminRating({required bool isNew}) async {
   try {
@@ -179,12 +180,15 @@ Future<List<List<Widget>>> songRecommendation({
     }
 
     for (var i in resultsongs) {
-      List<dynamic> songInfoDiffs = [];
+      List<Widget> songInfoDiffs = [];
       String versionname = '';
       int songid = i['id'];
       for (var j in songsdata['versions']) {
         if (j['version'] == i['version']) {
           versionname = j['title'];
+          if (versionname != 'CHUNITHM') {
+            versionname = versionname.replaceAll('CHUNITHM', '');
+          }
         }
       }
       for (var k in i['difficulties']) {
@@ -206,13 +210,31 @@ Future<List<List<Widget>>> songRecommendation({
                     double.parse(minRating) >=
                 double.parse(expectedScore)) {
           songInfoDiffs.add(
-            '${k['level_value']} -> ${calculatorRating(
-              scorestr: rankScore(rank: rank).toString(),
-              diffstr: k['level_value'].toString(),
-            ).toStringAsFixed(2)}(+${(calculatorRating(
-                  scorestr: rankScore(rank: rank).toString(),
-                  diffstr: k['level_value'].toString(),
-                ) - double.parse(minRating)).toStringAsFixed(2)})',
+            Card(
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadiusGeometry.all(Radius.circular(5)),
+              ),
+              color: diffcolor(diffindex: k['difficulty']),
+              child: Padding(
+                padding: EdgeInsetsGeometry.only(
+                  left: 8,
+                  right: 8,
+                  top: 3,
+                  bottom: 3,
+                ),
+
+                child: Text(
+                  '${k['level_value']} -> ${calculatorRating(
+                    scorestr: rankScore(rank: rank).toString(),
+                    diffstr: k['level_value'].toString(),
+                  ).toStringAsFixed(2)}(+${(calculatorRating(
+                        scorestr: rankScore(rank: rank).toString(),
+                        diffstr: k['level_value'].toString(),
+                      ) - double.parse(minRating)).toStringAsFixed(2)})',
+                  style: TextStyle(color: Colors.white),
+                ),
+              ),
+            ),
           );
         }
       }
@@ -237,17 +259,55 @@ Future<List<List<Widget>>> songRecommendation({
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  CachedNetworkImage(
-                    imageUrl:
-                        'https://assets2.lxns.net/chunithm/jacket/$songid.png',
-                    width: 75,
-                    height: 75,
-                    errorWidget: (context, url, error) => Text('加载失败'),
+                  Padding(
+                    padding: EdgeInsetsGeometry.only(right: 10),
+                    child: CachedNetworkImage(
+                      imageUrl:
+                          'https://assets2.lxns.net/chunithm/jacket/$songid.png',
+                      width: 95,
+                      height: 95,
+                      errorWidget: (context, url, error) => Text('加载失败'),
+                    ),
                   ),
                   Expanded(
-                    child: Text(
-                      '${i['id']} - ${i['title']}      ${i['genre']} - $versionname  \n $songInfoDiffs',
-                      textAlign: TextAlign.center,
+                    child: Column(
+                      children: [
+                        Row(
+                          children: [
+                            Expanded(
+                              child: Text(
+                                '${i['title']}',
+                                overflow: TextOverflow.ellipsis,
+                                style: TextStyle(
+                                  fontSize: 20,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                        Row(
+                          children: [
+                            Expanded(
+                              child: Text(
+                                '${i['artist']}',
+                                overflow: TextOverflow.ellipsis,
+                              ),
+                            ),
+                          ],
+                        ),
+                        Row(
+                          children: [
+                            Expanded(
+                              child: Text(
+                                '#${i['id']}   ${i['genre']} - $versionname',
+                                overflow: TextOverflow.ellipsis,
+                              ),
+                            ),
+                          ],
+                        ),
+                        Wrap(children: songInfoDiffs),
+                      ],
                     ),
                   ),
                 ],
