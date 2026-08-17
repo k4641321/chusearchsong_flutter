@@ -409,7 +409,45 @@ class _InfoState extends State<Info> {
                                 bottomRight: Radius.circular(10.0),
                               ),
                             ),
-                            onTap: () => updateData(context: context),
+                            onTap: () {
+                              showDialog(
+                                context: context,
+                                builder: (dialogContext) => AlertDialog(
+                                  title: Text('选择更新的数据'),
+                                  content: Column(
+                                    children: [
+                                      ListTile(
+                                        title: Text('所有数据'),
+                                        onTap: () {
+                                          Navigator.of(dialogContext).pop();
+                                          Dataupdate.updateAllData(
+                                            context: context,
+                                          );
+                                        },
+                                      ),
+                                      ListTile(
+                                        title: Text('仅成绩'),
+                                        onTap: () {
+                                          Navigator.of(dialogContext).pop();
+                                          Dataupdate.updateScore(
+                                            context: context,
+                                          );
+                                        },
+                                      ),
+                                      ListTile(
+                                        title: Text('仅机厅数据(新)'),
+                                        onTap: () {
+                                          Navigator.of(dialogContext).pop();
+                                          Dataupdate.updateNearcadeShopData(
+                                            context: context,
+                                          );
+                                        },
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              );
+                            },
                             child: Card(
                               color: Theme.of(
                                 context,

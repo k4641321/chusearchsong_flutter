@@ -228,11 +228,11 @@ class _MyHomePageState extends State<MyHomePage> {
     super.initState();
     // postusecount();
     WidgetsBinding.instance.addPostFrameCallback((_) async {
-      await ifres(context: context);
+      await Dataupdate.ifres(context: context);
       showChangesLog();
       chechupdate();
       showannouncement();
-      postusecount();
+      // postusecount();
     });
   }
 

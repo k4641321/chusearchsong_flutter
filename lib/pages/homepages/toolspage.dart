@@ -1,6 +1,7 @@
 import 'package:chusearchsong_flutter/pages/toolspages/friendbattlepage.dart';
 import 'package:chusearchsong_flutter/pages/toolspages/overpowercalculationpage.dart';
 import 'package:chusearchsong_flutter/pages/toolspages/ratingcalculationmethodpage.dart';
+import 'package:chusearchsong_flutter/pages/toolspages/searchlobbynewpage.dart';
 import 'package:chusearchsong_flutter/pages/toolspages/searchsongzxzrpage/searchsongzxzrpage.dart';
 import 'package:chusearchsong_flutter/pages/toolspages/songrecommendationpage.dart';
 import 'package:chusearchsong_flutter/function/fun.dart';
@@ -126,15 +127,15 @@ class _ToolPageState extends State<ToolPage> {
                           onPressed: () => Navigator.push(
                             context,
                             MaterialPageRoute(
-                              builder: (context) => SearchCollectiblesPage(),
+                              builder: (context) => Searchlobbynewpage(),
                             ),
                           ),
                           icon: Icon(
-                            Icons.inventory_2_outlined,
+                            Icons.store,
                             color: Theme.of(context).colorScheme.onSurface,
                           ),
                           label: Text(
-                            '收藏品查询',
+                            '机厅搜索(新)',
                             style: TextStyle(
                               color: Theme.of(context).colorScheme.onSurface,
                             ),
@@ -252,6 +253,30 @@ class _ToolPageState extends State<ToolPage> {
                           ),
                           label: Text(
                             'Rating计算方式',
+                            style: TextStyle(
+                              color: Theme.of(context).colorScheme.onSurface,
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                  Expanded(
+                    child: InkWell(
+                      child: Card(
+                        child: TextButton.icon(
+                          onPressed: () => Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => SearchCollectiblesPage(),
+                            ),
+                          ),
+                          icon: Icon(
+                            Icons.inventory_2_outlined,
+                            color: Theme.of(context).colorScheme.onSurface,
+                          ),
+                          label: Text(
+                            '收藏品查询',
                             style: TextStyle(
                               color: Theme.of(context).colorScheme.onSurface,
                             ),

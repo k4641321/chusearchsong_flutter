@@ -1,7 +1,9 @@
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:chusearchsong_flutter/function/toolsfun/viewallgradespagefun.dart';
 import 'package:flutter/material.dart';
 import 'dart:developer';
 import '../../fun.dart';
+import '../generateb50fun/generateb50.dart';
 
 Widget buildLevelDropdownMenu({required ValueChanged<dynamic>? onSelected}) {
   const List<DropdownMenuEntry> dropdownMenuEntries = [
@@ -89,7 +91,7 @@ Widget buildsongList({
   int othercount = 0;
   int completecount = 0;
   for (var i in songresultMap) {
-    List<dynamic> songInfoDiffs = [];
+    List<Widget> songInfoDiffs = [];
     String versionname = '';
     int score = 0;
     double rating = 0;
@@ -102,15 +104,31 @@ Widget buildsongList({
     }
     for (var k in i['difficulties']) {
       if (k['level_value'] >= level[0] && k['level_value'] <= level[1]) {
-        songInfoDiffs.add(k['level_value']);
+        songInfoDiffs.add(
+          Card(
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadiusGeometry.all(Radius.circular(5)),
+            ),
+            color: diffcolor(diffindex: k['difficulty']),
+            child: Padding(
+              padding: EdgeInsetsGeometry.only(
+                left: 8,
+                right: 8,
+                top: 3,
+                bottom: 3,
+              ),
+              child: Text(
+                '${returnDiffName(k['difficulty'])} - ${k['level_value']}',
+                style: TextStyle(color: Colors.white),
+              ),
+            ),
+          ),
+        );
         for (var l in allScoreData['data']) {
           if (k['difficulty'] == l['level_index'] && i['id'] == l['id']) {
             score = l['score'];
             rating = l['rating'].toDouble();
             rank = l['rank'];
-            if ((k as Map<String, dynamic>).containsKey('origin_id')) {
-              songid = k['origin_id'];
-            }
             completecount++;
             if (rank == 'sssp') {
               ssspcount++;
@@ -132,11 +150,14 @@ Widget buildsongList({
           }
         }
       }
+      if ((k as Map<String, dynamic>).containsKey('origin_id')) {
+        songid = k['origin_id'];
+      }
     }
 
     songresultWidget.add(
       InkWell(
-        // key: ValueKey(i['id']),
+        // key: ValueKey(songItem['id']),
         onTap: () async {
           interSongInfo(
             songbasedata: i,
@@ -153,23 +174,65 @@ Widget buildsongList({
             child: Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                CachedNetworkImage(
-                  imageUrl:
-                      'https://assets2.lxns.net/chunithm/jacket/$songid.png',
-                  width: 75,
-                  height: 75,
-                  errorWidget: (context, url, error) => Text('加载失败'),
+                Column(
+                  children: [
+                    Padding(
+                      padding: EdgeInsetsGeometry.only(right: 10),
+                      child: CachedNetworkImage(
+                        imageUrl:
+                            'https://assets2.lxns.net/chunithm/jacket/$songid.png',
+                        width: 95,
+                        height: 95,
+                        errorWidget: (context, url, error) => Text('加载失败'),
+                      ),
+                    ),
+                    Wrap(children: songInfoDiffs),
+                  ],
                 ),
-                // Image.network(
-                //   'https://assets2.lxns.net/chunithm/jacket/${i['id']}.png',
-                //   errorBuilder: (context, error, stackTrace) => Text('图片加载失败'),
-                //   width: 55,
-                //   height: 55,
-                // ),
                 Expanded(
-                  child: Text(
-                    '${i['id']} - ${i['title']}      ${i['genre']} - $versionname  \n $songInfoDiffs \n${playhistory(score: score, rating: rating, rank: rank)}',
-                    textAlign: TextAlign.center,
+                  child: Column(
+                    children: [
+                      Row(
+                        children: [
+                          Expanded(
+                            child: Text(
+                              '${i['title']}',
+                              overflow: TextOverflow.ellipsis,
+                              style: TextStyle(
+                                fontSize: 20,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                      Row(
+                        children: [
+                          Expanded(
+                            child: Text(
+                              '${i['artist']}',
+                              overflow: TextOverflow.ellipsis,
+                            ),
+                          ),
+                        ],
+                      ),
+                      Row(
+                        children: [
+                          Expanded(
+                            child: Text(
+                              '#${i['id']}   ${i['genre']} - $versionname',
+                              overflow: TextOverflow.ellipsis,
+                            ),
+                          ),
+                        ],
+                      ),
+                      score == 0
+                          ? SizedBox.shrink()
+                          : Text(
+                              '成绩：$score | Rating：$rating | 评级：${rank.replaceAll('p', '+')}',
+                              style: TextStyle(color: returnColor(score)),
+                            ),
+                    ],
                   ),
                 ),
               ],

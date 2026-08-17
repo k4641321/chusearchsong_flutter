@@ -5,6 +5,27 @@ import 'dart:developer';
 import 'dart:io';
 import 'package:path_provider/path_provider.dart';
 
+Future<void> saveNearcadeAllShop() async {
+  final path = await getApplicationSupportDirectory();
+  try {
+    final rawJson = await requestNearcadeAllShop();
+    // final decoded = json.decode(rawJson);
+    await File(
+      '${path.path}/res/segachara.json',
+    ).writeAsString(rawJson, encoding: utf8);
+  } catch (e) {
+    log('$e', name: 'request.dart', level: 1000);
+  }
+}
+
+Future<String> requestNearcadeAllShop() async {
+  final uri = Uri.parse(
+    'https://nearcade.phizone.cn/api/shops/?regionId=CN&limit=32767',
+  );
+  final response = await get(uri);
+  return response.body;
+}
+
 Future<String> requestOAuthCallbackToken(String code) async {
   final uri = Uri.parse(
     'https://chusearchsong.4641321.xyz/api/oauth/callback?code=$code',

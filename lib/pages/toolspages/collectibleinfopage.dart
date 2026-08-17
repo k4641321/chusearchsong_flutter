@@ -52,13 +52,6 @@ class _CollectibleInfoPageState extends State<CollectibleInfoPage> {
         log('trophyprogressstr error: $e');
         log('trophyprogressstr stackTrace: $stackTrace');
       }
-      result.add(
-        Text(
-          '颜色: ${newdata['color']}',
-          style: const TextStyle(fontSize: 20),
-          textAlign: TextAlign.center,
-        ),
-      );
     } else if (type == 'character') {
       try {
         final path = await getApplicationSupportDirectory();
@@ -67,6 +60,21 @@ class _CollectibleInfoPageState extends State<CollectibleInfoPage> {
         );
         for (var i in segacharadata) {
           if (i['name'] == widget.data['name']) {
+            List<Widget> cardresult = [
+              Row(
+                children: [
+                  Text(
+                    '官方信息',
+                    style: const TextStyle(
+                      fontSize: 20,
+                      fontWeight: FontWeight.bold,
+                    ),
+                    textAlign: TextAlign.start,
+                  ),
+                ],
+              ),
+              const Divider(),
+            ];
             setState(() {
               charatranwidget = TextButton(
                 onPressed: () async {
@@ -86,32 +94,133 @@ class _CollectibleInfoPageState extends State<CollectibleInfoPage> {
                 ),
               );
             });
-            result.add(
-              Text(
-                '画师：${i['artist']}',
-                style: TextStyle(fontSize: 20),
-                textAlign: TextAlign.center,
+            if (!mounted) return;
+            cardresult.add(
+              InkWell(
+                onLongPress: () =>
+                    copytext(text: i['artist'], context: context),
+                child: Row(
+                  children: [
+                    Icon(
+                      Icons.person,
+                      size: 18,
+                      color: Theme.of(context).colorScheme.primary,
+                    ),
+                    SizedBox(width: 4),
+                    SizedBox(
+                      width: 80,
+                      child: const Text('画师：', style: TextStyle(fontSize: 15)),
+                    ),
+                    SizedBox(width: 50),
+                    Expanded(
+                      child: Text(
+                        '${i['artist']}',
+                        style: TextStyle(fontSize: 15),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            );
+            cardresult.add(const Divider());
+            cardresult.add(
+              InkWell(
+                onLongPress: () =>
+                    copytext(text: i['ctg_name'], context: context),
+                child: Row(
+                  children: [
+                    Icon(
+                      Icons.map,
+                      size: 18,
+                      color: Theme.of(context).colorScheme.primary,
+                    ),
+                    SizedBox(width: 4),
+                    SizedBox(
+                      width: 80,
+                      child: const Text(
+                        '所属地图：',
+                        style: TextStyle(fontSize: 15),
+                      ),
+                    ),
+                    SizedBox(width: 50),
+                    Expanded(
+                      child: Text(
+                        '${i['ctg_name']}',
+                        style: TextStyle(fontSize: 15),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            );
+            cardresult.add(const Divider());
+            cardresult.add(
+              InkWell(
+                onLongPress: () =>
+                    copytext(text: i['release'], context: context),
+                child: Row(
+                  children: [
+                    Icon(
+                      Icons.date_range,
+                      size: 18,
+                      color: Theme.of(context).colorScheme.primary,
+                    ),
+                    SizedBox(width: 4),
+                    SizedBox(
+                      width: 80,
+                      child: const Text(
+                        '日服上线时间：',
+                        style: TextStyle(fontSize: 15),
+                      ),
+                    ),
+                    SizedBox(width: 50),
+                    Expanded(
+                      child: Text(
+                        '${i['release']}',
+                        style: TextStyle(fontSize: 15),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            );
+            cardresult.add(const Divider());
+            cardresult.add(
+              InkWell(
+                onLongPress: () => copytext(text: i['text'], context: context),
+                child: Row(
+                  children: [
+                    Icon(
+                      Icons.label,
+                      size: 18,
+                      color: Theme.of(context).colorScheme.primary,
+                    ),
+                    SizedBox(width: 4),
+                    SizedBox(
+                      width: 80,
+                      child: const Text('介绍：', style: TextStyle(fontSize: 15)),
+                    ),
+                    SizedBox(width: 50),
+                    Expanded(
+                      child: Text(
+                        '${i['text']}',
+                        style: TextStyle(fontSize: 15),
+                      ),
+                    ),
+                  ],
+                ),
               ),
             );
             result.add(
-              Text(
-                '所属地图：${i['ctg_name']}',
-                style: TextStyle(fontSize: 20),
-                textAlign: TextAlign.center,
-              ),
-            );
-            result.add(
-              Text(
-                '日服上线时间：${i['release']}',
-                style: TextStyle(fontSize: 20),
-                textAlign: TextAlign.center,
-              ),
-            );
-            result.add(
-              Text(
-                '介绍：${(i['text'] as List).join('\n')}',
-                style: TextStyle(fontSize: 20),
-                textAlign: TextAlign.center,
+              Padding(
+                padding: EdgeInsetsGeometry.all(10),
+                child: Card(
+                  color: Theme.of(context).colorScheme.secondaryContainer,
+                  child: Padding(
+                    padding: EdgeInsetsGeometry.all(4),
+                    child: Column(children: cardresult),
+                  ),
+                ),
               ),
             );
             result.add(
@@ -127,6 +236,7 @@ class _CollectibleInfoPageState extends State<CollectibleInfoPage> {
             );
 
             charatext = (i['text'] as List).join('\n');
+            break;
           }
         }
       } catch (e) {
@@ -136,39 +246,125 @@ class _CollectibleInfoPageState extends State<CollectibleInfoPage> {
 
     //检测有没有要求
     if (newdata.keys.contains('required')) {
-      List<String> difficulties = [];
+      List<Widget> difficulties = [];
       Map<String, dynamic> requiredList = newdata['required'][0];
       List<Widget> songList = [];
       if (requiredList['difficulties'].isEmpty) {
-        difficulties.add('任意难度');
+        difficulties.add(Text('任意难度'));
       } else {
+        difficulties.add(Text('需求：', style: TextStyle(fontSize: 20)));
         for (var i in requiredList['difficulties']) {
           // print('$i, $i.runtimeType');
           switch (i) {
             case 0:
-              difficulties.add('BASIC');
+              difficulties.add(
+                Card(
+                  color: diffcolor(diffindex: i),
+                  child: Padding(
+                    padding: EdgeInsetsGeometry.only(
+                      left: 8,
+                      right: 8,
+                      top: 3,
+                      bottom: 3,
+                    ),
+                    child: Text('BASIC'),
+                  ),
+                ),
+              );
             case 1:
-              difficulties.add('ADVANCED');
+              difficulties.add(
+                Card(
+                  color: diffcolor(diffindex: i),
+                  child: Padding(
+                    padding: EdgeInsetsGeometry.only(
+                      left: 8,
+                      right: 8,
+                      top: 3,
+                      bottom: 3,
+                    ),
+                    child: Text('ADVANCED'),
+                  ),
+                ),
+              );
             case 2:
-              difficulties.add('EXPERT');
+              difficulties.add(
+                Card(
+                  color: diffcolor(diffindex: i),
+                  child: Padding(
+                    padding: EdgeInsetsGeometry.only(
+                      left: 8,
+                      right: 8,
+                      top: 3,
+                      bottom: 3,
+                    ),
+                    child: Text('EXPERT'),
+                  ),
+                ),
+              );
             case 3:
-              difficulties.add('MASTER');
+              difficulties.add(
+                Card(
+                  color: diffcolor(diffindex: i),
+                  child: Padding(
+                    padding: EdgeInsetsGeometry.only(
+                      left: 8,
+                      right: 8,
+                      top: 3,
+                      bottom: 3,
+                    ),
+                    child: Text('MASTER'),
+                  ),
+                ),
+              );
             case 4:
-              difficulties.add('ULTIMATE');
+              difficulties.add(
+                Card(
+                  color: diffcolor(diffindex: i),
+                  child: Padding(
+                    padding: EdgeInsetsGeometry.only(
+                      left: 8,
+                      right: 8,
+                      top: 3,
+                      bottom: 3,
+                    ),
+                    child: Text('ULTRA'),
+                  ),
+                ),
+              );
             case 5:
-              difficulties.add('Worlds\'End');
+              difficulties.add(
+                Card(
+                  color: diffcolor(diffindex: i),
+                  child: Padding(
+                    padding: EdgeInsetsGeometry.only(
+                      left: 8,
+                      right: 8,
+                      top: 3,
+                      bottom: 3,
+                    ),
+                    child: Text('Wolrd\'s End'),
+                  ),
+                ),
+              );
             default:
-              difficulties.add('未知');
+              difficulties.add(
+                Card(
+                  color: diffcolor(diffindex: i),
+                  child: Padding(
+                    padding: EdgeInsetsGeometry.only(
+                      left: 8,
+                      right: 8,
+                      top: 3,
+                      bottom: 3,
+                    ),
+                    child: Text('未知'),
+                  ),
+                ),
+              );
           }
         }
       }
-      result.add(
-        Text(
-          '需求: \n难度: ${difficulties.toString()}',
-          style: const TextStyle(fontSize: 20),
-          textAlign: TextAlign.center,
-        ),
-      );
+      result.add(Wrap(alignment: WrapAlignment.center, children: difficulties));
       //full_chain要求
       if (requiredList.keys.contains('full_chain')) {
         String fullchain;
@@ -216,7 +412,7 @@ class _CollectibleInfoPageState extends State<CollectibleInfoPage> {
         rank = requiredList['rank'];
         result.add(
           Text(
-            'rank要求: $rank',
+            'Rank要求: $rank',
             style: const TextStyle(fontSize: 20),
             textAlign: TextAlign.center,
           ),
@@ -753,6 +949,45 @@ class _CollectibleInfoPageState extends State<CollectibleInfoPage> {
                               ],
                             ),
                           ),
+                          const Divider(),
+                          if (newdata['color'] != null)
+                            InkWell(
+                              onLongPress: () => copytext(
+                                text: newdata['color'],
+                                context: context,
+                              ),
+                              child: Row(
+                                children: [
+                                  Icon(
+                                    Icons.color_lens,
+                                    size: 18,
+                                    color: Theme.of(
+                                      context,
+                                    ).colorScheme.primary,
+                                  ),
+                                  SizedBox(width: 4),
+                                  SizedBox(
+                                    width: 80,
+                                    child: const Text(
+                                      '颜色：',
+                                      style: TextStyle(fontSize: 15),
+                                    ),
+                                  ),
+                                  SizedBox(width: 50),
+                                  Expanded(
+                                    child: Text(
+                                      '${newdata['color']}',
+                                      style: TextStyle(
+                                        fontSize: 15,
+                                        color: returnTrophyColor(
+                                          newdata['color'],
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
                           const Divider(),
                           InkWell(
                             onLongPress: () => copytext(

@@ -7,19 +7,19 @@ import 'package:path_provider/path_provider.dart';
 import 'dart:developer';
 
 Future<void> openmap({
-  required Map<String, dynamic> i,
+  required String address,
   required BuildContext context,
 }) async {
   final String myapp = 'com.k4641321.chusearchsong_flutter';
   Future<void> openamap() async {
     final Uri url = Uri.parse(
-      'androidamap://poi?sourceApplication=$myapp&keywords=${i['address']}',
+      'androidamap://poi?sourceApplication=$myapp&keywords=$address',
     );
     final Uri url2 = Uri.parse(
-      'amapuri://keywordsearch?keywords=${i['address']}&sourceApplication=$myapp',
+      'amapuri://keywordsearch?keywords=$address&sourceApplication=$myapp',
     );
     final Uri url3 = Uri.parse(
-      'amapuri://poi?sourceApplication=$myapp&keywords=${i['address']}',
+      'amapuri://poi?sourceApplication=$myapp&keywords=$address',
     );
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
@@ -65,7 +65,7 @@ Future<void> openmap({
 
   Future<void> openbaidu() async {
     final Uri url = Uri.parse(
-      'baidumap://map/place/search?query=${i['address']}&src=$myapp',
+      'baidumap://map/place/search?query=$address&src=$myapp',
     );
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
@@ -89,7 +89,7 @@ Future<void> openmap({
 
   Future<void> opentencent() async {
     final Uri url = Uri.parse(
-      'qqmap://map/search?keyword=${i['address']}&sourceApp=$myapp',
+      'qqmap://map/search?keyword=$address&sourceApp=$myapp',
     );
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
@@ -161,7 +161,7 @@ Future<List<Widget>> search({
               ),
             ),
           ),
-          onTap: () => openmap(i: i, context: context),
+          onTap: () => openmap(address: i['address'], context: context),
           onLongPress: () => copytext(text: i['address'], context: context),
         ),
       );
@@ -180,7 +180,7 @@ Future<List<Widget>> search({
                 ),
               ),
             ),
-            onTap: () => openmap(i: i, context: context),
+            onTap: () => openmap(address: i['address'], context: context),
           ),
         );
       }
