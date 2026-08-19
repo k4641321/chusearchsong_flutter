@@ -1,6 +1,7 @@
 import 'package:chusearchsong_flutter/function/fun.dart';
 import 'package:chusearchsong_flutter/pages/songinfopages/chartviewpage.dart';
 import 'package:chusearchsong_flutter/pages/toolspages/faulttoterantcomputationpage.dart';
+import 'package:chusearchsong_flutter/pages/toolspages/ratingcalculatorpage.dart';
 import 'package:flutter/material.dart';
 
 Widget returanAlias({required List alias, required BuildContext context}) {
@@ -98,9 +99,17 @@ List<Widget> returnDiffTabBarView({
                   ),
                 ),
                 const Divider(),
-                Text(
-                  '定数:      ${song2['const']}',
-                  style: TextStyle(fontSize: 15),
+                InkWell(
+                  onTap: () => Navigator.of(context).push(
+                    MaterialPageRoute(
+                      builder: (context) =>
+                          RatingCalculator(count: song2['const']),
+                    ),
+                  ),
+                  child: Text(
+                    '定数:      ${song2['const']}',
+                    style: TextStyle(fontSize: 15),
+                  ),
                 ),
                 const Divider(),
                 Text(

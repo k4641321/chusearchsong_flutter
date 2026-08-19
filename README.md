@@ -4,7 +4,7 @@
 
 ## 此项目为[chusearchsong](https://github.com/k4641321/chusearchsong) flutter的重构版
 
-![GitHub Downloads (all assets, all releases)](https://img.shields.io/github/downloads/k4641321/chusearchsong_flutter/total?style=for-the-badge) ![GitHub Actions Workflow Status](https://img.shields.io/github/actions/workflow/status/k4641321/chusearchsong_flutter/flutter.yml?style=for-the-badge) ![GitHub Release](https://img.shields.io/github/v/release/k4641321/chusearchsong_flutter?include_prereleases&style=for-the-badge) ![GitHub Repo stars](https://img.shields.io/github/stars/k4641321/chusearchsong_flutter?style=for-the-badge)
+![GitHub Downloads (all assets, all releases)](https://img.shields.io/github/downloads/k4641321/chusearchsong_flutter/total?style=for-the-badge) ![GitHub Actions Workflow Status](https://img.shields.io/github/actions/workflow/status/k4641321/chusearchsong_flutter/build.yml?style=for-the-badge) ![GitHub Release](https://img.shields.io/github/v/release/k4641321/chusearchsong_flutter?include_prereleases&style=for-the-badge) ![GitHub Repo stars](https://img.shields.io/github/stars/k4641321/chusearchsong_flutter?style=for-the-badge)
 
 一个使用flutter框架写的中二节奏查歌软件，歌曲数据来源于落雪咖啡屋，初次启动会下载数据保存在本地，可以离线使用
 

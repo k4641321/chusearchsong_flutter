@@ -5,6 +5,8 @@ import '../request.dart';
 import 'package:flutter/material.dart';
 import 'dart:convert';
 
+//此页面表格已经过AI优化
+
 Future<List<Widget>> getLineChartAndCard({
   required BuildContext context,
   required int id,
@@ -38,92 +40,150 @@ Future<List<Widget>> getLineChartAndCard({
       date.add(i['play_time']);
     }
 
+    // 日期标签格式化
+    String fmtDate(dynamic t) {
+      final d = DateTime.parse(t).toLocal();
+      String mm = d.month.toString().padLeft(2, '0');
+      String dd = d.day.toString().padLeft(2, '0');
+      return '$mm-$dd';
+    }
+
+    int labelStep = (date.length / 6).ceil();
+    if (labelStep < 1) labelStep = 1;
+
+    int scoreRange = maxscore - minscore;
+    if (scoreRange <= 0) scoreRange = 1;
+
     Widget lineChart = Padding(
       padding: const EdgeInsets.only(top: 100),
       child: SizedBox(
         height: 400,
         child: LineChart(
           LineChartData(
+            gridData: FlGridData(
+              show: true,
+              drawVerticalLine: false,
+              horizontalInterval: scoreRange / 4,
+              getDrawingHorizontalLine: (value) =>
+                  FlLine(color: Colors.grey.withOpacity(0.15), strokeWidth: 1),
+            ),
+            borderData: FlBorderData(
+              show: true,
+              border: Border(
+                left: BorderSide(color: Colors.grey.withOpacity(0.3)),
+                bottom: BorderSide(color: Colors.grey.withOpacity(0.3)),
+              ),
+            ),
             lineTouchData: LineTouchData(
               enabled: true,
-              // touchCallback:
-              //     (FlTouchEvent event, LineTouchResponse? touchResponse) {
-              //       if (event is FlTapUpEvent &&
-              //           touchResponse?.lineBarSpots?.isNotEmpty == true) {
-              //         int index =
-              //             touchResponse!.lineBarSpots!.last.x.toInt() - 1;
-              //         onSpotTouched(index); // 告诉父组件"用户点了第几个"
-              //       }
-              //     },
               touchTooltipData: LineTouchTooltipData(
+                tooltipBorderRadius: BorderRadius.circular(8),
+                tooltipPadding: const EdgeInsets.symmetric(
+                  horizontal: 12,
+                  vertical: 8,
+                ),
                 getTooltipItems: (touchedSpots) {
                   int idx = touchedSpots.last.x.toInt();
-                  List<LineTooltipItem> result = [
+                  return [
                     LineTooltipItem(
-                      '${touchedSpots.last.y.toInt()}\n${idx >= 0 && idx < date.length ? DateTime.parse(date[idx]).toLocal().toString() : ''}',
-                      TextStyle(color: Colors.black),
+                      '${touchedSpots.last.y.toInt()}\n',
+                      TextStyle(
+                        color: corlor,
+                        fontWeight: FontWeight.bold,
+                        fontSize: 14,
+                      ),
+                      children: [
+                        if (idx >= 0 && idx < date.length)
+                          TextSpan(
+                            text: DateTime.parse(
+                              date[idx],
+                            ).toLocal().toString().substring(0, 16),
+                            style: const TextStyle(
+                              color: Colors.black54,
+                              fontSize: 11,
+                            ),
+                          ),
+                      ],
                     ),
                   ];
-                  return result;
                 },
               ),
             ),
             titlesData: FlTitlesData(
               leftTitles: AxisTitles(
-                drawBelowEverything: false,
                 sideTitles: SideTitles(
-                  minIncluded: false,
                   showTitles: true,
-                  reservedSize: 50,
-                ),
-              ),
-              bottomTitles: AxisTitles(
-                drawBelowEverything: false,
-                sideTitles: SideTitles(
-                  interval: 1,
-                  showTitles: true,
-                  reservedSize: 90,
-                  minIncluded: true,
+                  reservedSize: 55,
                   getTitlesWidget: (value, meta) {
-                    int index = value.toInt();
-                    if (index >= date.length) {
-                      index = date.length - 1;
-                    } else if (index < 0) {
-                      index = 0;
-                    }
-                    if (index >= 0 && index < date.length) {
-                      return SideTitleWidget(
-                        meta: meta,
-                        child: Transform.rotate(
-                          angle: 45 * (3.1415926535 / 180), // 45度转弧度
-                          child: Padding(
-                            padding: EdgeInsets.only(top: 15),
-                            child: Text(
-                              DateTime.parse(date[index]).toLocal().toString(),
-                              style: TextStyle(fontSize: 10),
-                            ),
-                          ),
-                        ),
-                      );
-                    } else {
-                      return SizedBox.shrink();
-                    }
-                    // print(index);
+                    return SideTitleWidget(
+                      meta: meta,
+                      child: Text(
+                        '${value.toInt()}',
+                        style: TextStyle(fontSize: 10, color: Colors.grey),
+                      ),
+                    );
                   },
                 ),
               ),
-              topTitles: AxisTitles(
-                sideTitles: SideTitles(reservedSize: 100, showTitles: false),
+              bottomTitles: AxisTitles(
+                sideTitles: SideTitles(
+                  showTitles: true,
+                  interval: labelStep.toDouble(),
+                  reservedSize: 28,
+                  getTitlesWidget: (value, meta) {
+                    int index = value.toInt();
+                    if (index < 0 || index >= date.length) {
+                      return const SizedBox.shrink();
+                    }
+                    return SideTitleWidget(
+                      meta: meta,
+                      child: Text(
+                        fmtDate(date[index]),
+                        style: TextStyle(fontSize: 10, color: Colors.grey),
+                      ),
+                    );
+                  },
+                ),
               ),
-              rightTitles: AxisTitles(
+              topTitles: const AxisTitles(
+                sideTitles: SideTitles(showTitles: false),
+              ),
+              rightTitles: const AxisTitles(
                 sideTitles: SideTitles(showTitles: false),
               ),
             ),
-            lineBarsData: [LineChartBarData(spots: spots)],
+            lineBarsData: [
+              LineChartBarData(
+                spots: spots,
+                isCurved: true,
+                curveSmoothness: 0.3,
+                color: corlor,
+                barWidth: 3,
+                isStrokeCapRound: true,
+                dotData: FlDotData(
+                  show: true,
+                  getDotPainter: (spot, percent, barData, index) =>
+                      FlDotCirclePainter(
+                        radius: 2.5,
+                        color: corlor,
+                        strokeWidth: 1.5,
+                        strokeColor: Colors.white,
+                      ),
+                ),
+                belowBarData: BarAreaData(
+                  show: true,
+                  gradient: LinearGradient(
+                    begin: Alignment.topCenter,
+                    end: Alignment.bottomCenter,
+                    colors: [corlor.withOpacity(0.3), corlor.withOpacity(0.0)],
+                  ),
+                ),
+              ),
+            ],
             minX: 0,
-            maxX: allscore.length.toDouble() + 1,
-            minY: minscore.toDouble(),
-            maxY: maxscore.toDouble(),
+            maxX: allscore.length.toDouble(),
+            minY: (minscore - scoreRange * 0.1).toDouble(),
+            maxY: (maxscore + scoreRange * 0.1).toDouble(),
           ),
         ),
       ),
@@ -131,37 +191,52 @@ Future<List<Widget>> getLineChartAndCard({
     //历史成绩绘制
     for (var i in allscore) {
       cardList.add(
-        InkWell(
-          child: Card(
-            child: Padding(
-              padding: EdgeInsetsGeometry.all(8),
-              child: Column(
-                children: [
-                  Row(children: [Icon(Icons.star), Text('历史成绩')]),
-                  Text('Score:   ${i['score']}'),
-                  const Divider(),
-                  Text('Rating:   ${i['rating']}'),
-                  const Divider(),
-                  Text('Over Power:   ${i['over_power']}'),
-                  const Divider(),
-                  Text('Clear:   ${i['clear']}'),
-                  const Divider(),
-                  Text('Full Combo:   ${i['full_combo']}'),
-                  const Divider(),
-                  Text('Full Chain:   ${i['full_chain']}'),
-                  const Divider(),
-                  Text(
-                    'Rank:   ${(i['rank'] as String).replaceFirst('p', '+')}',
-                  ),
-                  const Divider(),
-                  Text(
-                    'Play time:   ${DateTime.parse(i['play_time']).toLocal()}',
-                  ),
-                  const Divider(),
-                  Text(
-                    'Update time:   ${DateTime.parse(i['upload_time']).toLocal()}',
-                  ),
-                ],
+        Padding(
+          padding: EdgeInsetsGeometry.all(8),
+          child: InkWell(
+            child: Card(
+              color: corlor,
+              child: Padding(
+                padding: EdgeInsetsGeometry.all(8),
+                child: Column(
+                  children: [
+                    Row(
+                      children: [
+                        Icon(Icons.star),
+                        Text(
+                          '历史成绩',
+                          style: TextStyle(
+                            fontSize: 18,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ],
+                    ),
+                    Text('Score:   ${i['score']}'),
+                    const Divider(),
+                    Text('Rating:   ${i['rating']}'),
+                    const Divider(),
+                    Text('Over Power:   ${i['over_power']}'),
+                    const Divider(),
+                    Text('Clear:   ${i['clear']}'),
+                    const Divider(),
+                    Text('Full Combo:   ${i['full_combo']}'),
+                    const Divider(),
+                    Text('Full Chain:   ${i['full_chain']}'),
+                    const Divider(),
+                    Text(
+                      'Rank:   ${(i['rank'] as String).replaceFirst('p', '+')}',
+                    ),
+                    const Divider(),
+                    Text(
+                      'Play time:   ${DateTime.parse(i['play_time']).toLocal()}',
+                    ),
+                    const Divider(),
+                    Text(
+                      'Update time:   ${DateTime.parse(i['upload_time']).toLocal()}',
+                    ),
+                  ],
+                ),
               ),
             ),
           ),

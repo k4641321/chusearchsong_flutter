@@ -273,6 +273,20 @@ Future<List<List<Widget>>> songRecommendation({
                     child: Column(
                       children: [
                         Row(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          children: [
+                            Expanded(
+                              child: Text(
+                                '#${i['id']}',
+                                style: TextStyle(
+                                  fontSize: 10,
+                                  color: Colors.grey,
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                        Row(
                           children: [
                             Expanded(
                               child: Text(
@@ -300,7 +314,7 @@ Future<List<List<Widget>>> songRecommendation({
                           children: [
                             Expanded(
                               child: Text(
-                                '#${i['id']}   ${i['genre']} - $versionname',
+                                '${i['genre']} - $versionname',
                                 overflow: TextOverflow.ellipsis,
                               ),
                             ),

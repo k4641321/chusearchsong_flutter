@@ -1,4 +1,5 @@
 import 'dart:developer';
+import 'dart:ui';
 
 import 'package:chusearchsong_flutter/function/fun.dart';
 import 'package:chusearchsong_flutter/function/toolsfun/searchlobbypagefun.dart';
@@ -78,29 +79,31 @@ class _ShopInfoState extends State<ShopInfo> {
             child: InkWell(
               onTap: () => showModalBottomSheet(
                 useSafeArea: true,
+                isScrollControlled: true,
                 context: context,
-                builder: (context) => Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-
-                  mainAxisSize: MainAxisSize.max,
-                  children: [
-                    Padding(
-                      padding: EdgeInsetsGeometry.all(8),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: [
-                          Text(
-                            '介绍',
-                            style: const TextStyle(
-                              fontSize: 20,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                          Text('${j['comment']}'),
-                        ],
+                builder: (context) => Padding(
+                  padding: const EdgeInsets.all(8),
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      const Text(
+                        '介绍',
+                        style: TextStyle(
+                          fontSize: 20,
+                          fontWeight: FontWeight.bold,
+                        ),
                       ),
-                    ),
-                  ],
+                      const SizedBox(height: 8),
+                      Flexible(
+                        // 让文本区占剩余空间，而不是撑爆
+                        child: SingleChildScrollView(
+                          // 长文本可滚动
+                          child: Text('${j['comment']}'),
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
               ),
               child: Row(
@@ -282,24 +285,44 @@ class _ShopInfoState extends State<ShopInfo> {
 }
 
 List<Widget> searchlobby({
-  required Map<String, dynamic> shopinformation,
+  required List shopinformation,
   required String text,
   required MapController mapController,
+  required List titleIdList,
 }) {
   List<Widget> list = [];
   Set<int> shopId = {};
-  for (var i in shopinformation['shops']) {
+
+  //游戏类型筛选
+  List result1 = [];
+  if (titleIdList.isNotEmpty) {
+    for (var i in shopinformation) {
+      for (var j in i['games']) {
+        if (titleIdList.contains(j['titleId'])) {
+          result1.add(i);
+          break;
+        }
+      }
+    }
+  }
+
+  List result2 = shopinformation;
+  if (result1.isNotEmpty) {
+    result2 = result1;
+  }
+  for (var i in result2) {
     //店名搜索
     if (i['name'].contains(text)) {
       shopId.add(i['id']);
     }
 
     //地区搜索
+    List address = [];
     for (var j in i['address']['region']) {
-      if (j['name']['zh'].contains(text)) {
-        shopId.add(i['id']);
-        break;
-      }
+      address.add(j['name']['zh']);
+    }
+    if (address.join('').contains(text)) {
+      shopId.add(i['id']);
     }
 
     //店铺id搜索
@@ -307,8 +330,9 @@ List<Widget> searchlobby({
       shopId.add(i['id']);
     }
   }
+
   //添加组件
-  for (var shop in (shopinformation['shops'] as List)) {
+  for (var shop in shopinformation) {
     if (shopId.contains(shop['id'])) {
       //地址拼接
       List<String> regionList = [];
@@ -326,6 +350,10 @@ List<Widget> searchlobby({
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
+                      Text(
+                        '#${shop['id']}',
+                        style: TextStyle(fontSize: 10, color: Colors.grey),
+                      ),
                       Text(
                         '${shop['name']}',
                         style: TextStyle(
@@ -358,6 +386,152 @@ List<Widget> searchlobby({
       );
     }
   }
-  log(list.length.toString());
+  log('搜索结果：${list.length.toString()}');
   return list;
+}
+
+class FilterBody extends StatefulWidget {
+  final Map<String, dynamic> gameList;
+  final ValueChanged<Set<dynamic>> onChanged;
+  final Set<dynamic> selectedKeys;
+
+  const FilterBody({
+    super.key,
+    required this.gameList,
+    required this.selectedKeys,
+    required this.onChanged,
+  });
+
+  @override
+  State<FilterBody> createState() => _FilterBodyState();
+}
+
+class _FilterBodyState extends State<FilterBody> {
+  Set<dynamic> _selectedKeys = {};
+
+  void init() {
+    _selectedKeys = widget.selectedKeys;
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    init();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    List<Widget> list = [];
+    for (var i in widget.gameList.keys) {
+      list.add(
+        FilterChip(
+          label: Text('${widget.gameList[i]}'),
+          selected: _selectedKeys.contains(int.parse(i)),
+          onSelected: (bool selected) {
+            setState(() {
+              if (selected) {
+                _selectedKeys.add(int.parse(i)); // 选中 → 添加 i
+              } else {
+                _selectedKeys.remove(int.parse(i)); // 取消 → 移除 i
+              }
+            });
+            widget.onChanged(_selectedKeys); // 把最新集合传出去
+          },
+        ),
+      );
+    }
+    return Padding(
+      padding: EdgeInsets.all(10),
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Text(
+            '选择游戏类型',
+            style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+          ),
+          const Divider(),
+          Wrap(runSpacing: 5, spacing: 10, children: list),
+        ],
+      ),
+    );
+  }
+}
+
+List<Marker> createMarkers({
+  required List shopList,
+  required List filterList,
+  required BuildContext context,
+}) {
+  List<Marker> loadsList = [];
+  // print(shopList);
+  for (var i in shopList) {
+    bool ismatch = filterList.isEmpty;
+    if (!ismatch) {
+      for (var j in i['games']) {
+        if (filterList.contains(j['titleId'])) {
+          ismatch = true;
+          break;
+        }
+      }
+    }
+    if (!ismatch) continue;
+    loadsList.add(
+      Marker(
+        width: 50,
+        height: 50,
+        point: LatLng(
+          i['location']['coordinates'][1],
+          i['location']['coordinates'][0],
+        ),
+        child: InkWell(
+          onTap: () {
+            showModalBottomSheet(
+              isScrollControlled: true,
+              useSafeArea: true,
+              context: context,
+              builder: (b) => DraggableScrollableSheet(
+                initialChildSize: 0.5,
+                minChildSize: 0.3,
+                maxChildSize: 1.0,
+                expand: false,
+                builder: (context, scrollController) => ScrollConfiguration(
+                  behavior: ScrollConfiguration.of(context).copyWith(
+                    dragDevices: {
+                      PointerDeviceKind.touch,
+                      PointerDeviceKind.mouse,
+                      PointerDeviceKind.stylus,
+                      PointerDeviceKind.trackpad,
+                    },
+                  ),
+                  child: ShopInfo(
+                    shopinformation: i,
+                    scrollController: scrollController,
+                  ),
+                ),
+              ),
+            );
+          },
+          child: Container(
+            padding: EdgeInsets.all(8),
+            alignment: Alignment.center,
+            width: 50,
+            height: 50,
+            decoration: BoxDecoration(
+              color: Theme.of(context).colorScheme.secondaryContainer,
+              shape: BoxShape.circle,
+              border: Border.all(color: Colors.white, width: 2),
+            ),
+
+            child: Icon(
+              Icons.videogame_asset_outlined,
+              color: Colors.blue,
+              size: 30,
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+  // log(loadsList.length.toString());
+  return loadsList;
 }

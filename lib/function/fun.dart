@@ -720,14 +720,24 @@ Widget returnSongCard({
               child: CachedNetworkImage(
                 imageUrl:
                     'https://assets2.lxns.net/chunithm/jacket/$originid.png',
-                width: 95,
-                height: 95,
+                width: 105,
+                height: 105,
                 errorWidget: (context, url, error) => Text('加载失败'),
               ),
             ),
             Expanded(
               child: Column(
                 children: [
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.start,
+
+                    children: [
+                      Text(
+                        '#${songbasedata['id']}',
+                        style: TextStyle(fontSize: 10, color: Colors.grey),
+                      ),
+                    ],
+                  ),
                   Row(
                     children: [
                       Expanded(
@@ -756,7 +766,7 @@ Widget returnSongCard({
                     children: [
                       Expanded(
                         child: Text(
-                          '#${songbasedata['id']}   ${songbasedata['genre']} - $versionname',
+                          '${songbasedata['genre']} - $versionname',
                           overflow: TextOverflow.ellipsis,
                         ),
                       ),

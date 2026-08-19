@@ -65,82 +65,88 @@ Future<List<Widget>> search({
       }
     }
     // songresultWidget.add(const Divider());
+    if (!context.mounted) return [];
     songresultWidget.add(
-      InkWell(
-        // key: ValueKey(i['id']),
-        onTap: () async {
-          interSongInfo(
-            songbasedata: i,
-            context: context,
-            versionname: versionname,
-          );
-        },
-
-        child: Card(
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(0.0),
-          ),
-          child: Padding(
-            padding: EdgeInsetsGeometry.all(10.0),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Padding(
-                  padding: EdgeInsetsGeometry.only(right: 10),
-                  child: CachedNetworkImage(
-                    imageUrl:
-                        'https://assets2.lxns.net/chunithm/jacket/$songid.png',
-                    width: 95,
-                    height: 95,
-                    errorWidget: (context, url, error) => Text('加载失败'),
-                  ),
-                ),
-                Expanded(
-                  child: Column(
-                    children: [
-                      Row(
-                        children: [
-                          Expanded(
-                            child: Text(
-                              '${i['title']}',
-                              overflow: TextOverflow.ellipsis,
-                              style: TextStyle(
-                                fontSize: 20,
-                                fontWeight: FontWeight.bold,
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
-                      Row(
-                        children: [
-                          Expanded(
-                            child: Text(
-                              '${i['artist']}',
-                              overflow: TextOverflow.ellipsis,
-                            ),
-                          ),
-                        ],
-                      ),
-                      Row(
-                        children: [
-                          Expanded(
-                            child: Text(
-                              '#${i['id']}   ${i['genre']} - $versionname',
-                              overflow: TextOverflow.ellipsis,
-                            ),
-                          ),
-                        ],
-                      ),
-                      Wrap(children: songInfoDiffs),
-                    ],
-                  ),
-                ),
-              ],
-            ),
-          ),
-        ),
+      returnSongCard(
+        songbasedata: i,
+        context: context,
+        versionname: versionname,
       ),
+      // InkWell(
+      //   // key: ValueKey(i['id']),
+      //   onTap: () async {
+      //     interSongInfo(
+      //       songbasedata: i,
+      //       context: context,
+      //       versionname: versionname,
+      //     );
+      //   },
+
+      //   child: Card(
+      //     shape: RoundedRectangleBorder(
+      //       borderRadius: BorderRadius.circular(0.0),
+      //     ),
+      //     child: Padding(
+      //       padding: EdgeInsetsGeometry.all(10.0),
+      //       child: Row(
+      //         mainAxisAlignment: MainAxisAlignment.center,
+      //         children: [
+      //           Padding(
+      //             padding: EdgeInsetsGeometry.only(right: 10),
+      //             child: CachedNetworkImage(
+      //               imageUrl:
+      //                   'https://assets2.lxns.net/chunithm/jacket/$songid.png',
+      //               width: 95,
+      //               height: 95,
+      //               errorWidget: (context, url, error) => Text('加载失败'),
+      //             ),
+      //           ),
+      //           Expanded(
+      //             child: Column(
+      //               children: [
+      //                 Row(
+      //                   children: [
+      //                     Expanded(
+      //                       child: Text(
+      //                         '${i['title']}',
+      //                         overflow: TextOverflow.ellipsis,
+      //                         style: TextStyle(
+      //                           fontSize: 20,
+      //                           fontWeight: FontWeight.bold,
+      //                         ),
+      //                       ),
+      //                     ),
+      //                   ],
+      //                 ),
+      //                 Row(
+      //                   children: [
+      //                     Expanded(
+      //                       child: Text(
+      //                         '${i['artist']}',
+      //                         overflow: TextOverflow.ellipsis,
+      //                       ),
+      //                     ),
+      //                   ],
+      //                 ),
+      //                 Row(
+      //                   children: [
+      //                     Expanded(
+      //                       child: Text(
+      //                         '#${i['id']}   ${i['genre']} - $versionname',
+      //                         overflow: TextOverflow.ellipsis,
+      //                       ),
+      //                     ),
+      //                   ],
+      //                 ),
+      //                 Wrap(children: songInfoDiffs),
+      //               ],
+      //             ),
+      //           ),
+      //         ],
+      //       ),
+      //     ),
+      //   ),
+      // ),
     );
   }
   // print(songresult);

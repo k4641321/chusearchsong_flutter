@@ -2,6 +2,7 @@ import 'dart:developer';
 import 'dart:io';
 import 'dart:convert';
 import 'package:chusearchsong_flutter/function/toolsfun/searchcollectiblespagefun.dart';
+import 'package:chusearchsong_flutter/pages/toolspages/ratingcalculatorpage.dart';
 import 'package:flutter/material.dart';
 import 'package:marquee/marquee.dart';
 import 'package:path_provider/path_provider.dart';
@@ -182,9 +183,18 @@ Future<List<Widget>> returnDiffTabBarView({
                       ),
                     ),
                     const Divider(),
-                    Text(
-                      '定数:      ${song2['level_value']}',
-                      style: TextStyle(fontSize: 15),
+                    InkWell(
+                      onTap: () => Navigator.of(context).push(
+                        MaterialPageRoute(
+                          builder: (context) => RatingCalculator(
+                            count: song2['level_value'].toDouble(),
+                          ),
+                        ),
+                      ),
+                      child: Text(
+                        '定数:      ${song2['level_value']}',
+                        style: TextStyle(fontSize: 15),
+                      ),
                     ),
                     const Divider(),
                     Text(

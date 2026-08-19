@@ -41,6 +41,8 @@ export default defineConfig({
                   { text: 'Over Power计算', link: '/helper/function/tools/overpowercalculation/' },
                   { text: '最新最热查歌', link: '/helper/function/tools/zxzrsearchsong/' },
                   { text: '所有成绩查看', link: '/helper/function/tools/viewallgrades/' },
+                  { text: '友人对战', link: '/helper/function/tools/friendbattle/' },
+                  { text: '机厅搜索(新)', link: '/helper/function/tools/searchlobbynew/' },
                 ]
               },
             ]

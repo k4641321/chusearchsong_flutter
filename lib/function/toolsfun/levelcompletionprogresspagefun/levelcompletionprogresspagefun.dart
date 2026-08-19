@@ -177,7 +177,7 @@ Widget buildsongList({
                 Column(
                   children: [
                     Padding(
-                      padding: EdgeInsetsGeometry.only(right: 10),
+                      padding: EdgeInsetsGeometry.only(right: 0),
                       child: CachedNetworkImage(
                         imageUrl:
                             'https://assets2.lxns.net/chunithm/jacket/$songid.png',
@@ -192,6 +192,19 @@ Widget buildsongList({
                 Expanded(
                   child: Column(
                     children: [
+                      Row(
+                        children: [
+                          Expanded(
+                            child: Text(
+                              '#${i['id']}',
+                              style: TextStyle(
+                                fontSize: 10,
+                                color: Colors.grey,
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
                       Row(
                         children: [
                           Expanded(
@@ -220,7 +233,7 @@ Widget buildsongList({
                         children: [
                           Expanded(
                             child: Text(
-                              '#${i['id']}   ${i['genre']} - $versionname',
+                              '${i['genre']} - $versionname',
                               overflow: TextOverflow.ellipsis,
                             ),
                           ),

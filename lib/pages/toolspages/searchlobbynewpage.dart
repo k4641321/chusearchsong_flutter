@@ -12,7 +12,9 @@ import 'package:latlong2/latlong.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:path_provider/path_provider.dart';
 
-Map<String, dynamic> decodeShopJson(String raw) =>
+List decodeShopList(String raw) => jsonDecode(raw) as List;
+
+Map<String, dynamic> decodeGameListJson(String raw) =>
     jsonDecode(raw) as Map<String, dynamic>;
 
 class Searchlobbynewpage extends StatefulWidget {
@@ -27,10 +29,14 @@ class _SearchlobbynewpageState extends State<Searchlobbynewpage> {
   final TextEditingController _searchController = TextEditingController();
 
   LatLng _current = LatLng(39.9062, 116.3913);
+  List<Marker> showmarkersList = [];
   List<Marker> markersList = [];
-  Map<String, dynamic> shopList = {};
+  List shopList = [];
   List<Widget> searchresult = [];
   bool isSearch = false;
+  LatLng userPosition = LatLng(39.9062, 116.3913);
+  Map<String, dynamic> gameList = {};
+  List selectGameIdlist = [];
 
   Future<void> init() async {
     try {
@@ -46,111 +52,61 @@ class _SearchlobbynewpageState extends State<Searchlobbynewpage> {
         ),
       );
       final path = await getApplicationSupportDirectory();
-      if (!File('${path.path}/res/nearcadeshops.json').existsSync()) {
+      if (!File('${path.path}/res/nearcadeshops.json').existsSync() ||
+          !File('${path.path}/res/nearcadegames.json').existsSync()) {
         setState(() {
           loadsText = '本地缓存缺失，正在下载，并解析';
         });
-        final String raw = await requestNearcadeAllShop();
-        shopList = await compute(decodeShopJson, raw);
-        File(
-          '${path.path}/res/nearcadeshops.json',
-        ).writeAsStringSync(jsonEncode(shopList));
-      } else {
-        shopList = shopList = await compute(
-          decodeShopJson,
+        await saveNearcadeAllShop();
+        shopList = await compute(
+          decodeShopList,
           File('${path.path}/res/nearcadeshops.json').readAsStringSync(),
         );
-      }
-      for (var i in shopList['shops']) {
-        if (!mounted) return;
-        loadsList.add(
-          Marker(
-            width: 50,
-            height: 50,
-            point: LatLng(
-              i['location']['coordinates'][1],
-              i['location']['coordinates'][0],
-            ),
-            child: InkWell(
-              onTap: () {
-                showModalBottomSheet(
-                  isScrollControlled: true,
-                  useSafeArea: true,
-                  context: context,
-                  builder: (b) => DraggableScrollableSheet(
-                    initialChildSize: 0.5,
-                    minChildSize: 0.3,
-                    maxChildSize: 1.0,
-                    expand: false,
-                    builder: (context, scrollController) => ScrollConfiguration(
-                      behavior: ScrollConfiguration.of(context).copyWith(
-                        dragDevices: {
-                          PointerDeviceKind.touch,
-                          PointerDeviceKind.mouse,
-                          PointerDeviceKind.stylus,
-                          PointerDeviceKind.trackpad,
-                        },
-                      ),
-                      child: ShopInfo(
-                        shopinformation: i,
-                        scrollController: scrollController,
-                      ),
-                    ),
-                  ),
-                );
-              },
-              child: Container(
-                padding: EdgeInsets.all(8),
-                alignment: Alignment.center,
-                width: 50,
-                height: 50,
-                decoration: BoxDecoration(
-                  color: Theme.of(context).colorScheme.secondaryContainer,
-                  shape: BoxShape.circle,
-                  border: Border.all(color: Colors.white, width: 2),
-                ),
 
-                child: Icon(
-                  Icons.videogame_asset_outlined,
-                  color: Colors.blue,
-                  size: 30,
-                ),
-              ),
-            ),
-          ),
+        for (var i in shopList) {
+          for (var j in i['games']) {
+            gameList['${j['titleId']}'] = '${j['name']}';
+          }
+        }
+        File(
+          '${path.path}/res/nearcadegames.json',
+        ).writeAsStringSync(jsonEncode(gameList));
+        // print(gameList);
+      } else {
+        shopList = await compute(
+          decodeShopList,
+          File('${path.path}/res/nearcadeshops.json').readAsStringSync(),
+        );
+        gameList = await compute(
+          decodeGameListJson,
+          File('${path.path}/res/nearcadegames.json').readAsStringSync(),
         );
       }
       if (!mounted) return;
+      markersList = createMarkers(
+        shopList: shopList,
+        filterList: selectGameIdlist,
+        context: context,
+      );
+      loadsList = List.from(markersList);
+      if (!mounted) return;
       setState(() {
-        markersList = loadsList;
+        showmarkersList = loadsList;
       });
+      await _locate();
+      if (!mounted) return;
       Navigator.of(context).pop();
     } catch (e, strack) {
+      Navigator.of(context).pop();
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text('错误：$e\n$strack')));
       log('$e\n$strack');
     }
   }
 
-  Future<void> _locate(bool isNew) async {
+  Future<void> _locate() async {
     try {
-      if (!isNew) {
-        LocationPermission permission = await Geolocator.checkPermission();
-        if (!mounted) return;
-        if (permission == LocationPermission.denied) {
-          permission = await Geolocator.requestPermission();
-        }
-        if (!mounted) return;
-        if (permission == LocationPermission.deniedForever) return;
-
-        final pos = await Geolocator.getCurrentPosition(
-          locationSettings: const LocationSettings(
-            accuracy: LocationAccuracy.high,
-          ),
-        );
-        if (!mounted) return;
-
-        _mapController.move(LatLng(pos.latitude, pos.longitude), 16);
-        return;
-      }
       LocationPermission permission = await Geolocator.checkPermission();
       if (!mounted) return;
       if (permission == LocationPermission.denied) {
@@ -178,7 +134,8 @@ class _SearchlobbynewpageState extends State<Searchlobbynewpage> {
             child: Icon(Icons.location_on, color: Colors.blue, size: 40),
           ),
         );
-        markersList = loadsList;
+        showmarkersList = loadsList;
+        // log(showmarkersList.length.toString());
       });
     } catch (e, strack) {
       log('$e\n$strack');
@@ -187,17 +144,34 @@ class _SearchlobbynewpageState extends State<Searchlobbynewpage> {
 
   void _searchlobby() {
     isSearch = true;
-    if (_searchController.text == '') {
+    if (_searchController.text == '' && selectGameIdlist.isEmpty) {
+      List<Marker> loadsList = List.from(
+        createMarkers(
+          shopList: shopList,
+          filterList: selectGameIdlist,
+          context: context,
+        ),
+      );
       setState(() {
         searchresult = [];
+        showmarkersList = loadsList;
       });
     } else {
+      List<Marker> loadsList = List.from(
+        createMarkers(
+          shopList: shopList,
+          filterList: selectGameIdlist,
+          context: context,
+        ),
+      );
       setState(() {
         searchresult = searchlobby(
           shopinformation: shopList,
           text: _searchController.text,
           mapController: _mapController,
+          titleIdList: selectGameIdlist,
         );
+        showmarkersList = loadsList;
       });
     }
   }
@@ -212,7 +186,7 @@ class _SearchlobbynewpageState extends State<Searchlobbynewpage> {
 
   @override
   void didChangeDependencies() {
-    _locate(true);
+    // _locate();
     super.didChangeDependencies();
   }
 
@@ -233,7 +207,7 @@ class _SearchlobbynewpageState extends State<Searchlobbynewpage> {
               //   flags: InteractiveFlag.all & ~InteractiveFlag.scrollWheelZoom,
               // ),
               onMapEvent: (MapEvent event) {
-                if (event is MapEventMoveEnd) {
+                if (event is MapEventMoveStart) {
                   if (!isSearch) return;
                   setState(() {
                     isSearch = false;
@@ -252,14 +226,14 @@ class _SearchlobbynewpageState extends State<Searchlobbynewpage> {
                 attributions: [
                   LogoSourceAttribution(
                     Icon(Icons.location_on, color: Colors.black),
-                    onTap: () => _locate(false),
+                    onTap: _locate,
                     height: 24,
                   ),
                 ],
               ),
               MarkerClusterLayerWidget(
                 options: MarkerClusterLayerOptions(
-                  markers: markersList,
+                  markers: showmarkersList,
                   size: Size(40, 40),
                   builder: (context, marker) => Container(
                     decoration: BoxDecoration(
@@ -287,7 +261,7 @@ class _SearchlobbynewpageState extends State<Searchlobbynewpage> {
                       controller: _searchController,
                       decoration: InputDecoration(
                         hintText: '输入关键字',
-                        filled: true, // ← 必须 true,否则 fillColor 不生效
+                        filled: true,
                         fillColor: Colors.white,
                         border: ShapedInputBorder(
                           shape: RoundedRectangleBorder(
@@ -306,6 +280,45 @@ class _SearchlobbynewpageState extends State<Searchlobbynewpage> {
                         _searchlobby();
                       },
                     ),
+                  ),
+                  IconButton(
+                    onPressed: () {
+                      showModalBottomSheet(
+                        isScrollControlled: true,
+                        useSafeArea: true,
+                        context: context,
+                        builder: (b) => DraggableScrollableSheet(
+                          initialChildSize: 0.5,
+                          minChildSize: 0.3,
+                          maxChildSize: 1.0,
+                          expand: false,
+                          builder: (context, scrollController) =>
+                              ScrollConfiguration(
+                                behavior: ScrollConfiguration.of(context)
+                                    .copyWith(
+                                      dragDevices: {
+                                        PointerDeviceKind.touch,
+                                        PointerDeviceKind.mouse,
+                                        PointerDeviceKind.stylus,
+                                        PointerDeviceKind.trackpad,
+                                      },
+                                    ),
+                                child: SingleChildScrollView(
+                                  controller: scrollController,
+                                  child: FilterBody(
+                                    gameList: gameList,
+                                    selectedKeys: selectGameIdlist.toSet(),
+                                    onChanged: (selectedKeys) {
+                                      log('$selectedKeys');
+                                      selectGameIdlist = selectedKeys.toList();
+                                    },
+                                  ),
+                                ),
+                              ),
+                        ),
+                      );
+                    },
+                    icon: Icon(Icons.filter_alt),
                   ),
                   IconButton(
                     onPressed: () {

@@ -6,21 +6,34 @@ import 'dart:io';
 import 'package:path_provider/path_provider.dart';
 
 Future<void> saveNearcadeAllShop() async {
-  final path = await getApplicationSupportDirectory();
   try {
-    final rawJson = await requestNearcadeAllShop();
-    // final decoded = json.decode(rawJson);
+    int page = 1;
+    List shopsList = [];
+    final path = await getApplicationSupportDirectory();
+    bool hasNext = true;
+
+    while (hasNext) {
+      final rawJson = await requestNearcadeAllShop(page: page); // 请求当前页
+      final result = await jsonDecode(rawJson) as Map<String, dynamic>;
+
+      if (result.containsKey('shops')) {
+        shopsList.addAll(result['shops']);
+      }
+      hasNext = result['hasNextPage'] == true;
+      log('有下一页');
+      page++;
+    }
     await File(
-      '${path.path}/res/segachara.json',
-    ).writeAsString(rawJson, encoding: utf8);
+      '${path.path}/res/nearcadeshops.json',
+    ).writeAsString(jsonEncode(shopsList), encoding: utf8);
   } catch (e) {
     log('$e', name: 'request.dart', level: 1000);
   }
 }
 
-Future<String> requestNearcadeAllShop() async {
+Future<String> requestNearcadeAllShop({required int page}) async {
   final uri = Uri.parse(
-    'https://nearcade.phizone.cn/api/shops/?regionId=CN&limit=32767',
+    'https://nearcade.phizone.cn/api/shops/?regionId=CN&limit=100&page=$page',
   );
   final response = await get(uri);
   return response.body;

@@ -264,6 +264,19 @@ List<List<Widget>> returnScoreList({
                               children: [
                                 Expanded(
                                   child: Text(
+                                    '#${j['id']}',
+                                    style: TextStyle(
+                                      fontSize: 10,
+                                      color: Colors.grey,
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                            Row(
+                              children: [
+                                Expanded(
+                                  child: Text(
                                     '${j['title']}',
                                     overflow: TextOverflow.ellipsis,
                                     style: TextStyle(
@@ -288,7 +301,7 @@ List<List<Widget>> returnScoreList({
                               children: [
                                 Expanded(
                                   child: Text(
-                                    '#${j['id']}   ${j['genre']} - $versionname',
+                                    '${j['genre']} - $versionname',
                                     overflow: TextOverflow.ellipsis,
                                   ),
                                 ),

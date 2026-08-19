@@ -2,10 +2,14 @@
 prev:
   text: '最新最热查歌'
   link: '/helper/function/tools/zxzrsearchsong'
+
+next:
+  text: '友人对战'
+  link: '/helper/function/tools/friendbattle'
 ---
 
 # 所有成绩查看
-![](image/屏幕截图%202026-08-06%20215700.png)
+![](image/屏幕截图%202026-08-19%20182254.png)
 > [!WARNING]
 > 此功能需要配置落雪Token
 

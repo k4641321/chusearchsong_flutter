@@ -5,7 +5,7 @@ next:
 ---
 
 # chusearchosng(中二查歌)
-![GitHub Downloads (all assets, all releases)](https://img.shields.io/github/downloads/k4641321/chusearchsong_flutter/total?style=for-the-badge)![GitHub Actions Workflow Status](https://img.shields.io/github/actions/workflow/status/k4641321/chusearchsong_flutter/flutter.yml?style=for-the-badge) ![GitHub Release](https://img.shields.io/github/v/release/k4641321/chusearchsong_flutter?include_prereleases&style=for-the-badge) ![GitHub Repo stars](https://img.shields.io/github/stars/k4641321/chusearchsong_flutter?style=for-the-badge)
+![GitHub Downloads (all assets, all releases)](https://img.shields.io/github/downloads/k4641321/chusearchsong_flutter/total?style=for-the-badge)![GitHub Actions Workflow Status](https://img.shields.io/github/actions/workflow/status/k4641321/chusearchsong_flutter/build.yml?style=for-the-badge) ![GitHub Release](https://img.shields.io/github/v/release/k4641321/chusearchsong_flutter?include_prereleases&style=for-the-badge) ![GitHub Repo stars](https://img.shields.io/github/stars/k4641321/chusearchsong_flutter?style=for-the-badge)
 ## 这是什么？
 这是作者在使用了Python toga，Python Kivy后，迫不得以转为Flutter写的一个关于**中二节奏**的工具
 > [!WARNING]

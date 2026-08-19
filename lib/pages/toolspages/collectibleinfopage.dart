@@ -239,8 +239,9 @@ class _CollectibleInfoPageState extends State<CollectibleInfoPage> {
             break;
           }
         }
-      } catch (e) {
-        result.add(Text('未找到官方角色文件，可能缺失，请手动更新数据 $e'));
+      } catch (e, strack) {
+        log('$e\n$strack');
+        result.add(Text('未找到官方角色文件，可能缺失，请手动更新数据 $e\n$strack'));
       }
     }
 
@@ -949,45 +950,46 @@ class _CollectibleInfoPageState extends State<CollectibleInfoPage> {
                               ],
                             ),
                           ),
-                          const Divider(),
-                          if (newdata['color'] != null)
-                            InkWell(
-                              onLongPress: () => copytext(
-                                text: newdata['color'],
-                                context: context,
-                              ),
-                              child: Row(
-                                children: [
-                                  Icon(
-                                    Icons.color_lens,
-                                    size: 18,
-                                    color: Theme.of(
-                                      context,
-                                    ).colorScheme.primary,
+
+                          newdata['color'] != null
+                              ? InkWell(
+                                  onLongPress: () => copytext(
+                                    text: newdata['color'],
+                                    context: context,
                                   ),
-                                  SizedBox(width: 4),
-                                  SizedBox(
-                                    width: 80,
-                                    child: const Text(
-                                      '颜色：',
-                                      style: TextStyle(fontSize: 15),
-                                    ),
-                                  ),
-                                  SizedBox(width: 50),
-                                  Expanded(
-                                    child: Text(
-                                      '${newdata['color']}',
-                                      style: TextStyle(
-                                        fontSize: 15,
-                                        color: returnTrophyColor(
-                                          newdata['color'],
+                                  child: Row(
+                                    children: [
+                                      Icon(
+                                        Icons.color_lens,
+                                        size: 18,
+                                        color: Theme.of(
+                                          context,
+                                        ).colorScheme.primary,
+                                      ),
+                                      SizedBox(width: 4),
+                                      SizedBox(
+                                        width: 80,
+                                        child: const Text(
+                                          '颜色：',
+                                          style: TextStyle(fontSize: 15),
                                         ),
                                       ),
-                                    ),
+                                      SizedBox(width: 50),
+                                      Expanded(
+                                        child: Text(
+                                          '${newdata['color']}',
+                                          style: TextStyle(
+                                            fontSize: 15,
+                                            color: returnTrophyColor(
+                                              newdata['color'],
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+                                    ],
                                   ),
-                                ],
-                              ),
-                            ),
+                                )
+                              : SizedBox.shrink(),
                           const Divider(),
                           InkWell(
                             onLongPress: () => copytext(
