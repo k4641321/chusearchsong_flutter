@@ -83,24 +83,29 @@ class _ShopInfoState extends State<ShopInfo> {
                 context: context,
                 builder: (context) => Padding(
                   padding: const EdgeInsets.all(8),
-                  child: Column(
-                    mainAxisSize: MainAxisSize.min,
-                    crossAxisAlignment: CrossAxisAlignment.center,
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      const Text(
-                        '介绍',
-                        style: TextStyle(
-                          fontSize: 20,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                      const SizedBox(height: 8),
-                      Flexible(
-                        // 让文本区占剩余空间，而不是撑爆
-                        child: SingleChildScrollView(
-                          // 长文本可滚动
-                          child: Text('${j['comment']}'),
-                        ),
+                      Column(
+                        mainAxisSize: MainAxisSize.min,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          const Text(
+                            '介绍',
+                            style: TextStyle(
+                              fontSize: 20,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                          const SizedBox(height: 8),
+                          Flexible(
+                            // 让文本区占剩余空间，而不是撑爆
+                            child: SingleChildScrollView(
+                              // 长文本可滚动
+                              child: Text('${j['comment']}'),
+                            ),
+                          ),
+                        ],
                       ),
                     ],
                   ),
