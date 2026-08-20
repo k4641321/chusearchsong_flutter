@@ -86,26 +86,22 @@ class _ShopInfoState extends State<ShopInfo> {
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      Column(
-                        mainAxisSize: MainAxisSize.min,
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: [
-                          const Text(
-                            '介绍',
-                            style: TextStyle(
-                              fontSize: 20,
-                              fontWeight: FontWeight.bold,
+                      Expanded(
+                        child: Column(
+                          mainAxisSize: MainAxisSize.min,
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            Text(
+                              '介绍',
+                              style: TextStyle(
+                                fontSize: 20,
+                                fontWeight: FontWeight.bold,
+                              ),
                             ),
-                          ),
-                          const SizedBox(height: 8),
-                          Flexible(
-                            // 让文本区占剩余空间，而不是撑爆
-                            child: SingleChildScrollView(
-                              // 长文本可滚动
-                              child: Text('${j['comment']}'),
-                            ),
-                          ),
-                        ],
+                            SizedBox(height: 8),
+                            Expanded(child: Text('${j['comment']}')),
+                          ],
+                        ),
                       ),
                     ],
                   ),

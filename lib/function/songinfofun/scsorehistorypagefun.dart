@@ -64,14 +64,16 @@ Future<List<Widget>> getLineChartAndCard({
               show: true,
               drawVerticalLine: false,
               horizontalInterval: scoreRange / 4,
-              getDrawingHorizontalLine: (value) =>
-                  FlLine(color: Colors.grey.withOpacity(0.15), strokeWidth: 1),
+              getDrawingHorizontalLine: (value) => FlLine(
+                color: Colors.grey.withValues(alpha: 0.15),
+                strokeWidth: 1,
+              ),
             ),
             borderData: FlBorderData(
               show: true,
               border: Border(
-                left: BorderSide(color: Colors.grey.withOpacity(0.3)),
-                bottom: BorderSide(color: Colors.grey.withOpacity(0.3)),
+                left: BorderSide(color: Colors.grey.withValues(alpha: 0.3)),
+                bottom: BorderSide(color: Colors.grey.withValues(alpha: 0.3)),
               ),
             ),
             lineTouchData: LineTouchData(
@@ -175,7 +177,10 @@ Future<List<Widget>> getLineChartAndCard({
                   gradient: LinearGradient(
                     begin: Alignment.topCenter,
                     end: Alignment.bottomCenter,
-                    colors: [corlor.withOpacity(0.3), corlor.withOpacity(0.0)],
+                    colors: [
+                      corlor.withValues(alpha: 0.3),
+                      corlor.withValues(alpha: 0.0),
+                    ],
                   ),
                 ),
               ),
@@ -189,54 +194,254 @@ Future<List<Widget>> getLineChartAndCard({
       ),
     );
     //历史成绩绘制
+    if (!context.mounted) return [Text('加载失败')];
     for (var i in allscore) {
       cardList.add(
         Padding(
-          padding: EdgeInsetsGeometry.all(8),
-          child: InkWell(
-            child: Card(
-              color: corlor,
-              child: Padding(
-                padding: EdgeInsetsGeometry.all(8),
-                child: Column(
-                  children: [
-                    Row(
-                      children: [
-                        Icon(Icons.star),
-                        Text(
-                          '历史成绩',
-                          style: TextStyle(
-                            fontSize: 18,
-                            fontWeight: FontWeight.bold,
-                          ),
+          padding: EdgeInsetsGeometry.all(10),
+          child: Card(
+            color: corlor,
+            child: Padding(
+              padding: EdgeInsetsGeometry.all(8),
+              child: Column(
+                children: [
+                  Row(
+                    children: [
+                      Icon(Icons.star),
+                      Text(
+                        '历史成绩',
+                        style: TextStyle(
+                          fontSize: 18,
+                          fontWeight: FontWeight.bold,
                         ),
-                      ],
-                    ),
-                    Text('Score:   ${i['score']}'),
-                    const Divider(),
-                    Text('Rating:   ${i['rating']}'),
-                    const Divider(),
-                    Text('Over Power:   ${i['over_power']}'),
-                    const Divider(),
-                    Text('Clear:   ${i['clear']}'),
-                    const Divider(),
-                    Text('Full Combo:   ${i['full_combo']}'),
-                    const Divider(),
-                    Text('Full Chain:   ${i['full_chain']}'),
-                    const Divider(),
-                    Text(
-                      'Rank:   ${(i['rank'] as String).replaceFirst('p', '+')}',
-                    ),
-                    const Divider(),
-                    Text(
-                      'Play time:   ${DateTime.parse(i['play_time']).toLocal()}',
-                    ),
-                    const Divider(),
-                    Text(
-                      'Update time:   ${DateTime.parse(i['upload_time']).toLocal()}',
-                    ),
-                  ],
-                ),
+                      ),
+                    ],
+                  ),
+                  Row(
+                    children: [
+                      Expanded(
+                        child: Text.rich(
+                          TextSpan(
+                            text: 'Score\n',
+                            children: [
+                              TextSpan(
+                                text: '${i['score']}',
+                                style: TextStyle(
+                                  fontSize: 35,
+                                  color: Theme.of(
+                                    context,
+                                  ).colorScheme.onPrimary,
+                                ),
+                              ),
+                            ],
+                          ),
+                          textAlign: TextAlign.center,
+                          style: TextStyle(fontSize: 15),
+                        ),
+                      ),
+                    ],
+                  ),
+                  const Divider(),
+                  Row(
+                    children: [
+                      Icon(
+                        Icons.trending_up,
+                        size: 18,
+                        color: Theme.of(context).colorScheme.primary,
+                      ),
+                      SizedBox(width: 4),
+                      SizedBox(
+                        width: 125,
+                        child: const Text(
+                          'Rating：',
+                          style: TextStyle(fontSize: 15),
+                        ),
+                      ),
+                      SizedBox(width: 50),
+                      Expanded(
+                        child: Text(
+                          '${i['rating']}',
+                          style: const TextStyle(fontSize: 15),
+                        ),
+                      ),
+                    ],
+                  ),
+                  const Divider(),
+                  Row(
+                    children: [
+                      Icon(
+                        Icons.bolt,
+                        size: 18,
+                        color: Theme.of(context).colorScheme.primary,
+                      ),
+                      SizedBox(width: 4),
+                      SizedBox(
+                        width: 125,
+                        child: const Text(
+                          'Over_power：',
+                          style: TextStyle(fontSize: 15),
+                        ),
+                      ),
+                      SizedBox(width: 50),
+                      Expanded(
+                        child: Text(
+                          '${i['over_power']}',
+                          style: const TextStyle(fontSize: 15),
+                        ),
+                      ),
+                    ],
+                  ),
+                  const Divider(),
+                  Row(
+                    children: [
+                      Icon(
+                        Icons.check_circle,
+                        size: 18,
+                        color: Theme.of(context).colorScheme.primary,
+                      ),
+                      SizedBox(width: 4),
+                      SizedBox(
+                        width: 125,
+                        child: const Text(
+                          'Clear：',
+                          style: TextStyle(fontSize: 15),
+                        ),
+                      ),
+                      SizedBox(width: 50),
+                      Expanded(
+                        child: Text(
+                          '${i['clear']}',
+                          style: const TextStyle(fontSize: 15),
+                        ),
+                      ),
+                    ],
+                  ),
+                  const Divider(),
+                  Row(
+                    children: [
+                      Icon(
+                        Icons.auto_awesome,
+                        size: 18,
+                        color: Theme.of(context).colorScheme.primary,
+                      ),
+                      SizedBox(width: 4),
+                      SizedBox(
+                        width: 125,
+                        child: const Text(
+                          'Full Combo：',
+                          style: TextStyle(fontSize: 15),
+                        ),
+                      ),
+                      SizedBox(width: 50),
+                      Expanded(
+                        child: Text(
+                          '${i['full_combo']}',
+                          style: const TextStyle(fontSize: 15),
+                        ),
+                      ),
+                    ],
+                  ),
+                  const Divider(),
+                  Row(
+                    children: [
+                      Icon(
+                        Icons.link,
+                        size: 18,
+                        color: Theme.of(context).colorScheme.primary,
+                      ),
+                      SizedBox(width: 4),
+                      SizedBox(
+                        width: 125,
+                        child: const Text(
+                          'Full Chain：',
+                          style: TextStyle(fontSize: 15),
+                        ),
+                      ),
+                      SizedBox(width: 50),
+                      Expanded(
+                        child: Text(
+                          '${i['full_chain']}',
+                          style: const TextStyle(fontSize: 15),
+                        ),
+                      ),
+                    ],
+                  ),
+                  const Divider(),
+                  Row(
+                    children: [
+                      Icon(
+                        Icons.military_tech,
+                        size: 18,
+                        color: Theme.of(context).colorScheme.primary,
+                      ),
+                      SizedBox(width: 4),
+                      SizedBox(
+                        width: 125,
+                        child: const Text(
+                          'Rank：',
+                          style: TextStyle(fontSize: 15),
+                        ),
+                      ),
+                      SizedBox(width: 50),
+                      Expanded(
+                        child: Text(
+                          (i['rank'] as String).replaceFirst('p', '+'),
+                          style: const TextStyle(fontSize: 15),
+                        ),
+                      ),
+                    ],
+                  ),
+                  const Divider(),
+                  Row(
+                    children: [
+                      Icon(
+                        Icons.play_circle,
+                        size: 18,
+                        color: Theme.of(context).colorScheme.primary,
+                      ),
+                      SizedBox(width: 4),
+                      SizedBox(
+                        width: 125,
+                        child: const Text(
+                          'Play Time：',
+                          style: TextStyle(fontSize: 15),
+                        ),
+                      ),
+                      SizedBox(width: 50),
+                      Expanded(
+                        child: Text(
+                          '${DateTime.parse(i['play_time']).toLocal()}',
+                          style: const TextStyle(fontSize: 15),
+                        ),
+                      ),
+                    ],
+                  ),
+                  const Divider(),
+                  Row(
+                    children: [
+                      Icon(
+                        Icons.cloud_upload,
+                        size: 18,
+                        color: Theme.of(context).colorScheme.primary,
+                      ),
+                      SizedBox(width: 4),
+                      SizedBox(
+                        width: 125,
+                        child: const Text(
+                          'Upload Time：',
+                          style: TextStyle(fontSize: 15),
+                        ),
+                      ),
+                      SizedBox(width: 50),
+                      Expanded(
+                        child: Text(
+                          '${DateTime.parse(i['upload_time']).toLocal()}',
+                          style: const TextStyle(fontSize: 15),
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
               ),
             ),
           ),

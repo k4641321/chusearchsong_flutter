@@ -60,6 +60,7 @@ Future<Widget> returnscore({
     List allscore = allscore1['data'];
 
     // print(i);
+    if (!context.mounted) return result;
     for (var j in allscore) {
       // print('${j['id']},$song');
       if (j['id'] == song) {
@@ -84,7 +85,7 @@ Future<Widget> returnscore({
                         children: [
                           Icon(Icons.star),
                           Text(
-                            '历史成绩',
+                            '最佳成绩',
                             style: TextStyle(
                               fontSize: 18,
                               fontWeight: FontWeight.bold,
@@ -92,20 +93,179 @@ Future<Widget> returnscore({
                           ),
                         ],
                       ),
-                      Text('Score:   ${j['score']}'),
+                      Row(
+                        children: [
+                          Expanded(
+                            child: Text.rich(
+                              TextSpan(
+                                text: 'Score\n',
+                                children: [
+                                  TextSpan(
+                                    text: '${j['score']}',
+                                    style: TextStyle(
+                                      fontSize: 35,
+                                      color: Theme.of(
+                                        context,
+                                      ).colorScheme.onPrimary,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                              textAlign: TextAlign.center,
+                              style: TextStyle(fontSize: 15),
+                            ),
+                          ),
+                        ],
+                      ),
                       const Divider(),
-                      Text('Rating:   ${j['rating']}'),
+                      Row(
+                        children: [
+                          Icon(
+                            Icons.trending_up,
+                            size: 18,
+                            color: Theme.of(context).colorScheme.primary,
+                          ),
+                          SizedBox(width: 4),
+                          SizedBox(
+                            width: 125,
+                            child: const Text(
+                              'Rating：',
+                              style: TextStyle(fontSize: 15),
+                            ),
+                          ),
+                          SizedBox(width: 50),
+                          Expanded(
+                            child: Text(
+                              '${j['rating']}',
+                              style: const TextStyle(fontSize: 15),
+                            ),
+                          ),
+                        ],
+                      ),
                       const Divider(),
-                      Text('Over_power:   ${j['over_power']}'),
+                      Row(
+                        children: [
+                          Icon(
+                            Icons.bolt,
+                            size: 18,
+                            color: Theme.of(context).colorScheme.primary,
+                          ),
+                          SizedBox(width: 4),
+                          SizedBox(
+                            width: 125,
+                            child: const Text(
+                              'Over_power：',
+                              style: TextStyle(fontSize: 15),
+                            ),
+                          ),
+                          SizedBox(width: 50),
+                          Expanded(
+                            child: Text(
+                              '${j['over_power']}',
+                              style: const TextStyle(fontSize: 15),
+                            ),
+                          ),
+                        ],
+                      ),
                       const Divider(),
-                      Text('Clear:   ${j['clear']}'),
+                      Row(
+                        children: [
+                          Icon(
+                            Icons.check_circle,
+                            size: 18,
+                            color: Theme.of(context).colorScheme.primary,
+                          ),
+                          SizedBox(width: 4),
+                          SizedBox(
+                            width: 125,
+                            child: const Text(
+                              'Clear：',
+                              style: TextStyle(fontSize: 15),
+                            ),
+                          ),
+                          SizedBox(width: 50),
+                          Expanded(
+                            child: Text(
+                              '${j['clear']}',
+                              style: const TextStyle(fontSize: 15),
+                            ),
+                          ),
+                        ],
+                      ),
                       const Divider(),
-                      Text('Full Combo:   ${j['full_combo']}'),
+                      Row(
+                        children: [
+                          Icon(
+                            Icons.auto_awesome,
+                            size: 18,
+                            color: Theme.of(context).colorScheme.primary,
+                          ),
+                          SizedBox(width: 4),
+                          SizedBox(
+                            width: 125,
+                            child: const Text(
+                              'Full Combo：',
+                              style: TextStyle(fontSize: 15),
+                            ),
+                          ),
+                          SizedBox(width: 50),
+                          Expanded(
+                            child: Text(
+                              '${j['full_combo']}',
+                              style: const TextStyle(fontSize: 15),
+                            ),
+                          ),
+                        ],
+                      ),
                       const Divider(),
-                      Text('Full Chain:   ${j['full_chain']}'),
+                      Row(
+                        children: [
+                          Icon(
+                            Icons.link,
+                            size: 18,
+                            color: Theme.of(context).colorScheme.primary,
+                          ),
+                          SizedBox(width: 4),
+                          SizedBox(
+                            width: 125,
+                            child: const Text(
+                              'Full Chain：',
+                              style: TextStyle(fontSize: 15),
+                            ),
+                          ),
+                          SizedBox(width: 50),
+                          Expanded(
+                            child: Text(
+                              '${j['full_chain']}',
+                              style: const TextStyle(fontSize: 15),
+                            ),
+                          ),
+                        ],
+                      ),
                       const Divider(),
-                      Text(
-                        'Rank:   ${(j['rank'] as String).replaceFirst('p', '+')}',
+                      Row(
+                        children: [
+                          Icon(
+                            Icons.military_tech,
+                            size: 18,
+                            color: Theme.of(context).colorScheme.primary,
+                          ),
+                          SizedBox(width: 4),
+                          SizedBox(
+                            width: 125,
+                            child: const Text(
+                              'Rank：',
+                              style: TextStyle(fontSize: 15),
+                            ),
+                          ),
+                          SizedBox(width: 50),
+                          Expanded(
+                            child: Text(
+                              (j['rank'] as String).replaceFirst('p', '+'),
+                              style: const TextStyle(fontSize: 15),
+                            ),
+                          ),
+                        ],
                       ),
                     ],
                   ),
@@ -132,6 +292,7 @@ Future<List<Widget>> returnDiffTabBarView({
     Map<String, dynamic> songInfo = await getSongInfo(song['id']);
     List diffs = songInfo['difficulties'];
     //添加谱面信息
+    if (!context.mounted) return result;
     for (var i = 0; i < diffs.length; i++) {
       var song2 = diffs[i];
       List<Widget> result2 = [];
@@ -183,48 +344,261 @@ Future<List<Widget>> returnDiffTabBarView({
                       ),
                     ),
                     const Divider(),
-                    InkWell(
-                      onTap: () => Navigator.of(context).push(
-                        MaterialPageRoute(
-                          builder: (context) => RatingCalculator(
-                            count: song2['level_value'].toDouble(),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Expanded(
+                          child: InkWell(
+                            onTap: () => Navigator.of(context).push(
+                              MaterialPageRoute(
+                                builder: (context) => RatingCalculator(
+                                  count: song2['level_value'].toDouble(),
+                                ),
+                              ),
+                            ),
+                            child: Text.rich(
+                              TextSpan(
+                                text: '定数\n',
+                                children: [
+                                  TextSpan(
+                                    text: '${song2['level_value']}',
+                                    style: TextStyle(
+                                      fontSize: 35,
+                                      color: Theme.of(
+                                        context,
+                                      ).colorScheme.onPrimary,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                              textAlign: TextAlign.center,
+                              style: TextStyle(fontSize: 15),
+                            ),
                           ),
                         ),
-                      ),
-                      child: Text(
-                        '定数:      ${song2['level_value']}',
-                        style: TextStyle(fontSize: 15),
-                      ),
+                      ],
                     ),
                     const Divider(),
-                    Text(
-                      'Total:      ${song2['notes']['total']}',
-                      style: TextStyle(fontSize: 15),
-                    ),
-                    const Divider(),
-                    Text(
-                      'Tap:      ${song2['notes']['tap']}',
-                      style: TextStyle(fontSize: 15),
-                    ),
-                    const Divider(),
-                    Text(
-                      'Hold:      ${song2['notes']['hold']}',
-                      style: TextStyle(fontSize: 15),
-                    ),
-                    const Divider(),
-                    Text(
-                      'Slide:      ${song2['notes']['slide']}',
-                      style: TextStyle(fontSize: 15),
-                    ),
-                    const Divider(),
-                    Text(
-                      'Air:       ${song2['notes']['air']}',
-                      style: TextStyle(fontSize: 15),
-                    ),
-                    const Divider(),
-                    Text(
-                      'Flick:       ${song2['notes']['flick']}',
-                      style: TextStyle(fontSize: 15),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: [
+                        Expanded(
+                          child: Padding(
+                            padding: EdgeInsetsGeometry.all(3),
+                            child: Container(
+                              decoration: BoxDecoration(
+                                color: Theme.of(context)
+                                    .colorScheme
+                                    .onPrimaryContainer
+                                    .withValues(alpha: 0.2),
+                                border: Border.all(
+                                  width: 1,
+                                  color: Theme.of(context).colorScheme.outline,
+                                ),
+                                borderRadius: BorderRadius.circular(8),
+                              ),
+                              child: Text.rich(
+                                TextSpan(
+                                  text: 'Total\n',
+                                  children: [
+                                    TextSpan(
+                                      text: '${song2['notes']['total']}',
+                                      style: TextStyle(
+                                        fontSize: 15,
+                                        color: Theme.of(
+                                          context,
+                                        ).colorScheme.onPrimary,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                                textAlign: TextAlign.center,
+                                style: TextStyle(fontSize: 10),
+                              ),
+                            ),
+                          ),
+                        ),
+                        Expanded(
+                          child: Padding(
+                            padding: EdgeInsetsGeometry.all(3),
+                            child: Container(
+                              decoration: BoxDecoration(
+                                color: Theme.of(context)
+                                    .colorScheme
+                                    .onPrimaryContainer
+                                    .withValues(alpha: 0.2),
+                                border: Border.all(
+                                  width: 1,
+                                  color: Theme.of(context).colorScheme.outline,
+                                ),
+                                borderRadius: BorderRadius.circular(8),
+                              ),
+                              child: Text.rich(
+                                TextSpan(
+                                  text: 'Tap\n',
+                                  children: [
+                                    TextSpan(
+                                      text: '${song2['notes']['tap']}',
+                                      style: TextStyle(
+                                        fontSize: 15,
+                                        color: Theme.of(
+                                          context,
+                                        ).colorScheme.onPrimary,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                                textAlign: TextAlign.center,
+                                style: TextStyle(fontSize: 10),
+                              ),
+                            ),
+                          ),
+                        ),
+                        Expanded(
+                          child: Padding(
+                            padding: EdgeInsetsGeometry.all(3),
+                            child: Container(
+                              decoration: BoxDecoration(
+                                color: Theme.of(context)
+                                    .colorScheme
+                                    .onPrimaryContainer
+                                    .withValues(alpha: 0.2),
+                                border: Border.all(
+                                  width: 1,
+                                  color: Theme.of(context).colorScheme.outline,
+                                ),
+                                borderRadius: BorderRadius.circular(8),
+                              ),
+                              child: Text.rich(
+                                TextSpan(
+                                  text: 'Hold\n',
+                                  children: [
+                                    TextSpan(
+                                      text: '${song2['notes']['hold']}',
+                                      style: TextStyle(
+                                        fontSize: 15,
+                                        color: Theme.of(
+                                          context,
+                                        ).colorScheme.onPrimary,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                                textAlign: TextAlign.center,
+                                style: TextStyle(fontSize: 10),
+                              ),
+                            ),
+                          ),
+                        ),
+                        Expanded(
+                          child: Padding(
+                            padding: EdgeInsetsGeometry.all(3),
+                            child: Container(
+                              decoration: BoxDecoration(
+                                color: Theme.of(context)
+                                    .colorScheme
+                                    .onPrimaryContainer
+                                    .withValues(alpha: 0.2),
+                                border: Border.all(
+                                  width: 1,
+                                  color: Theme.of(context).colorScheme.outline,
+                                ),
+                                borderRadius: BorderRadius.circular(8),
+                              ),
+                              child: Text.rich(
+                                TextSpan(
+                                  text: 'Slide\n',
+                                  children: [
+                                    TextSpan(
+                                      text: '${song2['notes']['slide']}',
+                                      style: TextStyle(
+                                        fontSize: 15,
+                                        color: Theme.of(
+                                          context,
+                                        ).colorScheme.onPrimary,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                                textAlign: TextAlign.center,
+                                style: TextStyle(fontSize: 10),
+                              ),
+                            ),
+                          ),
+                        ),
+                        Expanded(
+                          child: Padding(
+                            padding: EdgeInsetsGeometry.all(3),
+                            child: Container(
+                              decoration: BoxDecoration(
+                                color: Theme.of(context)
+                                    .colorScheme
+                                    .onPrimaryContainer
+                                    .withValues(alpha: 0.2),
+                                border: Border.all(
+                                  width: 1,
+                                  color: Theme.of(context).colorScheme.outline,
+                                ),
+                                borderRadius: BorderRadius.circular(8),
+                              ),
+                              child: Text.rich(
+                                TextSpan(
+                                  text: 'Air\n',
+                                  children: [
+                                    TextSpan(
+                                      text: '${song2['notes']['air']}',
+                                      style: TextStyle(
+                                        fontSize: 15,
+                                        color: Theme.of(
+                                          context,
+                                        ).colorScheme.onPrimary,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                                textAlign: TextAlign.center,
+                                style: TextStyle(fontSize: 10),
+                              ),
+                            ),
+                          ),
+                        ),
+                        Expanded(
+                          child: Padding(
+                            padding: EdgeInsetsGeometry.all(3),
+                            child: Container(
+                              decoration: BoxDecoration(
+                                color: Theme.of(context)
+                                    .colorScheme
+                                    .onPrimaryContainer
+                                    .withValues(alpha: 0.2),
+                                border: Border.all(
+                                  width: 1,
+                                  color: Theme.of(context).colorScheme.outline,
+                                ),
+                                borderRadius: BorderRadius.circular(8),
+                              ),
+                              child: Text.rich(
+                                TextSpan(
+                                  text: 'Flick\n',
+                                  children: [
+                                    TextSpan(
+                                      text: '${song2['notes']['flick']}',
+                                      style: TextStyle(
+                                        fontSize: 15,
+                                        color: Theme.of(
+                                          context,
+                                        ).colorScheme.onPrimary,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                                textAlign: TextAlign.center,
+                                style: TextStyle(fontSize: 10),
+                              ),
+                            ),
+                          ),
+                        ),
+                      ],
                     ),
                   ],
                 ),
