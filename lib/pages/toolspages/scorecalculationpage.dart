@@ -66,6 +66,10 @@ class _ScoreCalculation extends State<ScoreCalculation> {
                       String mstr = _mController.text;
                       double jc, j, a, m, score;
                       try {
+                        if (jcstr == '') jcstr = '0';
+                        if (jstr == '') jstr = '0';
+                        if (astr == '') astr = '0';
+                        if (mstr == '') mstr = '0';
                         jc = double.parse(jcstr);
                         j = double.parse(jstr);
                         a = double.parse(astr);

@@ -1,4 +1,5 @@
 import 'package:chusearchsong_flutter/function/infopagefun/infopagefun.dart';
+import 'package:chusearchsong_flutter/pages/infopages/sponsorshiprankingpage.dart';
 import 'package:flutter/material.dart';
 
 class Sponsoredauthorpage extends StatefulWidget {
@@ -32,6 +33,22 @@ class _SponsoredauthorpageState extends State<Sponsoredauthorpage> {
                       }
                     },
                     child: Text('使用爱发电'),
+                  ),
+                ),
+              ],
+            ),
+            Row(
+              children: [
+                Expanded(
+                  child: TextButton(
+                    onPressed: () async {
+                      Navigator.of(context).push(
+                        MaterialPageRoute(
+                          builder: (context) => Sponsorshiprankingpage(),
+                        ),
+                      );
+                    },
+                    child: Text('赞助排行榜'),
                   ),
                 ),
               ],

@@ -10,7 +10,7 @@ class RatingColor extends StatelessWidget {
     final ScrollController controller = ScrollController();
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Rating Color'),
+        title: const Text('Rating颜色'),
         // backgroundColor: const Color.fromARGB(255, 255, 229, 84),
       ),
       body: Scrollbar(

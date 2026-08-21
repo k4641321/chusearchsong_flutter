@@ -5,6 +5,221 @@ import 'dart:developer';
 import 'dart:io';
 import 'package:path_provider/path_provider.dart';
 
+Future<String> requestSponsorshipRanking() async {
+  final uri = Uri.parse('https://chusearchsong.4641321.xyz/api/zxphb');
+  final response = await get(uri);
+  return response.body;
+}
+
+Future<void> saveTrophiesData() async {
+  final directory = await getApplicationSupportDirectory();
+  final path = Directory('${directory.path}/res');
+  await File('${path.path}/trophies.json').create();
+  await File(
+    '${path.path}/trophies.json',
+  ).writeAsString(await requestTrophiesData());
+  log('保存到 ${path.path}/trophies.json');
+}
+
+Future<void> savePlatesData() async {
+  final directory = await getApplicationSupportDirectory();
+  final path = Directory('${directory.path}/res');
+  await File('${path.path}/plates.json').create();
+  await File(
+    '${path.path}/plates.json',
+  ).writeAsString(await requestPlatesData());
+  log('保存到 ${path.path}/plates.json');
+}
+
+Future<void> saveIconsData() async {
+  final directory = await getApplicationSupportDirectory();
+  final path = Directory('${directory.path}/res');
+  await File('${path.path}/icons.json').create();
+  await File('${path.path}/icons.json').writeAsString(await requestIconsData());
+  log('保存到 ${path.path}/icons.json');
+}
+
+Future<void> saveCharactersData() async {
+  final directory = await getApplicationSupportDirectory();
+  final path = Directory('${directory.path}/res');
+  await File('${path.path}/characters.json').create();
+  await File(
+    '${path.path}/characters.json',
+  ).writeAsString(await requestCharactersData());
+  log('保存到 ${path.path}/characters.json');
+}
+
+Future<void> saveLobbyData() async {
+  final directory = await getApplicationSupportDirectory();
+  final path = Directory('${directory.path}/res');
+  await File('${path.path}/location.json').create();
+  await File(
+    '${path.path}/location.json',
+  ).writeAsString(await requestLobbyData());
+  log('保存到 ${path.path}/location.json');
+}
+
+Future<void> saveAliasData() async {
+  final directory = await getApplicationSupportDirectory();
+  final path = Directory('${directory.path}/res');
+  await File('${path.path}/alias.json').create();
+  await File('${path.path}/alias.json').writeAsString(await requestAliasData());
+  log('保存到 ${path.path}/alias.json');
+}
+
+Future<void> saveSongdata() async {
+  final directory = await getApplicationSupportDirectory();
+  final path = Directory('${directory.path}/res');
+  await File('${path.path}/songs.json').create();
+  await File('${path.path}/songs.json').writeAsString(await requestSongData());
+  log('保存到 ${path.path}/songs.json');
+}
+
+Future<void> savezxzrsongs() async {
+  List zxzrsongslist = await requestreiwaf5sisongs();
+  log('请求reiwaf5sisongs');
+  List chunirecall = jsonDecode(zxzrsongslist[1]);
+  List chunithmrecord = jsonDecode(zxzrsongslist[0]);
+  log('请求beerpsisongs');
+  List beerpsisongs = jsonDecode(await requestbeerpsisongs());
+
+  // Map<String, dynamic> zxzrsongs = {};
+  log('添加未拥有的曲目');
+  List intlidList = [];
+  // List intlidchunirecIdList = [];
+  int idx = -1;
+  for (var i in beerpsisongs) {
+    intlidList.add(i['id']);
+    // intlidchunirecIdList.add(i['chunirec_id']);
+  }
+  // print(intlidchunirecIdList);
+  for (var i in chunirecall) {
+    // if (i['meta']['idx'] == null) {
+    //   throw Exception(i);
+    // }
+    if (!(i['meta'] as Map).containsKey('idx')) {
+      List chartsList = [];
+      List chartdiffList = (i['data'] as Map).keys.toList();
+      for (var j in chartdiffList) {
+        chartsList.add({
+          "difficulty": j,
+          "level": "${i['data'][j]['level']}",
+          "const": i['data'][j]['const'],
+          "charter": null,
+          "version": null,
+          "sdvxin_url": null,
+          "available": true,
+          "notecounts": {
+            "total": i['data'][j]['maxcombo'],
+            "tap": null,
+            "hold": null,
+            "slide": null,
+            "air": null,
+            "flick": null,
+          },
+        });
+      }
+      beerpsisongs.add({
+        "id": idx,
+        "chunirec_id": i['meta']['id'],
+        "title": i['meta']['title'],
+        "aliases": [],
+        "artist": i['meta']['artist'],
+        "genre": i['meta']['genre'],
+        "release": i['meta']['release'],
+        "version": null,
+        "jacket_url":
+            "https://chunithm-net-eng.com/mobile/img/${i['meta']['img']}.jpg",
+        "duration": null,
+        "bpm": {
+          "min": i['meta']['bpm'],
+          "max": i['meta']['bpm'],
+          "mode": i['meta']['bpm'],
+        },
+        "availability": {"intl": false, "jp": true},
+        "charts": chartsList,
+      });
+      idx--;
+      continue;
+    }
+    // if (i['meta']['idx'] == null) throw Exception(i);
+    // if (int.tryParse(i['meta']['idx']) == null) {
+    //   continue;
+    // }
+    if (!intlidList.contains(int.parse(i['meta']['idx']))) {
+      List chartsList = [];
+      List chartdiffList = (i['data'] as Map).keys.toList();
+      for (var j in chartdiffList) {
+        chartsList.add({
+          "difficulty": j,
+          "level": "${i['data'][j]['level']}",
+          "const": i['data'][j]['const'],
+          "charter": null,
+          "version": null,
+          "sdvxin_url": null,
+          "available": true,
+          "notecounts": {
+            "total": i['data'][j]['maxcombo'],
+            "tap": null,
+            "hold": null,
+            "slide": null,
+            "air": null,
+            "flick": null,
+          },
+        });
+      }
+      beerpsisongs.add({
+        "id": int.parse(i['meta']['idx']),
+        "chunirec_id": i['meta']['id'],
+        "title": i['meta']['title'],
+        "aliases": [],
+        "artist": i['meta']['artist'],
+        "genre": i['meta']['genre'],
+        "release": i['meta']['release'],
+        "version": null,
+        "jacket_url":
+            "https://new.chunithm-net.com/chuni-mobile/html/mobile/img/${i['meta']['img']}.jpg",
+        "duration": null,
+        "bpm": {
+          "min": i['meta']['bpm'],
+          "max": i['meta']['bpm'],
+          "mode": i['meta']['bpm'],
+        },
+        "availability": {"intl": false, "jp": true},
+        "charts": chartsList,
+      });
+    }
+  }
+  for (var i in chunithmrecord) {
+    if (!intlidList.contains(int.parse(i['idx']))) {
+      for (var j in beerpsisongs) {
+        if (j['id'] == int.parse(i['idx'])) {
+          j['version'] = i['version'];
+        }
+      }
+    }
+  }
+  final path = await getApplicationSupportDirectory();
+  try {
+    await File(
+      '${path.path}/res/zxzrsongs.json',
+    ).writeAsString(json.encode(beerpsisongs), encoding: utf8);
+  } catch (e) {
+    log('$e', name: 'request.dart', level: 1000);
+  }
+  log('保存到 ${path.path}/zxzrsongs.json');
+}
+
+Future<List> requestreiwaf5sisongs() async {
+  final chunithmrecorduri = Uri.parse(
+    'https://reiwa.f5.si/chunithm_record.json',
+  );
+  final chunirecalluri = Uri.parse('https://reiwa.f5.si/chunirec_all.json');
+  final chunirecall = await get(chunirecalluri);
+  final chunithmrecord = await get(chunithmrecorduri);
+  return [chunithmrecord.body, chunirecall.body];
+}
+
 Future<void> saveNearcadeAllShop() async {
   try {
     int page = 1;
@@ -94,6 +309,7 @@ Future<void> saveSegaCharaData() async {
     await File(
       '${path.path}/res/segachara.json',
     ).writeAsString(json.encode(decoded), encoding: utf8);
+    log('保存到 ${path.path}/segachara.json');
   } catch (e) {
     log('$e', name: 'request.dart', level: 1000);
   }
@@ -161,20 +377,20 @@ Future<String> requestVersion() async {
   return response.body;
 }
 
-Future<void> savezxzrsongs() async {
-  final path = await getApplicationSupportDirectory();
-  try {
-    final rawJson = await requestzxzrsongs();
-    final decoded = json.decode(rawJson);
-    await File(
-      '${path.path}/res/zxzrsongs.json',
-    ).writeAsString(json.encode(decoded), encoding: utf8);
-  } catch (e) {
-    log('$e', name: 'request.dart', level: 1000);
-  }
-}
+// Future<void> savezxzrsongs() async {
+//   final path = await getApplicationSupportDirectory();
+//   try {
+//     final rawJson = await requestzxzrsongs();
+//     final decoded = json.decode(rawJson);
+//     await File(
+//       '${path.path}/res/zxzrsongs.json',
+//     ).writeAsString(json.encode(decoded), encoding: utf8);
+//   } catch (e) {
+//     log('$e', name: 'request.dart', level: 1000);
+//   }
+// }
 
-Future<String> requestzxzrsongs() async {
+Future<String> requestbeerpsisongs() async {
   final response = await get(Uri.parse('https://chunithm.beerpsi.cc/songs'));
   return response.body;
 }
@@ -274,6 +490,7 @@ Future<void> saveB50() async {
   try {
     String b50str = await requestB50();
     await file.writeAsString(b50str);
+    log('B50完成');
   } catch (e) {
     log('$e', name: 'settingspagefun.dart - request.dart', level: 1000);
   }
@@ -294,6 +511,7 @@ Future<void> savePlayerInfo() async {
   try {
     String playerinfostr = await requestPlayerInfo();
     await file.writeAsString(playerinfostr);
+    log('玩家数据完成');
   } catch (e) {
     log('$e', name: 'settingspagefun.dart - request.dart', level: 1000);
   }
@@ -305,6 +523,7 @@ Future<void> saveTrend() async {
   try {
     String allscorestr = await requestTrend(token: await returnlxnstoken());
     await file.writeAsString(allscorestr);
+    log('Rating趋势完成');
   } catch (e) {
     log('$e', name: 'settingspagefun.dart - request.dart', level: 1000);
   }
@@ -316,6 +535,7 @@ Future<void> saveAllScore() async {
   try {
     String allscorestr = await requestScore(token: await returnlxnstoken());
     await file.writeAsString(allscorestr);
+    log('所有成绩完成');
   } catch (e) {
     log('$e', name: 'settingspagefun.dart - request.dart', level: 1000);
   }

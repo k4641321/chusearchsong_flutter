@@ -60,10 +60,22 @@ class _SearchCollectiblesState extends State<SearchCollectiblesPage> {
                     DropdownMenuEntry(value: 'plate', label: '名牌板'),
                     DropdownMenuEntry(value: 'icon', label: '头像'),
                     DropdownMenuEntry(value: 'trophy', label: '称号'),
+                    DropdownMenuEntry(value: 'required', label: '仅曲目需求'),
                   ],
-                  onSelected: (value) {
+                  onSelected: (value) async {
+                    List<Widget> result2 = [];
                     setState(() {
                       initialSelection = value ?? 'all';
+                    });
+                    result2 = await searchCollectibles(
+                      context: context,
+                      searchtext: _controller.text,
+                      searchtype: initialSelection,
+                      isSonginfo: false,
+                    );
+                    if (!mounted) return;
+                    setState(() {
+                      result = result2;
                     });
                   },
                 ),

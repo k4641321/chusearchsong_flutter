@@ -54,7 +54,7 @@ class _FaulttoterantcomputationPageState
       body: Column(
         children: [
           Text(
-            '提示: 1 Miss 约等于 2 ATTACK 约等于 146 JUSTICE \n 作者数学烂，此工具不能保证计算的准确性 \n 由于结果小数位数不同，可能有误差1个 \n M: Miss A: Attack J: Justice',
+            '提示: 1 Miss 约等于 2 ATTACK 约等于 146 JUSTICE \n 作者数学烂，此工具不能保证计算的准确性 \n 由于结果小数位数不同，可能有误差1个 \n M: Miss A: Attack J: Justice\n\'/\'是或的意思',
           ),
           Row(
             mainAxisAlignment: MainAxisAlignment.center,

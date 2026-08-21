@@ -45,7 +45,9 @@ class _UpdateScorePageState extends State<UpdateScorePage> {
       body: Center(
         child: Column(
           children: [
-            Text('打开下面的开关，打开网页，根据网页提示操作，开关打开期间可能无法正常访问其他网页'),
+            Text(
+              '打开下面的开关，打开网页，根据网页提示操作，开关打开期间可能无法正常访问其他网页，上传完成绩后需要在 关于界面 - 更新数据 以获取最新成绩',
+            ),
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [

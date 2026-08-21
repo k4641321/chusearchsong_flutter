@@ -45,7 +45,10 @@ Future<List<Widget>> search({
                   imageUrl: i['jacket_url'],
                   width: 75,
                   height: 75,
-                  errorWidget: (context, url, error) => Text('加载失败'),
+                  errorWidget: (context, url, error) {
+                    // log('$url\n$error');
+                    return Text('加载失败');
+                  },
                 ),
                 Expanded(
                   child: Text(
@@ -103,6 +106,9 @@ Future<List<dynamic>> filter(
     return [];
   }
   for (var i in songData) {
+    if (!(i as Map).containsKey('id') || i['id'] == null) {
+      continue;
+    }
     if (i['title'].toLowerCase().contains(title.toLowerCase())) {
       // log('匹配');
       songresult.add(i['id']);
@@ -112,6 +118,9 @@ Future<List<dynamic>> filter(
   //曲师筛选
 
   for (var i in songData) {
+    if (!(i as Map).containsKey('id') || i['id'] == null) {
+      continue;
+    }
     if (i['artist'].toLowerCase().contains(title.toLowerCase())) {
       // log('曲师匹配 ${i['artist']}');
       songresult.add(i['id']);
@@ -122,6 +131,9 @@ Future<List<dynamic>> filter(
   try {
     int.parse(title);
     for (var i in songData) {
+      if (!(i as Map).containsKey('id') || i['id'] == null) {
+        continue;
+      }
       if (i['id'].toString().contains(title)) {
         songresult.add(i['id']);
       }
@@ -133,6 +145,9 @@ Future<List<dynamic>> filter(
   //别名筛选
   // Set<Map<String, dynamic>> aliasresult = {};
   for (var i in songData) {
+    if (!(i as Map).containsKey('id') || i['id'] == null) {
+      continue;
+    }
     if ((i['aliases'] as List).contains(title.toLowerCase())) {
       songresult.add(i['id']);
       break;
@@ -149,6 +164,9 @@ Future<List<dynamic>> filter(
       bpmup = 9999;
     }
     for (var i in songData) {
+      if (!(i as Map).containsKey('id') || i['id'] == null) {
+        continue;
+      }
       if (!(i['bpm']['mode'] <= bpmup && i['bpm']['mode'] >= bpmdown)) {
         songresult.remove(i['id']);
       }
@@ -160,7 +178,12 @@ Future<List<dynamic>> filter(
     log('跳过谱师筛选');
   } else {
     for (var i in songData) {
+      if (!(i as Map).containsKey('id') || i['id'] == null) {
+        continue;
+      }
       for (var j in i['charts']) {
+        if (j['charter'] == null) continue;
+
         if (j['charter'].toLowerCase().contains(title.toLowerCase())) {
           songresult.add(i['id']);
         }
@@ -189,6 +212,9 @@ Future<List<dynamic>> filter(
     }
     // int listtobefilteredcount = listtobefiltered.length;
     for (var song in songData) {
+      if (!(song as Map).containsKey('id') || song['id'] == null) {
+        continue;
+      }
       for (var chart in song['charts']) {
         // 检查这一张谱面是否满足 listtobefiltered 里的所有条件
         bool allMatch = listtobefiltered.every((cond) {
@@ -245,6 +271,9 @@ Future<List<dynamic>> filter(
             '\$flick',
           ].contains(title.split(' ')[0])) {
         for (var i in songData) {
+          if (!(i as Map).containsKey('id') || i['id'] == null) {
+            continue;
+          }
           for (var j in i['charts']) {
             if (j['notecounts'][notetype] >=
                     int.tryParse(title.split(' ')[1]) &&
@@ -263,6 +292,9 @@ Future<List<dynamic>> filter(
     log('特殊筛选音符Tap');
     if (title.split(' ').length == 2) {
       for (var i in songData) {
+        if (!(i as Map).containsKey('id') || i['id'] == null) {
+          continue;
+        }
         for (var j in i['charts']) {
           if (j['notecounts']['tap'] == int.tryParse(title.split(' ')[1])) {
             songresult.add(i['id']);
@@ -272,6 +304,9 @@ Future<List<dynamic>> filter(
     } else if (title.split(' ').length == 3 && title.split(' ')[2] != '') {
       log('特殊筛选音符Tap');
       for (var i in songData) {
+        if (!(i as Map).containsKey('id') || i['id'] == null) {
+          continue;
+        }
         for (var j in i['charts']) {
           if (j['notecounts']['tap'] >= int.tryParse(title.split(' ')[1]) &&
               j['notecounts']['tap'] <= int.tryParse(title.split(' ')[2])) {
@@ -287,6 +322,9 @@ Future<List<dynamic>> filter(
     log('特殊筛选音符Tap');
     if (title.split(' ').length == 2) {
       for (var i in songData) {
+        if (!(i as Map).containsKey('id') || i['id'] == null) {
+          continue;
+        }
         for (var j in i['charts']) {
           if (j['notecounts']['hold'] == int.tryParse(title.split(' ')[1])) {
             songresult.add(i['id']);
@@ -296,6 +334,9 @@ Future<List<dynamic>> filter(
     } else if (title.split(' ').length == 3 && title.split(' ')[2] != '') {
       log('特殊筛选音符Tap');
       for (var i in songData) {
+        if (!(i as Map).containsKey('id') || i['id'] == null) {
+          continue;
+        }
         for (var j in i['charts']) {
           if (j['notecounts']['hold'] >= int.tryParse(title.split(' ')[1]) &&
               j['notecounts']['hold'] <= int.tryParse(title.split(' ')[2])) {
@@ -311,6 +352,9 @@ Future<List<dynamic>> filter(
     log('特殊筛选音符Slide');
     if (title.split(' ').length == 2) {
       for (var i in songData) {
+        if (!(i as Map).containsKey('id') || i['id'] == null) {
+          continue;
+        }
         for (var j in i['charts']) {
           if (j['notecounts']['slide'] == int.tryParse(title.split(' ')[1])) {
             songresult.add(i['id']);
@@ -320,6 +364,9 @@ Future<List<dynamic>> filter(
     } else if (title.split(' ').length == 3 && title.split(' ')[2] != '') {
       log('特殊筛选音符Slide');
       for (var i in songData) {
+        if (!(i as Map).containsKey('id') || i['id'] == null) {
+          continue;
+        }
         for (var j in i['charts']) {
           if (j['notecounts']['slide'] >= int.tryParse(title.split(' ')[1]) &&
               j['notecounts']['slide'] <= int.tryParse(title.split(' ')[2])) {
@@ -335,6 +382,9 @@ Future<List<dynamic>> filter(
     log('特殊筛选音符Air');
     if (title.split(' ').length == 2) {
       for (var i in songData) {
+        if (!(i as Map).containsKey('id') || i['id'] == null) {
+          continue;
+        }
         for (var j in i['charts']) {
           if (j['notecounts']['air'] == int.tryParse(title.split(' ')[1])) {
             songresult.add(i['id']);
@@ -344,6 +394,9 @@ Future<List<dynamic>> filter(
     } else if (title.split(' ').length == 3 && title.split(' ')[2] != '') {
       log('特殊筛选音符Air');
       for (var i in songData) {
+        if (!(i as Map).containsKey('id') || i['id'] == null) {
+          continue;
+        }
         for (var j in i['charts']) {
           if (j['notecounts']['air'] >= int.tryParse(title.split(' ')[1]) &&
               j['notecounts']['air'] <= int.tryParse(title.split(' ')[2])) {
@@ -359,6 +412,9 @@ Future<List<dynamic>> filter(
     log('特殊筛选音符Flick');
     if (title.split(' ').length == 2) {
       for (var i in songData) {
+        if (!(i as Map).containsKey('id') || i['id'] == null) {
+          continue;
+        }
         for (var j in i['charts']) {
           if (j['notecounts']['flick'] == int.tryParse(title.split(' ')[1])) {
             songresult.add(i['id']);
@@ -368,6 +424,9 @@ Future<List<dynamic>> filter(
     } else if (title.split(' ').length == 3 && title.split(' ')[2] != '') {
       log('特殊筛选音符Air');
       for (var i in songData) {
+        if (!(i as Map).containsKey('id') || i['id'] == null) {
+          continue;
+        }
         for (var j in i['charts']) {
           if (j['notecounts']['flick'] >= int.tryParse(title.split(' ')[1]) &&
               j['notecounts']['flick'] <= int.tryParse(title.split(' ')[2])) {

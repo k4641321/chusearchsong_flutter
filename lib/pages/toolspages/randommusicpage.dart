@@ -135,171 +135,177 @@ class _RandomMusicPageState extends State<RandomMusicPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      floatingActionButton: FloatingActionButton(
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(50)),
+        child: Icon(Icons.arrow_upward),
+        onPressed: () {
+          _scrollController.jumpTo(0);
+        },
+      ),
       appBar: AppBar(
         title: Text('随机歌曲'),
         // backgroundColor: const Color.fromARGB(255, 255, 229, 84),
       ),
-      body: Scrollbar(
+      body: CustomScrollView(
         controller: _scrollController,
-        child: SingleChildScrollView(
-          controller: _scrollController,
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Column(
-                children: [
-                  Row(
-                    children: [
-                      Expanded(
-                        child: TextButton(
-                          onPressed: () async {
-                            count = 1;
-                            await _performSearch();
-                          },
-                          child: Text(
-                            '抽一首',
-                            style: TextStyle(
-                              fontSize: 20,
-                              color: Theme.of(context).colorScheme.onSurface,
-                            ),
+        slivers: [
+          SliverToBoxAdapter(
+            child: Column(
+              children: [
+                Row(
+                  children: [
+                    Expanded(
+                      child: TextButton(
+                        onPressed: () async {
+                          count = 1;
+                          await _performSearch();
+                        },
+                        child: Text(
+                          '抽一首',
+                          style: TextStyle(
+                            fontSize: 20,
+                            color: Theme.of(context).colorScheme.onSurface,
                           ),
                         ),
                       ),
-                    ],
-                  ),
-                  Row(
-                    children: [
-                      Expanded(
-                        child: TextButton(
-                          onPressed: () async {
-                            count = 3;
-                            await _performSearch();
-                          },
-                          child: Text(
-                            '抽三首',
-                            style: TextStyle(
-                              fontSize: 20,
-                              color: Theme.of(context).colorScheme.onSurface,
-                            ),
+                    ),
+                  ],
+                ),
+                Row(
+                  children: [
+                    Expanded(
+                      child: TextButton(
+                        onPressed: () async {
+                          count = 3;
+                          await _performSearch();
+                        },
+                        child: Text(
+                          '抽三首',
+                          style: TextStyle(
+                            fontSize: 20,
+                            color: Theme.of(context).colorScheme.onSurface,
                           ),
                         ),
                       ),
-                    ],
-                  ),
-                  Row(
-                    children: [
-                      Expanded(
-                        child: TextButton(
-                          onPressed: () async {
-                            try {
-                              count = int.parse(_controller.text);
-                            } catch (e) {
-                              ScaffoldMessenger.of(
-                                context,
-                              ).showSnackBar(SnackBar(content: Text('输的什么玩意')));
-                              return;
-                            }
-                            await _performSearch();
-                          },
-                          child: Text(
-                            '抽自定义首',
-                            style: TextStyle(
-                              fontSize: 20,
-                              color: Theme.of(context).colorScheme.onSurface,
-                            ),
+                    ),
+                  ],
+                ),
+                Row(
+                  children: [
+                    Expanded(
+                      child: TextButton(
+                        onPressed: () async {
+                          try {
+                            count = int.parse(_controller.text);
+                          } catch (e) {
+                            ScaffoldMessenger.of(
+                              context,
+                            ).showSnackBar(SnackBar(content: Text('输的什么玩意')));
+                            return;
+                          }
+                          await _performSearch();
+                        },
+                        child: Text(
+                          '抽自定义首',
+                          style: TextStyle(
+                            fontSize: 20,
+                            color: Theme.of(context).colorScheme.onSurface,
                           ),
                         ),
                       ),
-                    ],
-                  ),
-                  Row(
-                    children: [
-                      Expanded(child: TextField(controller: _controller)),
-                    ],
-                  ),
-                ],
-              ),
-              Row(
-                children: [
-                  Expanded(child: genreDropdownMenu),
-                  Expanded(child: versionDropdownMenu),
-                  Expanded(
-                    child: buildDifficultyDownDropdownMenu(
-                      ccontroller: _difficultydown,
-                      initialSelection: selectedDifficultyDown,
-                      onSelected: (String? value) {
-                        setState(() {
-                          selectedDifficultyDown = value;
-                        });
-                      },
                     ),
-                  ),
-                  Expanded(
-                    child: buildDifficultyUpDropdownMenu(
-                      ccontroller: _difficultyup,
-                      initialSelection: selectedDifficultyUp,
-                      onSelected: (String? value) {
-                        setState(() {
-                          selectedDifficultyUp = value;
-                        });
-                      },
-                    ),
-                  ),
-                ],
-              ),
-              Row(
-                children: [
-                  Expanded(
-                    child: TextField(
-                      controller: _bpmdown,
-                      decoration: InputDecoration(hintText: 'BPM下限'),
-                      onChanged: (value) {
-                        try {
-                          bpmdown = int.parse(_bpmdown.text);
-                          _performSearch();
-                        } catch (e) {
-                          bpmdown = null;
-                          log('bpmdown不是数字');
-                        }
-                      },
-                    ),
-                  ),
-                  Expanded(
-                    child: TextField(
-                      controller: _bpmup,
-                      decoration: InputDecoration(hintText: 'BPM上限'),
-                      onChanged: (value) {
-                        try {
-                          bpmup = int.parse(_bpmup.text);
-                          _performSearch();
-                        } catch (e) {
-                          bpmup = null;
-                          log('bpmup不是数字');
-                        }
-                      },
-                    ),
-                  ),
-
-                  Expanded(
-                    child: buildIfPlayDropdownMenu(
-                      initialSelection: selectedifPlay,
-                      onSelected: (String? value) {
-                        setState(() {
-                          selectedifPlay = value;
-                        });
-                      },
-                    ),
-                  ),
-                ],
-              ),
-              ListView(
-                shrinkWrap: true,
-                // physics: NeverScrollableScrollPhysics(),
-                children: songResult,
-              ),
-            ],
+                  ],
+                ),
+                Row(
+                  children: [
+                    Expanded(child: TextField(controller: _controller)),
+                  ],
+                ),
+              ],
+            ),
           ),
-        ),
+          SliverToBoxAdapter(
+            child: Row(
+              children: [
+                Expanded(child: genreDropdownMenu),
+                Expanded(child: versionDropdownMenu),
+                Expanded(
+                  child: buildDifficultyDownDropdownMenu(
+                    ccontroller: _difficultydown,
+                    initialSelection: selectedDifficultyDown,
+                    onSelected: (String? value) {
+                      setState(() {
+                        selectedDifficultyDown = value;
+                      });
+                    },
+                  ),
+                ),
+                Expanded(
+                  child: buildDifficultyUpDropdownMenu(
+                    ccontroller: _difficultyup,
+                    initialSelection: selectedDifficultyUp,
+                    onSelected: (String? value) {
+                      setState(() {
+                        selectedDifficultyUp = value;
+                      });
+                    },
+                  ),
+                ),
+              ],
+            ),
+          ),
+          SliverToBoxAdapter(
+            child: Row(
+              children: [
+                Expanded(
+                  child: TextField(
+                    controller: _bpmdown,
+                    decoration: InputDecoration(hintText: 'BPM下限'),
+                    onChanged: (value) {
+                      try {
+                        bpmdown = int.parse(_bpmdown.text);
+                        _performSearch();
+                      } catch (e) {
+                        bpmdown = null;
+                        log('bpmdown不是数字');
+                      }
+                    },
+                  ),
+                ),
+                Expanded(
+                  child: TextField(
+                    controller: _bpmup,
+                    decoration: InputDecoration(hintText: 'BPM上限'),
+                    onChanged: (value) {
+                      try {
+                        bpmup = int.parse(_bpmup.text);
+                        _performSearch();
+                      } catch (e) {
+                        bpmup = null;
+                        log('bpmup不是数字');
+                      }
+                    },
+                  ),
+                ),
+
+                Expanded(
+                  child: buildIfPlayDropdownMenu(
+                    initialSelection: selectedifPlay,
+                    onSelected: (String? value) {
+                      setState(() {
+                        selectedifPlay = value;
+                      });
+                    },
+                  ),
+                ),
+              ],
+            ),
+          ),
+          SliverList.builder(
+            itemBuilder: (context, index) => songResult[index],
+            itemCount: songResult.length,
+          ),
+        ],
       ),
     );
   }

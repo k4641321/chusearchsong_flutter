@@ -197,7 +197,13 @@ class Dataupdate {
         showtext.value = '完成';
       }
     } catch (e, strack) {
-      showtext.value = '创建失败，请联系作者：$e\n$strack';
+      if (!context.mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('错误： $e\n$strack'),
+          // duration: Duration(microseconds: 500),
+        ),
+      );
       log('$e', name: 'main', level: 2000);
     }
 
@@ -208,7 +214,12 @@ class Dataupdate {
       showtext.value = '完成';
     } catch (e, strack) {
       if (!context.mounted) return;
-      showtext.value = '错误：$e\n$strack';
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('错误： $e\n$strack'),
+          // duration: Duration(microseconds: 500),
+        ),
+      );
       log('$e\n$strack', name: 'fun.dart', level: 2000);
     }
 
@@ -227,10 +238,13 @@ class Dataupdate {
         File('${path.path}/favorite.json').writeAsStringSync('[]');
         showtext.value = '完成';
       }
-    } catch (e) {
+    } catch (e, strack) {
       if (!context.mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('创建失败'), duration: Duration(microseconds: 500)),
+        SnackBar(
+          content: Text('创建失败 $e\n$strack'),
+          // duration: Duration(microseconds: 500),
+        ),
       );
       log('$e', name: 'main', level: 2000);
     }
@@ -278,73 +292,20 @@ class Dataupdate {
           },
         );
         // 下载歌曲数据
-        showtext.value = '下载歌曲数据';
-        await File('${path.path}/songs.json').create();
-        await File(
-          '${path.path}/songs.json',
-        ).writeAsString(await requestSongData());
+        showtext.value = '下载必要数据';
+        await Future.wait([
+          saveTrophiesData(),
+          savePlatesData(),
+          saveIconsData(),
+          saveCharactersData(),
+          saveLobbyData(),
+          saveAliasData(),
+          saveSongdata(),
+          savezxzrsongs(),
+          saveSegaCharaData(),
+          saveLatestVersion(),
+        ]);
         showtext.value = '完成';
-        log('保存到 ${path.path}/songs.json');
-        // 下载歌曲别名数据
-        showtext.value = '下载别名数据';
-        await File('${path.path}/alias.json').create();
-        await File(
-          '${path.path}/alias.json',
-        ).writeAsString(await requestAliasData());
-        showtext.value = '完成';
-        log('保存到 ${path.path}/alias.json');
-        // 下载机厅数据
-        showtext.value = '下载机厅数据';
-        await File('${path.path}/location.json').create();
-        await File(
-          '${path.path}/location.json',
-        ).writeAsString(await requestLobbyData());
-        showtext.value = '完成';
-        log('保存到 ${path.path}/location.json');
-        // 下载角色数据
-        showtext.value = '下载角色数据';
-        await File('${path.path}/characters.json').create();
-        await File(
-          '${path.path}/characters.json',
-        ).writeAsString(await requestCharactersData());
-        showtext.value = '完成';
-        log('保存到 ${path.path}/characters.json');
-        // 下载头像数据
-        showtext.value = '下载头像数据';
-        await File('${path.path}/icons.json').create();
-        await File(
-          '${path.path}/icons.json',
-        ).writeAsString(await requestIconsData());
-        showtext.value = '完成';
-        log('保存到 ${path.path}/icons.json');
-        // 下载名牌版数据
-        showtext.value = '下载名牌版数据';
-        await File('${path.path}/plates.json').create();
-        await File(
-          '${path.path}/plates.json',
-        ).writeAsString(await requestPlatesData());
-        showtext.value = '完成';
-        log('保存到 ${path.path}/plates.json');
-        //下载称号数据
-        showtext.value = '下载称号数据';
-        await File('${path.path}/trophies.json').create();
-        await File(
-          '${path.path}/trophies.json',
-        ).writeAsString(await requestTrophiesData());
-        if (!context.mounted) return;
-        showtext.value = '完成';
-        log('保存到 ${path.path}/trophies.json');
-        //下载最新最热资源
-        showtext.value = '下载最新最热资源';
-        await savezxzrsongs();
-        showtext.value = '完成';
-        log('保存到 ${path.path}/zxzrsongs.json');
-        //下载sega角色数据
-        showtext.value = '下载Sega角色数据';
-        await saveSegaCharaData();
-        if (!context.mounted) return;
-        showtext.value = '完成';
-        log('保存到 ${path.path}/segachara.json');
       }
 
       config['init'] = true;
@@ -357,7 +318,7 @@ class Dataupdate {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text('下载失败，请检查网络$e,\n$strack'),
-          duration: Duration(microseconds: 500),
+          // duration: Duration(microseconds: 500),
         ),
       );
       log('$e', name: 'main', level: 2000);
@@ -388,113 +349,29 @@ class Dataupdate {
       ),
     );
     try {
-      final directory = await getApplicationSupportDirectory();
-
-      final path = Directory('${directory.path}/res');
-      // 下载歌曲数据
-      showtext.value = '下载歌曲数据';
-      await File('${path.path}/songs.json').create();
-      await File(
-        '${path.path}/songs.json',
-      ).writeAsString(await requestSongData());
-      showtext.value = '完成';
-      log('保存到 ${path.path}/songs.json');
-      // 下载歌曲别名数据
-      showtext.value = '下载歌曲别名数据';
-      await File('${path.path}/alias.json').create();
-      await File(
-        '${path.path}/alias.json',
-      ).writeAsString(await requestAliasData());
-      showtext.value = '完成';
-      log('保存到 ${path.path}/alias.json');
-      // 下载机厅数据
-      showtext.value = '下载机厅数据';
-      await File('${path.path}/location.json').create();
-      await File(
-        '${path.path}/location.json',
-      ).writeAsString(await requestLobbyData());
-      showtext.value = '完成';
-      log('保存到 ${path.path}/location.json');
-      // 下载角色数据
-      showtext.value = '下载角色数据';
-      await File('${path.path}/characters.json').create();
-      await File(
-        '${path.path}/characters.json',
-      ).writeAsString(await requestCharactersData());
-      showtext.value = '完成';
-      log('保存到 ${path.path}/characters.json');
-      // 下载头像数据
-      showtext.value = '下载头像数据';
-      await File('${path.path}/icons.json').create();
-      await File(
-        '${path.path}/icons.json',
-      ).writeAsString(await requestIconsData());
-      showtext.value = '完成';
-      log('保存到 ${path.path}/icons.json');
-      // 下载名牌版数据
-      showtext.value = '下载名牌版数据';
-      await File('${path.path}/plates.json').create();
-      await File(
-        '${path.path}/plates.json',
-      ).writeAsString(await requestPlatesData());
-      showtext.value = '完成';
-      log('保存到 ${path.path}/plates.json');
-      //下载称号数据
-      showtext.value = '下载称号数据';
-      await File('${path.path}/trophies.json').create();
-      await File(
-        '${path.path}/trophies.json',
-      ).writeAsString(await requestTrophiesData());
-      showtext.value = '完成';
-      log('保存到 ${path.path}/trophies.json');
-      //获取成绩
-      showtext.value = '更新成绩';
-      await saveAllScore();
-      showtext.value = '完成';
-      log('保存到 ${path.path}/allscore.json');
-      //Rating趋势
-      showtext.value = '更新Rating趋势';
-      await saveTrend();
-      showtext.value = '完成';
-      log('保存到 ${path.path}/trend.json');
-      //玩家信息
-      showtext.value = '更新玩家信息';
-      await savePlayerInfo();
-      showtext.value = '完成';
-      log('保存到 ${path.path}/playerinfo.json');
-      //B50
-      showtext.value = '更新B50';
-      await saveB50();
-      showtext.value = '完成';
-      log('保存到 ${path.path}/b50.json');
-      print(directory);
-      //获取最新版本
-      showtext.value = '获取最新版本号';
-      await saveLatestVersion();
-      showtext.value = '完成';
-      log('保存到 ${directory.path}/config.json');
-      print(directory);
-      //下载最新最热资源
-      showtext.value = '更新最新最热资源';
-      await savezxzrsongs();
-      showtext.value = '完成';
-      log('保存到 ${path.path}/zxzrsongs.json');
-      //下载sega角色数据
-      showtext.value = '更新Sega角色数据';
-      await saveSegaCharaData();
-      showtext.value = '完成';
-      log('保存到 ${path.path}/segachara.json');
-      //下载机厅搜索（新）数据
-      showtext.value = '更新机厅数据';
-      await saveNearcadeAllShop();
-      showtext.value = '完成';
-      log('保存到 ${path.path}/nearcadeshops.json');
+      await Future.wait([
+        saveTrophiesData(),
+        savePlatesData(),
+        saveIconsData(),
+        saveCharactersData(),
+        saveLobbyData(),
+        saveAliasData(),
+        saveSongdata(),
+        savezxzrsongs(),
+        saveSegaCharaData(),
+        saveLatestVersion(),
+        saveNearcadeAllShop(),
+        saveB50(),
+        savePlayerInfo(),
+        saveTrend(),
+        saveAllScore(),
+      ]);
     } catch (e) {
       if (!context.mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text('下载失败，请检查网络'),
-          duration: Duration(microseconds: 500),
+          // duration: Duration(microseconds: 500),
         ),
       );
       log('$e', name: 'infopage.dart', level: 2000);
@@ -546,12 +423,12 @@ class Dataupdate {
       showtext.value = '更新B50';
       await saveB50();
       showtext.value = '完成';
-    } catch (e) {
+    } catch (e, strack) {
       if (!context.mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: Text('下载失败，请检查网络'),
-          duration: Duration(microseconds: 500),
+          content: Text('下载失败，请检查网络 $e\n$strack'),
+          // duration: Duration(microseconds: 500),
         ),
       );
       log('$e', name: 'infopage.dart', level: 2000);
@@ -590,15 +467,101 @@ class Dataupdate {
       await saveNearcadeAllShop();
       showtext.value = '完成';
       log('保存到 ${path.path}/nearcadeshops.json');
-    } catch (e) {
+    } catch (e, strack) {
       if (!context.mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: Text('下载失败，请检查网络'),
-          duration: Duration(microseconds: 500),
+          content: Text('下载失败，请检查网络 $e\n$strack'),
+          // duration: Duration(microseconds: 500),
         ),
       );
       log('$e', name: 'infopage.dart', level: 2000);
+    }
+    if (!context.mounted) return;
+    Navigator.of(context).pop();
+  }
+
+  static Future<void> updateBaseData({required BuildContext context}) async {
+    final showtext = ValueNotifier<String>('更新数据');
+    showDialog(
+      barrierDismissible: false,
+      context: context,
+      builder: (context) => AlertDialog(
+        title: Text('更新数据'),
+        content: Row(
+          children: [
+            CircularProgressIndicator(),
+            ValueListenableBuilder<String>(
+              valueListenable: showtext,
+              builder: (context, value, child) => Text(value),
+            ),
+          ],
+        ),
+      ),
+    );
+    try {
+      await Future.wait([
+        saveTrophiesData(),
+        savePlatesData(),
+        saveIconsData(),
+        saveCharactersData(),
+        saveLobbyData(),
+        saveAliasData(),
+        saveSongdata(),
+        saveLatestVersion(),
+      ]);
+    } catch (e, strack) {
+      if (!context.mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('下载失败，请检查网络 $e\n$strack'),
+          // duration: Duration(microseconds: 500),
+        ),
+      );
+      log('$e', name: 'infopage.dart', level: 2000);
+    }
+    if (!context.mounted) return;
+    Navigator.of(context).pop();
+  }
+
+  static Future<void> updatezxzrsongsData({
+    required BuildContext context,
+  }) async {
+    final showtext = ValueNotifier<String>('更新数据');
+    showDialog(
+      barrierDismissible: false,
+      context: context,
+      builder: (context) => AlertDialog(
+        title: Text('更新数据'),
+        content: Row(
+          children: [
+            CircularProgressIndicator(),
+            ValueListenableBuilder<String>(
+              valueListenable: showtext,
+              builder: (context, value, child) => Text(value),
+            ),
+          ],
+        ),
+      ),
+    );
+    try {
+      final directory = await getApplicationSupportDirectory();
+
+      final path = Directory('${directory.path}/res');
+      //下载最新最热资源
+      showtext.value = '更新最新最热资源';
+      await savezxzrsongs();
+      showtext.value = '完成';
+      log('保存到 ${path.path}/zxzrsongs.json');
+    } catch (e, strack) {
+      if (!context.mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('下载失败，请检查网络 $e\n$strack'),
+          // duration: Duration(microseconds: 500),
+        ),
+      );
+      log('$e\n$strack', name: 'infopage.dart', level: 2000);
     }
     if (!context.mounted) return;
     Navigator.of(context).pop();

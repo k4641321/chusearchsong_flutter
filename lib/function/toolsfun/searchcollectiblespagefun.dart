@@ -143,16 +143,20 @@ Future<List<Widget>> searchCollectibles({
   }
 
   //头像搜索
-  if ((searchtype == 'icon' || searchtype == 'all') && isSonginfo == false) {
+  if ((searchtype == 'icon' ||
+          searchtype == 'all' ||
+          searchtype == 'required') &&
+      isSonginfo == false) {
     String iconJsonStr = await File('${path.path}/icons.json').readAsString();
     Map<String, dynamic> iconJson = json.decode(iconJsonStr);
     for (var i in iconJson['icons']) {
-      if (i['name'].toLowerCase().contains(searchtext.toLowerCase())) {
-        collectibles.add(returnWidget(data: i, type: '头像'));
-      }
-    }
-    for (var i in iconJson['icons']) {
-      if (i['id'].toString().contains(searchtext)) {
+      if (i['name'].toLowerCase().contains(searchtext.toLowerCase()) ||
+          i['description'].toLowerCase().contains(searchtext.toLowerCase()) ||
+          i['id'].toString().contains(searchtext)) {
+        if (searchtype == 'required' &&
+            !(i as Map<String, dynamic>).containsKey('required')) {
+          continue;
+        }
         collectibles.add(returnWidget(data: i, type: '头像'));
       }
     }
@@ -167,16 +171,20 @@ Future<List<Widget>> searchCollectibles({
   }
 
   //名牌版搜索
-  if ((searchtype == 'plate' || searchtype == 'all') && isSonginfo == false) {
+  if ((searchtype == 'plate' ||
+          searchtype == 'all' ||
+          searchtype == 'required') &&
+      isSonginfo == false) {
     String plateJsonStr = await File('${path.path}/plates.json').readAsString();
     Map<String, dynamic> plateJson = json.decode(plateJsonStr);
     for (var i in plateJson['plates']) {
-      if (i['name'].toLowerCase().contains(searchtext.toLowerCase())) {
-        collectibles.add(returnWidget(data: i, type: '名牌版'));
-      }
-    }
-    for (var i in plateJson['plates']) {
-      if (i['id'].toString().contains(searchtext)) {
+      if (i['name'].toLowerCase().contains(searchtext.toLowerCase()) ||
+          i['description'].toLowerCase().contains(searchtext.toLowerCase()) ||
+          i['id'].toString().contains(searchtext)) {
+        if (searchtype == 'required' &&
+            !(i as Map<String, dynamic>).containsKey('required')) {
+          continue;
+        }
         collectibles.add(returnWidget(data: i, type: '名牌版'));
       }
     }
@@ -191,18 +199,23 @@ Future<List<Widget>> searchCollectibles({
   }
 
   //称号搜索
-  if ((searchtype == 'trophy' || searchtype == 'all') && isSonginfo == false) {
+  if ((searchtype == 'trophy' ||
+          searchtype == 'all' ||
+          searchtype == 'required') &&
+      isSonginfo == false) {
     String trophyJsonStr = await File(
       '${path.path}/trophies.json',
     ).readAsString();
     Map<String, dynamic> trophyJson = json.decode(trophyJsonStr);
     for (var i in trophyJson['trophies']) {
-      if (i['name'].toLowerCase().contains(searchtext.toLowerCase())) {
-        collectibles.add(returnWidget(data: i, type: '称号'));
-      }
-    }
-    for (var i in trophyJson['trophies']) {
-      if (i['id'].toString().contains(searchtext)) {
+      if ((i['name'].toLowerCase().contains(searchtext.toLowerCase()) ||
+          i['description'].toLowerCase().contains(searchtext.toLowerCase()) ||
+          i['color'].toString().contains(searchtext) ||
+          i['id'].toString().contains(searchtext))) {
+        if (searchtype == 'required' &&
+            !(i as Map<String, dynamic>).containsKey('required')) {
+          continue;
+        }
         collectibles.add(returnWidget(data: i, type: '称号'));
       }
     }
@@ -220,19 +233,22 @@ Future<List<Widget>> searchCollectibles({
   }
 
   //角色搜索
-  if ((searchtype == 'character' || searchtype == 'all') &&
+  if ((searchtype == 'character' ||
+          searchtype == 'all' ||
+          searchtype == 'required') &&
       isSonginfo == false) {
     String characterJsonStr = await File(
       '${path.path}/characters.json',
     ).readAsString();
     Map<String, dynamic> characterJson = json.decode(characterJsonStr);
     for (var i in characterJson['characters']) {
-      if (i['name'].toLowerCase().contains(searchtext.toLowerCase())) {
-        collectibles.add(returnWidget(data: i, type: '角色'));
-      }
-    }
-    for (var i in characterJson['characters']) {
-      if (i['id'].toString().contains(searchtext)) {
+      if (i['name'].toLowerCase().contains(searchtext.toLowerCase()) ||
+          i['id'].toString().contains(searchtext) ||
+          i['description'].toLowerCase().contains(searchtext.toLowerCase())) {
+        if (searchtype == 'required' &&
+            !(i as Map<String, dynamic>).containsKey('required')) {
+          continue;
+        }
         collectibles.add(returnWidget(data: i, type: '角色'));
       }
     }

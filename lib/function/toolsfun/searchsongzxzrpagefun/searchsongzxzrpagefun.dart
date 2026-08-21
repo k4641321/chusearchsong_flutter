@@ -68,6 +68,9 @@ Future<Widget> buildVersionDropdownMenu({
       DropdownMenuEntry<String>(label: '版本', value: '-1'),
     );
     for (var i in data) {
+      if (i['version'] == null) {
+        continue;
+      }
       versionList.add(i['version']);
     }
     for (var i in versionList) {

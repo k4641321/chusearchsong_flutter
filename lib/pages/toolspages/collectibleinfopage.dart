@@ -950,7 +950,7 @@ class _CollectibleInfoPageState extends State<CollectibleInfoPage> {
                               ],
                             ),
                           ),
-
+                          const Divider(),
                           newdata['color'] != null
                               ? InkWell(
                                   onLongPress: () => copytext(
@@ -990,7 +990,9 @@ class _CollectibleInfoPageState extends State<CollectibleInfoPage> {
                                   ),
                                 )
                               : SizedBox.shrink(),
-                          const Divider(),
+                          newdata['color'] != null
+                              ? const Divider()
+                              : SizedBox.shrink(),
                           InkWell(
                             onLongPress: () => copytext(
                               text: newdata['description'],

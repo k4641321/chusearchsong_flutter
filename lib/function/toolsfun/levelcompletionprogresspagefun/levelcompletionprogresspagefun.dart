@@ -190,62 +190,65 @@ Widget buildsongList({
                   ],
                 ),
                 Expanded(
-                  child: Column(
-                    children: [
-                      Row(
-                        children: [
-                          Expanded(
-                            child: Text(
-                              '#${i['id']}',
-                              style: TextStyle(
-                                fontSize: 10,
-                                color: Colors.grey,
+                  child: Padding(
+                    padding: EdgeInsetsGeometry.only(left: 10),
+                    child: Column(
+                      children: [
+                        Row(
+                          children: [
+                            Expanded(
+                              child: Text(
+                                '#${i['id']}',
+                                style: TextStyle(
+                                  fontSize: 10,
+                                  color: Colors.grey,
+                                ),
                               ),
                             ),
-                          ),
-                        ],
-                      ),
-                      Row(
-                        children: [
-                          Expanded(
-                            child: Text(
-                              '${i['title']}',
-                              overflow: TextOverflow.ellipsis,
-                              style: TextStyle(
-                                fontSize: 20,
-                                fontWeight: FontWeight.bold,
+                          ],
+                        ),
+                        Row(
+                          children: [
+                            Expanded(
+                              child: Text(
+                                '${i['title']}',
+                                overflow: TextOverflow.ellipsis,
+                                style: TextStyle(
+                                  fontSize: 20,
+                                  fontWeight: FontWeight.bold,
+                                ),
                               ),
                             ),
-                          ),
-                        ],
-                      ),
-                      Row(
-                        children: [
-                          Expanded(
-                            child: Text(
-                              '${i['artist']}',
-                              overflow: TextOverflow.ellipsis,
+                          ],
+                        ),
+                        Row(
+                          children: [
+                            Expanded(
+                              child: Text(
+                                '${i['artist']}',
+                                overflow: TextOverflow.ellipsis,
+                              ),
                             ),
-                          ),
-                        ],
-                      ),
-                      Row(
-                        children: [
-                          Expanded(
-                            child: Text(
-                              '${i['genre']} - $versionname',
-                              overflow: TextOverflow.ellipsis,
+                          ],
+                        ),
+                        Row(
+                          children: [
+                            Expanded(
+                              child: Text(
+                                '${i['genre']} - $versionname',
+                                overflow: TextOverflow.ellipsis,
+                              ),
                             ),
-                          ),
-                        ],
-                      ),
-                      score == 0
-                          ? SizedBox.shrink()
-                          : Text(
-                              '成绩：$score | Rating：$rating | 评级：${rank.replaceAll('p', '+')}',
-                              style: TextStyle(color: returnColor(score)),
-                            ),
-                    ],
+                          ],
+                        ),
+                        score == 0
+                            ? SizedBox.shrink()
+                            : Text(
+                                '成绩：$score | Rating：$rating | 评级：${rank.replaceAll('p', '+')}',
+                                style: TextStyle(color: returnColor(score)),
+                              ),
+                      ],
+                    ),
                   ),
                 ),
               ],

@@ -443,6 +443,24 @@ class _InfoState extends State<Info> {
                                           );
                                         },
                                       ),
+                                      ListTile(
+                                        title: Text('仅基础数据'),
+                                        onTap: () {
+                                          Navigator.of(dialogContext).pop();
+                                          Dataupdate.updateBaseData(
+                                            context: context,
+                                          );
+                                        },
+                                      ),
+                                      ListTile(
+                                        title: Text('仅最新最热数据'),
+                                        onTap: () {
+                                          Navigator.of(dialogContext).pop();
+                                          Dataupdate.updatezxzrsongsData(
+                                            context: context,
+                                          );
+                                        },
+                                      ),
                                     ],
                                   ),
                                 ),
