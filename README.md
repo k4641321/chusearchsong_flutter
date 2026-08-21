@@ -63,6 +63,17 @@
 欢迎大神入群指导*＜(´・ω・)っ 309546141
 差评开发中，如有Bug，请提Issue，我会非常感谢你的
 
+# 我该下哪一个？
+| 名称 | 说明 |
+|---|---|
+| app-arm64-v8a-release | 主流手机，64位的 |
+| app-armeabi-v7a-release | 比较老的手机，32位的 |
+| app-x86_64-release | 主要是给模拟器 |
+| chusearchsong-ios-unsigned | IOS未签名安装包 |
+| chusearchsong-linux-x64 | Linux系统 |
+| chusearchsong-macos | Mac系统，未签名安装包 |
+| chusearchsong-windows-x64 | Windows 64位免安装 |
+
 # 其余的话
 flutter目前是边学边写的，**有答辩代码是超级非常正常的**，目前是自己敲与AI生成部分代码，如果在某些地方有更好的地方欢迎提交  
 目前全是依赖Github Actions构建，想体验最新最热bug满天飞可以在Actions下载

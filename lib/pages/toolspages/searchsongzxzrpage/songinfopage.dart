@@ -163,7 +163,7 @@ class _SongInfoPageState extends State<SongInfoPage> {
                                 style: const TextStyle(fontSize: 15),
                               ),
                               Text(
-                                '上线状态：国际服：${widget.songdata['availability']['intl']} 日服：${widget.songdata['availability']['intl']}',
+                                '上线状态：国际服：${widget.songdata['availability']['intl']} 日服：${widget.songdata['availability']['jp']}',
                                 style: const TextStyle(fontSize: 15),
                               ),
                             ],

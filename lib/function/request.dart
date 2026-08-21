@@ -175,7 +175,7 @@ Future<void> savezxzrsongs() async {
         "aliases": [],
         "artist": i['meta']['artist'],
         "genre": i['meta']['genre'],
-        "release": i['meta']['release'],
+        "release_date": i['meta']['release'],
         "version": null,
         "jacket_url":
             "https://new.chunithm-net.com/chuni-mobile/html/mobile/img/${i['meta']['img']}.jpg",
