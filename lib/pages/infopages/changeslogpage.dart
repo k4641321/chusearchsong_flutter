@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:chusearchsong_flutter/function/fun.dart';
 import 'package:chusearchsong_flutter/function/request.dart';
 import 'package:flutter/material.dart';
 
@@ -61,7 +62,14 @@ class _ChangeslogpageState extends State<Changeslogpage> {
                   const Divider(),
                   Text('${i['date']}', style: TextStyle(fontSize: 20)),
                   const Divider(),
-                  Text('${i['content']}', style: TextStyle(fontSize: 15)),
+                  InkWell(
+                    onLongPress: () =>
+                        copytext(text: '${i['content']}', context: context),
+                    child: Text(
+                      '${i['content']}',
+                      style: TextStyle(fontSize: 15),
+                    ),
+                  ),
                 ],
               ),
             ),
