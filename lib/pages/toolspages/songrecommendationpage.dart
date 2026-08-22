@@ -20,19 +20,24 @@ class _SongRecommendationPageState extends State<SongRecommendationPage>
   List<List<Widget>> newSongWidgetList = [];
   int oldpage = 0;
   int newpage = 0;
+  int? selectedSpecialFilter = 0;
   bool isMinRatingChanged = false;
   bool _ready = false;
 
-  String? selectedGenre = '-1';
-  String? selectedVersion = '-1';
+  List<String> selectedGenre = ['-1'];
+  List<Widget> genreWidgetList = [];
+  List<Widget> versionWidgetList = [];
+  List<String> selectedVersion = ['-1'];
   String? selectedDifficultyDown = '-1';
   String? selectedDifficultyUp = '-1';
   String? selectedifPlay = '-1';
   String? selectedRank = '-1';
   int? bpmup;
   int? bpmdown;
-  bool _showFilters = true;
   List<Widget> searchResults = [];
+  Map<String, dynamic> songsData = {};
+  Map<String, dynamic> aliasData = {};
+
   final TextEditingController _searchController = TextEditingController();
   final TextEditingController _bpmup = TextEditingController();
   final TextEditingController _bpmdown = TextEditingController();
@@ -42,70 +47,104 @@ class _SongRecommendationPageState extends State<SongRecommendationPage>
   late TabController _tabController;
   final TextEditingController _difficultydown = TextEditingController();
   final TextEditingController _difficultyup = TextEditingController();
+  final ScrollController _scrollController = ScrollController();
 
-  Widget genreDropdownMenu = DropdownMenu<String>(dropdownMenuEntries: []);
-  Widget versionDropdownMenu = DropdownMenu<String>(dropdownMenuEntries: []);
+  //筛选按钮
+  IconData _filterIcon = Icons.filter_alt;
+  bool _showfilter = true;
+  //流派显示
+  IconData _showgenreIcon = Icons.arrow_drop_up_sharp;
+  bool _showgenre = false;
+  //版本显示
+  IconData _showversionIcon = Icons.arrow_drop_up_sharp;
+  bool _showversion = false;
+  //难度显示
+  IconData _showdiffIcon = Icons.arrow_drop_up_sharp;
+  bool _showdiff = false;
+  //Bpm显示
+  IconData _showbpmIcon = Icons.arrow_drop_up_sharp;
+  bool _showbpm = false;
+  //其余筛选显示
+  IconData _showotherIcon = Icons.arrow_drop_up_sharp;
+  bool _showother = false;
 
-  Future<void> _buildAllDropdownMenus() async {
-    Widget genreDropdownMenu1 = await buildGenreDropdownMenu(
-      initialSelection: selectedGenre,
-      onSelected: (String? value) {
-        if (!context.mounted) return;
-        setState(() {
-          selectedGenre = value;
-        });
-        try {
-          calculate();
-        } catch (e) {
-          ScaffoldMessenger.of(
-            context,
-          ).showSnackBar(SnackBar(content: Text('搜索失败，可能是数据丢失')));
+  void buildGenreWidget() {
+    List<Widget> genreWidgets = buildGenreWrapList(
+      songsdata: songsData,
+      currentGenre: selectedGenre,
+      onChange: () => setState(() {}),
+      onGenreSelected: (value) {
+        if (selectedGenre.contains(value) && value != '-1') {
+          selectedGenre.remove(value);
+          selectedGenre.remove('-1');
+        } else {
+          selectedGenre.add(value);
+          selectedGenre.remove('-1');
         }
-      },
-    );
-    Widget versionDropdownMenu1 = await buildVersionDropdownMenu(
-      initialSelection: selectedVersion,
-      onSelected: (String? value) {
-        if (!context.mounted) return;
-        setState(() {
-          selectedVersion = value;
-        });
-        try {
-          calculate();
-        } catch (e) {
-          ScaffoldMessenger.of(
-            context,
-          ).showSnackBar(SnackBar(content: Text('搜索失败，可能是数据丢失')));
+        if (selectedGenre.isEmpty) {
+          selectedGenre = ['-1'];
+        } else if (value == '-1') {
+          selectedGenre = ['-1'];
         }
+        buildGenreWidget();
+        calculate();
+        // print(selectedGenre);
       },
     );
     if (!mounted) return;
-    if (!context.mounted) return;
     setState(() {
-      genreDropdownMenu = genreDropdownMenu1;
-      versionDropdownMenu = versionDropdownMenu1;
+      genreWidgetList = genreWidgets;
+    });
+  }
+
+  void buildVersionWidget() {
+    List<Widget> versionWidgets = buildVersionWrapList(
+      songsdata: songsData,
+      currentVersion: selectedVersion,
+      onChange: () => setState(() {}),
+      onGenreSelected: (value) {
+        if (selectedVersion.contains(value) && value != '-1') {
+          selectedVersion.remove(value);
+          selectedVersion.remove('-1');
+        } else {
+          selectedVersion.add(value);
+          selectedVersion.remove('-1');
+        }
+        if (selectedVersion.isEmpty) {
+          selectedVersion = ['-1'];
+        } else if (value == '-1') {
+          selectedVersion = ['-1'];
+        }
+        buildVersionWidget();
+        calculate();
+        // print(selectedGenre);
+      },
+    );
+    if (!mounted) return;
+    setState(() {
+      versionWidgetList = versionWidgets;
     });
   }
 
   Future<List<dynamic>?> _performSearch() async {
     if (!_ready) return [];
     String searchTitle = _searchController.text;
-    String genre = selectedGenre ?? '-1';
-    String version = selectedVersion ?? '-1';
     String difficultyDown = selectedDifficultyDown ?? '-1';
     String difficultyUp = selectedDifficultyUp ?? '-1';
     String ifPlay = selectedifPlay ?? '-1';
     try {
       // 使用 await 调用异步函数
       List<dynamic> resultsMap = await filter(
+        songsData,
+        aliasData,
         searchTitle,
-        genre,
-        version,
+        selectedGenre,
+        selectedVersion,
         difficultyDown,
         difficultyUp,
         ifPlay,
-        bpmup,
         bpmdown,
+        bpmup,
         false,
         null,
         0,
@@ -192,6 +231,10 @@ class _SongRecommendationPageState extends State<SongRecommendationPage>
 
   Future<void> init({required bool isNew}) async {
     try {
+      songsData = await loadSongs();
+      aliasData = await loadAlias();
+      buildGenreWidget();
+      buildVersionWidget();
       double? result = await initminRating(isNew: isNew);
       if (result == null) {
         if (!context.mounted) return;
@@ -214,13 +257,13 @@ class _SongRecommendationPageState extends State<SongRecommendationPage>
   void _onDifficultyUpInput() {
     log('自定义难度上限');
     selectedDifficultyUp = _difficultyup.text;
-    _performSearch();
+    calculate();
   }
 
   void _onDifficultyDownInput() {
     log('自定义难度下限');
     selectedDifficultyDown = _difficultydown.text;
-    _performSearch();
+    calculate();
   }
 
   @override
@@ -228,7 +271,6 @@ class _SongRecommendationPageState extends State<SongRecommendationPage>
     super.initState();
     init(isNew: false);
     _tabController = TabController(length: 2, vsync: this);
-    _buildAllDropdownMenus();
     _difficultyup.addListener(_onDifficultyUpInput);
     _difficultydown.addListener(_onDifficultyDownInput);
     WidgetsBinding.instance.addPostFrameCallback((_) {
@@ -258,267 +300,568 @@ class _SongRecommendationPageState extends State<SongRecommendationPage>
         actions: [
           IconButton(
             onPressed: () {
-              if (_showFilters == false) {
+              if (_showfilter == false) {
                 setState(() {
-                  _showFilters = true;
+                  _showfilter = true;
                 });
-              } else if (_showFilters == true) {
+              } else if (_showfilter == true) {
                 setState(() {
-                  _showFilters = false;
+                  _showfilter = false;
+                });
+              }
+              if (_filterIcon == Icons.arrow_drop_down) {
+                setState(() {
+                  _filterIcon = Icons.arrow_drop_up;
+                });
+              } else if (_filterIcon == Icons.arrow_drop_up) {
+                setState(() {
+                  _filterIcon = Icons.arrow_drop_down;
                 });
               }
             },
-            icon: Icon(Icons.filter_alt),
+            icon: Icon(_filterIcon),
           ),
         ],
       ),
       body: DefaultTabController(
         length: 2,
-        child: Column(
-          children: [
-            Row(
-              children: [
-                Expanded(
-                  child: TextField(
-                    controller: _searchController,
-                    decoration: InputDecoration(
-                      hintText: '搜索...标题，曲师，别名，落雪id，谱师',
-                    ),
-                    onChanged: (value) {
+        child: CustomScrollView(
+          controller: _scrollController,
+          slivers: [
+            SliverToBoxAdapter(
+              child: Column(
+                children: [
+                  Row(
+                    children: [
+                      Expanded(
+                        child: TextField(
+                          controller: _searchController,
+                          decoration: InputDecoration(
+                            hintText: '搜索...标题，曲师，别名，落雪id，谱师',
+                          ),
+                          onChanged: (value) {
+                            try {
+                              calculate();
+                            } catch (e) {
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                SnackBar(content: Text('搜索失败，可能是数据丢失')),
+                              );
+                            }
+                          },
+                        ),
+                      ),
+
+                      IconButton(
+                        onPressed: () {
+                          try {
+                            calculate();
+                          } catch (e) {
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              SnackBar(content: Text('搜索失败，可能是数据丢失')),
+                            );
+                          }
+                        },
+                        icon: Icon(Icons.search),
+                      ),
+                    ],
+                  ),
+                  AnimatedSize(
+                    duration: Duration(milliseconds: 250),
+                    child: _showfilter
+                        ? Column(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              Column(
+                                children: [
+                                  InkWell(
+                                    onTap: () async {
+                                      setState(() {
+                                        _showgenre = !_showgenre;
+                                        if (_showgenreIcon ==
+                                            Icons.arrow_drop_down) {
+                                          _showgenreIcon = Icons.arrow_drop_up;
+                                        } else {
+                                          _showgenreIcon =
+                                              Icons.arrow_drop_down;
+                                        }
+                                      });
+                                    },
+                                    child: Padding(
+                                      padding: EdgeInsetsGeometry.all(8),
+                                      child: Row(
+                                        children: [
+                                          Expanded(
+                                            child: Text(
+                                              '分类',
+                                              style: TextStyle(
+                                                fontSize: 18,
+                                                fontWeight: FontWeight.bold,
+                                              ),
+                                            ),
+                                          ),
+                                          Icon(_showgenreIcon),
+                                        ],
+                                      ),
+                                    ),
+                                  ),
+                                  _showgenre
+                                      ? Wrap(
+                                          spacing: 5.0,
+                                          runSpacing: 3.0,
+                                          children: genreWidgetList,
+                                        )
+                                      : SizedBox.shrink(),
+                                ],
+                              ),
+                              Column(
+                                children: [
+                                  InkWell(
+                                    onTap: () async {
+                                      setState(() {
+                                        _showversion = !_showversion;
+                                        if (_showversionIcon ==
+                                            Icons.arrow_drop_down) {
+                                          _showversionIcon =
+                                              Icons.arrow_drop_up;
+                                        } else {
+                                          _showversionIcon =
+                                              Icons.arrow_drop_down;
+                                        }
+                                      });
+                                    },
+                                    child: Padding(
+                                      padding: EdgeInsetsGeometry.all(8),
+                                      child: Row(
+                                        children: [
+                                          Expanded(
+                                            child: Text(
+                                              '版本',
+                                              style: TextStyle(
+                                                fontSize: 18,
+                                                fontWeight: FontWeight.bold,
+                                              ),
+                                            ),
+                                          ),
+                                          Icon(_showversionIcon),
+                                        ],
+                                      ),
+                                    ),
+                                  ),
+                                  _showversion
+                                      ? Wrap(
+                                          spacing: 5.0,
+                                          runSpacing: 3.0,
+                                          children: versionWidgetList,
+                                        )
+                                      : SizedBox.shrink(),
+                                  Column(
+                                    children: [
+                                      InkWell(
+                                        onTap: () {
+                                          setState(() {
+                                            _showdiff = !_showdiff;
+                                            if (_showdiffIcon ==
+                                                Icons.arrow_drop_down) {
+                                              _showdiffIcon =
+                                                  Icons.arrow_drop_up;
+                                            } else {
+                                              _showdiffIcon =
+                                                  Icons.arrow_drop_down;
+                                            }
+                                          });
+                                        },
+                                        child: Padding(
+                                          padding: EdgeInsetsGeometry.all(8),
+                                          child: Row(
+                                            children: [
+                                              Expanded(
+                                                child: Text(
+                                                  '难度',
+                                                  style: TextStyle(
+                                                    fontSize: 18,
+                                                    fontWeight: FontWeight.bold,
+                                                  ),
+                                                ),
+                                              ),
+                                              Icon(_showdiffIcon),
+                                            ],
+                                          ),
+                                        ),
+                                      ),
+                                      _showdiff
+                                          ? Row(
+                                              children: [
+                                                Expanded(
+                                                  child: buildDifficultyDownDropdownMenu(
+                                                    ccontroller:
+                                                        _difficultydown,
+                                                    initialSelection:
+                                                        selectedDifficultyDown,
+                                                    onSelected: (String? value) {
+                                                      setState(() {
+                                                        selectedDifficultyDown =
+                                                            value;
+                                                      });
+                                                      try {
+                                                        calculate();
+                                                      } catch (e) {
+                                                        ScaffoldMessenger.of(
+                                                          context,
+                                                        ).showSnackBar(
+                                                          SnackBar(
+                                                            content: Text(
+                                                              '搜索失败，可能是数据丢失',
+                                                            ),
+                                                          ),
+                                                        );
+                                                      }
+                                                    },
+                                                  ),
+                                                ),
+                                                Padding(
+                                                  padding:
+                                                      EdgeInsetsGeometry.only(
+                                                        left: 10,
+                                                        right: 10,
+                                                      ),
+                                                  child: Text('~'),
+                                                ),
+                                                Expanded(
+                                                  child: buildDifficultyUpDropdownMenu(
+                                                    ccontroller: _difficultyup,
+                                                    initialSelection:
+                                                        selectedDifficultyUp,
+                                                    onSelected: (String? value) {
+                                                      setState(() {
+                                                        selectedDifficultyUp =
+                                                            value;
+                                                      });
+                                                      try {
+                                                        calculate();
+                                                      } catch (e) {
+                                                        ScaffoldMessenger.of(
+                                                          context,
+                                                        ).showSnackBar(
+                                                          SnackBar(
+                                                            content: Text(
+                                                              '搜索失败，可能是数据丢失',
+                                                            ),
+                                                          ),
+                                                        );
+                                                      }
+                                                    },
+                                                  ),
+                                                ),
+                                              ],
+                                            )
+                                          : SizedBox.shrink(),
+                                    ],
+                                  ),
+                                ],
+                              ),
+                              Column(
+                                children: [
+                                  InkWell(
+                                    onTap: () {
+                                      setState(() {
+                                        _showbpm = !_showbpm;
+                                        if (_showbpmIcon ==
+                                            Icons.arrow_drop_down) {
+                                          _showbpmIcon = Icons.arrow_drop_up;
+                                        } else {
+                                          _showbpmIcon = Icons.arrow_drop_down;
+                                        }
+                                      });
+                                    },
+                                    child: Padding(
+                                      padding: EdgeInsetsGeometry.all(8),
+                                      child: Row(
+                                        children: [
+                                          Expanded(
+                                            child: Text(
+                                              'BPM',
+                                              style: TextStyle(
+                                                fontSize: 18,
+                                                fontWeight: FontWeight.bold,
+                                              ),
+                                            ),
+                                          ),
+                                          Icon(_showbpmIcon),
+                                        ],
+                                      ),
+                                    ),
+                                  ),
+                                  _showbpm
+                                      ? Row(
+                                          children: [
+                                            Expanded(
+                                              child: TextField(
+                                                controller: _bpmdown,
+                                                decoration: InputDecoration(
+                                                  hintText: 'BPM下限',
+                                                ),
+                                                onChanged: (value) {
+                                                  try {
+                                                    bpmdown = int.parse(
+                                                      _bpmdown.text,
+                                                    );
+                                                    calculate();
+                                                  } catch (e) {
+                                                    bpmdown = null;
+                                                    log('bpmdown不是数字');
+                                                  }
+                                                },
+                                              ),
+                                            ),
+                                            Padding(
+                                              padding: EdgeInsetsGeometry.only(
+                                                left: 10,
+                                                right: 10,
+                                              ),
+                                              child: Text('~'),
+                                            ),
+                                            Expanded(
+                                              child: TextField(
+                                                controller: _bpmup,
+                                                decoration: InputDecoration(
+                                                  hintText: 'BPM上限',
+                                                ),
+                                                onChanged: (value) {
+                                                  try {
+                                                    bpmup = int.parse(
+                                                      _bpmup.text,
+                                                    );
+                                                    calculate();
+                                                  } catch (e) {
+                                                    bpmup = null;
+                                                    log('bpmup不是数字');
+                                                  }
+                                                },
+                                              ),
+                                            ),
+                                          ],
+                                        )
+                                      : SizedBox.shrink(),
+                                ],
+                              ),
+                              Column(
+                                children: [
+                                  InkWell(
+                                    onTap: () {
+                                      setState(() {
+                                        _showother = !_showother;
+                                        if (_showotherIcon ==
+                                            Icons.arrow_drop_down) {
+                                          _showotherIcon = Icons.arrow_drop_up;
+                                        } else {
+                                          _showotherIcon =
+                                              Icons.arrow_drop_down;
+                                        }
+                                      });
+                                    },
+                                    child: Padding(
+                                      padding: EdgeInsetsGeometry.all(8),
+                                      child: Row(
+                                        children: [
+                                          Expanded(
+                                            child: Text(
+                                              '其余选项',
+                                              style: TextStyle(
+                                                fontSize: 18,
+                                                fontWeight: FontWeight.bold,
+                                              ),
+                                            ),
+                                          ),
+                                          Icon(_showotherIcon),
+                                        ],
+                                      ),
+                                    ),
+                                  ),
+                                  _showother
+                                      ? Column(
+                                          children: [
+                                            Row(
+                                              children: [
+                                                Expanded(
+                                                  child: buildSpecialFilterDropdownMenu(
+                                                    initialSelection:
+                                                        selectedSpecialFilter,
+                                                    onSelected: (int? value) {
+                                                      setState(() {
+                                                        selectedSpecialFilter =
+                                                            value;
+                                                      });
+                                                      try {
+                                                        calculate();
+                                                      } catch (e) {
+                                                        ScaffoldMessenger.of(
+                                                          context,
+                                                        ).showSnackBar(
+                                                          SnackBar(
+                                                            content: Text(
+                                                              '搜索失败，可能是数据丢失',
+                                                            ),
+                                                          ),
+                                                        );
+                                                      }
+                                                    },
+                                                  ),
+                                                ),
+                                                Expanded(
+                                                  child: buildRankDropdownMenu(
+                                                    initialSelection:
+                                                        selectedRank,
+                                                    onSelected: (String? value) {
+                                                      if (!context.mounted)
+                                                        return;
+                                                      setState(() {
+                                                        selectedRank = value;
+                                                      });
+                                                      try {
+                                                        calculate();
+                                                      } catch (e) {
+                                                        ScaffoldMessenger.of(
+                                                          context,
+                                                        ).showSnackBar(
+                                                          SnackBar(
+                                                            content: Text('$e'),
+                                                          ),
+                                                        );
+                                                      }
+                                                    },
+                                                  ),
+                                                ),
+
+                                                Expanded(
+                                                  child: buildIfPlayDropdownMenu(
+                                                    initialSelection:
+                                                        selectedifPlay,
+                                                    onSelected: (String? value) {
+                                                      if (!context.mounted)
+                                                        return;
+                                                      setState(() {
+                                                        selectedifPlay = value;
+                                                      });
+                                                      try {
+                                                        calculate();
+                                                      } catch (e) {
+                                                        ScaffoldMessenger.of(
+                                                          context,
+                                                        ).showSnackBar(
+                                                          SnackBar(
+                                                            content: Text('$e'),
+                                                          ),
+                                                        );
+                                                      }
+                                                    },
+                                                  ),
+                                                ),
+                                              ],
+                                            ),
+                                            Row(
+                                              children: [
+                                                Text('最低Rating：'),
+                                                Expanded(
+                                                  child: TextField(
+                                                    onChanged: (value) {
+                                                      isMinRatingChanged = true;
+                                                      calculate();
+                                                    },
+                                                    controller:
+                                                        _minRatingController,
+                                                  ),
+                                                ),
+                                                Text('预吃分数：'),
+                                                Expanded(
+                                                  child: TextField(
+                                                    controller:
+                                                        _preScoreController,
+                                                    onChanged: (value) =>
+                                                        calculate(),
+                                                  ),
+                                                ),
+                                              ],
+                                            ),
+                                          ],
+                                        )
+                                      : SizedBox.shrink(),
+                                ],
+                              ),
+                            ],
+                          )
+                        : SizedBox.shrink(),
+                  ),
+                  Row(
+                    children: [
+                      Expanded(
+                        child: TextButton(
+                          onPressed: () => calculate(),
+                          child: Text('计算'),
+                        ),
+                      ),
+                    ],
+                  ),
+                  TabBar(
+                    controller: _tabController,
+                    tabs: [
+                      Tab(text: '旧歌'),
+                      Tab(text: '新歌'),
+                    ],
+                    onTap: (value) async {
                       try {
-                        calculate();
-                      } catch (e) {
-                        ScaffoldMessenger.of(
-                          context,
-                        ).showSnackBar(SnackBar(content: Text('搜索失败，可能是数据丢失')));
+                        if (isMinRatingChanged == true) {
+                          return;
+                        }
+                        if (value == 0) {
+                          init(isNew: false);
+                          if (oldSongWidgetList.isNotEmpty) {
+                            if (!context.mounted) return;
+                            setState(() {
+                              oldSongWidget = ListView.builder(
+                                itemBuilder: (context, index) =>
+                                    oldSongWidgetList[oldpage][index],
+                                itemCount: oldSongWidgetList[oldpage].length,
+                              );
+                              _pageController.text = '${oldpage + 1}';
+                            });
+                          }
+                        } else if (value == 1) {
+                          init(isNew: true);
+                          if (newSongWidgetList.isNotEmpty) {
+                            if (!context.mounted) return;
+                            setState(() {
+                              newSongWidget = ListView.builder(
+                                itemBuilder: (context, index) =>
+                                    newSongWidgetList[newpage][index],
+                                itemCount: newSongWidgetList[newpage].length,
+                              );
+                              _pageController.text = '${newpage + 1}';
+                            });
+                          }
+                        }
+                      } catch (e, strack) {
+                        log('$e\n$strack');
+                        if (!context.mounted) return;
+                        // ScaffoldMessenger.of(
+                        //   context,
+                        // ).showSnackBar(SnackBar(content: Text('错误 $e')));
                       }
                     },
                   ),
-                ),
-
-                IconButton(
-                  onPressed: () {
-                    try {
-                      calculate();
-                    } catch (e) {
-                      ScaffoldMessenger.of(
-                        context,
-                      ).showSnackBar(SnackBar(content: Text('搜索失败，可能是数据丢失')));
-                    }
-                  },
-                  icon: Icon(Icons.search),
-                ),
-              ],
-            ),
-            AnimatedSize(
-              duration: Duration(milliseconds: 250),
-              child: _showFilters
-                  ? Column(
-                      children: [
-                        Row(
-                          children: [
-                            Expanded(child: genreDropdownMenu),
-                            Expanded(child: versionDropdownMenu),
-                            Expanded(
-                              child: buildDifficultyDownDropdownMenu(
-                                ccontroller: _difficultydown,
-                                initialSelection: selectedDifficultyDown,
-                                onSelected: (String? value) {
-                                  if (!context.mounted) return;
-                                  setState(() {
-                                    selectedDifficultyDown = value;
-                                  });
-                                  try {
-                                    calculate();
-                                  } catch (e) {
-                                    ScaffoldMessenger.of(context).showSnackBar(
-                                      SnackBar(content: Text('$e')),
-                                    );
-                                  }
-                                },
-                              ),
-                            ),
-                            Expanded(
-                              child: buildDifficultyUpDropdownMenu(
-                                ccontroller: _difficultyup,
-                                initialSelection: selectedDifficultyUp,
-                                onSelected: (String? value) {
-                                  if (!context.mounted) return;
-                                  setState(() {
-                                    selectedDifficultyUp = value;
-                                  });
-                                  try {
-                                    calculate();
-                                  } catch (e) {
-                                    ScaffoldMessenger.of(context).showSnackBar(
-                                      SnackBar(content: Text('$e')),
-                                    );
-                                  }
-                                },
-                              ),
-                            ),
-                          ],
-                        ),
-                        Row(
-                          children: [
-                            Expanded(
-                              child: TextField(
-                                controller: _bpmdown,
-                                decoration: InputDecoration(hintText: 'BPM下限'),
-                                onChanged: (value) {
-                                  try {
-                                    bpmdown = int.parse(_bpmdown.text);
-                                    calculate();
-                                  } catch (e) {
-                                    bpmdown = null;
-                                    log('bpmdown不是数字');
-                                  }
-                                },
-                              ),
-                            ),
-                            Expanded(
-                              child: TextField(
-                                controller: _bpmup,
-                                decoration: InputDecoration(hintText: 'BPM上限'),
-                                onChanged: (value) {
-                                  try {
-                                    bpmup = int.parse(_bpmup.text);
-                                    calculate();
-                                  } catch (e) {
-                                    bpmup = null;
-                                    log('bpmup不是数字');
-                                  }
-                                },
-                              ),
-                            ),
-                            Expanded(
-                              child: buildRankDropdownMenu(
-                                initialSelection: selectedRank,
-                                onSelected: (String? value) {
-                                  if (!context.mounted) return;
-                                  setState(() {
-                                    selectedRank = value;
-                                  });
-                                  try {
-                                    calculate();
-                                  } catch (e) {
-                                    ScaffoldMessenger.of(context).showSnackBar(
-                                      SnackBar(content: Text('$e')),
-                                    );
-                                  }
-                                },
-                              ),
-                            ),
-
-                            Expanded(
-                              child: buildIfPlayDropdownMenu(
-                                initialSelection: selectedifPlay,
-                                onSelected: (String? value) {
-                                  if (!context.mounted) return;
-                                  setState(() {
-                                    selectedifPlay = value;
-                                  });
-                                  try {
-                                    calculate();
-                                  } catch (e) {
-                                    ScaffoldMessenger.of(context).showSnackBar(
-                                      SnackBar(content: Text('$e')),
-                                    );
-                                  }
-                                },
-                              ),
-                            ),
-                          ],
-                        ),
-                        Row(
-                          children: [
-                            Text('最低Rating：'),
-                            Expanded(
-                              child: TextField(
-                                onChanged: (value) {
-                                  isMinRatingChanged = true;
-                                  calculate();
-                                },
-                                controller: _minRatingController,
-                              ),
-                            ),
-                            Text('预吃分数：'),
-                            Expanded(
-                              child: TextField(
-                                controller: _preScoreController,
-                                onChanged: (value) => calculate(),
-                              ),
-                            ),
-                          ],
-                        ),
-                      ],
-                    )
-                  : SizedBox.shrink(),
-            ),
-            Row(
-              children: [
-                Expanded(
-                  child: TextButton(
-                    onPressed: () => calculate(),
-                    child: Text('计算'),
-                  ),
-                ),
-              ],
-            ),
-            TabBar(
-              controller: _tabController,
-              tabs: [
-                Tab(text: '旧歌'),
-                Tab(text: '新歌'),
-              ],
-              onTap: (value) async {
-                try {
-                  if (isMinRatingChanged == true) {
-                    return;
-                  }
-                  if (value == 0) {
-                    init(isNew: false);
-                    if (oldSongWidgetList.isNotEmpty) {
-                      if (!context.mounted) return;
-                      setState(() {
-                        oldSongWidget = ListView.builder(
-                          itemBuilder: (context, index) =>
-                              oldSongWidgetList[oldpage][index],
-                          itemCount: oldSongWidgetList[oldpage].length,
-                        );
-                        _pageController.text = '${oldpage + 1}';
-                      });
-                    }
-                  } else if (value == 1) {
-                    init(isNew: true);
-                    if (newSongWidgetList.isNotEmpty) {
-                      if (!context.mounted) return;
-                      setState(() {
-                        newSongWidget = ListView.builder(
-                          itemBuilder: (context, index) =>
-                              newSongWidgetList[newpage][index],
-                          itemCount: newSongWidgetList[newpage].length,
-                        );
-                        _pageController.text = '${newpage + 1}';
-                      });
-                    }
-                  }
-                } catch (e, strack) {
-                  log('$e\n$strack');
-                  if (!context.mounted) return;
-                  // ScaffoldMessenger.of(
-                  //   context,
-                  // ).showSnackBar(SnackBar(content: Text('错误 $e')));
-                }
-              },
-            ),
-            Expanded(
-              child: TabBarView(
-                controller: _tabController,
-                children: [
-                  Center(child: oldSongWidget),
-                  Center(child: newSongWidget),
                 ],
+              ),
+            ),
+            SliverToBoxAdapter(
+              child: SizedBox(
+                width: MediaQuery.widthOf(context),
+                height: MediaQuery.heightOf(context),
+                child: TabBarView(
+                  controller: _tabController,
+                  children: [
+                    Center(child: oldSongWidget),
+                    Center(child: newSongWidget),
+                  ],
+                ),
               ),
             ),
           ],

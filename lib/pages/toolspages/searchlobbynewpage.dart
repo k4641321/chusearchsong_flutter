@@ -47,7 +47,10 @@ class _SearchlobbynewpageState extends State<Searchlobbynewpage> {
         context: context,
         builder: (context) => AlertDialog(
           content: Row(
-            children: [CircularProgressIndicator(), Text(loadsText)],
+            children: [
+              CircularProgressIndicator(),
+              Expanded(child: Text(loadsText)),
+            ],
           ),
         ),
       );

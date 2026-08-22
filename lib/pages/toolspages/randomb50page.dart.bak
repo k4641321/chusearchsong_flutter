@@ -51,7 +51,7 @@ class _Randomb50pageState extends State<Randomb50page> {
                       b50Body = Text('生成中...');
                     });
                     try {
-                      Widget result = await randomb50Body(context: context);
+                      Widget result = await randomb50Body(context: context,songsData: );
                       setState(() {
                         b50Body = result;
                       });

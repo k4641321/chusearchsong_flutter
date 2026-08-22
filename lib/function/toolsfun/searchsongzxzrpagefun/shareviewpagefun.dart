@@ -41,7 +41,10 @@ Widget returnSongShareView({required Map<String, dynamic> songdata}) {
     }
   }
 
-  String cutNoteDesigner({required String designer}) {
+  String cutNoteDesigner({required String? designer}) {
+    if (designer == null) {
+      return '未知';
+    }
     if (designer.length > 7) {
       return '${designer.substring(0, 7)}...';
     } else {

@@ -94,7 +94,10 @@ Future<List<Widget>> searchCollectibles({
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceAround,
                     children: [
-                      image,
+                      Padding(
+                        padding: EdgeInsetsGeometry.only(right: 5),
+                        child: image,
+                      ),
                       Expanded(
                         child: Column(
                           children: [
@@ -102,8 +105,24 @@ Future<List<Widget>> searchCollectibles({
                               children: [
                                 Expanded(
                                   child: Text(
+                                    '#${data['id']}',
+                                    style: TextStyle(
+                                      fontSize: 10,
+                                      color: Colors.grey,
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                            Row(
+                              children: [
+                                Expanded(
+                                  child: Text(
                                     '${data['name']}',
-                                    style: TextStyle(fontSize: 20),
+                                    style: TextStyle(
+                                      fontSize: 20,
+                                      fontWeight: FontWeight.bold,
+                                    ),
                                   ),
                                 ),
                               ],
@@ -113,16 +132,6 @@ Future<List<Widget>> searchCollectibles({
                                 Expanded(
                                   child: Text(
                                     type,
-                                    style: TextStyle(fontSize: 15),
-                                  ),
-                                ),
-                              ],
-                            ),
-                            Row(
-                              children: [
-                                Expanded(
-                                  child: Text(
-                                    '#${data['id']}',
                                     style: TextStyle(fontSize: 15),
                                   ),
                                 ),

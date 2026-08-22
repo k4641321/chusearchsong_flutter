@@ -28,6 +28,8 @@ class ThankYouListPage extends StatelessWidget {
             const Divider(),
             Text('fu\n发现了在等级划分与判定的输入错误'),
             const Divider(),
+            Text('不可发送单个标点符号\n为随机歌曲美化提供建议'),
+            const Divider(),
             Text('以及使用这个软件的你'),
           ],
         ),

@@ -23,6 +23,317 @@ Future<Map<String, dynamic>> loadSongs() async {
   return json;
 }
 
+//加载别名数据
+Future<Map<String, dynamic>> loadAlias() async {
+  final directory = await getApplicationSupportDirectory();
+  final file = File('${directory.path}/res/alias.json');
+  final json = jsonDecode(await file.readAsString());
+  return json;
+}
+
+//版本Wrap列表
+List<Widget> buildVersionWrapList({
+  required Map<String, dynamic> songsdata,
+  required List currentVersion,
+  required VoidCallback onChange,
+  required ValueChanged onGenreSelected,
+}) {
+  List<Widget> wrapList = [];
+  try {
+    wrapList.add(
+      FilterChip(
+        label: Text('版本'),
+        selected: currentVersion.contains('-1'),
+        onSelected: (value) {
+          onGenreSelected('-1');
+          onChange();
+        },
+      ),
+    );
+    for (var i in songsdata['versions']) {
+      wrapList.add(
+        FilterChip(
+          label: Text(i['title']),
+          selected: currentVersion.contains(i['version'].toString()),
+          onSelected: (_) {
+            onGenreSelected(i['version'].toString());
+            onChange();
+          },
+        ),
+      );
+    }
+  } catch (e) {
+    log('创建流派失败 $e 返回默认流派列表');
+    wrapList = [
+      FilterChip(
+        label: Text('版本'),
+        selected: currentVersion.contains('-1'),
+        onSelected: (_) {
+          onGenreSelected('-1');
+          onChange();
+        },
+      ),
+      FilterChip(
+        label: Text('CHUNITHM'),
+        selected: currentVersion.contains('10000'),
+        onSelected: (_) {
+          onGenreSelected('10000');
+          onChange();
+        },
+      ),
+      FilterChip(
+        label: Text('CHUNITHM PLUS'),
+        selected: currentVersion.contains('10500'),
+        onSelected: (_) {
+          onGenreSelected('10500');
+          onChange();
+        },
+      ),
+      FilterChip(
+        label: Text('CHUNITHM AIR'),
+        selected: currentVersion.contains('11000'),
+        onSelected: (_) {
+          onGenreSelected('11000');
+          onChange();
+        },
+      ),
+      FilterChip(
+        label: Text('CHUNITHM AIR PLUS'),
+        selected: currentVersion.contains('11500'),
+        onSelected: (_) {
+          onGenreSelected('11500');
+          onChange();
+        },
+      ),
+      FilterChip(
+        label: Text('CHUNITHM STAR'),
+        selected: currentVersion.contains('12000'),
+        onSelected: (_) {
+          onGenreSelected('12000');
+          onChange();
+        },
+      ),
+      FilterChip(
+        label: Text('CHUNITHM STAR PLUS'),
+        selected: currentVersion.contains('12500'),
+        onSelected: (_) {
+          onGenreSelected('12500');
+          onChange();
+        },
+      ),
+      FilterChip(
+        label: Text('CHUNITHM AMAZON'),
+        selected: currentVersion.contains('13000'),
+        onSelected: (_) {
+          onGenreSelected('13000');
+          onChange();
+        },
+      ),
+      FilterChip(
+        label: Text('CHUNITHM AMAZON PLUS'),
+        selected: currentVersion.contains('13500'),
+        onSelected: (_) {
+          onGenreSelected('13500');
+          onChange();
+        },
+      ),
+      FilterChip(
+        label: Text('CHUNITHM CRYSTAL'),
+        selected: currentVersion.contains('14000'),
+        onSelected: (_) {
+          onGenreSelected('14000');
+          onChange();
+        },
+      ),
+      FilterChip(
+        label: Text('CHUNITHM CRYSTAL PLUS'),
+        selected: currentVersion.contains('14500'),
+        onSelected: (_) {
+          onGenreSelected('14500');
+          onChange();
+        },
+      ),
+      FilterChip(
+        label: Text('CHUNITHM PARADISE'),
+        selected: currentVersion.contains('15000'),
+        onSelected: (_) {
+          onGenreSelected('15000');
+          onChange();
+        },
+      ),
+      FilterChip(
+        label: Text('CHUNITHM PARADISE LOST'),
+        selected: currentVersion.contains('15500'),
+        onSelected: (_) {
+          onGenreSelected('15500');
+          onChange();
+        },
+      ),
+      FilterChip(
+        label: Text('CHUNITHM NEW'),
+        selected: currentVersion.contains('20000'),
+        onSelected: (_) {
+          onGenreSelected('20000');
+          onChange();
+        },
+      ),
+      FilterChip(
+        label: Text('CHUNITHM NEW PLUS'),
+        selected: currentVersion.contains('20500'),
+        onSelected: (_) {
+          onGenreSelected('20500');
+          onChange();
+        },
+      ),
+      FilterChip(
+        label: Text('CHUNITHM SUN'),
+        selected: currentVersion.contains('21000'),
+        onSelected: (_) {
+          onGenreSelected('21000');
+          onChange();
+        },
+      ),
+      FilterChip(
+        label: Text('CHUNITHM SUN PLUS'),
+        selected: currentVersion.contains('21500'),
+        onSelected: (_) {
+          onGenreSelected('21500');
+          onChange();
+        },
+      ),
+      FilterChip(
+        label: Text('CHUNITHM LUMINOUS'),
+        selected: currentVersion.contains('22000'),
+        onSelected: (_) {
+          onGenreSelected('22000');
+          onChange();
+        },
+      ),
+      FilterChip(
+        label: Text('CHUNITHM LUMINOUS PLUS'),
+        selected: currentVersion.contains('22500'),
+        onSelected: (_) {
+          onGenreSelected('22500');
+          onChange();
+        },
+      ),
+      FilterChip(
+        label: Text('CHUNITHM VERSE'),
+        selected: currentVersion.contains('23000'),
+        onSelected: (_) {
+          onGenreSelected('23000');
+          onChange();
+        },
+      ),
+    ];
+  }
+  return wrapList;
+}
+
+//流派Wrap列表
+List<Widget> buildGenreWrapList({
+  required Map<String, dynamic> songsdata,
+
+  required List currentGenre,
+  required VoidCallback onChange,
+  required ValueChanged onGenreSelected,
+}) {
+  List<Widget> wrapList = [];
+  try {
+    wrapList.add(
+      FilterChip(
+        label: Text('分类'),
+        selected: currentGenre.contains('-1'),
+        onSelected: (value) {
+          onGenreSelected('-1');
+          onChange();
+        },
+      ),
+    );
+    for (var i in songsdata['genres']) {
+      wrapList.add(
+        FilterChip(
+          label: Text(i['genre']),
+          selected: currentGenre.contains(i['id'].toString()),
+          onSelected: (_) {
+            onGenreSelected(i['id'].toString());
+            onChange();
+          },
+        ),
+      );
+    }
+  } catch (e) {
+    log('创建流派失败 $e 返回默认流派列表');
+    wrapList = [
+      FilterChip(
+        label: Text('分类'),
+        selected: currentGenre.contains('-1'),
+        onSelected: (_) {
+          onGenreSelected('-1');
+          onChange();
+        },
+      ),
+      FilterChip(
+        label: Text('流行 & 动漫'),
+        selected: currentGenre.contains('0'),
+        onSelected: (_) {
+          onGenreSelected('0');
+          onChange();
+        },
+      ),
+      FilterChip(
+        label: Text('niconico'),
+        selected: currentGenre.contains('2'),
+        onSelected: (_) {
+          onGenreSelected('2');
+          onChange();
+        },
+      ),
+      FilterChip(
+        label: Text('东方Project'),
+        selected: currentGenre.contains('3'),
+        onSelected: (_) {
+          onGenreSelected('3');
+          onChange();
+        },
+      ),
+      FilterChip(
+        label: Text('原创'),
+        selected: currentGenre.contains('5'),
+        onSelected: (_) {
+          onGenreSelected('5');
+          onChange();
+        },
+      ),
+      FilterChip(
+        label: Text('其他游戏'),
+        selected: currentGenre.contains('6'),
+        onSelected: (_) {
+          onGenreSelected('6');
+          onChange();
+        },
+      ),
+      FilterChip(
+        label: Text('彩绿'),
+        selected: currentGenre.contains('7'),
+        onSelected: (_) {
+          onGenreSelected('7');
+          onChange();
+        },
+      ),
+      FilterChip(
+        label: Text('音击舞萌'),
+        selected: currentGenre.contains('9'),
+        onSelected: (_) {
+          onGenreSelected('9');
+          onChange();
+        },
+      ),
+    ];
+  }
+  return wrapList;
+}
+
 // 流派
 Future<Widget> buildGenreDropdownMenu({
   String? initialSelection,
@@ -60,6 +371,7 @@ Future<Widget> buildGenreDropdownMenu({
     selectOnly: true,
     onSelected: onSelected,
     dropdownMenuEntries: dropdownMenuEntries,
+    decorationBuilder: (context, controller) => InputDecoration(),
   );
 }
 

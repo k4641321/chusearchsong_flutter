@@ -6,21 +6,14 @@ import 'package:flutter/material.dart';
 import 'package:path_provider/path_provider.dart';
 import '../fun.dart';
 import 'dart:math' as math;
-import 'package:cached_network_image/cached_network_image.dart';
 //我操了，自己都快看力竭了，太石了，自己都要看不懂了
 
 //生成组件
 Future<List<Widget>> search({
+  required Map<String, dynamic> songsData,
   required List<dynamic> songresultMap,
   required BuildContext context,
 }) async {
-  //加载曲目数据
-  final dataPath = await getApplicationSupportDirectory();
-  String jsonString = await File(
-    '${dataPath.path}/res/songs.json',
-  ).readAsString();
-  Map<String, dynamic> songData = json.decode(jsonString);
-
   //生成组件
   List<Widget> songresultWidget = [];
   log('添加组件');
@@ -29,8 +22,7 @@ Future<List<Widget>> search({
   for (var i in songresultMap) {
     List<Widget> songInfoDiffs = [];
     String versionname = '';
-    int songid = i['id'];
-    for (var j in songData['versions']) {
+    for (var j in songsData['versions']) {
       if (j['version'] == i['version']) {
         versionname = j['title'];
         if (versionname != 'CHUNITHM') {
@@ -60,9 +52,6 @@ Future<List<Widget>> search({
           ),
         ),
       );
-      if ((k as Map<String, dynamic>).containsKey('origin_id')) {
-        songid = k['origin_id'];
-      }
     }
     // songresultWidget.add(const Divider());
     if (!context.mounted) return [];
@@ -155,30 +144,22 @@ Future<List<Widget>> search({
 }
 
 Future<List<dynamic>> filter(
+  Map<String, dynamic> songsData,
+  Map<String, dynamic> aliasData,
   String title,
-  String genre,
-  String version,
+  List genre,
+  List version,
   String difficultydown,
   String difficultyup,
   String ifplay,
-  int? bpmup,
   int? bpmdown,
+  int? bpmup,
   bool isSearch,
   int? count,
   int? specialfilter,
 ) async {
   // 加载曲目数据
   final dataPath = await getApplicationSupportDirectory();
-  String jsonString = await File(
-    '${dataPath.path}/res/songs.json',
-  ).readAsString();
-  Map<String, dynamic> songData = json.decode(jsonString);
-
-  //加载别名
-  String aliasString = await File(
-    '${dataPath.path}/res/alias.json',
-  ).readAsString();
-  Map<String, dynamic> aliasData = json.decode(aliasString);
 
   //加载游玩记录
   List playhistory = [];
@@ -199,8 +180,8 @@ Future<List<dynamic>> filter(
   //初步筛选
   Set<int> songresult = {};
   if (title == '' &&
-      genre == '-1' &&
-      version == '-1' &&
+      genre.contains('-1') &&
+      version.contains('-1') &&
       difficultydown == '-1' &&
       difficultyup == '-1' &&
       ifplay == '-1' &&
@@ -210,7 +191,7 @@ Future<List<dynamic>> filter(
     log('未选择条件');
     return [];
   }
-  for (var i in songData['songs']) {
+  for (var i in songsData['songs']) {
     if (i['title'].toLowerCase().contains(title.toLowerCase())) {
       // log('匹配');
       songresult.add(i['id']);
@@ -219,7 +200,7 @@ Future<List<dynamic>> filter(
 
   //曲师筛选
 
-  for (var i in songData['songs']) {
+  for (var i in songsData['songs']) {
     if (i['artist'].toLowerCase().contains(title.toLowerCase())) {
       // log('曲师匹配 ${i['artist']}');
       songresult.add(i['id']);
@@ -229,7 +210,7 @@ Future<List<dynamic>> filter(
   //id筛选
   try {
     int.parse(title);
-    for (var i in songData['songs']) {
+    for (var i in songsData['songs']) {
       if (i['id'].toString().contains(title)) {
         songresult.add(i['id']);
       }
@@ -258,9 +239,11 @@ Future<List<dynamic>> filter(
     } else if (bpmup == null && bpmdown != null) {
       bpmup = 9999;
     }
-    for (var i in songData['songs']) {
+    for (var i in songsData['songs']) {
       if (!(i['bpm'] <= bpmup && i['bpm'] >= bpmdown)) {
         songresult.remove(i['id']);
+      } else {
+        songresult.add(i['id']);
       }
     }
   }
@@ -269,7 +252,7 @@ Future<List<dynamic>> filter(
   if (title == '') {
     log('跳过谱师筛选');
   } else {
-    for (var i in songData['songs']) {
+    for (var i in songsData['songs']) {
       for (var j in i['difficulties']) {
         if (j['note_designer'].toLowerCase().contains(title.toLowerCase())) {
           songresult.add(i['id']);
@@ -419,28 +402,28 @@ Future<List<dynamic>> filter(
 
   List songresultMap = [];
   for (var i in songresult) {
-    for (var j in songData['songs']) {
+    for (var j in songsData['songs']) {
       if (i == j['id']) {
         songresultMap.add(j);
       }
     }
   }
+
   //筛选流派
-  if (genre == '-1') {
+  if (genre.contains('-1')) {
     log('跳过流派');
   } else {
     List songresult2 = [];
     try {
-      int genreId = int.parse(genre);
-      for (var j in songData['genres']) {
-        if (j['id'] == genreId) {
-          genre = j['genre'];
-          break;
+      List genreList = [];
+      for (var j in songsData['genres']) {
+        if (genre.contains(j['id'].toString())) {
+          genreList.add(j['genre']);
         }
       }
 
       for (var i in songresultMap) {
-        if (i['genre'] == genre) {
+        if (genreList.contains(i['genre'])) {
           songresult2.add(i);
         }
       }
@@ -451,12 +434,12 @@ Future<List<dynamic>> filter(
   }
 
   //筛选版本
-  if (version == '-1') {
+  if (version.contains('-1')) {
     log('跳过版本');
   } else {
     List songresult3 = [];
     for (var i in songresultMap) {
-      if (i['version'] == int.parse(version)) {
+      if (version.contains(i['version'].toString())) {
         songresult3.add(i);
       }
     }
@@ -491,6 +474,7 @@ Future<List<dynamic>> filter(
     for (var i in songresultMap) {
       idlist.add(i['id']);
     }
+    if (idlist.isEmpty) return [];
     List<int> resultIds = [];
     final random = math.Random();
     if (count != null) {
@@ -499,7 +483,7 @@ Future<List<dynamic>> filter(
         resultIds.add(idlist[randomId]);
       }
       List randomresult = [];
-      for (var i in songData['songs']) {
+      for (var i in songsData['songs']) {
         for (var j in resultIds) {
           if (i['id'] == j) {
             randomresult.add(i);
@@ -509,6 +493,6 @@ Future<List<dynamic>> filter(
       songresultMap = randomresult;
     }
   }
-
+  log('结果：${songresultMap.length}');
   return songresultMap;
 }

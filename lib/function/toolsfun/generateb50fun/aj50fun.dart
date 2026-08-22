@@ -1,5 +1,6 @@
 import 'dart:io';
 import 'package:chusearchsong_flutter/function/fun.dart';
+import 'package:chusearchsong_flutter/function/toolsfun/generateb50fun/generateb50.dart';
 import 'package:flutter/material.dart';
 import 'package:path_provider/path_provider.dart';
 import '../../request.dart';
@@ -128,10 +129,10 @@ String? fullcomboImg({required String fullcombo}) {
   }
 }
 
-Future<Widget> aj50Body({required BuildContext context}) async {
-  final path = await getApplicationSupportDirectory();
-  String songdatastr = await File('${path.path}/res/songs.json').readAsString();
-  Map<String, dynamic> songsdata = jsonDecode(songdatastr);
+Future<Widget> aj50Body({
+  required BuildContext context,
+  required Map<String, dynamic> songsData,
+}) async {
   //请求全曲成绩数据
   String allsocresdatastr = await requestScore(token: await returnlxnstoken());
   List allscoredata = (jsonDecode(allsocresdatastr) as Map)['data'];
@@ -273,10 +274,25 @@ Future<Widget> aj50Body({required BuildContext context}) async {
     } else {
       songname = i['song_name'];
     }
-
+    double diffvalue = 0;
+    for (var j in songsData['songs']) {
+      if (i['id'] == j['id']) {
+        for (var k in j['difficulties']) {
+          if (i['level_index'] == k['difficulty']) {
+            diffvalue = k['level_value'].toDouble();
+          }
+        }
+        break;
+      }
+    }
     b50rowbody.add(
       InkWell(
         onTap: () async {
+          final path = await getApplicationSupportDirectory();
+          String songdatastr = await File(
+            '${path.path}/res/songs.json',
+          ).readAsString();
+          Map<String, dynamic> songsdata = jsonDecode(songdatastr);
           Map<String, dynamic>? songdata;
           String? versionname;
           for (var j in songsdata['songs']) {
@@ -311,66 +327,184 @@ Future<Widget> aj50Body({required BuildContext context}) async {
                 children: [
                   Card(
                     color: diffcolor(diffindex: i['level_index']),
-                    child: Row(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      mainAxisAlignment: MainAxisAlignment.spaceAround,
-                      children: [
-                        Padding(
-                          padding: EdgeInsetsGeometry.only(
-                            top: 6,
-                            // left: 6,
-                            bottom: 6,
-                            // right: 6,
-                          ),
-                          child: Image.network(
-                            'https://assets2.lxns.net/chunithm/jacket/${i['id']}.png',
-                            width: 135,
-                            height: 135,
-                            errorBuilder: (context, error, stackTrace) {
-                              return const Text('图片加载失败');
-                            },
-                          ),
-                        ),
-                        Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          children: [
-                            Text(
-                              '${i['level'].toString()}                  #$songcount',
-                              // style: TextStyle(fontSize: ),
-                              textAlign: TextAlign.end,
-                              style: TextStyle(color: Colors.white),
+                    child: Padding(
+                      padding: EdgeInsetsGeometry.only(
+                        bottom: 5,
+                        top: 5,
+                        left: 7,
+                        right: 5,
+                      ),
+                      child: Row(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        children: [
+                          Container(
+                            color: Colors.white,
+                            child: Padding(
+                              padding: EdgeInsetsGeometry.only(
+                                top: 3,
+                                left: 3,
+                                bottom: 3,
+                                right: 3,
+                              ),
+                              child: Image.network(
+                                'https://assets2.lxns.net/chunithm/jacket/${i['id']}.png',
+                                width: 115,
+                                height: 115,
+                                errorBuilder: (context, error, stackTrace) {
+                                  return const Text('图片加载失败');
+                                },
+                              ),
                             ),
+                          ),
+                          Padding(
+                            padding: EdgeInsetsGeometry.only(
+                              left: 10,
+                              bottom: 5,
+                            ),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              children: [
+                                Text(
+                                  '#$songcount',
+                                  // style: TextStyle(fontSize: ),
+                                  textAlign: TextAlign.end,
+                                  style: TextStyle(
+                                    color: const Color.fromARGB(
+                                      255,
+                                      216,
+                                      216,
+                                      216,
+                                    ),
+                                    fontSize: 10,
+                                  ),
+                                ),
 
-                            Text(
-                              i['score'].toString(),
-                              style: TextStyle(
-                                fontSize: 25,
-                                color: Colors.white,
-                              ),
+                                Text(
+                                  i['score'].toString(),
+                                  style: TextStyle(
+                                    fontSize: 27,
+                                    color: Colors.white,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+
+                                Padding(
+                                  padding: EdgeInsetsGeometry.only(bottom: 5),
+                                  child: Container(
+                                    decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.all(
+                                        Radius.circular(25),
+                                      ),
+                                      gradient: rankColor(rank: i['rank']),
+                                    ),
+                                    child: SizedBox(
+                                      width: 70,
+                                      child: Padding(
+                                        padding: EdgeInsetsGeometry.only(
+                                          left: 5,
+                                        ),
+                                        child: Padding(
+                                          padding: EdgeInsetsGeometry.only(
+                                            left: 0,
+                                            right: 3,
+                                            top: 0,
+                                            bottom: 3,
+                                          ),
+                                          child: Text(
+                                            '${i['rank'].toUpperCase().replaceAll('P', '+')}',
+                                            style: TextStyle(
+                                              fontSize: 20,
+                                              color: Colors.black,
+                                              fontWeight: FontWeight.bold,
+                                            ),
+                                            textAlign: TextAlign.center,
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                                // Image.asset(
+                                //   clearImg(clear: i['clear']),
+                                //   height: 18,
+                                // ),
+                                Row(
+                                  children: [
+                                    Container(
+                                      decoration: BoxDecoration(
+                                        color: clearColor(clear: i['clear']),
+                                        border: Border.all(
+                                          color: clearBroder(clear: i['clear']),
+                                          width: 3,
+                                        ),
+                                        borderRadius: BorderRadius.all(
+                                          Radius.circular(8),
+                                        ),
+                                      ),
+                                      child: Padding(
+                                        padding: EdgeInsetsGeometry.only(
+                                          bottom: 2,
+                                          top: 2,
+                                          left: 7,
+                                          right: 7,
+                                        ),
+                                        child: Text(
+                                          '${i['clear'].toUpperCase()}',
+                                          style: TextStyle(
+                                            fontWeight: FontWeight.bold,
+                                            color: Colors.black,
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                    i['full_combo'] != null
+                                        ? Padding(
+                                            padding: EdgeInsetsGeometry.only(
+                                              left: 5,
+                                            ),
+                                            child: Container(
+                                              decoration: BoxDecoration(
+                                                color: fullcombocolor(
+                                                  fullcombo: i['full_combo'],
+                                                ),
+                                                border: Border.all(
+                                                  color: fullcomboBrodercolor(
+                                                    fullcombo: i['full_combo'],
+                                                  ),
+                                                  width: 3,
+                                                ),
+                                                borderRadius: BorderRadius.all(
+                                                  Radius.circular(8),
+                                                ),
+                                              ),
+                                              child: Padding(
+                                                padding:
+                                                    EdgeInsetsGeometry.only(
+                                                      bottom: 2,
+                                                      top: 2,
+                                                      left: 7,
+                                                      right: 7,
+                                                    ),
+                                                child: Text(
+                                                  '${fullcomStringCut(fullcombo: i['full_combo'])}',
+                                                  style: TextStyle(
+                                                    fontWeight: FontWeight.bold,
+                                                    color: Colors.black,
+                                                  ),
+                                                ),
+                                              ),
+                                            ),
+                                          )
+                                        : SizedBox.shrink(),
+                                  ],
+                                ),
+                              ],
                             ),
-                            Text(
-                              'Rating: ${i['rating'].toString().length > 5 ? i['rating'].toString().substring(0, 5) : i['rating'].toString()}',
-                              style: TextStyle(
-                                fontSize: 15,
-                                color: Colors.white,
-                              ),
-                            ),
-                            Image.asset(rankImg(rank: i['rank']), height: 30),
-                            Image.asset(
-                              clearImg(clear: i['clear']),
-                              height: 18,
-                            ),
-                            fullcomboImg(fullcombo: i['full_combo'] ?? '') !=
-                                    null
-                                ? Image.asset(
-                                    fullcomboImg(fullcombo: i['full_combo'])!,
-                                    height: 18,
-                                  )
-                                : SizedBox.shrink(),
-                          ],
-                        ),
-                      ],
+                          ),
+                        ],
+                      ),
                     ),
                   ),
                   Column(
@@ -382,6 +516,10 @@ Future<Widget> aj50Body({required BuildContext context}) async {
                           fontSize: 16,
                           fontWeight: FontWeight.bold,
                         ),
+                      ),
+                      Text(
+                        '$diffvalue -> ${i['rating'].toString().length > 5 ? i['rating'].toString().substring(0, 5) : i['rating'].toString()}',
+                        style: TextStyle(fontSize: 15),
                       ),
                     ],
                   ),

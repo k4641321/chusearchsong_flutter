@@ -217,7 +217,7 @@ class _CollectibleInfoPageState extends State<CollectibleInfoPage> {
                 child: Card(
                   color: Theme.of(context).colorScheme.secondaryContainer,
                   child: Padding(
-                    padding: EdgeInsetsGeometry.all(4),
+                    padding: EdgeInsetsGeometry.all(8),
                     child: Column(children: cardresult),
                   ),
                 ),

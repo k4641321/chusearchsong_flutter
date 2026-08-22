@@ -1,5 +1,6 @@
 ﻿import 'dart:developer';
 import 'dart:io';
+import 'package:chusearchsong_flutter/function/list.dart';
 import 'package:path_provider/path_provider.dart';
 import '../../function/toolsfun/generateb50fun/generateb50.dart';
 import 'package:flutter/material.dart';
@@ -17,10 +18,16 @@ class GenerateB50Page extends StatefulWidget {
 
 class _GenerateB50PageState extends State<GenerateB50Page> {
   Widget image = Text('未生成或错误');
+  Map<String, dynamic> songsData = {};
+
+  Future<void> init() async {
+    songsData = await loadSongs();
+  }
 
   @override
   void initState() {
     super.initState();
+    init();
   }
 
   final GlobalKey _globalKey = GlobalKey();
@@ -67,6 +74,7 @@ class _GenerateB50PageState extends State<GenerateB50Page> {
                       Widget? result = await selectb50(
                         b50type: selectedType,
                         context: context,
+                        songsData: songsData,
                       );
                       setState(() {
                         if (result != null) {

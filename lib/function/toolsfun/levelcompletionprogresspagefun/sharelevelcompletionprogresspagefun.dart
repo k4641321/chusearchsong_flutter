@@ -273,9 +273,10 @@ Future<Widget> returnShareLevelCompletionProgressPageFun({
                 ),
               ),
               Text(
-                '${cuttitle(title: i['title'])}\n$diff',
-                style: TextStyle(fontSize: 10),
+                cuttitle(title: i['title']),
+                style: TextStyle(fontSize: 10, fontWeight: FontWeight.bold),
               ),
+              Text('$diff', style: TextStyle(fontSize: 10)),
             ],
           ),
         ),

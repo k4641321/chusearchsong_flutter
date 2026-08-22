@@ -123,7 +123,7 @@ class _SongshareviewpageState extends State<Songshareviewpage> {
                     width: 1920,
                     decoration: BoxDecoration(
                       image: DecorationImage(
-                        image: AssetImage('res/sharebg.webp'),
+                        image: AssetImage('res/background.png'),
                         fit: BoxFit.cover,
                       ),
                     ),

@@ -10,8 +10,10 @@ class RandomMusicPage extends StatefulWidget {
 }
 
 class _RandomMusicPageState extends State<RandomMusicPage> {
-  String? selectedGenre = '-1';
-  String? selectedVersion = '-1';
+  List<String> selectedGenre = ['-1'];
+  List<Widget> genreWidgetList = [];
+  List<Widget> versionWidgetList = [];
+  List<String> selectedVersion = ['-1'];
   String? selectedDifficultyDown = '-1';
   String? selectedDifficultyUp = '-1';
   String? selectedifPlay = '-1';
@@ -19,6 +21,8 @@ class _RandomMusicPageState extends State<RandomMusicPage> {
   int? bpmdown;
   int count = 0;
   List<Widget> searchResults = [];
+  Map<String, dynamic> songsData = {};
+  Map<String, dynamic> aliasData = {};
   // Future result;
   final TextEditingController _searchController = TextEditingController();
   final TextEditingController _bpmup = TextEditingController();
@@ -30,11 +34,29 @@ class _RandomMusicPageState extends State<RandomMusicPage> {
   final TextEditingController _difficultyup = TextEditingController();
   bool _ready = false;
 
+  //筛选按钮
+  IconData _filterIcon = Icons.filter_alt;
+  bool _showfilter = true;
+  //流派显示
+  IconData _showgenreIcon = Icons.arrow_drop_up_sharp;
+  bool _showgenre = false;
+  //版本显示
+  IconData _showversionIcon = Icons.arrow_drop_up_sharp;
+  bool _showversion = false;
+  //难度显示
+  IconData _showdiffIcon = Icons.arrow_drop_up_sharp;
+  bool _showdiff = false;
+  //Bpm显示
+  IconData _showbpmIcon = Icons.arrow_drop_up_sharp;
+  bool _showbpm = false;
+  //其余筛选显示
+  IconData _showotherIcon = Icons.arrow_drop_up_sharp;
+  bool _showother = false;
+
   Future<void> _performSearch() async {
     if (!_ready) return;
     String searchTitle = _searchController.text;
-    String genre = selectedGenre ?? '-1';
-    String version = selectedVersion ?? '-1';
+
     String difficultyDown = selectedDifficultyDown ?? '-1';
     String difficultyUp = selectedDifficultyUp ?? '-1';
     String ifPlay = selectedifPlay ?? '-1';
@@ -44,20 +66,23 @@ class _RandomMusicPageState extends State<RandomMusicPage> {
     try {
       // 使用 await 调用异步函数
       List<dynamic> resultsMap = await filter(
+        songsData,
+        aliasData,
         searchTitle,
-        genre,
-        version,
+        selectedGenre,
+        selectedVersion,
         difficultyDown,
         difficultyUp,
         ifPlay,
-        bpmup,
         bpmdown,
+        bpmup,
         false,
         randomcount,
         0,
       );
       if (!mounted) return;
       List<Widget> results = await search(
+        songsData: songsData,
         songresultMap: resultsMap,
         context: context,
       );
@@ -66,35 +91,65 @@ class _RandomMusicPageState extends State<RandomMusicPage> {
       setState(() {
         songResult = results;
       });
-    } catch (e) {
-      log('搜索错误: $e', name: 'searchpage.dart', level: 1000);
+    } catch (e, strack) {
+      log('搜索错误: $e\n$strack', name: 'searchpage.dart', level: 1000);
       // 可以显示错误信息给用户
     }
   }
 
-  Widget genreDropdownMenu = DropdownMenu<String>(dropdownMenuEntries: []);
-  Widget versionDropdownMenu = DropdownMenu<String>(dropdownMenuEntries: []);
-  Future<void> _buildAllDropdownMenus() async {
-    Widget genreDropdownMenu1 = await buildGenreDropdownMenu(
-      initialSelection: selectedGenre,
-      onSelected: (String? value) {
-        setState(() {
-          selectedGenre = value;
-        });
-      },
-    );
-    Widget versionDropdownMenu1 = await buildVersionDropdownMenu(
-      initialSelection: selectedVersion,
-      onSelected: (String? value) {
-        setState(() {
-          selectedVersion = value;
-        });
+  void buildGenreWidget() {
+    List<Widget> genreWidgets = buildGenreWrapList(
+      songsdata: songsData,
+      currentGenre: selectedGenre,
+      onChange: () => setState(() {}),
+      onGenreSelected: (value) {
+        if (selectedGenre.contains(value) && value != '-1') {
+          selectedGenre.remove(value);
+          selectedGenre.remove('-1');
+        } else {
+          selectedGenre.add(value);
+          selectedGenre.remove('-1');
+        }
+        if (selectedGenre.isEmpty) {
+          selectedGenre = ['-1'];
+        } else if (value == '-1') {
+          selectedGenre = ['-1'];
+        }
+        buildGenreWidget();
+        // print(selectedGenre);
       },
     );
     if (!mounted) return;
     setState(() {
-      genreDropdownMenu = genreDropdownMenu1;
-      versionDropdownMenu = versionDropdownMenu1;
+      genreWidgetList = genreWidgets;
+    });
+  }
+
+  void buildVersionWidget() {
+    List<Widget> versionWidgets = buildVersionWrapList(
+      songsdata: songsData,
+      currentVersion: selectedVersion,
+      onChange: () => setState(() {}),
+      onGenreSelected: (value) {
+        if (selectedVersion.contains(value) && value != '-1') {
+          selectedVersion.remove(value);
+          selectedVersion.remove('-1');
+        } else {
+          selectedVersion.add(value);
+          selectedVersion.remove('-1');
+        }
+        if (selectedVersion.isEmpty) {
+          selectedVersion = ['-1'];
+        } else if (value == '-1') {
+          selectedVersion = ['-1'];
+        }
+        buildVersionWidget();
+        // print(selectedGenre);
+      },
+    );
+    if (!mounted) return;
+    setState(() {
+      versionWidgetList = versionWidgets;
     });
   }
 
@@ -103,7 +158,6 @@ class _RandomMusicPageState extends State<RandomMusicPage> {
     if (double.tryParse(_difficultyup.text) != null) {
       selectedDifficultyUp = double.tryParse(_difficultyup.text).toString();
     }
-    _performSearch();
   }
 
   void _onDifficultyDownInput() {
@@ -111,13 +165,19 @@ class _RandomMusicPageState extends State<RandomMusicPage> {
     if (double.tryParse(_difficultydown.text) != null) {
       selectedDifficultyDown = double.tryParse(_difficultydown.text).toString();
     }
-    _performSearch();
+  }
+
+  Future<void> init() async {
+    songsData = await loadSongs();
+    aliasData = await loadAlias();
+    buildGenreWidget();
+    buildVersionWidget();
   }
 
   @override
   void initState() {
     super.initState();
-    _buildAllDropdownMenus();
+    init();
     _difficultyup.addListener(_onDifficultyUpInput);
     _difficultydown.addListener(_onDifficultyDownInput);
     WidgetsBinding.instance.addPostFrameCallback((_) {
@@ -145,6 +205,21 @@ class _RandomMusicPageState extends State<RandomMusicPage> {
       appBar: AppBar(
         title: Text('随机歌曲'),
         // backgroundColor: const Color.fromARGB(255, 255, 229, 84),
+        actions: [
+          IconButton(
+            onPressed: () async {
+              setState(() {
+                if (_filterIcon == Icons.filter_alt_off) {
+                  _filterIcon = Icons.filter_alt;
+                } else {
+                  _filterIcon = Icons.filter_alt_off;
+                }
+                _showfilter = !_showfilter;
+              });
+            },
+            icon: Icon(_filterIcon),
+          ),
+        ],
       ),
       body: CustomScrollView(
         controller: _scrollController,
@@ -190,117 +265,329 @@ class _RandomMusicPageState extends State<RandomMusicPage> {
                     ),
                   ],
                 ),
-                Row(
-                  children: [
-                    Expanded(
-                      child: TextButton(
-                        onPressed: () async {
-                          try {
-                            count = int.parse(_controller.text);
-                          } catch (e) {
-                            ScaffoldMessenger.of(
-                              context,
-                            ).showSnackBar(SnackBar(content: Text('输的什么玩意')));
-                            return;
-                          }
-                          await _performSearch();
-                        },
-                        child: Text(
-                          '抽自定义首',
+                Padding(
+                  padding: EdgeInsetsGeometry.only(bottom: 5),
+                  child: InkWell(
+                    onTap: () async {
+                      try {
+                        count = int.parse(_controller.text);
+                      } catch (e) {
+                        ScaffoldMessenger.of(
+                          context,
+                        ).showSnackBar(SnackBar(content: Text('输的什么玩意')));
+                        return;
+                      }
+                      await _performSearch();
+                    },
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Text(
+                          '抽',
                           style: TextStyle(
                             fontSize: 20,
-                            color: Theme.of(context).colorScheme.onSurface,
+                            fontWeight: FontWeight.bold,
                           ),
                         ),
-                      ),
+                        SizedBox(
+                          width: 70,
+                          child: TextField(
+                            controller: _controller,
+                            decoration: InputDecoration(
+                              isDense: true,
+                              // hintText: '我去除了大部分输入框边框，只保留了底边，这样才能让你知道这至少是个输入框（）',
+                            ),
+                          ),
+                        ),
+                        Text(
+                          '首',
+                          style: TextStyle(
+                            fontSize: 20,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ],
                     ),
-                  ],
-                ),
-                Row(
-                  children: [
-                    Expanded(child: TextField(controller: _controller)),
-                  ],
-                ),
-              ],
-            ),
-          ),
-          SliverToBoxAdapter(
-            child: Row(
-              children: [
-                Expanded(child: genreDropdownMenu),
-                Expanded(child: versionDropdownMenu),
-                Expanded(
-                  child: buildDifficultyDownDropdownMenu(
-                    ccontroller: _difficultydown,
-                    initialSelection: selectedDifficultyDown,
-                    onSelected: (String? value) {
-                      setState(() {
-                        selectedDifficultyDown = value;
-                      });
-                    },
-                  ),
-                ),
-                Expanded(
-                  child: buildDifficultyUpDropdownMenu(
-                    ccontroller: _difficultyup,
-                    initialSelection: selectedDifficultyUp,
-                    onSelected: (String? value) {
-                      setState(() {
-                        selectedDifficultyUp = value;
-                      });
-                    },
                   ),
                 ),
               ],
             ),
           ),
-          SliverToBoxAdapter(
-            child: Row(
-              children: [
-                Expanded(
-                  child: TextField(
-                    controller: _bpmdown,
-                    decoration: InputDecoration(hintText: 'BPM下限'),
-                    onChanged: (value) {
-                      try {
-                        bpmdown = int.parse(_bpmdown.text);
-                        _performSearch();
-                      } catch (e) {
-                        bpmdown = null;
-                        log('bpmdown不是数字');
-                      }
-                    },
+          _showfilter
+              ? SliverToBoxAdapter(
+                  child: Column(
+                    children: [
+                      Column(
+                        children: [
+                          InkWell(
+                            onTap: () async {
+                              setState(() {
+                                _showgenre = !_showgenre;
+                                if (_showgenreIcon == Icons.arrow_drop_down) {
+                                  _showgenreIcon = Icons.arrow_drop_up;
+                                } else {
+                                  _showgenreIcon = Icons.arrow_drop_down;
+                                }
+                              });
+                            },
+                            child: Padding(
+                              padding: EdgeInsetsGeometry.all(8),
+                              child: Row(
+                                children: [
+                                  Expanded(
+                                    child: Text(
+                                      '分类',
+                                      style: TextStyle(
+                                        fontSize: 18,
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                    ),
+                                  ),
+                                  Icon(_showgenreIcon),
+                                ],
+                              ),
+                            ),
+                          ),
+                          _showgenre
+                              ? Wrap(
+                                  spacing: 5.0,
+                                  runSpacing: 3.0,
+                                  children: genreWidgetList,
+                                )
+                              : SizedBox.shrink(),
+                        ],
+                      ),
+                      Column(
+                        children: [
+                          InkWell(
+                            onTap: () async {
+                              setState(() {
+                                _showversion = !_showversion;
+                                if (_showversionIcon == Icons.arrow_drop_down) {
+                                  _showversionIcon = Icons.arrow_drop_up;
+                                } else {
+                                  _showversionIcon = Icons.arrow_drop_down;
+                                }
+                              });
+                            },
+                            child: Padding(
+                              padding: EdgeInsetsGeometry.all(8),
+                              child: Row(
+                                children: [
+                                  Expanded(
+                                    child: Text(
+                                      '版本',
+                                      style: TextStyle(
+                                        fontSize: 18,
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                    ),
+                                  ),
+                                  Icon(_showversionIcon),
+                                ],
+                              ),
+                            ),
+                          ),
+                          _showversion
+                              ? Wrap(
+                                  spacing: 5.0,
+                                  runSpacing: 3.0,
+                                  children: versionWidgetList,
+                                )
+                              : SizedBox.shrink(),
+                        ],
+                      ),
+                      // Row(children: [Expanded(child: versionDropdownMenu)]),
+                      Column(
+                        children: [
+                          InkWell(
+                            onTap: () {
+                              setState(() {
+                                _showdiff = !_showdiff;
+                                if (_showdiffIcon == Icons.arrow_drop_down) {
+                                  _showdiffIcon = Icons.arrow_drop_up;
+                                } else {
+                                  _showdiffIcon = Icons.arrow_drop_down;
+                                }
+                              });
+                            },
+                            child: Padding(
+                              padding: EdgeInsetsGeometry.all(8),
+                              child: Row(
+                                children: [
+                                  Expanded(
+                                    child: Text(
+                                      '难度',
+                                      style: TextStyle(
+                                        fontSize: 18,
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                    ),
+                                  ),
+                                  Icon(_showdiffIcon),
+                                ],
+                              ),
+                            ),
+                          ),
+                          _showdiff
+                              ? Row(
+                                  children: [
+                                    Expanded(
+                                      child: buildDifficultyDownDropdownMenu(
+                                        ccontroller: _difficultydown,
+                                        initialSelection:
+                                            selectedDifficultyDown,
+                                        onSelected: (String? value) {
+                                          setState(() {
+                                            selectedDifficultyDown = value;
+                                          });
+                                        },
+                                      ),
+                                    ),
+                                    Padding(
+                                      padding: EdgeInsetsGeometry.only(
+                                        left: 10,
+                                        right: 10,
+                                      ),
+                                      child: Text('~'),
+                                    ),
+                                    Expanded(
+                                      child: buildDifficultyUpDropdownMenu(
+                                        ccontroller: _difficultyup,
+                                        initialSelection: selectedDifficultyUp,
+                                        onSelected: (String? value) {
+                                          setState(() {
+                                            selectedDifficultyUp = value;
+                                          });
+                                        },
+                                      ),
+                                    ),
+                                  ],
+                                )
+                              : SizedBox.shrink(),
+                        ],
+                      ),
+                      Column(
+                        children: [
+                          InkWell(
+                            onTap: () {
+                              setState(() {
+                                _showbpm = !_showbpm;
+                                if (_showbpmIcon == Icons.arrow_drop_down) {
+                                  _showbpmIcon = Icons.arrow_drop_up;
+                                } else {
+                                  _showbpmIcon = Icons.arrow_drop_down;
+                                }
+                              });
+                            },
+                            child: Padding(
+                              padding: EdgeInsetsGeometry.all(8),
+                              child: Row(
+                                children: [
+                                  Expanded(
+                                    child: Text(
+                                      'BPM',
+                                      style: TextStyle(
+                                        fontSize: 18,
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                    ),
+                                  ),
+                                  Icon(_showbpmIcon),
+                                ],
+                              ),
+                            ),
+                          ),
+                          _showbpm
+                              ? Row(
+                                  children: [
+                                    Expanded(
+                                      child: TextField(
+                                        controller: _bpmdown,
+                                        decoration: InputDecoration(
+                                          hintText: 'BPM下限',
+                                        ),
+                                        onChanged: (value) {
+                                          bpmdown = int.tryParse(_bpmdown.text);
+                                        },
+                                      ),
+                                    ),
+                                    Padding(
+                                      padding: EdgeInsetsGeometry.only(
+                                        left: 10,
+                                        right: 10,
+                                      ),
+                                      child: Text('~'),
+                                    ),
+                                    Expanded(
+                                      child: TextField(
+                                        controller: _bpmup,
+                                        decoration: InputDecoration(
+                                          hintText: 'BPM上限',
+                                        ),
+                                        onChanged: (value) {
+                                          bpmup = int.tryParse(_bpmup.text);
+                                        },
+                                      ),
+                                    ),
+                                  ],
+                                )
+                              : SizedBox.shrink(),
+                        ],
+                      ),
+                      Column(
+                        children: [
+                          InkWell(
+                            onTap: () {
+                              setState(() {
+                                _showother = !_showother;
+                                if (_showotherIcon == Icons.arrow_drop_down) {
+                                  _showotherIcon = Icons.arrow_drop_up;
+                                } else {
+                                  _showotherIcon = Icons.arrow_drop_down;
+                                }
+                              });
+                            },
+                            child: Padding(
+                              padding: EdgeInsetsGeometry.all(8),
+                              child: Row(
+                                children: [
+                                  Expanded(
+                                    child: Text(
+                                      '其余选项',
+                                      style: TextStyle(
+                                        fontSize: 18,
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                    ),
+                                  ),
+                                  Icon(_showotherIcon),
+                                ],
+                              ),
+                            ),
+                          ),
+                          _showother
+                              ? Row(
+                                  children: [
+                                    Expanded(
+                                      child: buildIfPlayDropdownMenu(
+                                        initialSelection: selectedifPlay,
+                                        onSelected: (String? value) {
+                                          setState(() {
+                                            selectedifPlay = value;
+                                          });
+                                        },
+                                      ),
+                                    ),
+                                  ],
+                                )
+                              : SizedBox.shrink(),
+                        ],
+                      ),
+                    ],
                   ),
-                ),
-                Expanded(
-                  child: TextField(
-                    controller: _bpmup,
-                    decoration: InputDecoration(hintText: 'BPM上限'),
-                    onChanged: (value) {
-                      try {
-                        bpmup = int.parse(_bpmup.text);
-                        _performSearch();
-                      } catch (e) {
-                        bpmup = null;
-                        log('bpmup不是数字');
-                      }
-                    },
-                  ),
-                ),
-
-                Expanded(
-                  child: buildIfPlayDropdownMenu(
-                    initialSelection: selectedifPlay,
-                    onSelected: (String? value) {
-                      setState(() {
-                        selectedifPlay = value;
-                      });
-                    },
-                  ),
-                ),
-              ],
-            ),
-          ),
+                )
+              : SliverToBoxAdapter(child: SizedBox.shrink()),
           SliverList.builder(
             itemBuilder: (context, index) => songResult[index],
             itemCount: songResult.length,

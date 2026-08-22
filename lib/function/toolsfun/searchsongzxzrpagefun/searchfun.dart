@@ -169,6 +169,8 @@ Future<List<dynamic>> filter(
       }
       if (!(i['bpm']['mode'] <= bpmup && i['bpm']['mode'] >= bpmdown)) {
         songresult.remove(i['id']);
+      } else {
+        songresult.add(i['id']);
       }
     }
   }
