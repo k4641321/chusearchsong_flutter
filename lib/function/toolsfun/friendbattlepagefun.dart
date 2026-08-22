@@ -144,7 +144,9 @@ List<Widget> returnvsresultwidget({
                       text: '${i[0]['score']}\n',
                       children: [
                         TextSpan(
-                          text: (i[0]['rank'] as String).replaceAll('p', '+'),
+                          text: (i[0]['rank'] as String)
+                              .replaceAll('p', '+')
+                              .toUpperCase(),
                         ),
                       ],
                     ),
@@ -159,7 +161,9 @@ List<Widget> returnvsresultwidget({
                       text: '${i[1]['score']}\n',
                       children: [
                         TextSpan(
-                          text: (i[1]['rank'] as String).replaceAll('p', '+'),
+                          text: (i[1]['rank'] as String)
+                              .replaceAll('p', '+')
+                              .toUpperCase(),
                         ),
                       ],
                     ),

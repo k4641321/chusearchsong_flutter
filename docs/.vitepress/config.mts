@@ -18,7 +18,8 @@ export default defineConfig({
         text: '帮助文档',
         items: [
           { text: '主页', link: '/helper/' },
-          {text: '功能介绍', link: '/helper/function/', items: [
+          {
+            text: '功能介绍', link: '/helper/function/', items: [
               { text: '搜索歌曲', link: '/helper/function/search/' },
               { text: '歌曲详情', link: '/helper/function/songinfo/' },
               { text: '收藏', link: '/helper/function/favorite/' },
@@ -45,8 +46,11 @@ export default defineConfig({
                   { text: '机厅搜索(新)', link: '/helper/function/tools/searchlobbynew/' },
                 ]
               },
+              { text: '关于界面', link: '/helper/infopage/' },
             ]
           },
+          
+
           { text: '常见问题', link: '/question/' },
         ]
       }

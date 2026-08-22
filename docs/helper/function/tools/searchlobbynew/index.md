@@ -2,9 +2,7 @@
 prev:
   text: '友人对战'
   link: '/helper/function/tools/friendbattle'
-next:
-  text: '常见问题'
-  link: /question/'
+
 ---
 # 机厅搜索(新)
 

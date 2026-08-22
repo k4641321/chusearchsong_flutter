@@ -261,7 +261,9 @@ Future<Widget> returnscore({
                           SizedBox(width: 50),
                           Expanded(
                             child: Text(
-                              (j['rank'] as String).replaceFirst('p', '+'),
+                              (j['rank'] as String)
+                                  .replaceFirst('p', '+')
+                                  .toUpperCase(),
                               style: const TextStyle(fontSize: 15),
                             ),
                           ),

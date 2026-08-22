@@ -385,7 +385,9 @@ Future<List<Widget>> getLineChartAndCard({
                       SizedBox(width: 50),
                       Expanded(
                         child: Text(
-                          (i['rank'] as String).replaceFirst('p', '+'),
+                          (i['rank'] as String)
+                              .replaceFirst('p', '+')
+                              .toUpperCase(),
                           style: const TextStyle(fontSize: 15),
                         ),
                       ),
