@@ -4,7 +4,7 @@ import 'package:flutter/services.dart';
 import 'dart:convert';
 import 'dart:io';
 import 'package:path_provider/path_provider.dart';
-import '../function/toolsfun/ratingcalculatorpagefun.dart';
+import 'toolsfun/ratingcalculatorpagefun.dart';
 
 //麻痹的，开始学不知道，现在知道可以不用加<String>，来不及改了
 
@@ -13,6 +13,30 @@ String fix2dp(double value) {
   final sign = truncated < 0 ? '-' : '';
   final abs = truncated.abs();
   return '$sign${abs ~/ 100}.${(abs % 100).toString().padLeft(2, '0')}';
+}
+
+//加载所有成绩
+Future<Map<String, dynamic>> loadb50ScoreData() async {
+  final directory = await getApplicationSupportDirectory();
+  final file = File('${directory.path}/res/b50.json');
+  final json = jsonDecode(await file.readAsString());
+  return json;
+}
+
+//加载所有成绩
+Future<Map<String, dynamic>> loadAllScoreData() async {
+  final directory = await getApplicationSupportDirectory();
+  final file = File('${directory.path}/res/allscore.json');
+  final json = jsonDecode(await file.readAsString());
+  return json;
+}
+
+//加载歌曲数据
+Future<Map<String, dynamic>> loadPlayerData() async {
+  final directory = await getApplicationSupportDirectory();
+  final file = File('${directory.path}/res/playerinfo.json');
+  final json = jsonDecode(await file.readAsString());
+  return json;
 }
 
 //加载歌曲数据

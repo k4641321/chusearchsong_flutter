@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import '../../function/list.dart';
+import '../../../function/list.dart';
 import 'dart:developer';
-import '../../function/searchfun/search.dart';
+import '../../../function/searchfun/search.dart';
 
 class RandomMusicPage extends StatefulWidget {
   const RandomMusicPage({super.key});

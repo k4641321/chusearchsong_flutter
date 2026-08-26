@@ -10,7 +10,7 @@ next:
 # 工具列表
 ![展示](./image/屏幕截图%202026-08-19%20180604.png)
 
-## 信息
+<!-- ## 信息
 - [等级划分与判定](./rankinfo/)
 - [Rating颜色](./ratingcolor/)
 - [机厅搜索](./searchlobby/)
@@ -26,4 +26,5 @@ next:
 - [随机歌曲](./randommusic/)
 - [更新成绩](./updatescore/)
 - [吃分推荐](./songrecommendation/)
-- [等级完成进度](./levelcompletionprogress/)
+- [等级完成进度](./levelcompletionprogress/) -->
+我写不动了，看侧边栏

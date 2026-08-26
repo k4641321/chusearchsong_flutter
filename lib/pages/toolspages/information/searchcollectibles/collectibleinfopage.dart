@@ -3,14 +3,14 @@ import 'dart:developer';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:chusearchsong_flutter/function/toolsfun/collectibleinfopagefun.dart';
 import 'package:flutter/material.dart';
-import '../../function/fun.dart';
+import '../../../../function/fun.dart';
 import 'dart:io';
 import 'package:path_provider/path_provider.dart';
 import 'dart:convert';
-import '../../function/texttranslate.dart';
-import '../../function/toolsfun/generateb50fun/generateb50.dart';
-import '../../function/toolsfun/playerinfopagefun.dart';
-import '../../function/request.dart';
+import '../../../../function/texttranslate.dart';
+import '../../../../function/toolsfun/generateb50fun/generateb50.dart';
+import '../../../../function/toolsfun/playerinfopagefun.dart';
+import '../../../../function/request.dart';
 
 class CollectibleInfoPage extends StatefulWidget {
   const CollectibleInfoPage({

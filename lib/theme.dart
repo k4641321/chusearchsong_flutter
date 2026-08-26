@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 
-final ColorScheme lightTheme = ColorScheme.light(
+/// 浅色主题 - 以黄色为主色调
+final ColorScheme lightTheme = ColorScheme.fromSeed(
+  seedColor: Colors.amber,
   brightness: Brightness.light,
-  primary: const Color.fromARGB(255, 255, 239, 146),
-  onSecondary: const Color.fromARGB(255, 223, 223, 223),
 );
 
-final ColorScheme darkTheme = ColorScheme.dark(
+/// 深色主题 - 以黄色为主色调
+final ColorScheme darkTheme = ColorScheme.fromSeed(
+  seedColor: Colors.amber,
   brightness: Brightness.dark,
-  primary: const Color.fromARGB(255, 193, 182, 123),
-  onSecondary: const Color.fromARGB(255, 223, 223, 223),
 );

@@ -1,7 +1,7 @@
 import 'package:chusearchsong_flutter/function/fun.dart';
 import 'package:chusearchsong_flutter/pages/songinfopages/chartviewpage.dart';
-import 'package:chusearchsong_flutter/pages/toolspages/faulttoterantcomputationpage.dart';
-import 'package:chusearchsong_flutter/pages/toolspages/ratingcalculatorpage.dart';
+import 'package:chusearchsong_flutter/pages/toolspages/tools/faulttoterantcomputationpage.dart';
+import 'package:chusearchsong_flutter/pages/toolspages/tools/ratingcalculatorpage.dart';
 import 'package:flutter/material.dart';
 
 Widget returanAlias({required List alias, required BuildContext context}) {

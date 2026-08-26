@@ -6,7 +6,7 @@ import 'package:chusearchsong_flutter/function/list.dart'
 import 'package:chusearchsong_flutter/function/toolsfun/searchsongzxzrpagefun/searchsongzxzrpagefun.dart';
 import 'package:flutter/material.dart';
 
-import '../../../function/toolsfun/searchsongzxzrpagefun/searchfun.dart';
+import '../../../../function/toolsfun/searchsongzxzrpagefun/searchfun.dart';
 
 class Searchsongzxzrpage extends StatefulWidget {
   const Searchsongzxzrpage({super.key});

@@ -176,9 +176,6 @@ Future<void> updateconfig() async {
     config['announcement']['value'] = 0;
   }
   File('${path.path}/config.json').writeAsStringSync(json.encode(config));
-
-  //最新版本获取
-  await saveLatestVersion();
 }
 
 Future<String> loadmapconfig(BuildContext context) async {

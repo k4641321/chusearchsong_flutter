@@ -1,26 +1,27 @@
-import 'package:chusearchsong_flutter/pages/toolspages/friendbattlepage.dart';
-import 'package:chusearchsong_flutter/pages/toolspages/overpowercalculationpage.dart';
-import 'package:chusearchsong_flutter/pages/toolspages/ratingcalculationmethodpage.dart';
-import 'package:chusearchsong_flutter/pages/toolspages/searchlobbynewpage.dart';
-import 'package:chusearchsong_flutter/pages/toolspages/searchsongzxzrpage/searchsongzxzrpage.dart';
-import 'package:chusearchsong_flutter/pages/toolspages/songrecommendationpage.dart';
+import 'package:chusearchsong_flutter/pages/toolspages/tools/chuqinturntablepage.dart';
+import 'package:chusearchsong_flutter/pages/toolspages/tools/friendbattlepage.dart';
+import 'package:chusearchsong_flutter/pages/toolspages/tools/overpowercalculationpage.dart';
+import 'package:chusearchsong_flutter/pages/toolspages/information/ratingcalculationmethodpage.dart';
+import 'package:chusearchsong_flutter/pages/toolspages/information/searchlobbynewpage.dart';
+import 'package:chusearchsong_flutter/pages/toolspages/tools/searchsongzxzrpage/searchsongzxzrpage.dart';
+import 'package:chusearchsong_flutter/pages/toolspages/tools/songrecommendationpage.dart';
 import 'package:chusearchsong_flutter/function/fun.dart';
-import 'package:chusearchsong_flutter/pages/toolspages/viewallgradespage.dart';
+import 'package:chusearchsong_flutter/pages/toolspages/tools/viewallgradespage.dart';
 import '../../function/toolsfun/ratingtrendpagefun.dart';
-import '../toolspages/ratingcalculatorpage.dart';
+import '../toolspages/tools/ratingcalculatorpage.dart';
 import 'package:flutter/material.dart';
-import '../toolspages/rankcolorpage.dart';
-import '../toolspages/rankinfopage.dart';
-import '../toolspages/scorecalculationpage.dart';
-import '../toolspages/searchlobbypage.dart';
-import '../toolspages/randommusicpage.dart';
-import '../toolspages/searchcollectiblespage.dart';
-import '../toolspages/faulttoterantcomputationpage.dart';
-import '../toolspages/ratingtrendpages.dart';
-import '../toolspages/updatescorepage.dart';
-import '../toolspages/generateb50page.dart';
-import '../toolspages/playerinfopage.dart';
-import '../toolspages/levelcompletionprogresspage/levelcompletionprogresspage.dart';
+import '../toolspages/information/rankcolorpage.dart';
+import '../toolspages/information/rankinfopage.dart';
+import '../toolspages/tools/scorecalculationpage.dart';
+import '../toolspages/information/searchlobbypage.dart';
+import '../toolspages/tools/randommusicpage.dart';
+import '../toolspages/information/searchcollectibles/searchcollectiblespage.dart';
+import '../toolspages/tools/faulttoterantcomputationpage.dart';
+import '../toolspages/information/ratingtrendpages.dart';
+import '../toolspages/tools/updatescorepage.dart';
+import '../toolspages/tools/generateb50page.dart';
+import '../toolspages/information/playerinfopage.dart';
+import '../toolspages/tools/levelcompletionprogresspage/levelcompletionprogresspage.dart';
 
 //主窗口
 class ToolPage extends StatefulWidget {
@@ -610,6 +611,34 @@ class _ToolPageState extends State<ToolPage> {
                           ),
                           icon: Icon(
                             Icons.sports_kabaddi_outlined,
+                            color: Theme.of(context).colorScheme.onSurface,
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+              Row(
+                children: [
+                  Expanded(
+                    child: InkWell(
+                      child: Card(
+                        child: TextButton.icon(
+                          label: Text(
+                            '神秘转盘',
+                            style: TextStyle(
+                              color: Theme.of(context).colorScheme.onSurface,
+                            ),
+                          ),
+                          onPressed: () => Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => const Chuqinturntablepage(),
+                            ),
+                          ),
+                          icon: Icon(
+                            Icons.album,
                             color: Theme.of(context).colorScheme.onSurface,
                           ),
                         ),

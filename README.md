@@ -44,6 +44,8 @@
 - [x] 所有成绩预览
 - [x] 友人对战
 - [x] 新机厅搜索
+- [x] 出勤转盘
+- [ ] 全曲进度
 - [ ] ~~多个收藏夹~~(技术力不行，不做了)  
 *...more...*
 
@@ -77,6 +79,12 @@
 # 其余的话
 flutter目前是边学边写的，**有答辩代码是超级非常正常的**，目前是自己敲与AI生成部分代码，如果在某些地方有更好的地方欢迎提交  
 目前全是依赖Github Actions构建，想体验最新最热bug满天飞可以在Actions下载
+
+# 数据来源
+- 国服歌曲，收藏品，排行榜等来自[落雪咖啡屋](https://maimai.lxns.net/)
+- 最新最热资源[beerpsi](https://chuni-penguin.beerpsi.cc/developer/api/)，[reiwa.f5.si](https://reiwa.f5.si/api.html)
+- 部分角色立绘与介绍[中二日服官网](https://chunithm.sega.jp/)
+- 机厅数据[华立官网](http://wc.wahlap.net/chunithm/location/index.html)，[Nearcade](https://nearcade.apifox.cn/)
 
 # 赞助
 赏杯奶茶钱呗(  

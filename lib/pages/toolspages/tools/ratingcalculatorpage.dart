@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import '../../function/list.dart';
-import '../../function/toolsfun/ratingcalculatorpagefun.dart';
+import '../../../function/list.dart';
+import '../../../function/toolsfun/ratingcalculatorpagefun.dart';
 
 //Rating计算器
 class RatingCalculator extends StatefulWidget {

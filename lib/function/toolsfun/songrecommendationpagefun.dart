@@ -5,7 +5,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:chusearchsong_flutter/function/fun.dart';
 import 'package:flutter/material.dart';
 import 'package:path_provider/path_provider.dart';
-import '../../function/toolsfun/ratingcalculatorpagefun.dart';
+import 'ratingcalculatorpagefun.dart';
 import 'generateb50fun/generateb50.dart';
 
 Future<double?> initminRating({required bool isNew}) async {

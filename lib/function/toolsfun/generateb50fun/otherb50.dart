@@ -1,3 +1,4 @@
+import 'dart:developer';
 import 'dart:io';
 import 'package:chusearchsong_flutter/function/fun.dart';
 import 'package:chusearchsong_flutter/function/toolsfun/generateb50fun/generateb50.dart';
@@ -5,26 +6,75 @@ import 'package:flutter/material.dart';
 import 'package:path_provider/path_provider.dart';
 import 'dart:convert';
 
-Future<Widget> fc50Body({
+//寸B50
+Future<Widget> generatecun50Body({
   required BuildContext context,
   required Map<String, dynamic> songsData,
   required Map<String, dynamic> playerdata,
   required List allscoredata,
+  required String type,
+  required String? genreorversion,
 }) async {
-  //查找所有AJ成绩
-  List fcb50 = [];
-  for (var i in allscoredata) {
-    if (i['full_combo'] == 'fullcombo') {
-      fcb50.add(i);
+  //筛选曲目
+
+  List resultScoreList = [];
+  if (type == '寸50') {
+    for (var i in allscoredata) {
+      if (i['score'] < 1007499 && i['score'] >= 1007000) {
+        resultScoreList.add(i);
+      }
     }
   }
-  fcb50.sort((a, b) => b['rating'].compareTo(a['rating']));
-  // print(fcb50);
-  // print(randomb50);
-  double trophywidth = 525;
-  if (playerdata['trophy']['name'].length > 17) {
-    trophywidth = trophywidth + (playerdata['trophy']['name'].length - 17) * 10;
+  if (type == '寸鸟50') {
+    for (var i in allscoredata) {
+      if (i['score'] < 1009000 && i['score'] >= 1008900) {
+        resultScoreList.add(i);
+      }
+    }
+  } else if (type == '流派50') {
+    for (var i in allscoredata) {
+      for (var j in songsData['songs']) {
+        if (i['id'] == j['id'] && j['genre'] == genreorversion) {
+          resultScoreList.add(i);
+          break;
+        }
+      }
+    }
+  } else if (type == '版本50') {
+    for (var i in allscoredata) {
+      for (var j in songsData['songs']) {
+        if (i['id'] == j['id'] && j['version'] == int.parse(genreorversion!)) {
+          resultScoreList.add(i);
+          break;
+        }
+      }
+    }
+  } else if (type == '谱师50') {
+    for (var i in allscoredata) {
+      for (var j in songsData['songs']) {
+        for (var k in j['difficulties']) {
+          if (i['id'] == j['id'] && k['note_designer'] == genreorversion) {
+            resultScoreList.add(i);
+            break;
+          }
+        }
+      }
+    }
+  } else if (type == '曲师50') {
+    for (var i in allscoredata) {
+      for (var j in songsData['songs']) {
+        if (i['id'] == j['id'] && j['artist'] == genreorversion) {
+          resultScoreList.add(i);
+          break;
+        }
+      }
+    }
   }
+  resultScoreList.sort((a, b) => b['rating'].compareTo(a['rating']));
+  if (resultScoreList.length > 50) {
+    resultScoreList = resultScoreList.sublist(0, 50);
+  }
+
   //先定义所需的变量
   Widget characterimage = SizedBox.shrink();
   if (playerdata['character'] != null) {
@@ -35,6 +85,10 @@ Future<Widget> fc50Body({
   }
   List<Widget> b50body = [];
   Widget b50 = Column(children: b50body);
+  double trophywidth = 525;
+  if (playerdata['trophy']['name'].length > 17) {
+    trophywidth = trophywidth + (playerdata['trophy']['name'].length - 17) * 10;
+  }
   Widget title = SizedBox(
     height: 170,
     child: Row(
@@ -44,6 +98,7 @@ Future<Widget> fc50Body({
           padding: EdgeInsetsGeometry.only(left: 55),
           child: SizedBox(
             width: trophywidth,
+            // 525,
             height: 225,
             child: Card(
               child: Row(
@@ -64,7 +119,7 @@ Future<Widget> fc50Body({
                             bottom: 5,
                           ),
                           child: Text(
-                            '${playerdata['trophy']['name']}',
+                            playerdata['trophy']['name'],
                             style: TextStyle(color: Colors.black),
                           ),
                         ),
@@ -78,7 +133,6 @@ Future<Widget> fc50Body({
                       ),
                       Text(
                         'Rating:   ${playerdata['rating']}',
-
                         style: TextStyle(
                           fontSize: 25,
                           color: ratingColor(rating: playerdata['rating']),
@@ -98,7 +152,7 @@ Future<Widget> fc50Body({
   );
   // final ScrollController _scrollController = ScrollController();
   //b50文字
-  Widget b30text = Row(
+  Widget b50text = Row(
     mainAxisAlignment: MainAxisAlignment.center,
     children: [
       Card(
@@ -111,26 +165,25 @@ Future<Widget> fc50Body({
             right: 20,
           ),
           child: Text(
-            'B30',
+            'b50',
             style: TextStyle(fontSize: 30, color: Colors.white),
           ),
         ),
       ),
     ],
   );
+
   //底部信息
   Widget fontter = Row(
     mainAxisAlignment: MainAxisAlignment.center,
     children: [
       Text(
-        '此 FC B50由chusearchsong（中二查歌）生成，生成时间：${DateTime.now()}',
+        '此 $type B50由chusearchsong（中二查歌）生成，生成时间：${DateTime.now()}',
         style: TextStyle(fontWeight: FontWeight.bold, color: Colors.black),
       ),
     ],
   );
-
   //b50绘制
-  int total = 0;
   List<Widget> b50rowbody = [];
   Widget b50row = Row(
     mainAxisAlignment: MainAxisAlignment.center,
@@ -138,8 +191,7 @@ Future<Widget> fc50Body({
   );
   int row = 0;
   int songcount = 1;
-  for (var i in fcb50) {
-    if (total > 50) break;
+  for (var i in resultScoreList) {
     String songname;
     if ((i['song_name'] as String).length > 18) {
       songname = i['song_name'].substring(0, 18) + '...';
@@ -164,6 +216,7 @@ Future<Widget> fc50Body({
     } else if (i['clear'] == 'absolute' && i['full_combo'] == null) {
       fontSize = 8;
     }
+
     b50rowbody.add(
       InkWell(
         onTap: () async {
@@ -329,6 +382,7 @@ Future<Widget> fc50Body({
                                           style: TextStyle(
                                             fontWeight: FontWeight.bold,
                                             color: Colors.black,
+                                            fontSize: fontSize,
                                           ),
                                         ),
                                       ),
@@ -366,7 +420,6 @@ Future<Widget> fc50Body({
                                                   style: TextStyle(
                                                     fontWeight: FontWeight.bold,
                                                     color: Colors.black,
-                                                    fontSize: fontSize,
                                                   ),
                                                 ),
                                               ),
@@ -417,11 +470,11 @@ Future<Widget> fc50Body({
       row++;
     }
     songcount++;
-    total++;
   }
   if (b50rowbody.isNotEmpty) {
     b50body.add(b50row);
   }
+
   //背景绘制
   Widget result = Container(
     width: 5896 / 2,
@@ -432,7 +485,7 @@ Future<Widget> fc50Body({
         fit: BoxFit.cover,
       ),
     ),
-    child: Center(child: Column(children: [title, b30text, b50, fontter])),
+    child: Center(child: Column(children: [title, b50text, b50, fontter])),
   );
 
   return result;

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import '../../function/toolsfun/songrecommendationpagefun.dart';
-import '../../function/list.dart';
-import '../../function/searchfun/search.dart';
+import '../../../function/toolsfun/songrecommendationpagefun.dart';
+import '../../../function/list.dart';
+import '../../../function/searchfun/search.dart';
 import 'dart:developer';
 
 class SongRecommendationPage extends StatefulWidget {

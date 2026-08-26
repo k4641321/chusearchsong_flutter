@@ -1,6 +1,6 @@
 import 'package:chusearchsong_flutter/function/toolsfun/playerinfopagefun.dart';
 import 'package:flutter/material.dart';
-import '../../function/fun.dart';
+import '../../../function/fun.dart';
 
 class PlayerInfoPage extends StatefulWidget {
   const PlayerInfoPage({super.key, required this.playerdata});

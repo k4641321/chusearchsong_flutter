@@ -1,7 +1,7 @@
 import 'dart:developer';
-import '../../function/toolsfun/searchlobbypagefun.dart';
+import '../../../function/toolsfun/searchlobbypagefun.dart';
 import 'package:flutter/material.dart';
-import '../../function/list.dart';
+import '../../../function/list.dart';
 
 class SearchLobbyPage extends StatefulWidget {
   const SearchLobbyPage({super.key});

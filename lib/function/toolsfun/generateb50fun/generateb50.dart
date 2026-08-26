@@ -2,27 +2,59 @@
 import 'package:chusearchsong_flutter/function/fun.dart';
 import 'package:chusearchsong_flutter/function/toolsfun/generateb50fun/aj50fun.dart';
 import 'package:chusearchsong_flutter/function/toolsfun/generateb50fun/fc50fun.dart';
+import 'package:chusearchsong_flutter/function/toolsfun/generateb50fun/otherb50.dart';
 import 'package:chusearchsong_flutter/function/toolsfun/generateb50fun/randomb50pagefun.dart';
 import 'package:flutter/material.dart';
 import 'package:path_provider/path_provider.dart';
-import '../../request.dart';
 import 'dart:convert';
 
 Future<Widget?> selectb50({
   required String b50type,
   required BuildContext context,
   required Map<String, dynamic> songsData,
+  required Map<String, dynamic> playerdata,
+  required List allscoredata,
+  required Map<String, dynamic> b50data,
+  String? genre,
 }) async {
-  if (b50type == 'b50') {
-    return await generateb50Body(context: context, songsData: songsData);
+  if (b50type == 'b50' || b50type == '个人理论50' || b50type == '理论50') {
+    return await generateb50Body(
+      context: context,
+      songsData: songsData,
+      playerdata: playerdata,
+      b50data: b50data,
+      type: b50type,
+    );
   } else if (b50type == 'random50') {
-    return await randomb50Body(context: context, songsData: songsData);
+    return await randomb50Body(
+      context: context,
+      songsData: songsData,
+      playerdata: playerdata,
+      allscoredata: allscoredata,
+    );
   } else if (b50type == 'aj30') {
-    return await aj50Body(context: context, songsData: songsData);
+    return await aj50Body(
+      context: context,
+      songsData: songsData,
+      playerdata: playerdata,
+      allscoredata: allscoredata,
+    );
   } else if (b50type == 'fc30') {
-    return await fc50Body(context: context, songsData: songsData);
+    return await fc50Body(
+      context: context,
+      songsData: songsData,
+      playerdata: playerdata,
+      allscoredata: allscoredata,
+    );
   } else {
-    return null;
+    return await generatecun50Body(
+      context: context,
+      songsData: songsData,
+      playerdata: playerdata,
+      allscoredata: allscoredata,
+      type: b50type,
+      genreorversion: genre,
+    );
   }
 }
 
@@ -158,7 +190,7 @@ Color clearColor({required String clear}) {
 Color clearBroder({required String clear}) {
   switch (clear) {
     case 'failed':
-      return Colors.grey;
+      return const Color.fromARGB(255, 130, 130, 130);
     case 'clear':
       return const Color.fromARGB(255, 255, 141, 59);
     case 'hard':
@@ -285,18 +317,103 @@ LinearGradient rankColor({required String rank}) {
   }
 }
 
-//普通B50
+//普通B50与理论B50
 Future<Widget> generateb50Body({
   required BuildContext context,
   required Map<String, dynamic> songsData,
+  required Map<String, dynamic> playerdata,
+  required Map<String, dynamic> b50data,
+  required String type,
 }) async {
-  //请求b50数据
-  String b50datastr = await requestB50();
-  Map<String, dynamic> b50data = (jsonDecode(b50datastr) as Map)['data'];
-  //请求玩家信息
-  String playerdatastr = await requestPlayerInfo();
-  Map<String, dynamic> playerdata = (jsonDecode(playerdatastr) as Map)['data'];
+  if (type == '个人理论50') {
+    for (var i in b50data['bests']) {
+      for (var j in songsData['songs']) {
+        if (i['id'] == j['id']) {
+          for (var k in j['difficulties']) {
+            if (k['difficulty'] == i['level_index']) {
+              i['level_value'] = k['level_value'];
+            }
+          }
+        }
+      }
+    }
+    for (var i in b50data['new_bests']) {
+      for (var j in songsData['songs']) {
+        if (i['id'] == j['id']) {
+          for (var k in j['difficulties']) {
+            if (k['difficulty'] == i['level_index']) {
+              i['level_value'] = k['level_value'];
+            }
+          }
+        }
+      }
+    }
+    (b50data['new_bests'] as List).sort(
+      (a, b) => b['level_value']!.compareTo(a['level_value']!),
+    );
+  } else if (type == '理论50') {
+    Map<String, dynamic> config = await loadConfig();
+    List lasteversionname = config['latest_version'];
+    List lasteversion = [];
+    for (var i in songsData['versions']) {
+      if (lasteversionname.contains(i['title'])) {
+        lasteversion.add(i['version']);
+      }
+    }
+    b50data['bests'] = [];
+    for (var i in songsData['songs']) {
+      if (!lasteversion.contains(i['version'])) {
+        b50data['bests'].add({
+          "id": i['id'],
+          "song_name": "${i['title']}",
+          "level": "${(i['difficulties'] as List).last['level']}",
+          "level_index": (i['difficulties'] as List).last['difficulty'],
+          "score": 1010000,
+          "rating": (i['difficulties'] as List).last['level_value'] + 2.15,
+          "over_power": 0,
+          "clear": "clear",
+          "full_combo": 'alljusticecritical',
+          "full_chain": null,
+          "rank": "s",
+          "play_time": "2026-08-02T08:48:00Z",
+          "upload_time": "2026-08-02T12:20:57Z",
+          "last_played_time": "2026-08-02T08:48:00Z",
+        });
+      }
+    }
+    (b50data['bests'] as List).sort(
+      (a, b) => b['rating'].compareTo(a['rating']),
+    );
+    b50data['bests'] = (b50data['bests'] as List).sublist(0, 30);
+    b50data['new_bests'] = [];
+    for (var i in songsData['songs']) {
+      if (lasteversion.contains(i['version'])) {
+        b50data['new_bests'].add({
+          "id": i['id'],
+          "song_name": "${i['title']}",
+          "level": "${(i['difficulties'] as List).last['level']}",
+          "level_index": (i['difficulties'] as List).last['difficulty'],
+          "score": 1010000,
+          "rating": (i['difficulties'] as List).last['level_value'] + 2.15,
+          "over_power": 0,
+          "clear": "clear",
+          "full_combo": 'alljusticecritical',
+          "full_chain": null,
+          "rank": "s",
+          "play_time": "2026-08-02T08:48:00Z",
+          "upload_time": "2026-08-02T12:20:57Z",
+          "last_played_time": "2026-08-02T08:48:00Z",
+        });
+      }
+    }
+    (b50data['new_bests'] as List).sort(
+      (a, b) => b['rating'].compareTo(a['rating']),
+    );
+    b50data['new_bests'] = (b50data['new_bests'] as List).sublist(0, 20);
+  }
+
   //先定义所需的变量
+  double totalRating = 0;
   Widget characterimage = SizedBox.shrink();
   if (playerdata['character'] != null) {
     characterimage = Image.network(
@@ -312,67 +429,7 @@ Future<Widget> generateb50Body({
   if (playerdata['trophy']['name'].length > 17) {
     trophywidth = trophywidth + (playerdata['trophy']['name'].length - 17) * 10;
   }
-  Widget title = SizedBox(
-    height: 170,
-    child: Row(
-      mainAxisAlignment: MainAxisAlignment.start,
-      children: [
-        Padding(
-          padding: EdgeInsetsGeometry.only(left: 55),
-          child: SizedBox(
-            width: trophywidth,
-            // 525,
-            height: 225,
-            child: Card(
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: [
-                  Column(
-                    mainAxisAlignment: MainAxisAlignment.spaceAround,
-                    children: [
-                      Card(
-                        color: trophyColor(
-                          trophy: playerdata['trophy']['color'],
-                        ),
-                        child: Padding(
-                          padding: EdgeInsetsGeometry.only(
-                            left: 60,
-                            right: 60,
-                            top: 5,
-                            bottom: 5,
-                          ),
-                          child: Text(
-                            playerdata['trophy']['name'],
-                            style: TextStyle(color: Colors.black),
-                          ),
-                        ),
-                      ),
-                      Padding(
-                        padding: EdgeInsetsGeometry.only(left: 15),
-                        child: Text(
-                          'Lv.${playerdata['level']}  ${playerdata['name']}',
-                          style: TextStyle(fontSize: 30),
-                        ),
-                      ),
-                      Text(
-                        'Rating:   ${playerdata['rating']}',
-                        style: TextStyle(
-                          fontSize: 25,
-                          color: ratingColor(rating: playerdata['rating']),
-                          shadows: [Shadow(color: Colors.black, blurRadius: 3)],
-                        ),
-                      ),
-                    ],
-                  ),
-                  characterimage,
-                ],
-              ),
-            ),
-          ),
-        ),
-      ],
-    ),
-  );
+
   // final ScrollController _scrollController = ScrollController();
   //b30文字
   Widget b30text = Row(
@@ -417,11 +474,15 @@ Future<Widget> generateb50Body({
     ],
   );
   //底部信息
+  String theory50 = '';
+  if (type != 'b50') {
+    theory50 = type;
+  }
   Widget fontter = Row(
     mainAxisAlignment: MainAxisAlignment.center,
     children: [
       Text(
-        '此B50由chusearchsong（中二查歌）生成，生成时间：${DateTime.now()}',
+        '此 $theory50 B50由chusearchsong（中二查歌）生成，生成时间：${DateTime.now()}',
         style: TextStyle(fontWeight: FontWeight.bold, color: Colors.black),
       ),
     ],
@@ -433,11 +494,11 @@ Future<Widget> generateb50Body({
     children: b30rowbody,
   );
   int row = 0;
-  int songcount = 1;
+  int songcount = 0;
   for (var i in b50data['bests']) {
     String songname;
-    if ((i['song_name'] as String).length > 18) {
-      songname = i['song_name'].substring(0, 18) + '...';
+    if ((i['song_name'] as String).length > 16) {
+      songname = i['song_name'].substring(0, 16) + '...';
     } else {
       songname = i['song_name'];
     }
@@ -452,21 +513,31 @@ Future<Widget> generateb50Body({
         break;
       }
     }
+    if (type != 'b50') {
+      i['score'] = 1010000;
+      i['rank'] = 'sssp';
+      i['clear'] = 'clear';
+      i['full_combo'] = 'alljusticecritical';
+      i['rating'] = diffvalue + 2.15;
+      totalRating = totalRating + i['rating'];
+    }
+
+    double fontSize = 14;
+    if (i['clear'] == 'catastrophy' && i['full_combo'] == null) {
+      fontSize = 6;
+    } else if (i['clear'] == 'absolute' && i['full_combo'] == null) {
+      fontSize = 8;
+    }
 
     b30rowbody.add(
       InkWell(
         onTap: () async {
-          final path = await getApplicationSupportDirectory();
-          String songdatastr = await File(
-            '${path.path}/res/songs.json',
-          ).readAsString();
-          Map<String, dynamic> songsdata = jsonDecode(songdatastr);
           Map<String, dynamic>? songdata;
           String? versionname;
-          for (var j in songsdata['songs']) {
+          for (var j in songsData['songs']) {
             if (i['id'] == j['id']) {
               songdata = j;
-              for (var k in songsdata['versions']) {
+              for (var k in songsData['versions']) {
                 if (j['version'] == k['version']) {
                   versionname = k['title'];
                   break;
@@ -623,6 +694,7 @@ Future<Widget> generateb50Body({
                                           style: TextStyle(
                                             fontWeight: FontWeight.bold,
                                             color: Colors.black,
+                                            fontSize: fontSize,
                                           ),
                                         ),
                                       ),
@@ -741,20 +813,31 @@ Future<Widget> generateb50Body({
         break;
       }
     }
+    if (type != 'b50') {
+      i['score'] = 1010000;
+      i['rank'] = 'sssp';
+      i['clear'] = 'clear';
+      i['full_combo'] = 'alljusticecritical';
+      i['rating'] = diffvalue + 2.15;
+      totalRating = totalRating + i['rating'];
+    }
+
+    double fontSize = 14;
+    if (i['clear'] == 'catastrophy' && i['full_combo'] == null) {
+      fontSize = 6;
+    } else if (i['clear'] == 'absolute' && i['full_combo'] == null) {
+      fontSize = 8;
+    }
+
     b20rowbody.add(
       InkWell(
         onTap: () async {
-          final path = await getApplicationSupportDirectory();
-          String songdatastr = await File(
-            '${path.path}/res/songs.json',
-          ).readAsString();
-          Map<String, dynamic> songsdata = jsonDecode(songdatastr);
           Map<String, dynamic>? songdata;
           String? versionname;
-          for (var j in songsdata['songs']) {
+          for (var j in songsData['songs']) {
             if (i['id'] == j['id']) {
               songdata = j;
-              for (var k in songsdata['versions']) {
+              for (var k in songsData['versions']) {
                 if (j['version'] == k['version']) {
                   versionname = k['title'];
                   break;
@@ -911,6 +994,7 @@ Future<Widget> generateb50Body({
                                           style: TextStyle(
                                             fontWeight: FontWeight.bold,
                                             color: Colors.black,
+                                            fontSize: fontSize,
                                           ),
                                         ),
                                       ),
@@ -1002,7 +1086,80 @@ Future<Widget> generateb50Body({
   if (b20rowbody.isNotEmpty) {
     b20body.add(b20row);
   }
+
+  if (type != 'b50') {
+    totalRating = totalRating / songcount;
+    playerdata['rating'] = double.parse(
+      totalRating.toString().length > 5
+          ? totalRating.toString().substring(0, 5)
+          : totalRating.toString(),
+    );
+  }
+
+  //玩家信息
+  Widget title = SizedBox(
+    height: 170,
+    child: Row(
+      mainAxisAlignment: MainAxisAlignment.start,
+      children: [
+        Padding(
+          padding: EdgeInsetsGeometry.only(left: 55),
+          child: SizedBox(
+            width: trophywidth,
+            // 525,
+            height: 225,
+            child: Card(
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  Column(
+                    mainAxisAlignment: MainAxisAlignment.spaceAround,
+                    children: [
+                      Card(
+                        color: trophyColor(
+                          trophy: playerdata['trophy']['color'],
+                        ),
+                        child: Padding(
+                          padding: EdgeInsetsGeometry.only(
+                            left: 60,
+                            right: 60,
+                            top: 5,
+                            bottom: 5,
+                          ),
+                          child: Text(
+                            playerdata['trophy']['name'],
+                            style: TextStyle(color: Colors.black),
+                          ),
+                        ),
+                      ),
+                      Padding(
+                        padding: EdgeInsetsGeometry.only(left: 15),
+                        child: Text(
+                          'Lv.${playerdata['level']}  ${playerdata['name']}',
+                          style: TextStyle(fontSize: 30),
+                        ),
+                      ),
+                      Text(
+                        'Rating:   ${playerdata['rating']}',
+                        style: TextStyle(
+                          fontSize: 25,
+                          color: ratingColor(rating: playerdata['rating']),
+                          shadows: [Shadow(color: Colors.black, blurRadius: 3)],
+                        ),
+                      ),
+                    ],
+                  ),
+                  characterimage,
+                ],
+              ),
+            ),
+          ),
+        ),
+      ],
+    ),
+  );
   //背景绘制
+
   Widget result = Container(
     width: 5896 / 2,
     height: 2844 / 2,
@@ -1026,6 +1183,14 @@ Widget buildTypeDropdownMenu({required ValueChanged onSelected}) {
     DropdownMenuEntry(value: 'random50', label: '随机b50'),
     DropdownMenuEntry(value: 'fc30', label: 'FC30'),
     DropdownMenuEntry(value: 'aj30', label: 'AJ30'),
+    DropdownMenuEntry(value: '寸50', label: '寸50'),
+    DropdownMenuEntry(value: '寸鸟50', label: '寸鸟50'),
+    DropdownMenuEntry(value: '流派50', label: '流派50'),
+    DropdownMenuEntry(value: '版本50', label: '版本50'),
+    DropdownMenuEntry(value: '谱师50', label: '谱师50'),
+    DropdownMenuEntry(value: '曲师50', label: '曲师50'),
+    DropdownMenuEntry(value: '个人理论50', label: '个人理论50'),
+    DropdownMenuEntry(value: '理论50', label: '理论50'),
   ];
   return DropdownMenu(
     selectOnly: true,
@@ -1035,4 +1200,67 @@ Widget buildTypeDropdownMenu({required ValueChanged onSelected}) {
     onSelected: onSelected,
     dropdownMenuEntries: dropdownMenuEntries,
   );
+}
+
+class NoteDesignerOrArtist extends StatefulWidget {
+  final ValueChanged fun;
+  final Set notedesignerorartist;
+  const NoteDesignerOrArtist({
+    super.key,
+    required this.fun,
+    required this.notedesignerorartist,
+  });
+
+  @override
+  State<NoteDesignerOrArtist> createState() => _NoteDesignerOrArtistState();
+}
+
+class _NoteDesignerOrArtistState extends State<NoteDesignerOrArtist> {
+  List<Widget> children = [];
+  final TextEditingController _controller = TextEditingController();
+
+  void search() {
+    children = [];
+    for (var i in widget.notedesignerorartist) {
+      if (i.toString().toLowerCase().contains(_controller.text.toLowerCase())) {
+        children.add(ListTile(title: Text('$i'), onTap: () => widget.fun(i)));
+      }
+    }
+    setState(() {
+      children = children;
+    });
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    for (var i in widget.notedesignerorartist) {
+      children.add(ListTile(title: Text('$i'), onTap: () => widget.fun(i)));
+    }
+    setState(() {
+      children = children;
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      body: Column(
+        children: [
+          Row(
+            children: [
+              Expanded(
+                child: TextField(
+                  controller: _controller,
+                  onChanged: (value) => search(),
+                  decoration: InputDecoration(hintText: '搜索...'),
+                ),
+              ),
+            ],
+          ),
+          Expanded(child: ListView(children: children)),
+        ],
+      ),
+    );
+  }
 }

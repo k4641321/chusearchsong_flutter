@@ -7,6 +7,7 @@ import '../generateb50fun/generateb50.dart';
 
 Widget buildLevelDropdownMenu({required ValueChanged<dynamic>? onSelected}) {
   const List<DropdownMenuEntry> dropdownMenuEntries = [
+    // DropdownMenuEntry(value: [0, 16.9], label: '全部'),
     DropdownMenuEntry(value: [0, 0.9], label: '0'),
     DropdownMenuEntry(value: [1, 1.9], label: '1'),
     DropdownMenuEntry(value: [2, 2.9], label: '2'),
@@ -186,7 +187,6 @@ Widget buildsongList({
                         errorWidget: (context, url, error) => Text('加载失败'),
                       ),
                     ),
-                    Wrap(children: songInfoDiffs),
                   ],
                 ),
                 Expanded(
@@ -247,6 +247,7 @@ Widget buildsongList({
                                 '成绩：$score | Rating：$rating | 评级：${rank.replaceAll('p', '+')}',
                                 style: TextStyle(color: returnColor(score)),
                               ),
+                        Wrap(children: songInfoDiffs),
                       ],
                     ),
                   ),

@@ -3,140 +3,15 @@ import 'package:chusearchsong_flutter/function/fun.dart';
 import 'package:chusearchsong_flutter/function/toolsfun/generateb50fun/generateb50.dart';
 import 'package:flutter/material.dart';
 import 'package:path_provider/path_provider.dart';
-import '../../request.dart';
 import 'dart:convert';
 import 'dart:math';
-
-Color diffcolor({required int diffindex}) {
-  switch (diffindex) {
-    case 0:
-      return Colors.green;
-    case 1:
-      return Colors.orange;
-    case 2:
-      return Colors.red;
-    case 3:
-      return Colors.purple;
-    case 4:
-      return Colors.black;
-    case 5:
-      return Colors.pink;
-    default:
-      return Colors.white;
-  }
-}
-
-Color ratingColor({required double rating}) {
-  if (rating >= 0 && rating < 4) {
-    return Colors.green; // 绿  0.00~3.99
-  } else if (rating < 7) {
-    return Colors.orange; // 橙  4.00~6.99
-  } else if (rating < 10) {
-    return Colors.red; // 红  7.00~9.99
-  } else if (rating < 12) {
-    return Colors.deepPurple; // 紫  10.00~11.99
-  } else if (rating < 13.25) {
-    return Colors.deepOrange; // 铜  12.00~13.24
-  } else if (rating < 14.5) {
-    return Colors.grey; // 银  13.25~14.49
-  } else if (rating < 15.25) {
-    return Colors.yellow; // 金  14.50~15.24
-  } else if (rating < 16) {
-    return Colors.amber; // 铂金 15.25~15.99
-  } else if (rating < 17) {
-    return Colors.purple; // 彩虹 16.00~16.99
-  } else {
-    return Colors.purpleAccent; // 彩虹(极) 17.00~
-  }
-}
-
-Color trophyColor({required String trophy}) {
-  switch (trophy) {
-    case 'platina':
-      return Colors.purpleAccent;
-    case 'gold':
-      return Colors.yellowAccent;
-    case 'silver':
-      return Colors.grey;
-    default:
-      return Colors.white;
-  }
-}
-
-String rankImg({required String rank}) {
-  switch (rank) {
-    case 'sssp':
-      return 'res/rank/sssp.png';
-    case 'sss':
-      return 'res/rank/sss.png';
-    case 'ssp':
-      return 'res/rank/ssp.png';
-    case 'ss':
-      return 'res/rank/ss.png';
-    case 'sp':
-      return 'res/rank/sp.png';
-    case 's':
-      return 'res/rank/s.png';
-    case 'aaa':
-      return 'res/rank/aaa.png';
-    case 'aa':
-      return 'res/rank/aa.png';
-    case 'a':
-      return 'res/rank/a.png';
-    case 'bbb':
-      return 'res/rank/bbb.png';
-    case 'bb':
-      return 'res/rank/bb.png';
-    case 'b':
-      return 'res/rank/b.png';
-    case 'c':
-      return 'res/rank/c.png';
-    case 'd':
-      return 'res/rank/d.png';
-    default:
-      return 'res/rank/d.png';
-  }
-}
-
-String clearImg({required String clear}) {
-  switch (clear) {
-    case 'failed':
-      return 'res/complete/failed.png';
-    case 'clear':
-      return 'res/complete/clear.png';
-    case 'hard':
-      return 'res/complete/hard.png';
-    case 'brave':
-      return 'res/complete/brave.png';
-    case 'catastrophy':
-      return 'res/complete/catastrophy.png';
-    case 'absolute':
-      return 'res/complete/absolute.png';
-    default:
-      return 'res/complete/failed.png';
-  }
-}
-
-String? fullcomboImg({required String fullcombo}) {
-  switch (fullcombo) {
-    case 'fullcombo':
-      return 'res/complete/fullcombo.png';
-    case 'alljustice':
-      return 'res/complete/alljustice.png';
-    case 'alljusticecritical':
-      return 'res/complete/alljusticecritical.png';
-    default:
-      return null;
-  }
-}
 
 Future<Widget> randomb50Body({
   required BuildContext context,
   required Map<String, dynamic> songsData,
+  required Map<String, dynamic> playerdata,
+  required List allscoredata,
 }) async {
-  //请求全曲成绩数据
-  String allsocresdatastr = await requestScore(token: await returnlxnstoken());
-  List allscoredata = (jsonDecode(allsocresdatastr) as Map)['data'];
   //开抽
   List randomb50;
   final random = List.from(allscoredata);
@@ -151,9 +26,7 @@ Future<Widget> randomb50Body({
     }
   }
   // print(randomb50);
-  //请求玩家信息
-  String playerdatastr = await requestPlayerInfo();
-  Map<String, dynamic> playerdata = (jsonDecode(playerdatastr) as Map)['data'];
+
   double trophywidth = 525;
   if (playerdata['trophy']['name'].length > 17) {
     trophywidth = trophywidth + (playerdata['trophy']['name'].length - 17) * 10;
@@ -287,20 +160,21 @@ Future<Widget> randomb50Body({
         break;
       }
     }
+    double fontSize = 14;
+    if (i['clear'] == 'catastrophy' && i['full_combo'] == null) {
+      fontSize = 6;
+    } else if (i['clear'] == 'absolute' && i['full_combo'] == null) {
+      fontSize = 8;
+    }
     b50rowbody.add(
       InkWell(
         onTap: () async {
-          final path = await getApplicationSupportDirectory();
-          String songdatastr = await File(
-            '${path.path}/res/songs.json',
-          ).readAsString();
-          Map<String, dynamic> songsdata = jsonDecode(songdatastr);
           Map<String, dynamic>? songdata;
           String? versionname;
-          for (var j in songsdata['songs']) {
+          for (var j in songsData['songs']) {
             if (i['id'] == j['id']) {
               songdata = j;
-              for (var k in songsdata['versions']) {
+              for (var k in songsData['versions']) {
                 if (j['version'] == k['version']) {
                   versionname = k['title'];
                   break;
@@ -457,6 +331,7 @@ Future<Widget> randomb50Body({
                                           style: TextStyle(
                                             fontWeight: FontWeight.bold,
                                             color: Colors.black,
+                                            fontSize: fontSize,
                                           ),
                                         ),
                                       ),

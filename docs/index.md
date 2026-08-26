@@ -15,7 +15,7 @@ hero:
       link: https://chusearchsong.4641321.xyz/
 features:
   - title: 未来的计划
-    details: 友人对战
+    details: 我没活了，快写不动了
   # - title: Feature B
   #   details: Lorem ipsum dolor sit amet, consectetur adipiscing elit
   # - title: Feature C

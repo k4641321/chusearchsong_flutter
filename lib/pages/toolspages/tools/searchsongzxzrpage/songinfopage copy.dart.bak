@@ -1,8 +1,8 @@
 import 'package:chusearchsong_flutter/function/fun.dart';
 import 'package:flutter/material.dart';
 import 'dart:developer';
-import '../../../function/toolsfun/searchsongzxzrpagefun/songinfopagefun.dart';
-import './songshareviewpage.dart';
+import '../toolsfun/searchsongzxzrpagefun/songinfopagefun.dart';
+import 'songshareviewpage.dart';
 
 class SongInfoPage extends StatefulWidget {
   final Map<String, dynamic> songdata;
@@ -163,7 +163,7 @@ class _SongInfoPageState extends State<SongInfoPage> {
                                 style: const TextStyle(fontSize: 15),
                               ),
                               Text(
-                                '上线状态：国际服：${widget.songdata['availability']['intl']} 日服：${widget.songdata['availability']['jp']}',
+                                '上线状态：国际服：${widget.songdata['availability']['intl']} 日服：${widget.songdata['availability']['intl']}',
                                 style: const TextStyle(fontSize: 15),
                               ),
                             ],

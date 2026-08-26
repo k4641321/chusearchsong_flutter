@@ -2,7 +2,7 @@ import 'dart:convert';
 
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:chusearchsong_flutter/function/toolsfun/playerinfopagefun.dart';
-import 'package:chusearchsong_flutter/pages/toolspages/collectibleinfopage.dart';
+import 'package:chusearchsong_flutter/pages/toolspages/information/searchcollectibles/collectibleinfopage.dart';
 import 'package:flutter/material.dart';
 import 'dart:io';
 import 'package:path_provider/path_provider.dart';

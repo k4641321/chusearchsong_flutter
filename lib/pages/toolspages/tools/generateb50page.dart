@@ -1,8 +1,9 @@
-﻿import 'dart:developer';
+﻿import 'dart:convert';
+import 'dart:developer';
 import 'dart:io';
 import 'package:chusearchsong_flutter/function/list.dart';
 import 'package:path_provider/path_provider.dart';
-import '../../function/toolsfun/generateb50fun/generateb50.dart';
+import '../../../function/toolsfun/generateb50fun/generateb50.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'dart:ui' as ui;
@@ -19,9 +20,24 @@ class GenerateB50Page extends StatefulWidget {
 class _GenerateB50PageState extends State<GenerateB50Page> {
   Widget image = Text('未生成或错误');
   Map<String, dynamic> songsData = {};
+  Map<String, dynamic> playerdata = {};
+  Map<String, dynamic> workingplayerdata = {};
+  List allscoredata = [];
+  String? genreorversion;
+  Map<String, dynamic> b50data = {};
+  Map<String, dynamic> workingb50data = {};
 
   Future<void> init() async {
+    //加载曲目信息
     songsData = await loadSongs();
+    //加载玩家信息
+    playerdata = await loadPlayerData();
+    playerdata = playerdata['data'];
+    //加载所有成绩
+    allscoredata = (await loadAllScoreData())['data'];
+    //加载b50数据
+    b50data = (await loadb50ScoreData())['data'];
+    workingplayerdata = Map.from(b50data);
   }
 
   @override
@@ -57,6 +73,90 @@ class _GenerateB50PageState extends State<GenerateB50Page> {
                 child: buildTypeDropdownMenu(
                   onSelected: (value) {
                     selectedType = value;
+                    if (selectedType == '流派50') {
+                      List<Widget> children = [];
+
+                      for (var i in songsData['genres']) {
+                        children.add(
+                          ListTile(
+                            title: Text(i['genre']),
+                            onTap: () {
+                              genreorversion = i['genre'];
+                              Navigator.of(context).pop();
+                            },
+                          ),
+                        );
+                      }
+                      showDialog(
+                        context: context,
+                        builder: (context) => SimpleDialog(
+                          title: Text('选择流派'),
+                          children: children,
+                        ),
+                      );
+                    } else if (selectedType == '版本50') {
+                      List<Widget> children = [];
+
+                      for (var i in songsData['versions']) {
+                        String title = i['title'];
+                        if (i['title'] != 'CHUNITHM') {
+                          title = (i['title'] as String).replaceAll(
+                            'CHUNITHM',
+                            '',
+                          );
+                        }
+                        children.add(
+                          ListTile(
+                            title: Text(title),
+                            onTap: () {
+                              genreorversion = i['version'].toString();
+                              Navigator.of(context).pop();
+                            },
+                          ),
+                        );
+                      }
+                      showDialog(
+                        context: context,
+                        builder: (context) => SimpleDialog(
+                          title: Text('选择版本'),
+                          children: children,
+                        ),
+                      );
+                    } else if (selectedType == '谱师50') {
+                      Set<String> designers = {};
+
+                      for (var i in songsData['songs']) {
+                        for (var j in i['difficulties']) {
+                          designers.add(j['note_designer']);
+                        }
+                      }
+                      showModalBottomSheet(
+                        context: context,
+                        builder: (context) => NoteDesignerOrArtist(
+                          fun: (value) {
+                            genreorversion = value;
+                            Navigator.of(context).pop();
+                          },
+                          notedesignerorartist: designers,
+                        ),
+                      );
+                    } else if (selectedType == '曲师50') {
+                      Set<String> artist = {};
+
+                      for (var i in songsData['songs']) {
+                        artist.add(i['artist']);
+                      }
+                      showModalBottomSheet(
+                        context: context,
+                        builder: (context) => NoteDesignerOrArtist(
+                          fun: (value) {
+                            genreorversion = value;
+                            Navigator.of(context).pop();
+                          },
+                          notedesignerorartist: artist,
+                        ),
+                      );
+                    }
                   },
                 ),
               ),
@@ -67,20 +167,30 @@ class _GenerateB50PageState extends State<GenerateB50Page> {
               Expanded(
                 child: TextButton(
                   onPressed: () async {
+                    if ((selectedType == '流派50' || selectedType == '版本50') &&
+                        genreorversion == null) {
+                      return;
+                    }
                     setState(() {
                       b50Body = Text('生成中...');
                     });
                     try {
+                      workingb50data = json.decode(json.encode(b50data));
+                      workingplayerdata = json.decode(json.encode(playerdata));
                       Widget? result = await selectb50(
                         b50type: selectedType,
                         context: context,
                         songsData: songsData,
+                        playerdata: workingplayerdata,
+                        allscoredata: allscoredata,
+                        genre: genreorversion,
+                        b50data: workingb50data,
                       );
                       setState(() {
                         if (result != null) {
                           b50Body = result;
                         } else {
-                          b50Body = Text('生成失败');
+                          b50Body = Text('生成失败，可能没结果');
                         }
                       });
                       if (!context.mounted) return;
