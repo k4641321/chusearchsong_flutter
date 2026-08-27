@@ -133,23 +133,51 @@ class _PlayerInfoPageState extends State<PlayerInfoPage> {
                   ),
                 ),
                 const Divider(),
-                Card(
-                  color: Theme.of(context).colorScheme.secondaryContainer,
-                  child: Padding(
-                    padding: const EdgeInsets.all(8),
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                      children: [
-                        const SizedBox(height: 10),
-                        InkWell(
-                          onLongPress: () => copytext(
-                            text: widget.playerdata['friend_code'].toString(),
-                            context: context,
+                Padding(
+                  padding: EdgeInsetsGeometry.all(8),
+                  child: Card(
+                    color: Theme.of(context).colorScheme.secondaryContainer,
+                    child: Padding(
+                      padding: const EdgeInsets.all(8),
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        children: [
+                          const SizedBox(height: 10),
+                          InkWell(
+                            onLongPress: () => copytext(
+                              text: widget.playerdata['friend_code'].toString(),
+                              context: context,
+                            ),
+                            child: Row(
+                              children: [
+                                Icon(
+                                  Icons.people,
+                                  size: 18,
+                                  color: Theme.of(context).colorScheme.primary,
+                                ),
+                                const SizedBox(width: 4),
+                                const SizedBox(
+                                  width: 100,
+                                  child: Text(
+                                    '好友码：',
+                                    style: TextStyle(fontSize: 15),
+                                  ),
+                                ),
+                                const SizedBox(width: 50),
+                                Expanded(
+                                  child: Text(
+                                    '${widget.playerdata['friend_code']}',
+                                    style: const TextStyle(fontSize: 15),
+                                  ),
+                                ),
+                              ],
+                            ),
                           ),
-                          child: Row(
+                          const Divider(),
+                          Row(
                             children: [
                               Icon(
-                                Icons.people,
+                                Icons.play_circle,
                                 size: 18,
                                 color: Theme.of(context).colorScheme.primary,
                               ),
@@ -157,198 +185,173 @@ class _PlayerInfoPageState extends State<PlayerInfoPage> {
                               const SizedBox(
                                 width: 100,
                                 child: Text(
-                                  '好友码：',
+                                  '总游玩次数：',
                                   style: TextStyle(fontSize: 15),
                                 ),
                               ),
                               const SizedBox(width: 50),
                               Expanded(
                                 child: Text(
-                                  '${widget.playerdata['friend_code']}',
+                                  '${widget.playerdata['total_play_count']}',
                                   style: const TextStyle(fontSize: 15),
                                 ),
                               ),
                             ],
                           ),
-                        ),
-                        const Divider(),
-                        Row(
-                          children: [
-                            Icon(
-                              Icons.play_circle,
-                              size: 18,
-                              color: Theme.of(context).colorScheme.primary,
-                            ),
-                            const SizedBox(width: 4),
-                            const SizedBox(
-                              width: 100,
-                              child: Text(
-                                '总游玩次数：',
-                                style: TextStyle(fontSize: 15),
+                          const Divider(),
+                          Row(
+                            children: [
+                              Icon(
+                                Icons.savings,
+                                size: 18,
+                                color: Theme.of(context).colorScheme.primary,
                               ),
-                            ),
-                            const SizedBox(width: 50),
-                            Expanded(
-                              child: Text(
-                                '${widget.playerdata['total_play_count']}',
-                                style: const TextStyle(fontSize: 15),
+                              const SizedBox(width: 4),
+                              const SizedBox(
+                                width: 100,
+                                child: Text(
+                                  '总金币数：',
+                                  style: TextStyle(fontSize: 15),
+                                ),
                               ),
-                            ),
-                          ],
-                        ),
-                        const Divider(),
-                        Row(
-                          children: [
-                            Icon(
-                              Icons.savings,
-                              size: 18,
-                              color: Theme.of(context).colorScheme.primary,
-                            ),
-                            const SizedBox(width: 4),
-                            const SizedBox(
-                              width: 100,
-                              child: Text(
-                                '总金币数：',
-                                style: TextStyle(fontSize: 15),
+                              const SizedBox(width: 50),
+                              Expanded(
+                                child: Text(
+                                  '${widget.playerdata['total_currency']}',
+                                  style: const TextStyle(fontSize: 15),
+                                ),
                               ),
-                            ),
-                            const SizedBox(width: 50),
-                            Expanded(
-                              child: Text(
-                                '${widget.playerdata['total_currency']}',
-                                style: const TextStyle(fontSize: 15),
+                            ],
+                          ),
+                          const Divider(),
+                          Row(
+                            children: [
+                              Icon(
+                                Icons.paid,
+                                size: 18,
+                                color: Theme.of(context).colorScheme.primary,
                               ),
-                            ),
-                          ],
-                        ),
-                        const Divider(),
-                        Row(
-                          children: [
-                            Icon(
-                              Icons.paid,
-                              size: 18,
-                              color: Theme.of(context).colorScheme.primary,
-                            ),
-                            const SizedBox(width: 4),
-                            const SizedBox(
-                              width: 100,
-                              child: Text(
-                                '当前金币数：',
-                                style: TextStyle(fontSize: 15),
+                              const SizedBox(width: 4),
+                              const SizedBox(
+                                width: 100,
+                                child: Text(
+                                  '当前金币数：',
+                                  style: TextStyle(fontSize: 15),
+                                ),
                               ),
-                            ),
-                            const SizedBox(width: 50),
-                            Expanded(
-                              child: Text(
-                                '${widget.playerdata['currency']}',
-                                style: const TextStyle(fontSize: 15),
+                              const SizedBox(width: 50),
+                              Expanded(
+                                child: Text(
+                                  '${widget.playerdata['currency']}',
+                                  style: const TextStyle(fontSize: 15),
+                                ),
                               ),
-                            ),
-                          ],
-                        ),
-                        const Divider(),
-                        Row(
-                          children: [
-                            Icon(
-                              Icons.bolt,
-                              size: 18,
-                              color: Theme.of(context).colorScheme.primary,
-                            ),
-                            const SizedBox(width: 4),
-                            const SizedBox(
-                              width: 100,
-                              child: Text(
-                                '总 OVER POWER：',
-                                style: TextStyle(fontSize: 15),
+                            ],
+                          ),
+                          const Divider(),
+                          Row(
+                            children: [
+                              Icon(
+                                Icons.bolt,
+                                size: 18,
+                                color: Theme.of(context).colorScheme.primary,
                               ),
-                            ),
-                            const SizedBox(width: 50),
-                            Expanded(
-                              child: Text(
-                                '${widget.playerdata['over_power']}',
-                                style: const TextStyle(fontSize: 15),
+                              const SizedBox(width: 4),
+                              const SizedBox(
+                                width: 100,
+                                child: Text(
+                                  '总 OVER POWER：',
+                                  style: TextStyle(fontSize: 15),
+                                ),
                               ),
-                            ),
-                          ],
-                        ),
-                        const Divider(),
-                        Row(
-                          children: [
-                            Icon(
-                              Icons.show_chart,
-                              size: 18,
-                              color: Theme.of(context).colorScheme.primary,
-                            ),
-                            const SizedBox(width: 4),
-                            const SizedBox(
-                              width: 100,
-                              child: Text(
-                                'OP 总进度：',
-                                style: TextStyle(fontSize: 15),
+                              const SizedBox(width: 50),
+                              Expanded(
+                                child: Text(
+                                  '${widget.playerdata['over_power']}',
+                                  style: const TextStyle(fontSize: 15),
+                                ),
                               ),
-                            ),
-                            const SizedBox(width: 50),
-                            Expanded(
-                              child: Text(
-                                '${widget.playerdata['over_power_progress']}',
-                                style: const TextStyle(fontSize: 15),
+                            ],
+                          ),
+                          const Divider(),
+                          Row(
+                            children: [
+                              Icon(
+                                Icons.show_chart,
+                                size: 18,
+                                color: Theme.of(context).colorScheme.primary,
                               ),
-                            ),
-                          ],
-                        ),
-                        const Divider(),
-                        Row(
-                          children: [
-                            Icon(
-                              Icons.replay,
-                              size: 18,
-                              color: Theme.of(context).colorScheme.primary,
-                            ),
-                            const SizedBox(width: 4),
-                            const SizedBox(
-                              width: 100,
-                              child: Text(
-                                '突破次数：',
-                                style: TextStyle(fontSize: 15),
+                              const SizedBox(width: 4),
+                              const SizedBox(
+                                width: 100,
+                                child: Text(
+                                  'OP 总进度：',
+                                  style: TextStyle(fontSize: 15),
+                                ),
                               ),
-                            ),
-                            const SizedBox(width: 50),
-                            Expanded(
-                              child: Text(
-                                '${widget.playerdata['reborn_count']}',
-                                style: const TextStyle(fontSize: 15),
+                              const SizedBox(width: 50),
+                              Expanded(
+                                child: Text(
+                                  '${widget.playerdata['over_power_progress']}',
+                                  style: const TextStyle(fontSize: 15),
+                                ),
                               ),
-                            ),
-                          ],
-                        ),
-                        const Divider(),
-                        Row(
-                          children: [
-                            Icon(
-                              Icons.cloud_upload,
-                              size: 18,
-                              color: Theme.of(context).colorScheme.primary,
-                            ),
-                            const SizedBox(width: 4),
-                            const SizedBox(
-                              width: 100,
-                              child: Text(
-                                '最后更新：',
-                                style: TextStyle(fontSize: 15),
+                            ],
+                          ),
+                          const Divider(),
+                          Row(
+                            children: [
+                              Icon(
+                                Icons.replay,
+                                size: 18,
+                                color: Theme.of(context).colorScheme.primary,
                               ),
-                            ),
-                            const SizedBox(width: 50),
-                            Expanded(
-                              child: Text(
-                                DateTime.parse(
-                                  widget.playerdata['upload_time'],
-                                ).toLocal().toString().substring(0, 16),
-                                style: const TextStyle(fontSize: 15),
+                              const SizedBox(width: 4),
+                              const SizedBox(
+                                width: 100,
+                                child: Text(
+                                  '突破次数：',
+                                  style: TextStyle(fontSize: 15),
+                                ),
                               ),
-                            ),
-                          ],
-                        ),
-                      ],
+                              const SizedBox(width: 50),
+                              Expanded(
+                                child: Text(
+                                  '${widget.playerdata['reborn_count']}',
+                                  style: const TextStyle(fontSize: 15),
+                                ),
+                              ),
+                            ],
+                          ),
+                          const Divider(),
+                          Row(
+                            children: [
+                              Icon(
+                                Icons.cloud_upload,
+                                size: 18,
+                                color: Theme.of(context).colorScheme.primary,
+                              ),
+                              const SizedBox(width: 4),
+                              const SizedBox(
+                                width: 100,
+                                child: Text(
+                                  '最后更新：',
+                                  style: TextStyle(fontSize: 15),
+                                ),
+                              ),
+                              const SizedBox(width: 50),
+                              Expanded(
+                                child: Text(
+                                  DateTime.parse(
+                                    widget.playerdata['upload_time'],
+                                  ).toLocal().toString().substring(0, 16),
+                                  style: const TextStyle(fontSize: 15),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ],
+                      ),
                     ),
                   ),
                 ),

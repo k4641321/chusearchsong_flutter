@@ -81,25 +81,25 @@ class _SongshareviewpageState extends State<Songshareviewpage> {
                           '${path.path}/tmp/zxzrsongshare.png',
                         ).writeAsBytesSync(pngBytes!);
                         if (!context.mounted) return;
-                        final platform = Theme.of(context).platform;
-                        if (platform == TargetPlatform.windows ||
-                            platform == TargetPlatform.linux) {
-                          await FilePicker.saveFile(
-                            dialogTitle: '保存单曲信息与成绩',
-                            fileName: 'zxzrsongshare.png',
-                            bytes: pngBytes,
-                            type: FileType.custom,
-                            allowedExtensions: ['png'],
-                          );
-                        } else {
-                          await SharePlus.instance.share(
-                            ShareParams(
-                              files: [
-                                XFile('${path.path}/tmp/zxzrsongshare.png'),
-                              ],
-                            ),
-                          );
-                        }
+                        // final platform = Theme.of(context).platform;
+                        // if (platform == TargetPlatform.windows ||
+                        //     platform == TargetPlatform.linux) {
+                        await FilePicker.saveFile(
+                          dialogTitle: '保存单曲信息与成绩',
+                          fileName: 'zxzrsongshare.png',
+                          bytes: pngBytes,
+                          type: FileType.custom,
+                          allowedExtensions: ['png'],
+                        );
+                        // } else {
+                        //   await SharePlus.instance.share(
+                        //     ShareParams(
+                        //       files: [
+                        //         XFile('${path.path}/tmp/zxzrsongshare.png'),
+                        //       ],
+                        //     ),
+                        //   );
+                        // }
                       } catch (e) {
                         log('$e', name: 'songshareviewpage.dart', level: 1000);
                       }

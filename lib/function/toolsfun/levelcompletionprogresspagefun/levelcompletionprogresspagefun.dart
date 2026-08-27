@@ -187,6 +187,7 @@ Widget buildsongList({
                         errorWidget: (context, url, error) => Text('加载失败'),
                       ),
                     ),
+                    Wrap(children: songInfoDiffs),
                   ],
                 ),
                 Expanded(
@@ -247,7 +248,6 @@ Widget buildsongList({
                                 '成绩：$score | Rating：$rating | 评级：${rank.replaceAll('p', '+')}',
                                 style: TextStyle(color: returnColor(score)),
                               ),
-                        Wrap(children: songInfoDiffs),
                       ],
                     ),
                   ),

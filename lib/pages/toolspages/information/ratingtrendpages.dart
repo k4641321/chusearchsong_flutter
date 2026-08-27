@@ -159,23 +159,23 @@ class _RatingTrendPagesState extends State<RatingTrendPages> {
                   '${path.path}/tmp/ratingtrend.png',
                 ).writeAsBytesSync(pngBytes!);
                 if (!context.mounted) return;
-                final platform = Theme.of(context).platform;
-                if (platform == TargetPlatform.windows ||
-                    platform == TargetPlatform.linux) {
-                  await FilePicker.saveFile(
-                    dialogTitle: '保存Rating趋势',
-                    fileName: 'ratingtrend.png',
-                    bytes: pngBytes,
-                    type: FileType.custom,
-                    allowedExtensions: ['png'],
-                  );
-                } else {
-                  await SharePlus.instance.share(
-                    ShareParams(
-                      files: [XFile('${path.path}/tmp/ratingtrend.png')],
-                    ),
-                  );
-                }
+                // final platform = Theme.of(context).platform;
+                // if (platform == TargetPlatform.windows ||
+                //     platform == TargetPlatform.linux) {
+                await FilePicker.saveFile(
+                  dialogTitle: '保存Rating趋势',
+                  fileName: 'ratingtrend.png',
+                  bytes: pngBytes,
+                  type: FileType.custom,
+                  allowedExtensions: ['png'],
+                );
+                // } else {
+                //   await SharePlus.instance.share(
+                //     ShareParams(
+                //       files: [XFile('${path.path}/tmp/ratingtrend.png')],
+                //     ),
+                //   );
+                // }
               } catch (e, strack) {
                 log('$e \n $strack');
                 if (!context.mounted) return;
