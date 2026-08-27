@@ -1,10 +1,6 @@
-import 'dart:developer';
-import 'dart:io';
 import 'package:chusearchsong_flutter/function/fun.dart';
 import 'package:chusearchsong_flutter/function/toolsfun/generateb50fun/generateb50.dart';
 import 'package:flutter/material.dart';
-import 'package:path_provider/path_provider.dart';
-import 'dart:convert';
 
 //寸B50
 Future<Widget> generatecun50Body({
@@ -193,8 +189,8 @@ Future<Widget> generatecun50Body({
   int songcount = 1;
   for (var i in resultScoreList) {
     String songname;
-    if ((i['song_name'] as String).length > 16) {
-      songname = i['song_name'].substring(0, 16) + '...';
+    if ((i['song_name'] as String).length > 14) {
+      songname = i['song_name'].substring(0, 14) + '...';
     } else {
       songname = i['song_name'];
     }

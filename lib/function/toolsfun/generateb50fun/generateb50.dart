@@ -1,12 +1,9 @@
-﻿import 'dart:io';
-import 'package:chusearchsong_flutter/function/fun.dart';
+﻿import 'package:chusearchsong_flutter/function/fun.dart';
 import 'package:chusearchsong_flutter/function/toolsfun/generateb50fun/aj50fun.dart';
 import 'package:chusearchsong_flutter/function/toolsfun/generateb50fun/fc50fun.dart';
 import 'package:chusearchsong_flutter/function/toolsfun/generateb50fun/otherb50.dart';
 import 'package:chusearchsong_flutter/function/toolsfun/generateb50fun/randomb50pagefun.dart';
 import 'package:flutter/material.dart';
-import 'package:path_provider/path_provider.dart';
-import 'dart:convert';
 
 Future<Widget?> selectb50({
   required String b50type,
@@ -797,8 +794,8 @@ Future<Widget> generateb50Body({
   for (var i in b50data['new_bests']) {
     double diffvalue = 0;
     String songname;
-    if ((i['song_name'] as String).length > 16) {
-      songname = i['song_name'].substring(0, 16) + '...';
+    if ((i['song_name'] as String).length > 14) {
+      songname = i['song_name'].substring(0, 14) + '...';
     } else {
       songname = i['song_name'];
     }

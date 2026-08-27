@@ -8,7 +8,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'dart:ui' as ui;
 import 'package:file_picker/file_picker.dart';
-import 'package:share_plus/share_plus.dart';
 
 class GenerateB50Page extends StatefulWidget {
   const GenerateB50Page({super.key});

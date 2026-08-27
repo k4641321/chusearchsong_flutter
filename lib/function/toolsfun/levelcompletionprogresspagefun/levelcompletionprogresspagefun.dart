@@ -53,17 +53,17 @@ Widget buildsongList({
   required BuildContext context,
   required ScrollController scrollController,
 }) {
-  String playhistory({
-    required int score,
-    required double rating,
-    required String rank,
-  }) {
-    if (score == 0 || rating == 0.0 || rank == '') {
-      return '';
-    } else {
-      return '\n成绩：$score | Rating：$rating | 评级：${rank.replaceFirst('p', '+')}';
-    }
-  }
+  // String playhistory({
+  //   required int score,
+  //   required double rating,
+  //   required String rank,
+  // }) {
+  //   if (score == 0 || rating == 0.0 || rank == '') {
+  //     return '';
+  //   } else {
+  //     return '\n成绩：$score | Rating：$rating | 评级：${rank.replaceFirst('p', '+')}';
+  //   }
+  // }
 
   List songresultMap = [];
   //先筛选难度

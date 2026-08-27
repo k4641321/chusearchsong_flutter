@@ -1,4 +1,3 @@
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'dart:io';
 import 'package:path_provider/path_provider.dart';
@@ -34,7 +33,7 @@ class _FavoritePageState extends State<FavoritePage> {
     for (var i in favoriteJson) {
       List<Widget> songInfoDiffs = [];
       String versionname = '';
-      int songid = i['id'];
+      // int songid = i['id'];
       for (var j in songData['versions']) {
         if (j['version'] == i['version']) {
           versionname = j['title'];
@@ -62,9 +61,9 @@ class _FavoritePageState extends State<FavoritePage> {
             ),
           ),
         );
-        if ((k as Map<String, dynamic>).containsKey('origin_id')) {
-          songid = k['origin_id'];
-        }
+        // if ((k as Map<String, dynamic>).containsKey('origin_id')) {
+        //   songid = k['origin_id'];
+        // }
       }
 
       // songresultWidget.add(const Divider());

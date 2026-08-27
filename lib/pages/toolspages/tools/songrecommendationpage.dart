@@ -712,8 +712,10 @@ class _SongRecommendationPageState extends State<SongRecommendationPage>
                                                     initialSelection:
                                                         selectedRank,
                                                     onSelected: (String? value) {
-                                                      if (!context.mounted)
+                                                      if (!context.mounted) {
                                                         return;
+                                                      }
+
                                                       setState(() {
                                                         selectedRank = value;
                                                       });
@@ -737,8 +739,9 @@ class _SongRecommendationPageState extends State<SongRecommendationPage>
                                                     initialSelection:
                                                         selectedifPlay,
                                                     onSelected: (String? value) {
-                                                      if (!context.mounted)
+                                                      if (!context.mounted) {
                                                         return;
+                                                      }
                                                       setState(() {
                                                         selectedifPlay = value;
                                                       });

@@ -8,7 +8,6 @@ import 'package:flutter/rendering.dart';
 import 'dart:io';
 import 'package:path_provider/path_provider.dart';
 import '../../../function/toolsfun/generateb50fun/generateb50.dart';
-import 'package:share_plus/share_plus.dart';
 import 'package:file_picker/file_picker.dart';
 
 //懒得翻文档了，我又不会设计ui，让ai美化了
@@ -266,7 +265,7 @@ class _RatingTrendPagesState extends State<RatingTrendPages> {
                                   barWidth: 2.5,
                                   dotData: FlDotData(
                                     show: spots.length < 30,
-                                    getDotPainter: (spot, _, __, ___) =>
+                                    getDotPainter: (spot, _, _, _) =>
                                         FlDotCirclePainter(
                                           radius: 3,
                                           color: primaryColor,
