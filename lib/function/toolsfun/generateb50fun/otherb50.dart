@@ -193,8 +193,8 @@ Future<Widget> generatecun50Body({
   int songcount = 1;
   for (var i in resultScoreList) {
     String songname;
-    if ((i['song_name'] as String).length > 18) {
-      songname = i['song_name'].substring(0, 18) + '...';
+    if ((i['song_name'] as String).length > 16) {
+      songname = i['song_name'].substring(0, 16) + '...';
     } else {
       songname = i['song_name'];
     }

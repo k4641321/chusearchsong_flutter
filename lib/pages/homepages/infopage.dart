@@ -429,57 +429,56 @@ class _InfoState extends State<Info> {
                               onTap: () {
                                 showDialog(
                                   context: context,
-                                  builder: (dialogContext) => AlertDialog(
+                                  builder: (dialogContext) => SimpleDialog(
                                     title: Text('选择更新的数据'),
-                                    content: Column(
-                                      children: [
-                                        ListTile(
-                                          title: Text('所有数据'),
-                                          onTap: () {
-                                            Navigator.of(dialogContext).pop();
-                                            Dataupdate.updateAllData(
-                                              context: context,
-                                            );
-                                          },
-                                        ),
-                                        ListTile(
-                                          title: Text('仅成绩'),
-                                          onTap: () {
-                                            Navigator.of(dialogContext).pop();
-                                            Dataupdate.updateScore(
-                                              context: context,
-                                            );
-                                          },
-                                        ),
-                                        ListTile(
-                                          title: Text('仅机厅数据(新)'),
-                                          onTap: () {
-                                            Navigator.of(dialogContext).pop();
-                                            Dataupdate.updateNearcadeShopData(
-                                              context: context,
-                                            );
-                                          },
-                                        ),
-                                        ListTile(
-                                          title: Text('仅基础数据'),
-                                          onTap: () {
-                                            Navigator.of(dialogContext).pop();
-                                            Dataupdate.updateBaseData(
-                                              context: context,
-                                            );
-                                          },
-                                        ),
-                                        ListTile(
-                                          title: Text('仅最新最热数据'),
-                                          onTap: () {
-                                            Navigator.of(dialogContext).pop();
-                                            Dataupdate.updatezxzrsongsData(
-                                              context: context,
-                                            );
-                                          },
-                                        ),
-                                      ],
-                                    ),
+
+                                    children: [
+                                      ListTile(
+                                        title: Text('所有数据'),
+                                        onTap: () {
+                                          Navigator.of(dialogContext).pop();
+                                          Dataupdate.updateAllData(
+                                            context: context,
+                                          );
+                                        },
+                                      ),
+                                      ListTile(
+                                        title: Text('仅成绩'),
+                                        onTap: () {
+                                          Navigator.of(dialogContext).pop();
+                                          Dataupdate.updateScore(
+                                            context: context,
+                                          );
+                                        },
+                                      ),
+                                      ListTile(
+                                        title: Text('仅机厅数据(新)'),
+                                        onTap: () {
+                                          Navigator.of(dialogContext).pop();
+                                          Dataupdate.updateNearcadeShopData(
+                                            context: context,
+                                          );
+                                        },
+                                      ),
+                                      ListTile(
+                                        title: Text('仅基础数据'),
+                                        onTap: () {
+                                          Navigator.of(dialogContext).pop();
+                                          Dataupdate.updateBaseData(
+                                            context: context,
+                                          );
+                                        },
+                                      ),
+                                      ListTile(
+                                        title: Text('仅最新最热数据'),
+                                        onTap: () {
+                                          Navigator.of(dialogContext).pop();
+                                          Dataupdate.updatezxzrsongsData(
+                                            context: context,
+                                          );
+                                        },
+                                      ),
+                                    ],
                                   ),
                                 );
                               },

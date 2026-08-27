@@ -141,8 +141,8 @@ Future<Widget> fc50Body({
   for (var i in fcb50) {
     if (total > 50) break;
     String songname;
-    if ((i['song_name'] as String).length > 18) {
-      songname = i['song_name'].substring(0, 18) + '...';
+    if ((i['song_name'] as String).length > 16) {
+      songname = i['song_name'].substring(0, 16) + '...';
     } else {
       songname = i['song_name'];
     }

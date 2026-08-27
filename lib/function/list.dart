@@ -31,10 +31,18 @@ Future<Map<String, dynamic>> loadAllScoreData() async {
   return json;
 }
 
-//加载歌曲数据
+//加载玩家数据
 Future<Map<String, dynamic>> loadPlayerData() async {
   final directory = await getApplicationSupportDirectory();
   final file = File('${directory.path}/res/playerinfo.json');
+  final json = jsonDecode(await file.readAsString());
+  return json;
+}
+
+//加载歌曲数据
+Future<List> loadzxzrSongs() async {
+  final directory = await getApplicationSupportDirectory();
+  final file = File('${directory.path}/res/zxzrsongs.json');
   final json = jsonDecode(await file.readAsString());
   return json;
 }

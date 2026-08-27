@@ -237,23 +237,23 @@ class _GenerateB50PageState extends State<GenerateB50Page> {
                         '${path.path}/tmp/b50.png',
                       ).writeAsBytesSync(pngBytes!);
                       if (!context.mounted) return;
-                      final platform = Theme.of(context).platform;
-                      if (platform == TargetPlatform.windows ||
-                          platform == TargetPlatform.linux) {
-                        await FilePicker.saveFile(
-                          dialogTitle: '保存B50',
-                          fileName: 'b50.png',
-                          bytes: pngBytes,
-                          type: FileType.custom,
-                          allowedExtensions: ['png'],
-                        );
-                      } else {
-                        await SharePlus.instance.share(
-                          ShareParams(
-                            files: [XFile('${path.path}/tmp/b50.png')],
-                          ),
-                        );
-                      }
+                      // final platform = Theme.of(context).platform;
+                      // if (platform == TargetPlatform.windows ||
+                      //     platform == TargetPlatform.linux) {
+                      await FilePicker.saveFile(
+                        dialogTitle: '保存B50',
+                        fileName: 'b50.png',
+                        bytes: pngBytes,
+                        type: FileType.custom,
+                        allowedExtensions: ['png'],
+                      );
+                      // } else {
+                      //   await SharePlus.instance.share(
+                      //     ShareParams(
+                      //       files: [XFile('${path.path}/tmp/b50.png')],
+                      //     ),
+                      //   );
+                      // }
                     } catch (e) {
                       log('$e', name: 'generateb50page.dart', level: 1000);
                     }

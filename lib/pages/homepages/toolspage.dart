@@ -6,6 +6,7 @@ import 'package:chusearchsong_flutter/pages/toolspages/information/searchlobbyne
 import 'package:chusearchsong_flutter/pages/toolspages/tools/searchsongzxzrpage/searchsongzxzrpage.dart';
 import 'package:chusearchsong_flutter/pages/toolspages/tools/songrecommendationpage.dart';
 import 'package:chusearchsong_flutter/function/fun.dart';
+import 'package:chusearchsong_flutter/pages/toolspages/tools/variousrankingspage.dart';
 import 'package:chusearchsong_flutter/pages/toolspages/tools/viewallgradespage.dart';
 import '../../function/toolsfun/ratingtrendpagefun.dart';
 import '../toolspages/tools/ratingcalculatorpage.dart';
@@ -638,7 +639,31 @@ class _ToolPageState extends State<ToolPage> {
                             ),
                           ),
                           icon: Icon(
-                            Icons.album,
+                            Icons.album_outlined,
+                            color: Theme.of(context).colorScheme.onSurface,
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                  Expanded(
+                    child: InkWell(
+                      child: Card(
+                        child: TextButton.icon(
+                          label: Text(
+                            '各种排行榜',
+                            style: TextStyle(
+                              color: Theme.of(context).colorScheme.onSurface,
+                            ),
+                          ),
+                          onPressed: () => Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => const Variousrankingspage(),
+                            ),
+                          ),
+                          icon: Icon(
+                            Icons.leaderboard_outlined,
                             color: Theme.of(context).colorScheme.onSurface,
                           ),
                         ),
