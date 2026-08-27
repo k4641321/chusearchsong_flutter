@@ -161,7 +161,7 @@ Future<Widget> generatecun50Body({
             right: 20,
           ),
           child: Text(
-            'b50',
+            'B50',
             style: TextStyle(fontSize: 30, color: Colors.white),
           ),
         ),
