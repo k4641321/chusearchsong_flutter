@@ -12,7 +12,7 @@ class ThankYouListPage extends StatelessWidget {
           children: [
             Text('排名不分前后'),
             const Divider(),
-            Text('ChiffonOwO\n为B50生成，成绩的生成提供了优秀的方案'),
+            Text('ChiffonOwO\n为B50生成，成绩的生成提供了优秀的方案，为IOS设备测试提供了支持'),
             const Divider(),
             Text('Komaeda\n为播放器界面改进提供了建议'),
             const Divider(),

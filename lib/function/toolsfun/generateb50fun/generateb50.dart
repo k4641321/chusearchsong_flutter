@@ -494,8 +494,8 @@ Future<Widget> generateb50Body({
   int songcount = 0;
   for (var i in b50data['bests']) {
     String songname;
-    if ((i['song_name'] as String).length > 16) {
-      songname = i['song_name'].substring(0, 16) + '...';
+    if ((i['song_name'] as String).length > 14) {
+      songname = i['song_name'].substring(0, 14) + '...';
     } else {
       songname = i['song_name'];
     }
@@ -749,6 +749,7 @@ Future<Widget> generateb50Body({
                     children: [
                       Text(
                         songname,
+                        maxLines: 1,
                         style: TextStyle(
                           fontSize: 16,
                           fontWeight: FontWeight.bold,
@@ -1049,6 +1050,7 @@ Future<Widget> generateb50Body({
                     children: [
                       Text(
                         songname,
+                        maxLines: 1,
                         style: TextStyle(
                           fontSize: 16,
                           fontWeight: FontWeight.bold,
