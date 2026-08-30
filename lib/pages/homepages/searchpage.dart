@@ -61,7 +61,7 @@ class _SearchPageState extends State<SearchPage> {
 
     try {
       // 使用 await 调用异步函数
-      List<dynamic> resultsMap = await filter(
+      Map<String, dynamic> resultsMap = await filter(
         songsData,
         aliasData,
         searchTitle,
@@ -81,6 +81,7 @@ class _SearchPageState extends State<SearchPage> {
         songsData: songsData,
         songresultMap: resultsMap,
         context: context,
+        searchinfo: resultsMap['searchinfo'],
       );
       if (!mounted) return;
       setState(() {

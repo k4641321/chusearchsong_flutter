@@ -16,8 +16,8 @@ class _SongRecommendationPageState extends State<SongRecommendationPage>
   //定义所需变量
   Widget oldSongWidget = SizedBox.shrink(); //CircularProgressIndicator();
   Widget newSongWidget = SizedBox.shrink(); //CircularProgressIndicator();
-  List<List<Widget>> oldSongWidgetList = [];
-  List<List<Widget>> newSongWidgetList = [];
+  List<List<Widget>> oldSongWidgetList = [[]];
+  List<List<Widget>> newSongWidgetList = [[]];
   int oldpage = 0;
   int newpage = 0;
   int? selectedSpecialFilter = 0;
@@ -134,7 +134,7 @@ class _SongRecommendationPageState extends State<SongRecommendationPage>
     String ifPlay = selectedifPlay ?? '-1';
     try {
       // 使用 await 调用异步函数
-      List<dynamic> resultsMap = await filter(
+      Map<String, dynamic> resultsMap = await filter(
         songsData,
         aliasData,
         searchTitle,
@@ -149,7 +149,7 @@ class _SongRecommendationPageState extends State<SongRecommendationPage>
         null,
         0,
       );
-      return resultsMap;
+      return resultsMap['songs'];
     } catch (e, strack) {
       log('搜索错误: $e\n$strack', name: 'searchpage.dart', level: 1000);
       return null;
@@ -165,14 +165,14 @@ class _SongRecommendationPageState extends State<SongRecommendationPage>
       // double.parse(_pageController.text);
       if (!mounted) return;
       if (filterSongs != null) {
-        if (selectedRank == '-1') {
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-              content: Text('未选择评级，将使用SSS+评级'),
-              duration: Duration(seconds: 1),
-            ),
-          );
-        }
+        // if (selectedRank == '-1') {
+        //   ScaffoldMessenger.of(context).showSnackBar(
+        //     SnackBar(
+        //       content: Text('未选择评级，将使用SSS+评级'),
+        //       duration: Duration(seconds: 1),
+        //     ),
+        //   );
+        // }
         if (_minRatingController.text == '') {
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
@@ -206,16 +206,8 @@ class _SongRecommendationPageState extends State<SongRecommendationPage>
       if (!context.mounted) return;
       setState(() {
         if (_tabController.index == 0) {
-          oldSongWidget = ListView.builder(
-            itemBuilder: (context, index) => oldSongWidgetList[oldpage][index],
-            itemCount: oldSongWidgetList[oldpage].length,
-          );
           _pageController.text = '${oldpage + 1}';
         } else {
-          newSongWidget = ListView.builder(
-            itemBuilder: (context, index) => newSongWidgetList[newpage][index],
-            itemCount: newSongWidgetList[newpage].length,
-          );
           _pageController.text = '${newpage + 1}';
         }
       });
@@ -289,6 +281,7 @@ class _SongRecommendationPageState extends State<SongRecommendationPage>
     _tabController.dispose();
     _difficultyup.removeListener(_onDifficultyUpInput);
     _difficultydown.removeListener(_onDifficultyDownInput);
+    _scrollController.dispose();
     super.dispose();
   }
 
@@ -820,11 +813,6 @@ class _SongRecommendationPageState extends State<SongRecommendationPage>
                           if (oldSongWidgetList.isNotEmpty) {
                             if (!context.mounted) return;
                             setState(() {
-                              oldSongWidget = ListView.builder(
-                                itemBuilder: (context, index) =>
-                                    oldSongWidgetList[oldpage][index],
-                                itemCount: oldSongWidgetList[oldpage].length,
-                              );
                               _pageController.text = '${oldpage + 1}';
                             });
                           }
@@ -833,11 +821,6 @@ class _SongRecommendationPageState extends State<SongRecommendationPage>
                           if (newSongWidgetList.isNotEmpty) {
                             if (!context.mounted) return;
                             setState(() {
-                              newSongWidget = ListView.builder(
-                                itemBuilder: (context, index) =>
-                                    newSongWidgetList[newpage][index],
-                                itemCount: newSongWidgetList[newpage].length,
-                              );
                               _pageController.text = '${newpage + 1}';
                             });
                           }
@@ -854,17 +837,18 @@ class _SongRecommendationPageState extends State<SongRecommendationPage>
                 ],
               ),
             ),
-            SliverToBoxAdapter(
-              child: SizedBox(
-                width: MediaQuery.widthOf(context),
-                height: MediaQuery.heightOf(context),
-                child: TabBarView(
-                  controller: _tabController,
-                  children: [
-                    Center(child: oldSongWidget),
-                    Center(child: newSongWidget),
-                  ],
-                ),
+            SliverList(
+              delegate: SliverChildBuilderDelegate(
+                (context, index) {
+                  if (_tabController.index == 0) {
+                    return oldSongWidgetList[oldpage][index];
+                  } else {
+                    return newSongWidgetList[newpage][index];
+                  }
+                },
+                childCount: _tabController.index == 0
+                    ? oldSongWidgetList[oldpage].length
+                    : newSongWidgetList[newpage].length,
               ),
             ),
           ],
@@ -884,11 +868,6 @@ class _SongRecommendationPageState extends State<SongRecommendationPage>
                   }
                   if (!context.mounted) return;
                   setState(() {
-                    oldSongWidget = ListView.builder(
-                      itemBuilder: (context, index) =>
-                          oldSongWidgetList[oldpage][index],
-                      itemCount: oldSongWidgetList[oldpage].length,
-                    );
                     _pageController.text = '${oldpage + 1}';
                   });
                 } else {
@@ -899,11 +878,6 @@ class _SongRecommendationPageState extends State<SongRecommendationPage>
                   }
                   if (!context.mounted) return;
                   setState(() {
-                    newSongWidget = ListView.builder(
-                      itemBuilder: (context, index) =>
-                          newSongWidgetList[newpage][index],
-                      itemCount: newSongWidgetList[newpage].length,
-                    );
                     _pageController.text = '${newpage + 1}';
                   });
                 }
@@ -929,13 +903,7 @@ class _SongRecommendationPageState extends State<SongRecommendationPage>
                       oldpage = oldSongWidgetList.length - 1;
                     }
                     if (!context.mounted) return;
-                    setState(() {
-                      oldSongWidget = ListView.builder(
-                        itemBuilder: (context, index) =>
-                            oldSongWidgetList[oldpage][index],
-                        itemCount: oldSongWidgetList[oldpage].length,
-                      );
-                    });
+                    setState(() {});
                   } else {
                     newpage = int.parse(value) - 1;
                     if (newpage < 0) {
@@ -944,13 +912,7 @@ class _SongRecommendationPageState extends State<SongRecommendationPage>
                       newpage = newSongWidgetList.length - 1;
                     }
                     if (!context.mounted) return;
-                    setState(() {
-                      newSongWidget = ListView.builder(
-                        itemBuilder: (context, index) =>
-                            newSongWidgetList[newpage][index],
-                        itemCount: newSongWidgetList[newpage].length,
-                      );
-                    });
+                    setState(() {});
                   }
                 } catch (e) {
                   return;
@@ -969,11 +931,6 @@ class _SongRecommendationPageState extends State<SongRecommendationPage>
                   }
                   if (!context.mounted) return;
                   setState(() {
-                    oldSongWidget = ListView.builder(
-                      itemBuilder: (context, index) =>
-                          oldSongWidgetList[oldpage][index],
-                      itemCount: oldSongWidgetList[oldpage].length,
-                    );
                     _pageController.text = '${oldpage + 1}';
                   });
                 } else {
@@ -983,11 +940,6 @@ class _SongRecommendationPageState extends State<SongRecommendationPage>
                   }
                   if (!context.mounted) return;
                   setState(() {
-                    newSongWidget = ListView.builder(
-                      itemBuilder: (context, index) =>
-                          newSongWidgetList[newpage][index],
-                      itemCount: newSongWidgetList[newpage].length,
-                    );
                     _pageController.text = '${newpage + 1}';
                   });
                 }

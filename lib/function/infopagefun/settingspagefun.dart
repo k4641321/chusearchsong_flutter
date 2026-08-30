@@ -175,6 +175,22 @@ Future<void> updateconfig() async {
     config['announcement']['read'] = false;
     config['announcement']['value'] = 0;
   }
+  //收藏列表
+  if (!config.containsKey('favoriteFileUpdated')) {
+    List favroitesList = jsonDecode(
+      await File('${path.path}/files/favorite.json').readAsString(),
+    );
+    Map<String, dynamic> newFavoritesList = {};
+    newFavoritesList["favorite"] = [];
+    for (var i in favroitesList) {
+      (newFavoritesList["favorite"] as List).add(i['id']);
+    }
+    File(
+      '${path.path}/files/favorite.json',
+    ).writeAsString(jsonEncode(newFavoritesList));
+    config['favoriteFileUpdated'] = true;
+  }
+
   File('${path.path}/config.json').writeAsStringSync(json.encode(config));
 }
 

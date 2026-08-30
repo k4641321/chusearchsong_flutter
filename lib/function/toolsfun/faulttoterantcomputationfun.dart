@@ -156,7 +156,7 @@ List<DataRow> calculate({required int total, required bool countdown}) {
   rows.add(
     DataRow(
       cells: [
-        DataCell(Text('S+')),
+        DataCell(Text('S')),
         DataCell(Text('最多可有: $tapm 个M / $tapa 个A / $tapj 个J')),
       ],
     ),

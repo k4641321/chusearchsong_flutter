@@ -225,6 +225,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "0.7.13"
+  dev_http_proxy:
+    dependency: "direct main"
+    description:
+      name: dev_http_proxy
+      sha256: acdfddd56fafbb7da39f82a9e12f5264496583e16f941318863cfa48f2c34017
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.0.3"
   dynamic_color:
     dependency: "direct main"
     description:

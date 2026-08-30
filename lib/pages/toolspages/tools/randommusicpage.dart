@@ -65,7 +65,7 @@ class _RandomMusicPageState extends State<RandomMusicPage> {
     randomcount = count;
     try {
       // 使用 await 调用异步函数
-      List<dynamic> resultsMap = await filter(
+      Map<String, dynamic> resultsMap = await filter(
         songsData,
         aliasData,
         searchTitle,

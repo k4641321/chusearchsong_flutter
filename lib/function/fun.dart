@@ -190,7 +190,11 @@ class Dataupdate {
         if (!context.mounted) return;
         showtext.value = '开始创建配置文件';
         File('${directory.path}/config.json').createSync();
-        Map<String, dynamic> config = {"theme": "light", "init": false};
+        Map<String, dynamic> config = {
+          "theme": "light",
+          "init": false,
+          "favoriteFileUpdated": true,
+        };
         File(
           '${directory.path}/config.json',
         ).writeAsStringSync(jsonEncode(config));
@@ -235,7 +239,9 @@ class Dataupdate {
       if (!File('${path.path}/favorite.json').existsSync()) {
         showtext.value = '创建收藏文件';
         File('${path.path}/favorite.json').createSync();
-        File('${path.path}/favorite.json').writeAsStringSync('[]');
+        File(
+          '${path.path}/favorite.json',
+        ).writeAsStringSync(jsonEncode({'favorite': []}));
         showtext.value = '完成';
       }
     } catch (e, strack) {
@@ -631,14 +637,18 @@ Widget returnSongCard({
   required Map<String, dynamic> songbasedata,
   required String versionname,
   required BuildContext context,
+  VoidCallback? onReturn,
+  Map<int, dynamic>? searchinfo,
 }) {
   int originid = songbasedata['id'];
+  //难度组件
   List<Widget> songInfoDiffs = [];
   if (((songbasedata['difficulties'] as List).last as Map).containsKey(
     'origin_id',
   )) {
     originid = songbasedata['difficulties'].last['origin_id'];
   }
+
   for (var k in songbasedata['difficulties']) {
     songInfoDiffs.add(
       Card(
@@ -662,14 +672,46 @@ Widget returnSongCard({
       ),
     );
   }
+
+  //搜索结果组件
+  Widget searchinfoWidget = SizedBox.shrink();
+  if (searchinfo != null &&
+      searchinfo.keys.toList().contains(songbasedata['id'])) {
+    String searchinfostr = '';
+    if ((searchinfo[songbasedata['id']] as Map).containsKey('BPM')) {
+      searchinfostr =
+          '$searchinfostr BPM:${(searchinfo[songbasedata['id']] as Map)['BPM']}';
+    }
+    if ((searchinfo[songbasedata['id']] as Map).containsKey('alias')) {
+      searchinfostr =
+          '$searchinfostr 别名:${(searchinfo[songbasedata['id']] as Map)['alias']}';
+    }
+    if ((searchinfo[songbasedata['id']] as Map).containsKey('note_designer')) {
+      searchinfostr =
+          '$searchinfostr 谱师:${(searchinfo[songbasedata['id']] as Map)['note_designer']}';
+    }
+    if ((searchinfo[songbasedata['id']] as Map).containsKey('notecounts')) {
+      for (var l
+          in ((searchinfo[songbasedata['id']] as Map)['notecounts'] as Map).keys
+              .toList()) {
+        searchinfostr =
+            '$searchinfostr $l:${searchinfo[songbasedata['id']]['notecounts'][l]}';
+      }
+    }
+    searchinfoWidget = Text(
+      searchinfostr,
+      style: TextStyle(color: Colors.grey),
+    );
+  }
   return InkWell(
     // key: ValueKey(songItem['id']),
     onTap: () async {
-      interSongInfo(
+      await interSongInfo(
         songbasedata: songbasedata,
         context: context,
         versionname: versionname,
       );
+      onReturn?.call();
     },
     child: Card(
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(0.0)),
@@ -736,6 +778,7 @@ Widget returnSongCard({
                     ],
                   ),
                   Wrap(children: songInfoDiffs),
+                  searchinfoWidget,
                 ],
               ),
             ),
@@ -744,4 +787,22 @@ Widget returnSongCard({
       ),
     ),
   );
+}
+
+Future<Map<String, dynamic>> loadFavoriteSong() async {
+  final path = await getApplicationSupportDirectory();
+
+  String configJsonStr = await File(
+    '${path.path}/files/favorite.json',
+  ).readAsString();
+  Map<String, dynamic> configJson = json.decode(configJsonStr);
+  return configJson;
+}
+
+Future<void> saveFavoriteSong(Map<String, dynamic> favoriteSongs) async {
+  final path = await getApplicationSupportDirectory();
+
+  await File(
+    '${path.path}/files/favorite.json',
+  ).writeAsString(jsonEncode(favoriteSongs));
 }

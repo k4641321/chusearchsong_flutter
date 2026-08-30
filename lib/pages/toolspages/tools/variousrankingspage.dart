@@ -37,7 +37,7 @@ class _VariousrankingspageState extends State<Variousrankingspage> {
     init();
   }
 
-  void viewResult() {
+  Future<void> viewResult() async {
     try {
       final workingSongsData = jsonDecode(jsonEncode(songsData));
       final workingzxzrSongsData = jsonDecode(jsonEncode(zxzrSongsData));

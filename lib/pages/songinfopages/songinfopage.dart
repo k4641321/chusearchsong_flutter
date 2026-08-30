@@ -42,82 +42,170 @@ class _SongInfoPageState extends State<SongInfoPage> {
   //添加收藏
   Future<void> _add() async {
     try {
-      final favoriteJsonPath =
-          '${(await getApplicationSupportDirectory()).path}/files/favorite.json';
-      String favoriteJsonStr = await File(favoriteJsonPath).readAsString();
-      List<dynamic> favoriteJson = json.decode(favoriteJsonStr);
-      List<dynamic> willadd = [];
-      final exists = favoriteJson.any(
-        (item) => item['id'] == widget.songbasedata['id'],
-      );
-      if (exists) {
-        log('已添加');
-      } else {
-        favoriteJson.add(widget.songbasedata);
-        log('添加成功');
-      }
+      Map<String, dynamic> favoriteSongs = await loadFavoriteSong();
 
-      favoriteJson.addAll(willadd);
-      favoriteJsonStr = json.encode(favoriteJson);
-      File(favoriteJsonPath).writeAsStringSync(favoriteJsonStr);
       if (!mounted) return;
-      setState(() {
-        icon = Icons.favorite;
-      });
-      if (!mounted) return;
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('成功')));
-    } catch (e) {
-      log('错误', name: 'songinfopage', level: 1000);
+      List<Widget> children = [];
+      for (var i in favoriteSongs.keys.toList()) {
+        children.add(
+          ListTile(
+            title: Text(i),
+            onTap: () {
+              try {
+                if (!(favoriteSongs[i] as List).contains(
+                  widget.songbasedata['id'],
+                )) {
+                  favoriteSongs[i].add(widget.songbasedata['id']);
+                } else {
+                  return;
+                }
+                saveFavoriteSong(favoriteSongs);
+                if (!mounted) return;
+                setState(() {
+                  icon = Icons.favorite;
+                });
+                if (!mounted) return;
+                ScaffoldMessenger.of(
+                  context,
+                ).showSnackBar(SnackBar(content: Text('成功')));
+                Navigator.pop(context);
+              } catch (e, strack) {
+                log('$e\n$strack');
+                ScaffoldMessenger.of(
+                  context,
+                ).showSnackBar(SnackBar(content: Text('错误：$e\n$strack')));
+              }
+            },
+          ),
+        );
+      }
+      children.add(
+        ListTile(
+          title: Text('+', textAlign: TextAlign.center),
+          onTap: () {
+            try {
+              final TextEditingController controller = TextEditingController();
+              showDialog(
+                context: context,
+                builder: (context) => AlertDialog(
+                  title: Text('输入名称'),
+                  content: TextField(controller: controller),
+                  actions: [
+                    TextButton(
+                      onPressed: () => Navigator.pop(context),
+                      child: Text('取消'),
+                    ),
+                    TextButton(
+                      onPressed: () async {
+                        Map<String, dynamic> favoriteListSongs =
+                            await loadFavoriteSong();
+                        List favoriteListSongKeys = favoriteListSongs.keys
+                            .toList();
+                        if (favoriteListSongKeys.contains(controller.text)) {
+                          if (!context.mounted) return;
+                          ScaffoldMessenger.of(
+                            context,
+                          ).showSnackBar(SnackBar(content: Text('已存在相同文件')));
+
+                          Navigator.pop(context);
+                          return;
+                        }
+                        favoriteListSongs[controller.text] = [];
+                        favoriteListSongs[controller.text].add(
+                          widget.songbasedata['id'],
+                        );
+                        await saveFavoriteSong(favoriteListSongs);
+                        if (!context.mounted) return;
+
+                        Navigator.pop(context);
+                        Navigator.pop(context);
+                      },
+                      child: Text('确定'),
+                    ),
+                  ],
+                ),
+              );
+            } catch (e, strack) {
+              log('$e\n$strack');
+              ScaffoldMessenger.of(
+                context,
+              ).showSnackBar(SnackBar(content: Text('错误：$e\n$strack')));
+            }
+          },
+        ),
+      );
+      await showDialog(
+        context: context,
+        builder: (context) =>
+            SimpleDialog(title: Text('选择收藏夹'), children: children),
+      );
+    } catch (e, strack) {
+      log('$e\n$strack', name: 'songinfopage', level: 1000);
       if (!mounted) return;
       ScaffoldMessenger.of(
         context,
-      ).showSnackBar(SnackBar(content: Text('添加失败')));
+      ).showSnackBar(SnackBar(content: Text('添加失败\n$e\n$strack')));
     }
   }
 
   //移除收藏
   Future<void> _remove() async {
     try {
-      final favoriteJsonPath =
-          '${(await getApplicationSupportDirectory()).path}/files/favorite.json';
-      String favoriteJsonStr = await File(favoriteJsonPath).readAsString();
-      List<dynamic> favoriteJson = json.decode(favoriteJsonStr);
-      favoriteJson.removeWhere(
-        (item) => item['id'] == widget.songbasedata['id'],
+      Map<String, dynamic> favoriteSongs = await loadFavoriteSong();
+      List<Widget> children = [];
+
+      for (var i in favoriteSongs.keys.toList()) {
+        if ((favoriteSongs[i] as List).contains(widget.songbasedata['id'])) {
+          children.add(
+            ListTile(
+              title: Text(i),
+              onTap: () {
+                favoriteSongs[i].remove(widget.songbasedata['id']);
+                saveFavoriteSong(favoriteSongs);
+                if (!mounted) return;
+                setState(() {
+                  icon = Icons.favorite_border;
+                });
+                if (!mounted) return;
+                ScaffoldMessenger.of(
+                  context,
+                ).showSnackBar(SnackBar(content: Text('成功')));
+                Navigator.pop(context);
+              },
+            ),
+          );
+        }
+      }
+      if (!mounted) return;
+      showDialog(
+        context: context,
+        builder: (context) =>
+            SimpleDialog(title: Text('选择删除的文件夹'), children: children),
       );
-      favoriteJsonStr = json.encode(favoriteJson);
-      File(favoriteJsonPath).writeAsStringSync(favoriteJsonStr);
-      if (!mounted) return;
-      setState(() {
-        icon = Icons.favorite_border;
-      });
-      if (!mounted) return;
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('成功')));
-    } catch (e) {
-      log('错误', name: 'songinfopage', level: 1000);
+    } catch (e, strack) {
+      log('$e\n$strack', name: 'songinfopage', level: 1000);
       if (!mounted) return;
       ScaffoldMessenger.of(
         context,
-      ).showSnackBar(SnackBar(content: Text('删除失败')));
+      ).showSnackBar(SnackBar(content: Text('删除失败\n$e\n$strack')));
     }
   }
 
   //收藏按钮状态
   Future<void> _buttonIcon() async {
     try {
-      final favoriteJsonPath =
-          '${(await getApplicationSupportDirectory()).path}/files/favorite.json';
-      String favoriteJsonStr = await File(favoriteJsonPath).readAsString();
-      List<dynamic> favoriteJson = json.decode(favoriteJsonStr) as List;
+      Map<String, dynamic> favoriteSongs = await loadFavoriteSong();
       bool isFavorite = false;
-      for (var i in favoriteJson) {
-        if (i['id'] == widget.songbasedata['id']) {
+
+      for (var i in favoriteSongs.keys.toList()) {
+        if ((favoriteSongs[i] as List).contains(widget.songbasedata['id'])) {
           isFavorite = true;
           log('已收藏');
-          break;
         }
-        if (!mounted) return;
       }
+
+      if (!mounted) return;
+
       setState(() {
         icon = isFavorite ? Icons.favorite : Icons.favorite_border;
       });
@@ -360,11 +448,28 @@ class _SongInfoPageState extends State<SongInfoPage> {
               ),
               IconButton(
                 onPressed: () async {
-                  if (icon == Icons.favorite_border) {
-                    _add();
-                  } else if (icon == Icons.favorite) {
-                    _remove();
-                  }
+                  showDialog(
+                    context: context,
+                    builder: (context) => SimpleDialog(
+                      title: Text('选择操作'),
+                      children: [
+                        ListTile(
+                          title: Text('添加'),
+                          onTap: () {
+                            _add();
+                            Navigator.of(context).pop();
+                          },
+                        ),
+                        ListTile(
+                          title: Text('删除'),
+                          onTap: () {
+                            _remove();
+                            Navigator.of(context).pop();
+                          },
+                        ),
+                      ],
+                    ),
+                  );
                 },
                 icon: Icon(icon),
               ),

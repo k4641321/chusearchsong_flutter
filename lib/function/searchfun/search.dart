@@ -11,15 +11,17 @@ import 'dart:math' as math;
 //生成组件
 Future<List<Widget>> search({
   required Map<String, dynamic> songsData,
-  required List<dynamic> songresultMap,
+  required Map<String, dynamic> songresultMap,
   required BuildContext context,
+  Map<int, dynamic>? searchinfo,
 }) async {
   //生成组件
   List<Widget> songresultWidget = [];
   log('添加组件');
   // print(songresult);
+  if (songresultMap.isEmpty) return [];
 
-  for (var i in songresultMap) {
+  for (var i in songresultMap['songs']) {
     List<Widget> songInfoDiffs = [];
     String versionname = '';
     for (var j in songsData['versions']) {
@@ -60,6 +62,7 @@ Future<List<Widget>> search({
         songbasedata: i,
         context: context,
         versionname: versionname,
+        searchinfo: searchinfo,
       ),
       // InkWell(
       //   // key: ValueKey(i['id']),
@@ -143,7 +146,7 @@ Future<List<Widget>> search({
   return songresultWidget;
 }
 
-Future<List<dynamic>> filter(
+Future<Map<String, dynamic>> filter(
   Map<String, dynamic> songsData,
   Map<String, dynamic> aliasData,
   String title,
@@ -163,19 +166,22 @@ Future<List<dynamic>> filter(
 
   //加载游玩记录
   List playhistory = [];
-  try {
+  if (File('${dataPath.path}/res/allscore.json').existsSync()) {
     String playhistorystr = await File(
       '${dataPath.path}/res/allscore.json',
     ).readAsString();
     Map<String, dynamic> playhistoryjson = json.decode(playhistorystr);
     playhistory = playhistoryjson['data'];
-  } catch (e) {
+  } else {
     log('无游玩记录文件');
   }
 
   log(
     '$title $genre $version $difficultydown $difficultyup $ifplay $bpmup $bpmdown $specialfilter',
   );
+
+  //信息展示
+  Map<int, dynamic> searchinfo = {};
 
   //初步筛选
   Set<int> songresult = {};
@@ -189,7 +195,7 @@ Future<List<dynamic>> filter(
       bpmdown == null &&
       isSearch == true) {
     log('未选择条件');
-    return [];
+    return {};
   }
   for (var i in songsData['songs']) {
     if (i['title'].toLowerCase().contains(title.toLowerCase())) {
@@ -225,6 +231,10 @@ Future<List<dynamic>> filter(
     for (var j in i['aliases']) {
       if (j.toLowerCase().contains(title.toLowerCase())) {
         songresult.add(i['song_id']);
+        if (title != '') {
+          searchinfo[i['song_id']] ??= {};
+          (searchinfo[i['song_id']] as Map)['alias'] = j;
+        }
         break;
       }
     }
@@ -244,6 +254,8 @@ Future<List<dynamic>> filter(
         songresult.remove(i['id']);
       } else {
         songresult.add(i['id']);
+        searchinfo[i['id']] ??= {};
+        (searchinfo[i['id']] as Map)['BPM'] = i['bpm'];
       }
     }
   }
@@ -256,6 +268,8 @@ Future<List<dynamic>> filter(
       for (var j in i['difficulties']) {
         if (j['note_designer'].toLowerCase().contains(title.toLowerCase())) {
           songresult.add(i['id']);
+          searchinfo[i['id']] ??= {};
+          (searchinfo[i['id']] as Map)['note_designer'] = j['note_designer'];
         }
       }
     }
@@ -328,6 +342,11 @@ Future<List<dynamic>> filter(
                 if (j['notecounts'][notetype] ==
                     int.tryParse(title.split(' ')[1])) {
                   songresult.add(i['id']);
+                  searchinfo[i['id']] ??= {};
+                  (searchinfo[i['id']] as Map)['notecounts'] ??= {};
+                  (searchinfo[i['id']] as Map)['notecounts'] = {
+                    notetype: j['notecounts'][notetype],
+                  };
                 }
               }
             }
@@ -348,6 +367,11 @@ Future<List<dynamic>> filter(
                     j['notecounts'][notetype] <=
                         int.tryParse(title.split(' ')[2])) {
                   songresult.add(i['id']);
+                  searchinfo[i['id']] ??= {};
+                  (searchinfo[i['id']] as Map)['notecounts'] ??= {};
+                  (searchinfo[i['id']] as Map)['notecounts'] = {
+                    notetype: j['notecounts'][notetype],
+                  };
                 }
               }
             }
@@ -474,7 +498,7 @@ Future<List<dynamic>> filter(
     for (var i in songresultMap) {
       idlist.add(i['id']);
     }
-    if (idlist.isEmpty) return [];
+    if (idlist.isEmpty) return {};
     List<int> resultIds = [];
     final random = math.Random();
     if (count != null) {
@@ -494,5 +518,5 @@ Future<List<dynamic>> filter(
     }
   }
   log('结果：${songresultMap.length}');
-  return songresultMap;
+  return {"songs": songresultMap, "searchinfo": searchinfo};
 }
