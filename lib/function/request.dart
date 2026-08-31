@@ -6,7 +6,7 @@ import 'dart:io';
 import 'package:path_provider/path_provider.dart';
 
 Future<String> requestSponsorshipRanking() async {
-  final uri = Uri.parse('https://chusearchsong.4641321.xyz/api/zxphb');
+  final uri = Uri.parse('https://chusearchsong.devintom.top/api/zxphb');
   final response = await get(uri);
   return response.body;
 }
@@ -256,7 +256,7 @@ Future<String> requestNearcadeAllShop({required int page}) async {
 
 Future<String> requestOAuthCallbackToken(String code) async {
   final uri = Uri.parse(
-    'https://chusearchsong.4641321.xyz/api/oauth/callback?code=$code',
+    'https://chusearchsong.devintom.top/api/oauth/callback?code=$code',
   );
   final response = await get(uri);
   return response.body;
@@ -264,7 +264,7 @@ Future<String> requestOAuthCallbackToken(String code) async {
 
 Future<String> requestotherPlayerInfo(int friendcode) async {
   final uri = Uri.parse(
-    'https://chusearchsong.4641321.xyz/api/playerinfo?friendcode=$friendcode',
+    'https://chusearchsong.devintom.top/api/playerinfo?friendcode=$friendcode',
   );
   final response = await get(uri);
   return response.body;
@@ -277,7 +277,7 @@ Future<String> loadSongsData() async {
 
 Future<String> finduploadallscore(int friendcode) async {
   final uri = Uri.parse(
-    'https://chusearchsong.4641321.xyz/api/finduploadallscore/$friendcode',
+    'https://chusearchsong.devintom.top/api/finduploadallscore/$friendcode',
   );
   final response = await get(uri);
   // print(response.body);
@@ -285,7 +285,9 @@ Future<String> finduploadallscore(int friendcode) async {
 }
 
 Future<String> uploadplayerscore() async {
-  final uri = Uri.parse('https://chusearchsong.4641321.xyz/api/uploadallscore');
+  final uri = Uri.parse(
+    'https://chusearchsong.devintom.top/api/uploadallscore',
+  );
   List score = jsonDecode(
     await requestScore(token: await returnlxnstoken()),
   )['data'];
@@ -324,14 +326,14 @@ Future<String> requestSegaCharaData() async {
 
 Future<String> requestuscount() async {
   final response = await get(
-    Uri.parse('https://chusearchsong.4641321.xyz/api/usecount'),
+    Uri.parse('https://chusearchsong.devintom.top/api/usecount'),
   );
   return response.body;
 }
 
 Future<String> requestAnnouncement() async {
   final response = await get(
-    Uri.parse('https://chusearchsong.4641321.xyz/api/announcement'),
+    Uri.parse('https://chusearchsong.devintom.top/api/announcement'),
   );
   return response.body;
 }
@@ -349,7 +351,7 @@ Future<void> saveconfig(Map<String, dynamic> config) async {
 
 Future<String> requestChangeslog() async {
   final response = await get(
-    Uri.parse('https://chusearchsong.4641321.xyz/api/changelog'),
+    Uri.parse('https://chusearchsong.devintom.top/api/changelog'),
   );
   return response.body;
 }
@@ -360,7 +362,7 @@ Future<String> requestproxychartdata({
 }) async {
   final body = json.encode({"charturl": charturl, "level_index": levelindex});
   final response = await post(
-    Uri.parse('https://chusearchsong.4641321.xyz/api/chart/'),
+    Uri.parse('https://chusearchsong.devintom.top/api/chart/'),
     headers: {'Content-Type': 'application/json'},
     body: body,
   );
@@ -372,7 +374,7 @@ Future<String> requestproxychartdata({
 
 Future<String> requestVersion() async {
   final response = await get(
-    Uri.parse('https://chusearchsong.4641321.xyz/api/version'),
+    Uri.parse('https://chusearchsong.devintom.top/api/version'),
   );
   return response.body;
 }

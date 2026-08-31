@@ -60,11 +60,7 @@ class _SongInfoPageState extends State<SongInfoPage> {
                   return;
                 }
                 saveFavoriteSong(favoriteSongs);
-                if (!mounted) return;
-                setState(() {
-                  icon = Icons.favorite;
-                });
-                if (!mounted) return;
+                _buttonIcon();
                 ScaffoldMessenger.of(
                   context,
                 ).showSnackBar(SnackBar(content: Text('成功')));
@@ -116,7 +112,7 @@ class _SongInfoPageState extends State<SongInfoPage> {
                         );
                         await saveFavoriteSong(favoriteListSongs);
                         if (!context.mounted) return;
-
+                        _buttonIcon();
                         Navigator.pop(context);
                         Navigator.pop(context);
                       },

@@ -99,7 +99,7 @@ Future<void> lanuchdownload({required BuildContext context}) async {
 
 Future<void> lanuchhelpdocs({required BuildContext context}) async {
   final githuburl = Uri.parse(
-    'https://blog.4641321.xyz/chusearchsong_flutter/',
+    'https://blog.devintom.top/chusearchsong_flutter/',
   );
   try {
     if (!await launchUrl(githuburl)) {

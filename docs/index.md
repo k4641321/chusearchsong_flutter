@@ -12,7 +12,7 @@ hero:
       link: helper/index
     - theme: alt
       text: 项目官网
-      link: https://chusearchsong.4641321.xyz/
+      link: https://chusearchsong.devintom.top/
 features:
   - title: 未来的计划
     details: 我没活了，快写不动了

@@ -114,6 +114,7 @@ class _ChartViewPageState extends State<ChartViewPage> {
             ),
           );
           // print(chartproxyresult);
+          if (!mounted) return;
           setState(() {
             result = [
               Image.memory(

@@ -64,7 +64,7 @@
 - 应用名称修改
 
 ## 2026-08-06
-- 特殊筛选语法增加，用法请参考[帮助文档](https://blog.4641321.xyz/chdusearchsong)
+- 特殊筛选语法增加，用法请参考[帮助文档](https://blog.devintom.top/chdusearchsong)
 - 增加微信赞赏码
 - 修复无法获取公告的Bug
 
@@ -77,7 +77,7 @@
 - 修复最新最热查歌单难度筛选失败的Bug
 
 ## 2026-08-01
-- 添加了按音符数量筛选，用法请参考[帮助文档](https://blog.4641321.xyz/chusearchsong)
+- 添加了按音符数量筛选，用法请参考[帮助文档](https://blog.devintom.top/chusearchsong)
 - 添加了公告显示
 - 添加了自动检查更新，可选择是否关闭
 - 修复了点击谱面预览加速设置时进入落雪设置Token界面（复制粘贴好用（ 
