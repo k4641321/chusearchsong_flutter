@@ -107,4 +107,12 @@ Mac用户：macOS系统已自带相关组件，不需要额外安装iTunes。
 5. 点击进入，然后点击**信任**按钮
 6. 在弹出的确认框中再次点击**信任**
 
-完成以上操作后，回到手机桌面，就可以正常打开并使用刚才安装的应用了。
+完成以上操作后，回到手机桌面，就可以正常打开并使用刚才安装的应用了。  
+  
+## 阿里云accessKeyId与accessKeySecret获取
+### 一、前往阿里云机器翻译控制台开通机器翻译
+点击直达 https://mt.console.aliyun.com/basic
+  
+### 二、创建阿里云RAM账号
+点击直达 https://ram.console.aliyun.com/overview?activeTab=workflow  
+在**创建程序用户AccessKey**里选择***用于程序访问的超级用户***
