@@ -45,6 +45,8 @@ export default defineConfig({
                   { text: '友人对战', link: '/helper/function/tools/friendbattle/' },
                   { text: '机厅搜索(新)', link: '/helper/function/tools/searchlobbynew/' },
                   { text: '神秘转盘', link: '/helper/function/tools/chuqinturntable/' },
+                  { text: '各种排行榜', link: '/helper/function/tools/variousrankings/' },
+                  { text: '连扉', link: '/helper/function/tools/linkedverse/' },
                 ]
               },
               { text: '关于界面', link: '/helper/infopage/' },

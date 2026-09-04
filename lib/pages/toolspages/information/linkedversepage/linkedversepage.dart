@@ -23,6 +23,7 @@ class _LinkedversepageState extends State<Linkedversepage> {
       songsData = await loadSongs();
       List<Widget> children = [];
       for (var i in linkedverseData['gate']) {
+        if (!i['go_online']) continue;
         children.add(
           InkWell(
             onTap: () => Navigator.push(
