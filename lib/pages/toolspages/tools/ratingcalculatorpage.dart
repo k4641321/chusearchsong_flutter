@@ -91,7 +91,10 @@ class _RatingCalculatorState extends State<RatingCalculator>
                               Text('定数: '),
                               Expanded(
                                 child: TextField(
-                                  keyboardType: TextInputType.number,
+                                  keyboardType:
+                                      const TextInputType.numberWithOptions(
+                                        decimal: true,
+                                      ),
                                   controller: _diffController,
                                 ),
                               ),
@@ -102,7 +105,10 @@ class _RatingCalculatorState extends State<RatingCalculator>
                               Text('成绩: '),
                               Expanded(
                                 child: TextField(
-                                  keyboardType: TextInputType.number,
+                                  keyboardType:
+                                      const TextInputType.numberWithOptions(
+                                        decimal: true,
+                                      ),
                                   controller: _scoreController,
                                 ),
                               ),
@@ -173,7 +179,10 @@ class _RatingCalculatorState extends State<RatingCalculator>
                               Expanded(
                                 child: TextField(
                                   controller: _diffController2,
-                                  keyboardType: TextInputType.number,
+                                  keyboardType:
+                                      const TextInputType.numberWithOptions(
+                                        decimal: true,
+                                      ),
                                 ),
                               ),
                             ],

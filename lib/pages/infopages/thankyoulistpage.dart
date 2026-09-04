@@ -8,7 +8,7 @@ class ThankYouListPage extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(title: const Text('感谢名单')),
       body: Center(
-        child: Column(
+        child: ListView(
           children: [
             Text('排名不分前后'),
             const Divider(),
@@ -29,6 +29,8 @@ class ThankYouListPage extends StatelessWidget {
             Text('fu\n发现了在等级划分与判定的输入错误'),
             const Divider(),
             Text('不可发送单个标点符号\n为随机歌曲美化提供建议'),
+            const Divider(),
+            Text('NANY\n发现 单曲Rating计算器 苹果端无法输入小数点的问题'),
             const Divider(),
             Text('以及使用这个软件的你'),
           ],
