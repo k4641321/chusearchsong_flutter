@@ -1,13 +1,13 @@
 import 'dart:developer';
 
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:chusearchsong_flutter/function/aliyunapi/texttranslate.dart';
 import 'package:chusearchsong_flutter/function/toolsfun/collectibleinfopagefun.dart';
 import 'package:flutter/material.dart';
 import '../../../../function/fun.dart';
 import 'dart:io';
 import 'package:path_provider/path_provider.dart';
 import 'dart:convert';
-import '../../../../function/texttranslate.dart';
 import '../../../../function/toolsfun/generateb50fun/generateb50.dart';
 import '../../../../function/toolsfun/playerinfopagefun.dart';
 import '../../../../function/request.dart';
@@ -78,9 +78,13 @@ class _CollectibleInfoPageState extends State<CollectibleInfoPage> {
             setState(() {
               charatranwidget = TextButton(
                 onPressed: () async {
-                  String translate2 = await translateText(
-                    sourceText: charatext,
-                    context: context,
+                  // String translate2 = await translateText(
+                  //   sourceText: charatext,
+                  //   context: context,
+                  // );
+                  final translate1 = await AliTextTranslate.create();
+                  final String translate2 = await translate1.translate(
+                    text: charatext,
                   );
                   setState(() {
                     translate = translate2;
@@ -1034,9 +1038,13 @@ class _CollectibleInfoPageState extends State<CollectibleInfoPage> {
                     TextButton(
                       onPressed: () async {
                         try {
-                          String result = await translateText(
-                            sourceText: newdata['description'],
-                            context: context,
+                          // String result = await translateText(
+                          //   sourceText: newdata['description'],
+                          //   context: context,
+                          // );
+                          final translate1 = await AliTextTranslate.create();
+                          final String result = await translate1.translate(
+                            text: newdata['description'],
                           );
                           if (!mounted) return;
                           setState(() {
@@ -1059,9 +1067,13 @@ class _CollectibleInfoPageState extends State<CollectibleInfoPage> {
                     TextButton(
                       onPressed: () async {
                         try {
-                          String result = await translateText(
-                            sourceText: newdata['name'],
-                            context: context,
+                          // String result = await translateText(
+                          //   sourceText: newdata['name'],
+                          //   context: context,
+                          // );
+                          final translate1 = await AliTextTranslate.create();
+                          final String result = await translate1.translate(
+                            text: newdata['name'],
                           );
                           if (!mounted) return;
                           setState(() {

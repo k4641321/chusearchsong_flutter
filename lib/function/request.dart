@@ -5,9 +5,35 @@ import 'dart:developer';
 import 'dart:io';
 import 'package:path_provider/path_provider.dart';
 
+Future<void> saveLinkedVerseData() async {
+  final directory = await getApplicationSupportDirectory();
+  final path = Directory('${directory.path}/res');
+  await File('${path.path}/linkedversedata.json').create();
+  await File(
+    '${path.path}/linkedversedata.json',
+  ).writeAsString(await requestLinkedVerseData());
+  log('保存到 ${path.path}/linkedversedata.json');
+}
+
+Future<String> requestLinkedVerseData() async {
+  final uri = Uri.parse(
+    'https://chusearchsong.devintom.top/api/linkedversedata',
+  );
+  final response = await get(uri);
+  if (response.statusCode != 200) {
+    throw Exception('请求失败，状态码：${response.statusCode}');
+  }
+
+  return response.body;
+}
+
 Future<String> requestSponsorshipRanking() async {
   final uri = Uri.parse('https://chusearchsong.devintom.top/api/zxphb');
   final response = await get(uri);
+  if (response.statusCode != 200) {
+    throw Exception('请求失败，状态码：${response.statusCode}');
+  }
+
   return response.body;
 }
 
@@ -217,6 +243,12 @@ Future<List> requestreiwaf5sisongs() async {
   final chunirecalluri = Uri.parse('https://reiwa.f5.si/chunirec_all.json');
   final chunirecall = await get(chunirecalluri);
   final chunithmrecord = await get(chunithmrecorduri);
+  if (chunirecall.statusCode != 200) {
+    throw Exception('请求失败，状态码：${chunirecall.statusCode}');
+  }
+  if (chunithmrecord.statusCode != 200) {
+    throw Exception('请求失败，状态码：${chunithmrecord.statusCode}');
+  }
   return [chunithmrecord.body, chunirecall.body];
 }
 
@@ -251,6 +283,9 @@ Future<String> requestNearcadeAllShop({required int page}) async {
     'https://nearcade.phizone.cn/api/shops/?regionId=CN&limit=100&page=$page',
   );
   final response = await get(uri);
+  if (response.statusCode != 200) {
+    throw Exception('请求失败，状态码：${response.statusCode}');
+  }
   return response.body;
 }
 
@@ -259,6 +294,9 @@ Future<String> requestOAuthCallbackToken(String code) async {
     'https://chusearchsong.devintom.top/api/oauth/callback?code=$code',
   );
   final response = await get(uri);
+  if (response.statusCode != 200) {
+    throw Exception('请求失败，状态码：${response.statusCode}');
+  }
   return response.body;
 }
 
@@ -267,6 +305,9 @@ Future<String> requestotherPlayerInfo(int friendcode) async {
     'https://chusearchsong.devintom.top/api/playerinfo?friendcode=$friendcode',
   );
   final response = await get(uri);
+  if (response.statusCode != 200) {
+    throw Exception('请求失败，状态码：${response.statusCode}');
+  }
   return response.body;
 }
 
@@ -280,6 +321,9 @@ Future<String> finduploadallscore(int friendcode) async {
     'https://chusearchsong.devintom.top/api/finduploadallscore/$friendcode',
   );
   final response = await get(uri);
+  if (response.statusCode != 200) {
+    throw Exception('请求失败，状态码：${response.statusCode}');
+  }
   // print(response.body);
   return response.body;
 }
@@ -300,6 +344,9 @@ Future<String> uploadplayerscore() async {
     headers: {'Content-Type': 'application/json'},
     body: jsonEncode({'friendcode': playerdata['friend_code'], 'data': score}),
   );
+  if (response.statusCode != 200) {
+    throw Exception('请求失败，状态码：${response.statusCode}');
+  }
   return response.body;
 }
 
@@ -321,6 +368,9 @@ Future<String> requestSegaCharaData() async {
   final response = await get(
     Uri.parse('https://chunithm.sega.jp/storage/json/chara.json'),
   );
+  if (response.statusCode != 200) {
+    throw Exception('请求失败，状态码：${response.statusCode}');
+  }
   return response.body;
 }
 
@@ -328,6 +378,9 @@ Future<String> requestuscount() async {
   final response = await get(
     Uri.parse('https://chusearchsong.devintom.top/api/usecount'),
   );
+  if (response.statusCode != 200) {
+    throw Exception('请求失败，状态码：${response.statusCode}');
+  }
   return response.body;
 }
 
@@ -335,6 +388,9 @@ Future<String> requestAnnouncement() async {
   final response = await get(
     Uri.parse('https://chusearchsong.devintom.top/api/announcement'),
   );
+  if (response.statusCode != 200) {
+    throw Exception('请求失败，状态码：${response.statusCode}');
+  }
   return response.body;
 }
 
@@ -353,6 +409,9 @@ Future<String> requestChangeslog() async {
   final response = await get(
     Uri.parse('https://chusearchsong.devintom.top/api/changelog'),
   );
+  if (response.statusCode != 200) {
+    throw Exception('请求失败，状态码：${response.statusCode}');
+  }
   return response.body;
 }
 
@@ -366,6 +425,9 @@ Future<String> requestproxychartdata({
     headers: {'Content-Type': 'application/json'},
     body: body,
   );
+  if (response.statusCode != 200) {
+    throw Exception('请求失败，状态码：${response.statusCode}');
+  }
   // log('status: ${response.statusCode}');
   // log('location: ${response.headers['location']}');
   // log('body: ${response.body}');
@@ -376,6 +438,9 @@ Future<String> requestVersion() async {
   final response = await get(
     Uri.parse('https://chusearchsong.devintom.top/api/version'),
   );
+  if (response.statusCode != 200) {
+    throw Exception('请求失败，状态码：${response.statusCode}');
+  }
   return response.body;
 }
 
@@ -394,6 +459,9 @@ Future<String> requestVersion() async {
 
 Future<String> requestbeerpsisongs() async {
   final response = await get(Uri.parse('https://chunithm.beerpsi.cc/songs'));
+  if (response.statusCode != 200) {
+    throw Exception('请求失败，状态码：${response.statusCode}');
+  }
   return response.body;
 }
 
@@ -411,6 +479,9 @@ Future<String> requestLatestVersion() async {
   final response = await get(
     Uri.parse('https://www.diving-fish.com/api/chunithmprober/latest_version'),
   );
+  if (response.statusCode != 200) {
+    throw Exception('请求失败，状态码：${response.statusCode}');
+  }
   return response.body;
 }
 
@@ -422,6 +493,9 @@ Future<String> requestRankingList({required int id, required int diff}) async {
     ),
     headers: headers,
   );
+  if (response.statusCode != 200) {
+    throw Exception('请求失败，状态码：${response.statusCode}');
+  }
   return response.body;
 }
 
@@ -429,6 +503,9 @@ Future<String> requestRelatedCollectibles({required int id}) async {
   final response = await get(
     Uri.parse('https://maimai.lxns.net/api/v0/chunithm/song-collections/$id'),
   );
+  if (response.statusCode != 200) {
+    throw Exception('请求失败，状态码：${response.statusCode}');
+  }
   return response.body;
 }
 
@@ -440,6 +517,9 @@ Future<String> requestSongHistory({required int id, required int diff}) async {
     ),
     headers: headers,
   );
+  if (response.statusCode != 200) {
+    throw Exception('请求失败，状态码：${response.statusCode}');
+  }
   return response.body;
 }
 
@@ -449,6 +529,9 @@ Future<String> requestTrendProgress({required int id}) async {
     Uri.parse('https://maimai.lxns.net/api/v0/user/chunithm/player/trophy/$id'),
     headers: headers,
   );
+  if (response.statusCode != 200) {
+    throw Exception('请求失败，状态码：${response.statusCode}');
+  }
   return response.body;
 }
 
@@ -474,6 +557,9 @@ Future<String> requestSongBests({
     ),
     headers: headers,
   );
+  if (response.statusCode != 200) {
+    throw Exception('请求失败，状态码：${response.statusCode}');
+  }
   return response.body;
 }
 
@@ -483,6 +569,9 @@ Future<String> requestB50() async {
     Uri.parse('https://maimai.lxns.net/api/v0/user/chunithm/player/bests'),
     headers: headers,
   );
+  if (response.statusCode != 200) {
+    throw Exception('请求失败，状态码：${response.statusCode}');
+  }
   return response.body;
 }
 
@@ -504,6 +593,9 @@ Future<String> requestPlayerInfo() async {
     Uri.parse('https://maimai.lxns.net/api/v0/user/chunithm/player'),
     headers: headers,
   );
+  if (response.statusCode != 200) {
+    throw Exception('请求失败，状态码：${response.statusCode}');
+  }
   return response.body;
 }
 
@@ -549,6 +641,9 @@ Future<String> requestTrend({required String token}) async {
     Uri.parse('https://maimai.lxns.net/api/v0/user/chunithm/player/trend'),
     headers: headers,
   );
+  if (response.statusCode != 200) {
+    throw Exception('请求失败，状态码：${response.statusCode}');
+  }
   return response.body;
 }
 
@@ -558,6 +653,9 @@ Future<String> requestScore({required String token}) async {
     Uri.parse('https://maimai.lxns.net/api/v0/user/chunithm/player/scores'),
     headers: headers,
   );
+  if (response.statusCode != 200) {
+    throw Exception('请求失败，状态码：${response.statusCode}');
+  }
   return response.body;
 }
 
@@ -565,6 +663,9 @@ Future<String> requestPlatesData() async {
   final response = await get(
     Uri.parse('https://maimai.lxns.net/api/v0/chunithm/plate/list'),
   );
+  if (response.statusCode != 200) {
+    throw Exception('请求失败，状态码：${response.statusCode}');
+  }
   return response.body;
 }
 
@@ -572,6 +673,9 @@ Future<String> requestCharactersData() async {
   final response = await get(
     Uri.parse('https://maimai.lxns.net/api/v0/chunithm/character/list'),
   );
+  if (response.statusCode != 200) {
+    throw Exception('请求失败，状态码：${response.statusCode}');
+  }
   return response.body;
 }
 
@@ -579,6 +683,9 @@ Future<String> requestIconsData() async {
   final response = await get(
     Uri.parse('https://maimai.lxns.net/api/v0/chunithm/icon/list'),
   );
+  if (response.statusCode != 200) {
+    throw Exception('请求失败，状态码：${response.statusCode}');
+  }
   return response.body;
 }
 
@@ -586,6 +693,9 @@ Future<String> requestTrophiesData() async {
   final response = await get(
     Uri.parse('https://maimai.lxns.net/api/v0/chunithm/trophy/list'),
   );
+  if (response.statusCode != 200) {
+    throw Exception('请求失败，状态码：${response.statusCode}');
+  }
   return response.body;
 }
 
@@ -593,6 +703,9 @@ Future<String> requestLobbyData() async {
   final response = await get(
     Uri.parse('http://sega-register.wahlap.net/api/sega/midtr/rest/location'),
   );
+  if (response.statusCode != 200) {
+    throw Exception('请求失败，状态码：${response.statusCode}');
+  }
   return response.body;
 }
 
@@ -600,6 +713,9 @@ Future<String> requestAliasData() async {
   final response = await get(
     Uri.parse('https://maimai.lxns.net/api/v0/chunithm/alias/list'),
   );
+  if (response.statusCode != 200) {
+    throw Exception('请求失败，状态码：${response.statusCode}');
+  }
   return response.body;
 }
 
@@ -607,6 +723,9 @@ Future<String> requestSongData() async {
   final response = await get(
     Uri.parse('https://maimai.lxns.net/api/v0/chunithm/song/list'),
   );
+  if (response.statusCode != 200) {
+    throw Exception('请求失败，状态码：${response.statusCode}');
+  }
   return response.body;
 }
 
@@ -614,6 +733,9 @@ Future<Map<String, dynamic>> getSongInfo(int id) async {
   final response = await get(
     Uri.parse('https://maimai.lxns.net/api/v0/chunithm/song/$id'),
   );
+  if (response.statusCode != 200) {
+    throw Exception('请求失败，状态码：${response.statusCode}');
+  }
 
   Map<String, dynamic> songInfo = jsonDecode(response.body);
   return songInfo;

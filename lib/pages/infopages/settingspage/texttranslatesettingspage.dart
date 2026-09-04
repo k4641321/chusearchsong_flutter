@@ -19,9 +19,9 @@ class _TextTranslateSettingsPageState extends State<TextTranslateSettingsPage> {
     if (result.isEmpty) return;
     if (!mounted) return;
     setState(() {
-      secretIdController.text = result['secretId'];
-      secretKeyController.text = result['secretKey'];
-      projectIdController.text = result['projectId'];
+      secretIdController.text = result['accessKeyId'] ?? '';
+      secretKeyController.text = result['accessKeySecret'] ?? '';
+      // projectIdController.text = result['projectId'];
     });
   }
 
@@ -44,22 +44,22 @@ class _TextTranslateSettingsPageState extends State<TextTranslateSettingsPage> {
               children: [
                 Row(
                   children: [
-                    Text('SecretId  '),
+                    Text('accessKeyId  '),
                     Expanded(child: TextField(controller: secretIdController)),
                   ],
                 ),
                 Row(
                   children: [
-                    Text('SecretKey  '),
+                    Text('accessKeySecret  '),
                     Expanded(child: TextField(controller: secretKeyController)),
                   ],
                 ),
-                Row(
-                  children: [
-                    Text('ProjectId  '),
-                    Expanded(child: TextField(controller: projectIdController)),
-                  ],
-                ),
+                // Row(
+                //   children: [
+                //     Text('ProjectId  '),
+                //     Expanded(child: TextField(controller: projectIdController)),
+                //   ],
+                // ),
                 Row(
                   children: [
                     Expanded(
@@ -69,11 +69,11 @@ class _TextTranslateSettingsPageState extends State<TextTranslateSettingsPage> {
                             try {
                               String secretId = secretIdController.text;
                               String secretKey = secretKeyController.text;
-                              String projectId = projectIdController.text;
+                              // String projectId = projectIdController.text;
                               await savetexttranslateconfig(
                                 secretId: secretId,
                                 secretKey: secretKey,
-                                projectId: projectId,
+                                // projectId: projectId,
                                 context: context,
                               );
                             } catch (e) {
@@ -96,7 +96,7 @@ class _TextTranslateSettingsPageState extends State<TextTranslateSettingsPage> {
                   ],
                 ),
                 const Divider(),
-                Text('翻译采用腾讯云的机器翻译，请自行申请相关密钥，个人版每月的免费额度够用了'),
+                Text('翻译采用阿里云的机器翻译，请自行申请相关密钥，个人版每月的免费额度够用了'),
               ],
             ),
           ),

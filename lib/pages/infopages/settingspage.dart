@@ -109,6 +109,112 @@ class _SettingsPageState extends State<SettingsPage> {
     confirmdarkmode();
   }
 
+  /// 导航类菜单项
+  Widget _buildNavItem({
+    required IconData icon,
+    required String title,
+    required String subtitle,
+    required VoidCallback onTap,
+    required bool isFirst,
+    required bool isLast,
+  }) {
+    final borderRadius = BorderRadius.vertical(
+      top: isFirst ? const Radius.circular(15) : Radius.zero,
+      bottom: isLast ? const Radius.circular(15) : Radius.zero,
+    );
+
+    return Material(
+      color: Theme.of(context).colorScheme.primaryContainer.withAlpha(120),
+      borderRadius: borderRadius,
+      child: InkWell(
+        borderRadius: borderRadius,
+        onTap: onTap,
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+          child: Row(
+            children: [
+              Icon(icon, size: 28),
+              const SizedBox(width: 14),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      title,
+                      style: const TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.w500,
+                      ),
+                    ),
+                    const SizedBox(height: 2),
+                    Text(
+                      subtitle,
+                      style: TextStyle(
+                        fontSize: 13,
+                        color: Theme.of(context).colorScheme.onSurfaceVariant,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              Icon(
+                Icons.chevron_right,
+                size: 20,
+                color: Theme.of(context).colorScheme.onSurface.withAlpha(100),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  /// 开关类菜单项
+  Widget _buildSwitchItem({
+    required IconData icon,
+    required String title,
+    required String subtitle,
+    required bool value,
+    required ValueChanged<bool> onChanged,
+    required bool isFirst,
+    required bool isLast,
+  }) {
+    final borderRadius = BorderRadius.vertical(
+      top: isFirst ? const Radius.circular(15) : Radius.zero,
+      bottom: isLast ? const Radius.circular(15) : Radius.zero,
+    );
+
+    return Material(
+      color: Theme.of(context).colorScheme.primaryContainer.withAlpha(120),
+      borderRadius: borderRadius,
+      child: Padding(
+        padding: const EdgeInsets.only(left: 16, right: 8),
+        child: SwitchListTile(
+          contentPadding: EdgeInsets.zero,
+          secondary: Icon(icon, size: 28),
+          title: Text(title, style: const TextStyle(fontSize: 16)),
+          subtitle: Text(
+            subtitle,
+            style: TextStyle(
+              fontSize: 13,
+              color: Theme.of(context).colorScheme.onSurfaceVariant,
+            ),
+          ),
+          value: value,
+          onChanged: onChanged,
+        ),
+      ),
+    );
+  }
+
+  Widget _buildDivider() {
+    return Divider(
+      height: 0,
+      indent: 58,
+      color: Theme.of(context).colorScheme.onSurface.withAlpha(30),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -117,404 +223,120 @@ class _SettingsPageState extends State<SettingsPage> {
         controller: _scrollController,
         child: SingleChildScrollView(
           controller: _scrollController,
-          child: Center(
-            child: Column(
-              children: [
-                Padding(
-                  padding: EdgeInsetsGeometry.only(left: 10, right: 10),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Expanded(
-                        child: InkWell(
-                          child: Card(
-                            color: Theme.of(
-                              context,
-                            ).colorScheme.primaryContainer.withAlpha(150),
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.only(
-                                topLeft: Radius.circular(15),
-                                topRight: Radius.circular(15),
-                              ),
-                            ),
-                            child: Padding(
-                              padding: EdgeInsetsGeometry.all(10),
-                              child: Row(
-                                mainAxisAlignment: MainAxisAlignment.start,
-                                children: [
-                                  Padding(
-                                    padding: EdgeInsetsGeometry.only(
-                                      right: 10,
-                                      left: 5,
-                                    ),
-                                    child: Icon(Icons.translate, size: 35),
-                                  ),
-                                  Column(
-                                    mainAxisAlignment: MainAxisAlignment.start,
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      Text(
-                                        '翻译设置',
-                                        textAlign: TextAlign.center,
-                                        style: TextStyle(
-                                          fontSize: 18,
-                                          fontWeight: FontWeight.bold,
-                                        ),
-                                      ),
-                                      Text(
-                                        '配置腾讯机器翻译参数',
-                                        style: TextStyle(
-                                          color: Theme.of(
-                                            context,
-                                          ).colorScheme.onSurfaceVariant,
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                ],
-                              ),
-                            ),
-                          ),
-                          onTap: () => Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => TextTranslateSettingsPage(),
-                            ),
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
+          padding: const EdgeInsets.symmetric(horizontal: 16),
+          child: Column(
+            children: [
+              const SizedBox(height: 16),
 
-                Padding(
-                  padding: EdgeInsetsGeometry.only(left: 10, right: 10),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    children: [
-                      Expanded(
-                        child: InkWell(
-                          child: Card(
-                            color: Theme.of(
-                              context,
-                            ).colorScheme.primaryContainer.withAlpha(150),
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.all(
-                                Radius.circular(0.0),
-                              ),
-                            ),
-                            child: Padding(
-                              padding: EdgeInsetsGeometry.all(10),
-                              child: Row(
-                                mainAxisAlignment: MainAxisAlignment.start,
-                                children: [
-                                  Padding(
-                                    padding: EdgeInsetsGeometry.only(
-                                      right: 10,
-                                      left: 5,
-                                    ),
-                                    child: Icon(Icons.token, size: 35),
-                                  ),
-                                  Column(
-                                    mainAxisAlignment: MainAxisAlignment.start,
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      Text(
-                                        '落雪设置',
-                                        textAlign: TextAlign.center,
-                                        style: TextStyle(
-                                          fontSize: 18,
-                                          fontWeight: FontWeight.bold,
-                                        ),
-                                      ),
-                                      Text(
-                                        '配置落雪Token',
-                                        style: TextStyle(
-                                          color: Theme.of(
-                                            context,
-                                          ).colorScheme.onSurfaceVariant,
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                ],
-                              ),
-                            ),
-                          ),
-                          onTap: () => Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => LxnsSettingsPage(),
-                            ),
-                          ),
-                        ),
-                      ),
-                    ],
+              // ── 第一组：翻译 + 落雪 ──
+              _buildNavItem(
+                icon: Icons.translate,
+                title: '翻译设置',
+                subtitle: '配置阿里云机器翻译参数',
+                isFirst: true,
+                isLast: false,
+                onTap: () => Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => const TextTranslateSettingsPage(),
                   ),
                 ),
-                Padding(
-                  padding: EdgeInsetsGeometry.only(left: 10, right: 10),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    children: [
-                      Expanded(
-                        child: InkWell(
-                          child: Card(
-                            color: Theme.of(
-                              context,
-                            ).colorScheme.primaryContainer.withAlpha(150),
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.all(
-                                Radius.circular(0.0),
-                              ),
-                            ),
-                            child: Padding(
-                              padding: EdgeInsetsGeometry.all(5),
-                              child: Row(
-                                children: [
-                                  Padding(
-                                    padding: EdgeInsetsGeometry.only(left: 10),
-                                    child: Icon(Icons.vpn_key, size: 35),
-                                  ),
-                                  Expanded(
-                                    child: SwitchListTile(
-                                      title: Text('谱面预览加速（实验性'),
-                                      subtitle: Text('vercel过来的我不确定彳亍不彳亍'),
-                                      value: chartproxy,
-                                      onChanged: (value) async {
-                                        try {
-                                          setState(() => chartproxy = value);
-                                          await changeChartProxy(
-                                            state: chartproxy,
-                                          );
-                                        } catch (e, strack) {
-                                          log('$e\n$strack');
-                                          if (!context.mounted) return;
-                                          ScaffoldMessenger.of(
-                                            context,
-                                          ).showSnackBar(
-                                            SnackBar(
-                                              content: Text('错误：$e\n$strack'),
-                                            ),
-                                          );
-                                        }
-                                      },
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ),
-                          ),
-                        ),
-                      ),
-                    ],
+              ),
+              _buildDivider(),
+              _buildNavItem(
+                icon: Icons.token,
+                title: '落雪设置',
+                subtitle: '配置落雪 Token',
+                isFirst: false,
+                isLast: true,
+                onTap: () => Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => const LxnsSettingsPage(),
                   ),
                 ),
-                Padding(
-                  padding: EdgeInsetsGeometry.only(left: 10, right: 10),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    children: [
-                      Expanded(
-                        child: InkWell(
-                          child: Card(
-                            color: Theme.of(
-                              context,
-                            ).colorScheme.primaryContainer.withAlpha(150),
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.all(
-                                Radius.circular(0.0),
-                              ),
-                            ),
-                            child: Padding(
-                              padding: EdgeInsetsGeometry.all(5),
-                              child: Row(
-                                children: [
-                                  Padding(
-                                    padding: EdgeInsetsGeometry.only(left: 10),
-                                    child: Icon(
-                                      Icons.update_outlined,
-                                      size: 35,
-                                    ),
-                                  ),
-                                  Expanded(
-                                    child: SwitchListTile(
-                                      title: Text('自动检查更新'),
-                                      subtitle: Text('启动时是否自动检查更新'),
-                                      value: autocheckupdate,
-                                      onChanged: (value) async {
-                                        try {
-                                          setState(
-                                            () => autocheckupdate = value,
-                                          );
-                                          final path =
-                                              await getApplicationSupportDirectory();
-                                          Map<String, dynamic> config =
-                                              jsonDecode(
-                                                await File(
-                                                  '${path.path}/config.json',
-                                                ).readAsString(),
-                                              );
-                                          config['autocheckupdate'] =
-                                              autocheckupdate;
-                                          await File(
-                                            '${path.path}/config.json',
-                                          ).writeAsString(jsonEncode(config));
-                                        } catch (e, strack) {
-                                          log('$e\n$strack');
-                                          if (!context.mounted) return;
-                                          ScaffoldMessenger.of(
-                                            context,
-                                          ).showSnackBar(
-                                            SnackBar(
-                                              content: Text('错误：$e\n$strack'),
-                                            ),
-                                          );
-                                        }
-                                      },
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ),
-                          ),
-                        ),
-                      ),
-                    ],
+              ),
+
+              const SizedBox(height: 24),
+
+              // ── 第二组：开关项 ──
+              _buildSwitchItem(
+                icon: Icons.vpn_key,
+                title: '谱面预览加速（实验性）',
+                subtitle: 'Vercel 代理，不确定是否可用',
+                value: chartproxy,
+                isFirst: true,
+                isLast: false,
+                onChanged: (value) async {
+                  try {
+                    setState(() => chartproxy = value);
+                    await changeChartProxy(state: chartproxy);
+                  } catch (e, stack) {
+                    log('$e\n$stack');
+                    if (!context.mounted) return;
+                    ScaffoldMessenger.of(
+                      context,
+                    ).showSnackBar(SnackBar(content: Text('错误：$e')));
+                  }
+                },
+              ),
+              _buildDivider(),
+              _buildSwitchItem(
+                icon: Icons.update_outlined,
+                title: '自动检查更新',
+                subtitle: '启动时是否自动检查更新',
+                value: autocheckupdate,
+                isFirst: false,
+                isLast: true,
+                onChanged: (value) async {
+                  try {
+                    setState(() => autocheckupdate = value);
+                    final path = await getApplicationSupportDirectory();
+                    final config = jsonDecode(
+                      await File('${path.path}/config.json').readAsString(),
+                    );
+                    config['autocheckupdate'] = autocheckupdate;
+                    await File(
+                      '${path.path}/config.json',
+                    ).writeAsString(jsonEncode(config));
+                  } catch (e, stack) {
+                    log('$e\n$stack');
+                    if (!context.mounted) return;
+                    ScaffoldMessenger.of(
+                      context,
+                    ).showSnackBar(SnackBar(content: Text('错误：$e')));
+                  }
+                },
+              ),
+
+              const SizedBox(height: 24),
+
+              // ── 第三组：主题 + 地图 ──
+              _buildNavItem(
+                icon: Icons.brightness_4,
+                title: '主题模式',
+                subtitle: '当前为：$darkmode',
+                isFirst: true,
+                isLast: false,
+                onTap: darkmodechange,
+              ),
+              _buildDivider(),
+              _buildNavItem(
+                icon: Icons.map,
+                title: '地图设置',
+                subtitle: '设置首选地图',
+                isFirst: false,
+                isLast: true,
+                onTap: () => Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => const MapSettingsPage(),
                   ),
                 ),
-                Padding(
-                  padding: EdgeInsetsGeometry.only(left: 10, right: 10),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    children: [
-                      Expanded(
-                        child: InkWell(
-                          onTap: darkmodechange,
-                          child: Card(
-                            color: Theme.of(
-                              context,
-                            ).colorScheme.primaryContainer.withAlpha(150),
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.all(
-                                Radius.circular(0.0),
-                              ),
-                            ),
-                            child: Padding(
-                              padding: EdgeInsetsGeometry.all(10),
-                              child: Row(
-                                mainAxisAlignment: MainAxisAlignment.start,
-                                children: [
-                                  Padding(
-                                    padding: EdgeInsetsGeometry.only(
-                                      right: 10,
-                                      left: 5,
-                                    ),
-                                    child: Icon(Icons.brightness_4, size: 35),
-                                  ),
-                                  Column(
-                                    mainAxisAlignment: MainAxisAlignment.start,
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      Text(
-                                        '主题模式',
-                                        textAlign: TextAlign.center,
-                                        style: TextStyle(
-                                          fontSize: 18,
-                                          fontWeight: FontWeight.bold,
-                                        ),
-                                      ),
-                                      Text(
-                                        '切换主题模式,当前为：$darkmode',
-                                        style: TextStyle(
-                                          color: Theme.of(
-                                            context,
-                                          ).colorScheme.onSurfaceVariant,
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                ],
-                              ),
-                            ),
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-                Padding(
-                  padding: EdgeInsetsGeometry.only(left: 10, right: 10),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Expanded(
-                        child: InkWell(
-                          child: Card(
-                            color: Theme.of(
-                              context,
-                            ).colorScheme.primaryContainer.withAlpha(150),
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.only(
-                                bottomLeft: Radius.circular(15),
-                                bottomRight: Radius.circular(15),
-                              ),
-                            ),
-                            child: Padding(
-                              padding: EdgeInsetsGeometry.all(10),
-                              child: Row(
-                                mainAxisAlignment: MainAxisAlignment.start,
-                                children: [
-                                  Padding(
-                                    padding: EdgeInsetsGeometry.only(
-                                      right: 10,
-                                      left: 5,
-                                    ),
-                                    child: Icon(Icons.map, size: 35),
-                                  ),
-                                  Column(
-                                    mainAxisAlignment: MainAxisAlignment.start,
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      Text(
-                                        '地图设置',
-                                        textAlign: TextAlign.center,
-                                        style: TextStyle(
-                                          fontSize: 18,
-                                          fontWeight: FontWeight.bold,
-                                        ),
-                                      ),
-                                      Text(
-                                        '设置首选地图',
-                                        style: TextStyle(
-                                          color: Theme.of(
-                                            context,
-                                          ).colorScheme.onSurfaceVariant,
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                ],
-                              ),
-                            ),
-                          ),
-                          onTap: () => Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => MapSettingsPage(),
-                            ),
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              ],
-            ),
+              ),
+
+              const SizedBox(height: 30),
+            ],
           ),
         ),
       ),

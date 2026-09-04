@@ -92,6 +92,8 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
+  bool _isLoading = true;
+
   Future<void> postusecount() async {
     try {
       String result = await requestuscount();
@@ -115,10 +117,17 @@ class _MyHomePageState extends State<MyHomePage> {
         log('有新的公告');
         if (!mounted) return;
         await showDialog(
+          barrierDismissible: false,
           context: context,
           builder: (context) => AlertDialog(
             title: Text(announcement[0]['title']),
             content: Text(announcement[0]['content']),
+            actions: [
+              TextButton(
+                onPressed: () => Navigator.pop(context),
+                child: Text('确定'),
+              ),
+            ],
           ),
         );
         config['announcement']['date'] = announcement[0]['date'];
@@ -232,7 +241,10 @@ class _MyHomePageState extends State<MyHomePage> {
       showChangesLog();
       chechupdate();
       showannouncement();
-      postusecount();
+      setState(() {
+        _isLoading = false;
+      });
+      // postusecount();
     });
   }
 
@@ -249,8 +261,27 @@ class _MyHomePageState extends State<MyHomePage> {
     // infopagebox,
     Info(onThemeChanged: widget.handleThemeChanged),
   ];
+
   @override
   Widget build(BuildContext context) {
+    //脑子抽掉了，忘记做新下载测试了
+    if (_isLoading) {
+      return Scaffold(
+        body: Center(
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Image.asset('res/icon.png', width: 80, height: 80),
+              const SizedBox(height: 16),
+              const CircularProgressIndicator(),
+              const SizedBox(height: 12),
+              Text('加载中...'),
+            ],
+          ),
+        ),
+      );
+    }
+
     return Scaffold(
       appBar: AppBar(
         title: Text(title),

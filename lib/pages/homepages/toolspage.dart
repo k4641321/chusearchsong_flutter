@@ -1,3 +1,4 @@
+import 'package:chusearchsong_flutter/pages/toolspages/information/linkedversepage/linkedversepage.dart';
 import 'package:chusearchsong_flutter/pages/toolspages/tools/chuqinturntablepage.dart';
 import 'package:chusearchsong_flutter/pages/toolspages/tools/friendbattlepage.dart';
 import 'package:chusearchsong_flutter/pages/toolspages/tools/overpowercalculationpage.dart';
@@ -6,6 +7,7 @@ import 'package:chusearchsong_flutter/pages/toolspages/information/searchlobbyne
 import 'package:chusearchsong_flutter/pages/toolspages/tools/searchsongzxzrpage/searchsongzxzrpage.dart';
 import 'package:chusearchsong_flutter/pages/toolspages/tools/songrecommendationpage.dart';
 import 'package:chusearchsong_flutter/function/fun.dart';
+import 'package:chusearchsong_flutter/pages/toolspages/tools/testpage.dart';
 import 'package:chusearchsong_flutter/pages/toolspages/tools/variousrankingspage.dart';
 import 'package:chusearchsong_flutter/pages/toolspages/tools/viewallgradespage.dart';
 import '../../function/toolsfun/ratingtrendpagefun.dart';
@@ -289,6 +291,34 @@ class _ToolPageState extends State<ToolPage> {
                   ),
                 ],
               ),
+              Row(
+                children: [
+                  Expanded(
+                    child: InkWell(
+                      child: Card(
+                        child: TextButton.icon(
+                          label: Text(
+                            'Linke Verse',
+                            style: TextStyle(
+                              color: Theme.of(context).colorScheme.onSurface,
+                            ),
+                          ),
+                          onPressed: () => Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => const Linkedversepage(),
+                            ),
+                          ),
+                          icon: Icon(
+                            Icons.door_back_door_outlined,
+                            color: Theme.of(context).colorScheme.onSurface,
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
               const Divider(),
               Text('工具'),
               Row(
@@ -434,17 +464,10 @@ class _ToolPageState extends State<ToolPage> {
                             ),
                           ),
                           onPressed: () {
-                            final platform = Theme.of(context).platform;
-                            if (platform != TargetPlatform.android) {
-                              ScaffoldMessenger.of(context).showSnackBar(
-                                SnackBar(content: Text('不是目标平台，不给予打开')),
-                              );
-                              return;
-                            }
                             Navigator.push(
                               context,
                               MaterialPageRoute(
-                                builder: (context) => UpdateScorePage(),
+                                builder: (context) => Updatescorepage(),
                               ),
                             );
                           },
@@ -672,34 +695,34 @@ class _ToolPageState extends State<ToolPage> {
                   ),
                 ],
               ),
-              // Row(
-              //   children: [
-              //     Expanded(
-              //       child: InkWell(
-              //         child: Card(
-              //           child: TextButton.icon(
-              //             label: Text(
-              //               'test',
-              //               style: TextStyle(
-              //                 color: Theme.of(context).colorScheme.onSurface,
-              //               ),
-              //             ),
-              //             onPressed: () => Navigator.push(
-              //               context,
-              //               MaterialPageRoute(
-              //                 builder: (context) => const Testpage(),
-              //               ),
-              //             ),
-              //             icon: Icon(
-              //               Icons.leaderboard_outlined,
-              //               color: Theme.of(context).colorScheme.onSurface,
-              //             ),
-              //           ),
-              //         ),
-              //       ),
-              //     ),
-              //   ],
-              // ),
+              Row(
+                children: [
+                  // Expanded(
+                  //   child: InkWell(
+                  //     child: Card(
+                  //       child: TextButton.icon(
+                  //         label: Text(
+                  //           'test',
+                  //           style: TextStyle(
+                  //             color: Theme.of(context).colorScheme.onSurface,
+                  //           ),
+                  //         ),
+                  //         onPressed: () => Navigator.push(
+                  //           context,
+                  //           MaterialPageRoute(
+                  //             builder: (context) => const Testpage(),
+                  //           ),
+                  //         ),
+                  //         icon: Icon(
+                  //           Icons.leaderboard_outlined,
+                  //           color: Theme.of(context).colorScheme.onSurface,
+                  //         ),
+                  //       ),
+                  //     ),
+                  //   ),
+                  // ),
+                ],
+              ),
             ],
           ),
         ),

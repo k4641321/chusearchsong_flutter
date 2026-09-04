@@ -19,6 +19,7 @@ class _SearchPageState extends State<SearchPage> {
   String? selectedDifficultyUp = '-1';
   String? selectedifPlay = '-1';
   int? selectedSpecialFilter = 0;
+  int? selectedOnlySearch = 0;
   int? bpmup;
   int? bpmdown;
   List<Widget> searchResults = [];
@@ -75,6 +76,7 @@ class _SearchPageState extends State<SearchPage> {
         true,
         null,
         selectedSpecialFilter,
+        selectedOnlySearch,
       );
       if (!mounted) return;
       List<Widget> results = await search(
@@ -167,10 +169,14 @@ class _SearchPageState extends State<SearchPage> {
   }
 
   Future<void> init() async {
-    songsData = await loadSongs();
-    aliasData = await loadAlias();
-    buildGenreWidget();
-    buildVersionWidget();
+    try {
+      songsData = await loadSongs();
+      aliasData = await loadAlias();
+      buildGenreWidget();
+      buildVersionWidget();
+    } catch (e, strack) {
+      log('初始化错误: $e\n$strack', name: 'searchpage.dart', level: 1000);
+    }
   }
 
   @override
@@ -591,6 +597,30 @@ class _SearchPageState extends State<SearchPage> {
                                             onSelected: (int? value) {
                                               setState(() {
                                                 selectedSpecialFilter = value;
+                                              });
+                                              try {
+                                                _performSearch();
+                                              } catch (e) {
+                                                ScaffoldMessenger.of(
+                                                  context,
+                                                ).showSnackBar(
+                                                  SnackBar(
+                                                    content: Text(
+                                                      '搜索失败，可能是数据丢失',
+                                                    ),
+                                                  ),
+                                                );
+                                              }
+                                            },
+                                          ),
+                                        ),
+                                        Expanded(
+                                          child: buildOnlySearchDropdownMenu(
+                                            initialSelection:
+                                                selectedOnlySearch,
+                                            onSelected: (int? value) {
+                                              setState(() {
+                                                selectedOnlySearch = value;
                                               });
                                               try {
                                                 _performSearch();

@@ -11,7 +11,7 @@ import 'package:package_info_plus/package_info_plus.dart';
 Future<void> savetexttranslateconfig({
   required String secretId,
   required String secretKey,
-  required String projectId,
+  // required String projectId,
   required BuildContext context,
 }) async {
   try {
@@ -22,9 +22,9 @@ Future<void> savetexttranslateconfig({
     if (!config.containsKey('texttranslate')) {
       config['texttranslate'] = {};
     }
-    config['texttranslate']['secretId'] = secretId;
-    config['texttranslate']['secretKey'] = secretKey;
-    config['texttranslate']['projectId'] = projectId;
+    config['texttranslate']['accessKeyId'] = secretId;
+    config['texttranslate']['accessKeySecret'] = secretKey;
+    // config['texttranslate']['projectId'] = projectId;
     await file.writeAsString(json.encode(config));
     if (!context.mounted) return;
     ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('成功')));

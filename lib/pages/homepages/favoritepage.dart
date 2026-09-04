@@ -4,10 +4,8 @@ import 'package:chusearchsong_flutter/function/list.dart';
 import 'package:flutter/material.dart';
 import 'dart:io';
 import 'package:path_provider/path_provider.dart';
-import 'dart:convert';
 import '../../function/fun.dart';
 import '../../function/favoritepagefun.dart';
-import '../../function/toolsfun/generateb50fun/generateb50.dart';
 
 class FavoritePage extends StatefulWidget {
   const FavoritePage({super.key});
@@ -91,6 +89,45 @@ class _FavoritePageState extends State<FavoritePage> {
     init();
   }
 
+  /// 操作按钮（带图标的 chip 风格）
+  Widget _buildActionChip({
+    required IconData icon,
+    required String label,
+    required VoidCallback onTap,
+    Color? color,
+  }) {
+    final effectiveColor = color ?? Theme.of(context).colorScheme.primary;
+
+    return Expanded(
+      child: Material(
+        color: effectiveColor.withAlpha(25),
+        borderRadius: BorderRadius.circular(12),
+        child: InkWell(
+          borderRadius: BorderRadius.circular(12),
+          onTap: onTap,
+          child: Padding(
+            padding: const EdgeInsets.symmetric(vertical: 10),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Icon(icon, size: 22, color: effectiveColor),
+                const SizedBox(height: 4),
+                Text(
+                  label,
+                  style: TextStyle(
+                    fontSize: 12,
+                    fontWeight: FontWeight.w500,
+                    color: effectiveColor,
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -108,12 +145,16 @@ class _FavoritePageState extends State<FavoritePage> {
             controller: _scrollController,
             slivers: [
               SliverToBoxAdapter(
-                child: Column(
-                  children: [
-                    Row(
-                      children: [
-                        Expanded(
-                          child: InkWell(
+                child: Padding(
+                  padding: const EdgeInsets.fromLTRB(16, 12, 16, 8),
+                  child: Column(
+                    children: [
+                      // ── 操作按钮行 ──
+                      Row(
+                        children: [
+                          _buildActionChip(
+                            icon: Icons.file_download_outlined,
+                            label: '导入',
                             onTap: () async {
                               try {
                                 await importFavoriteSong(context: context);
@@ -125,20 +166,11 @@ class _FavoritePageState extends State<FavoritePage> {
                                 );
                               }
                             },
-                            child: Card(
-                              child: Padding(
-                                padding: EdgeInsetsGeometry.all(8),
-                                child: Text(
-                                  '导入收藏曲目',
-                                  style: TextStyle(fontSize: 15),
-                                  textAlign: TextAlign.center,
-                                ),
-                              ),
-                            ),
                           ),
-                        ),
-                        Expanded(
-                          child: InkWell(
+                          const SizedBox(width: 8),
+                          _buildActionChip(
+                            icon: Icons.file_upload_outlined,
+                            label: '导出',
                             onTap: () async {
                               try {
                                 await exportFavoriteSong(context: context);
@@ -149,58 +181,47 @@ class _FavoritePageState extends State<FavoritePage> {
                                 );
                               }
                             },
-                            child: Card(
-                              child: Padding(
-                                padding: EdgeInsetsGeometry.all(8),
-                                child: Text(
-                                  '导出收藏曲目',
-                                  style: TextStyle(fontSize: 15),
-                                  textAlign: TextAlign.center,
-                                ),
-                              ),
-                            ),
                           ),
-                        ),
-                      ],
-                    ),
-                    Row(
-                      children: [
-                        Expanded(
-                          child: TextButton(
-                            onPressed: () async {
+                          const SizedBox(width: 8),
+                          _buildActionChip(
+                            icon: Icons.create_new_folder_outlined,
+                            label: '新建',
+                            onTap: () async {
                               try {
-                                final TextEditingController controller =
-                                    TextEditingController();
-                                showDialog(
+                                final controller = TextEditingController();
+                                if (!context.mounted) return;
+                                final result = await showDialog<bool>(
                                   context: context,
                                   builder: (context) => AlertDialog(
-                                    title: Text('输入名称'),
-                                    content: TextField(controller: controller),
+                                    title: const Text('新建收藏夹'),
+                                    content: TextField(
+                                      controller: controller,
+                                      decoration: const InputDecoration(
+                                        hintText: '输入名称',
+                                        border: OutlineInputBorder(),
+                                      ),
+                                      autofocus: true,
+                                    ),
                                     actions: [
                                       TextButton(
                                         onPressed: () => Navigator.pop(context),
-                                        child: Text('取消'),
+                                        child: const Text('取消'),
                                       ),
-                                      TextButton(
+                                      FilledButton(
                                         onPressed: () async {
-                                          Map<String, dynamic>
-                                          favoriteListSongs =
+                                          final favoriteListSongs =
                                               await loadFavoriteSong();
-                                          List favoriteListSongKeys =
-                                              favoriteListSongs.keys.toList();
-                                          if (favoriteListSongKeys.contains(
+                                          if (favoriteListSongs.keys.contains(
                                             controller.text,
                                           )) {
                                             if (!context.mounted) return;
                                             ScaffoldMessenger.of(
                                               context,
                                             ).showSnackBar(
-                                              SnackBar(
-                                                content: Text('已存在相同文件'),
+                                              const SnackBar(
+                                                content: Text('已存在相同名称'),
                                               ),
                                             );
-
-                                            Navigator.pop(context);
                                             return;
                                           }
                                           favoriteListSongs[controller.text] =
@@ -211,90 +232,91 @@ class _FavoritePageState extends State<FavoritePage> {
                                           await loadFavoriteList();
                                           await _returnfavoriteResults();
                                           if (!context.mounted) return;
-
                                           Navigator.pop(context);
                                         },
-                                        child: Text('确定'),
+                                        child: const Text('确定'),
                                       ),
                                     ],
                                   ),
                                 );
-                              } catch (e, strack) {
-                                log('$e\n$strack');
+                              } catch (e, stack) {
+                                log('$e\n$stack');
+                                if (!context.mounted) return;
                                 ScaffoldMessenger.of(context).showSnackBar(
-                                  SnackBar(content: Text('错误：$e\n$strack')),
+                                  SnackBar(content: Text('错误：$e')),
                                 );
                               }
                             },
-                            child: Text('新建收藏夹'),
                           ),
-                        ),
-                        Expanded(
-                          child: TextButton(
-                            onPressed: () async {
+                          const SizedBox(width: 8),
+                          _buildActionChip(
+                            icon: Icons.delete_outline,
+                            label: '删除',
+                            color: Theme.of(context).colorScheme.error,
+                            onTap: () async {
                               try {
-                                List<Widget> children = [];
-                                Map<String, dynamic> favoriteListSongs =
+                                final favoriteListSongs =
                                     await loadFavoriteSong();
-                                List favoriteListSongsKeys = favoriteListSongs
-                                    .keys
+                                final keys = favoriteListSongs.keys
+                                    .where((k) => k != 'favorite')
                                     .toList();
-                                for (var i in favoriteListSongsKeys) {
-                                  if (i == 'favorite') continue;
-                                  children.add(
-                                    ListTile(
-                                      title: Text(i),
-                                      onTap: () async {
-                                        if (selectedName == i) {
-                                          selectedName = 'favorite';
-                                        }
-                                        favoriteListSongs.remove(i);
-                                        await saveFavoriteSong(
-                                          favoriteListSongs,
-                                        );
-                                        await loadFavoriteList();
-                                        await _returnfavoriteResults();
-                                        if (!context.mounted) return;
-                                        Navigator.pop(context);
-                                      },
-                                    ),
-                                  );
-                                }
                                 if (!context.mounted) return;
                                 showDialog(
                                   context: context,
                                   builder: (context) => SimpleDialog(
-                                    title: Text('选择收藏夹'),
-                                    children: children,
+                                    title: const Text('选择要删除的收藏夹'),
+                                    children: keys.map((name) {
+                                      return ListTile(
+                                        title: Text(name),
+                                        onTap: () async {
+                                          if (selectedName == name) {
+                                            selectedName = 'favorite';
+                                          }
+                                          favoriteListSongs.remove(name);
+                                          await saveFavoriteSong(
+                                            favoriteListSongs,
+                                          );
+                                          await loadFavoriteList();
+                                          await _returnfavoriteResults();
+                                          if (!context.mounted) return;
+                                          Navigator.pop(context);
+                                        },
+                                      );
+                                    }).toList(),
                                   ),
                                 );
-                              } catch (e, strack) {
-                                log('$e\n$strack');
+                              } catch (e, stack) {
+                                log('$e\n$stack');
+                                if (!context.mounted) return;
                                 ScaffoldMessenger.of(context).showSnackBar(
-                                  SnackBar(content: Text('错误：$e\n$strack')),
+                                  SnackBar(content: Text('错误：$e')),
                                 );
                               }
                             },
-                            child: Text('删除收藏夹'),
                           ),
-                        ),
-                      ],
-                    ),
-                  ],
-                ),
-              ),
-              SliverToBoxAdapter(
-                child: DropdownMenu(
-                  key: ValueKey(selectedName),
-                  menuHeight: 300,
-                  selectOnly: true,
-                  width: double.maxFinite,
-                  initialSelection: selectedName,
-                  onSelected: (value) => setState(() {
-                    selectedName = value;
-                    _returnfavoriteResults();
-                  }),
-                  dropdownMenuEntries: dropdownMenuEntries,
+                        ],
+                      ),
+
+                      const SizedBox(height: 12),
+
+                      // ── 下拉菜单 ──
+                      DropdownMenu(
+                        key: ValueKey(selectedName),
+                        menuHeight: 300,
+                        selectOnly: true,
+                        expandedInsets: EdgeInsets.zero,
+                        leadingIcon: const Icon(Icons.folder_outlined),
+                        label: const Text('收藏夹'),
+                        width: double.maxFinite,
+                        initialSelection: selectedName,
+                        onSelected: (value) => setState(() {
+                          selectedName = value;
+                          _returnfavoriteResults();
+                        }),
+                        dropdownMenuEntries: dropdownMenuEntries,
+                      ),
+                    ],
+                  ),
                 ),
               ),
               SliverList.builder(

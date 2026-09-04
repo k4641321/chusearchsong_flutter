@@ -535,29 +535,29 @@ Widget buildDifficultyUpDropdownMenu({
     dropdownMenuEntries: const [
       DropdownMenuEntry<String>(label: '难度上限', value: '-1'),
       DropdownMenuEntry<String>(label: '0', value: '0'),
-      DropdownMenuEntry<String>(label: '1', value: '1'),
-      DropdownMenuEntry<String>(label: '2', value: '2'),
-      DropdownMenuEntry<String>(label: '3', value: '3'),
-      DropdownMenuEntry<String>(label: '4', value: '4'),
-      DropdownMenuEntry<String>(label: '5', value: '5'),
-      DropdownMenuEntry<String>(label: '6', value: '6'),
-      DropdownMenuEntry<String>(label: '7', value: '7'),
+      DropdownMenuEntry<String>(label: '1', value: '1.4'),
+      DropdownMenuEntry<String>(label: '2', value: '2.4'),
+      DropdownMenuEntry<String>(label: '3', value: '3.4'),
+      DropdownMenuEntry<String>(label: '4', value: '4.4'),
+      DropdownMenuEntry<String>(label: '5', value: '5.4'),
+      DropdownMenuEntry<String>(label: '6', value: '6.4'),
+      DropdownMenuEntry<String>(label: '7', value: '7.4'),
       DropdownMenuEntry<String>(label: '7+', value: '7.9'),
-      DropdownMenuEntry<String>(label: '8', value: '8'),
+      DropdownMenuEntry<String>(label: '8', value: '8.4'),
       DropdownMenuEntry<String>(label: '8+', value: '8.9'),
-      DropdownMenuEntry<String>(label: '9', value: '9'),
+      DropdownMenuEntry<String>(label: '9', value: '9.4'),
       DropdownMenuEntry<String>(label: '9+', value: '9.9'),
-      DropdownMenuEntry<String>(label: '10', value: '10'),
+      DropdownMenuEntry<String>(label: '10', value: '10.4'),
       DropdownMenuEntry<String>(label: '10+', value: '10.9'),
-      DropdownMenuEntry<String>(label: '11', value: '11'),
+      DropdownMenuEntry<String>(label: '11', value: '11.4'),
       DropdownMenuEntry<String>(label: '11+', value: '11.9'),
-      DropdownMenuEntry<String>(label: '12', value: '12'),
+      DropdownMenuEntry<String>(label: '12', value: '12.4'),
       DropdownMenuEntry<String>(label: '12+', value: '12.9'),
-      DropdownMenuEntry<String>(label: '13', value: '13'),
+      DropdownMenuEntry<String>(label: '13', value: '13.4'),
       DropdownMenuEntry<String>(label: '13+', value: '13.9'),
-      DropdownMenuEntry<String>(label: '14', value: '14'),
+      DropdownMenuEntry<String>(label: '14', value: '14.4'),
       DropdownMenuEntry<String>(label: '14+', value: '14.9'),
-      DropdownMenuEntry<String>(label: '15', value: '15'),
+      DropdownMenuEntry<String>(label: '15', value: '15.4'),
       DropdownMenuEntry<String>(label: '15+', value: '15.9'),
       DropdownMenuEntry<String>(label: '16', value: '16.4'),
       DropdownMenuEntry<String>(label: '16+', value: '16.9'),
@@ -598,6 +598,28 @@ Widget buildSpecialFilterDropdownMenu({
     dropdownMenuEntries: const [
       DropdownMenuEntry<int>(label: '不启用特殊筛选', value: 0),
       DropdownMenuEntry<int>(label: '启用特殊筛选', value: 1),
+    ],
+  );
+}
+
+//选择搜索
+Widget buildOnlySearchDropdownMenu({
+  int? initialSelection,
+  ValueChanged<int?>? onSelected,
+}) {
+  return DropdownMenu<int>(
+    menuHeight: 300.0,
+    width: double.infinity,
+    initialSelection: initialSelection ?? 0,
+    selectOnly: true,
+    onSelected: onSelected,
+    dropdownMenuEntries: const [
+      DropdownMenuEntry<int>(label: '搜索全部', value: 0),
+      DropdownMenuEntry<int>(label: '仅搜标题', value: 1),
+      DropdownMenuEntry<int>(label: '仅搜曲师', value: 2),
+      DropdownMenuEntry<int>(label: '仅搜Id', value: 3),
+      DropdownMenuEntry<int>(label: '仅搜别名', value: 4),
+      DropdownMenuEntry<int>(label: '仅搜谱师', value: 5),
     ],
   );
 }

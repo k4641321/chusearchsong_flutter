@@ -20,6 +20,8 @@ Future<void> exportFavoriteSong({required BuildContext context}) async {
             ListTile(
               title: Text(i),
               onTap: () async {
+                if (!context.mounted) return;
+                Navigator.pop(context);
                 final Uint8List dataBytes = utf8.encode(
                   jsonEncode(favoriteSongs[i]),
                 );
@@ -38,8 +40,6 @@ Future<void> exportFavoriteSong({required BuildContext context}) async {
                 await outputFile.writeAsString(
                   jsonEncode({i: favoriteSongs[i]}),
                 );
-                if (!context.mounted) return;
-                Navigator.pop(context);
               },
             ),
           );

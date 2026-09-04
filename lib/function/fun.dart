@@ -194,6 +194,7 @@ class Dataupdate {
           "theme": "light",
           "init": false,
           "favoriteFileUpdated": true,
+          "autocheckupdate": true,
         };
         File(
           '${directory.path}/config.json',
@@ -310,6 +311,7 @@ class Dataupdate {
           savezxzrsongs(),
           saveSegaCharaData(),
           saveLatestVersion(),
+          saveLinkedVerseData(),
         ]);
         showtext.value = '完成';
       }
@@ -371,6 +373,7 @@ class Dataupdate {
         savePlayerInfo(),
         saveTrend(),
         saveAllScore(),
+        saveLinkedVerseData(),
       ]);
     } catch (e) {
       if (!context.mounted) return;
@@ -515,6 +518,7 @@ class Dataupdate {
         saveAliasData(),
         saveSongdata(),
         saveLatestVersion(),
+        saveLinkedVerseData(),
       ]);
     } catch (e, strack) {
       if (!context.mounted) return;
@@ -805,4 +809,14 @@ Future<void> saveFavoriteSong(Map<String, dynamic> favoriteSongs) async {
   await File(
     '${path.path}/files/favorite.json',
   ).writeAsString(jsonEncode(favoriteSongs));
+}
+
+Future<Map<String, dynamic>> loadLinkedVerseData() async {
+  final path = await getApplicationSupportDirectory();
+
+  String configJsonStr = await File(
+    '${path.path}/res/linkedversedata.json',
+  ).readAsString();
+  Map<String, dynamic> configJson = json.decode(configJsonStr);
+  return configJson;
 }

@@ -1,10 +1,9 @@
 import 'dart:convert';
-import 'dart:io';
+import 'package:chusearchsong_flutter/function/fun.dart';
 import 'package:crypto/crypto.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:http/http.dart' as http;
-import 'package:path_provider/path_provider.dart';
 
 Future<String> translateText({
   required String sourceText,
@@ -14,13 +13,10 @@ Future<String> translateText({
     return 'Null';
   }
   //读取SecretId和SecretKey
-  final configpath = await getApplicationSupportDirectory();
-  final configfile = File('${configpath.path}/config.json');
+  final Map<String, dynamic> config = await loadConfig();
   final String tencentSecretId;
   final String tencentSecretKey;
   try {
-    final String configstr = await configfile.readAsString();
-    Map<String, dynamic> config = json.decode(configstr);
     tencentSecretId = config['texttranslate']['secretId'];
     tencentSecretKey = config['texttranslate']['secretKey'];
     // print(tencentSecretId);

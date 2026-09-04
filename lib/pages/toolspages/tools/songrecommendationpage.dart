@@ -32,6 +32,7 @@ class _SongRecommendationPageState extends State<SongRecommendationPage>
   String? selectedDifficultyUp = '-1';
   String? selectedifPlay = '-1';
   String? selectedRank = '-1';
+  int? selectedOnlySearch = 0;
   int? bpmup;
   int? bpmdown;
   List<Widget> searchResults = [];
@@ -148,6 +149,7 @@ class _SongRecommendationPageState extends State<SongRecommendationPage>
         false,
         null,
         0,
+        selectedOnlySearch,
       );
       return resultsMap['songs'];
     } catch (e, strack) {
@@ -746,6 +748,31 @@ class _SongRecommendationPageState extends State<SongRecommendationPage>
                                                         ).showSnackBar(
                                                           SnackBar(
                                                             content: Text('$e'),
+                                                          ),
+                                                        );
+                                                      }
+                                                    },
+                                                  ),
+                                                ),
+                                                Expanded(
+                                                  child: buildOnlySearchDropdownMenu(
+                                                    initialSelection:
+                                                        selectedOnlySearch,
+                                                    onSelected: (int? value) {
+                                                      setState(() {
+                                                        selectedOnlySearch =
+                                                            value;
+                                                      });
+                                                      try {
+                                                        _performSearch();
+                                                      } catch (e) {
+                                                        ScaffoldMessenger.of(
+                                                          context,
+                                                        ).showSnackBar(
+                                                          SnackBar(
+                                                            content: Text(
+                                                              '搜索失败，可能是数据丢失',
+                                                            ),
                                                           ),
                                                         );
                                                       }

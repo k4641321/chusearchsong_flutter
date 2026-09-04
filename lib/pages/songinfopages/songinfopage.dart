@@ -1,10 +1,7 @@
-import 'dart:convert';
 import 'dart:developer';
-import 'package:chusearchsong_flutter/function/texttranslate.dart';
+import 'package:chusearchsong_flutter/function/aliyunapi/texttranslate.dart';
 import 'package:flutter/material.dart';
 import 'musicpage.dart';
-import 'dart:io';
-import 'package:path_provider/path_provider.dart';
 import 'package:url_launcher/url_launcher.dart';
 import '../../function/songinfofun/songinfopagefun.dart';
 import '../../function/fun.dart';
@@ -574,9 +571,13 @@ class _SongInfoPageState extends State<SongInfoPage> {
                 TextButton(
                   onPressed: () async {
                     try {
-                      String result = await translateText(
-                        sourceText: widget.songbasedata['title'],
-                        context: context,
+                      // String result = await translateText(
+                      //   sourceText: widget.songbasedata['title'],
+                      //   context: context,
+                      // );
+                      final translate = await AliTextTranslate.create();
+                      final String result = await translate.translate(
+                        text: widget.songbasedata['title'],
                       );
                       if (!context.mounted) return;
                       setState(() {

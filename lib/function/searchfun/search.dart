@@ -160,6 +160,7 @@ Future<Map<String, dynamic>> filter(
   bool isSearch,
   int? count,
   int? specialfilter,
+  int? onlysearch,
 ) async {
   // 加载曲目数据
   final dataPath = await getApplicationSupportDirectory();
@@ -177,7 +178,7 @@ Future<Map<String, dynamic>> filter(
   }
 
   log(
-    '$title $genre $version $difficultydown $difficultyup $ifplay $bpmup $bpmdown $specialfilter',
+    '$title $genre $version $difficultydown $difficultyup $ifplay $bpmup $bpmdown $specialfilter $onlysearch',
   );
 
   //信息展示
@@ -185,57 +186,65 @@ Future<Map<String, dynamic>> filter(
 
   //初步筛选
   Set<int> songresult = {};
-  if (title == '' &&
-      genre.contains('-1') &&
-      version.contains('-1') &&
-      difficultydown == '-1' &&
-      difficultyup == '-1' &&
-      ifplay == '-1' &&
-      bpmup == null &&
-      bpmdown == null &&
-      isSearch == true) {
-    log('未选择条件');
-    return {};
-  }
-  for (var i in songsData['songs']) {
-    if (i['title'].toLowerCase().contains(title.toLowerCase())) {
-      // log('匹配');
-      songresult.add(i['id']);
+  if (onlysearch == 0 || onlysearch == 1 || onlysearch == null) {
+    if (title == '' &&
+        genre.contains('-1') &&
+        version.contains('-1') &&
+        difficultydown == '-1' &&
+        difficultyup == '-1' &&
+        ifplay == '-1' &&
+        bpmup == null &&
+        bpmdown == null &&
+        isSearch == true) {
+      log('未选择条件');
+      return {};
+    }
+    for (var i in songsData['songs']) {
+      if (i['title'].toLowerCase().contains(title.toLowerCase())) {
+        // log('匹配');
+        songresult.add(i['id']);
+      }
     }
   }
 
   //曲师筛选
 
-  for (var i in songsData['songs']) {
-    if (i['artist'].toLowerCase().contains(title.toLowerCase())) {
-      // log('曲师匹配 ${i['artist']}');
-      songresult.add(i['id']);
+  if (onlysearch == 0 || onlysearch == 2 || onlysearch == null) {
+    for (var i in songsData['songs']) {
+      if (i['artist'].toLowerCase().contains(title.toLowerCase())) {
+        // log('曲师匹配 ${i['artist']}');
+        songresult.add(i['id']);
+      }
     }
   }
 
   //id筛选
-  try {
-    int.parse(title);
-    for (var i in songsData['songs']) {
-      if (i['id'].toString().contains(title)) {
-        songresult.add(i['id']);
+  if (onlysearch == 0 || onlysearch == 3 || onlysearch == null) {
+    try {
+      int.parse(title);
+      for (var i in songsData['songs']) {
+        if (i['id'].toString().contains(title)) {
+          songresult.add(i['id']);
+        }
       }
+    } catch (e) {
+      log('跳过id筛选');
     }
-  } catch (e) {
-    log('跳过id筛选');
   }
 
   //别名筛选
   // Set<Map<String, dynamic>> aliasresult = {};
-  for (var i in aliasData['aliases']) {
-    for (var j in i['aliases']) {
-      if (j.toLowerCase().contains(title.toLowerCase())) {
-        songresult.add(i['song_id']);
-        if (title != '') {
-          searchinfo[i['song_id']] ??= {};
-          (searchinfo[i['song_id']] as Map)['alias'] = j;
+  if (onlysearch == 0 || onlysearch == 4 || onlysearch == null) {
+    for (var i in aliasData['aliases']) {
+      for (var j in i['aliases']) {
+        if (j.toLowerCase().contains(title.toLowerCase())) {
+          songresult.add(i['song_id']);
+          if (title != '') {
+            searchinfo[i['song_id']] ??= {};
+            (searchinfo[i['song_id']] as Map)['alias'] = j;
+          }
+          break;
         }
-        break;
       }
     }
   }
@@ -261,15 +270,17 @@ Future<Map<String, dynamic>> filter(
   }
 
   //谱师筛选
-  if (title == '') {
-    log('跳过谱师筛选');
-  } else {
-    for (var i in songsData['songs']) {
-      for (var j in i['difficulties']) {
-        if (j['note_designer'].toLowerCase().contains(title.toLowerCase())) {
-          songresult.add(i['id']);
-          searchinfo[i['id']] ??= {};
-          (searchinfo[i['id']] as Map)['note_designer'] = j['note_designer'];
+  if (onlysearch == 0 || onlysearch == 5 || onlysearch == null) {
+    if (title == '') {
+      log('跳过谱师筛选');
+    } else {
+      for (var i in songsData['songs']) {
+        for (var j in i['difficulties']) {
+          if (j['note_designer'].toLowerCase().contains(title.toLowerCase())) {
+            songresult.add(i['id']);
+            searchinfo[i['id']] ??= {};
+            (searchinfo[i['id']] as Map)['note_designer'] = j['note_designer'];
+          }
         }
       }
     }
