@@ -49,6 +49,7 @@ class _FavoritePageState extends State<FavoritePage> {
   Future<void> _returnfavoriteResults() async {
     List<Widget> favoriteResults = [];
     Map<String, dynamic> favoriteListSong = await loadFavoriteSong();
+    print(favoriteListSong);
     for (var i in favoriteListSong[selectedName]) {
       String versionname = '';
       late Map<String, dynamic> songbasedata;
@@ -158,7 +159,8 @@ class _FavoritePageState extends State<FavoritePage> {
                             onTap: () async {
                               try {
                                 await importFavoriteSong(context: context);
-                                _returnfavoriteResults();
+                                await loadFavoriteList();
+                                await _returnfavoriteResults();
                               } catch (e) {
                                 if (!context.mounted) return;
                                 ScaffoldMessenger.of(context).showSnackBar(

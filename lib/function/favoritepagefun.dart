@@ -73,7 +73,7 @@ Future<void> importFavoriteSong({required BuildContext context}) async {
     try {
       Map<String, dynamic> importFavoriteSongs = jsonDecode(content);
       if (!context.mounted) return;
-      showDialog(
+      await showDialog(
         context: context,
         builder: (context) {
           final TextEditingController controller = TextEditingController();
@@ -93,17 +93,41 @@ Future<void> importFavoriteSong({required BuildContext context}) async {
                   if (favoriteListSongsKeys.contains(controller.text)) {
                     if (!context.mounted) return;
 
-                    ScaffoldMessenger.of(
-                      context,
-                    ).showSnackBar(SnackBar(content: Text('已存在同名文件夹')));
+                    await showDialog(
+                      context: context,
+                      builder: (context) => AlertDialog(
+                        title: Text('提示'),
+                        content: Text('已存在同名文件夹，是否覆盖'),
+                        actions: [
+                          TextButton(
+                            onPressed: () => Navigator.pop(context),
+                            child: Text('取消'),
+                          ),
+                          TextButton(
+                            onPressed: () {
+                              favoriteSongs[controller.text] =
+                                  importFavoriteSongs.values.first;
+                              File(
+                                '${path.path}/files/favorite.json',
+                              ).writeAsStringSync(jsonEncode(favoriteSongs));
+                              if (!context.mounted) return;
+                              Navigator.pop(context);
+                              Navigator.pop(context);
+                            },
+                            child: Text('确定'),
+                          ),
+                        ],
+                      ),
+                    );
+                  } else {
+                    favoriteSongs[controller.text] =
+                        importFavoriteSongs.values.first;
+                    File(
+                      '${path.path}/files/favorite.json',
+                    ).writeAsStringSync(jsonEncode(favoriteSongs));
+                    if (!context.mounted) return;
+                    Navigator.pop(context);
                   }
-                  favoriteSongs[controller.text] =
-                      importFavoriteSongs.values.first;
-                  File(
-                    '${path.path}/files/favorite.json',
-                  ).writeAsStringSync(jsonEncode(favoriteSongs));
-                  if (!context.mounted) return;
-                  Navigator.pop(context);
                 },
                 child: Text('确定'),
               ),

@@ -11,6 +11,7 @@ import 'songinfofun/songinfopagefun.dart';
 import 'package:flutter/services.dart';
 import 'infopagefun/settingspagefun.dart';
 import 'toolsfun/generateb50fun/generateb50.dart';
+import 'package:async/async.dart';
 
 //Rating趋势
 Future<List> returnscoretrendlist() async {
@@ -371,42 +372,54 @@ class Dataupdate {
 
   //更新数据
   static Future<void> updateAllData({required BuildContext context}) async {
-    final showtext = ValueNotifier<String>('更新数据');
-    showDialog(
-      barrierDismissible: false,
-      context: context,
-      builder: (context) => AlertDialog(
-        title: Text('更新数据'),
-        content: Row(
-          children: [
-            CircularProgressIndicator(),
-            ValueListenableBuilder<String>(
-              valueListenable: showtext,
-              builder: (context, value, child) => Text(value),
-            ),
-          ],
-        ),
-      ),
-    );
     try {
-      await Future.wait([
-        saveTrophiesData(),
-        savePlatesData(),
-        saveIconsData(),
-        saveCharactersData(),
-        saveLobbyData(),
-        saveAliasData(),
-        saveSongdata(),
-        savezxzrsongs(),
-        saveSegaCharaData(),
-        saveLatestVersion(),
-        saveNearcadeAllShop(),
-        saveB50(),
-        savePlayerInfo(),
-        saveTrend(),
-        saveAllScore(),
-        saveLinkedVerseData(),
-      ]);
+      final showtext = ValueNotifier<String>('更新数据');
+      CancelableOperation<void>? operation;
+      showDialog(
+        barrierDismissible: false,
+        context: context,
+        builder: (context) => AlertDialog(
+          title: Text('更新数据'),
+          content: Row(
+            children: [
+              CircularProgressIndicator(),
+              ValueListenableBuilder<String>(
+                valueListenable: showtext,
+                builder: (context, value, child) => Text(value),
+              ),
+            ],
+          ),
+        ),
+      ).then((_) {
+        operation?.cancel();
+      });
+      operation = CancelableOperation.fromFuture(
+        Future.wait([
+          saveTrophiesData(),
+          savePlatesData(),
+          saveIconsData(),
+          saveCharactersData(),
+          saveLobbyData(),
+          saveAliasData(),
+          saveSongdata(),
+          savezxzrsongs(),
+          saveSegaCharaData(),
+          saveLatestVersion(),
+          saveNearcadeAllShop(),
+          saveB50(),
+          savePlayerInfo(),
+          saveTrend(),
+          saveAllScore(),
+          saveLinkedVerseData(),
+        ]),
+        onCancel: () {
+          log('更新全部数据被取消');
+          ScaffoldMessenger.of(
+            context,
+          ).showSnackBar(SnackBar(content: Text('取消')));
+        },
+      );
+      await operation.value;
     } catch (e) {
       if (!context.mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(
@@ -424,46 +437,54 @@ class Dataupdate {
   }
 
   static Future<void> updateScore({required BuildContext context}) async {
-    final showtext = ValueNotifier<String>('更新数据');
-    showDialog(
-      barrierDismissible: false,
-      context: context,
-      builder: (context) => AlertDialog(
-        title: Text('更新数据'),
-        content: Row(
-          children: [
-            CircularProgressIndicator(),
-            ValueListenableBuilder<String>(
-              valueListenable: showtext,
-              builder: (context, value, child) => Text(value),
-            ),
-          ],
-        ),
-      ),
-    );
     try {
-      final directory = await getApplicationSupportDirectory();
+      final showtext = ValueNotifier<String>('更新数据');
+      Future<void> update() async {
+        final directory = await getApplicationSupportDirectory();
 
-      final path = Directory('${directory.path}/res');
-      //获取成绩
-      showtext.value = '更新成绩';
-      await saveAllScore();
-      showtext.value = '完成';
-      log('保存到 ${path.path}/allscore.json');
-      //Rating趋势
-      showtext.value = '更新Rating趋势';
-      await saveTrend();
-      showtext.value = '完成';
-      log('保存到 ${path.path}/trend.json');
-      //玩家信息
-      showtext.value = '更新玩家信息';
-      await savePlayerInfo();
-      showtext.value = '完成';
-      log('保存到 ${path.path}/playerinfo.json');
-      //B50
-      showtext.value = '更新B50';
-      await saveB50();
-      showtext.value = '完成';
+        final path = Directory('${directory.path}/res');
+        //获取成绩
+        showtext.value = '更新成绩';
+        await saveAllScore();
+        showtext.value = '完成';
+        log('保存到 ${path.path}/allscore.json');
+        //Rating趋势
+        showtext.value = '更新Rating趋势';
+        await saveTrend();
+        showtext.value = '完成';
+        log('保存到 ${path.path}/trend.json');
+        //玩家信息
+        showtext.value = '更新玩家信息';
+        await savePlayerInfo();
+        showtext.value = '完成';
+        log('保存到 ${path.path}/playerinfo.json');
+        //B50
+        showtext.value = '更新B50';
+        await saveB50();
+        showtext.value = '完成';
+      }
+
+      CancelableOperation<void>? operation;
+      showDialog(
+        barrierDismissible: false,
+        context: context,
+        builder: (context) => AlertDialog(
+          title: Text('更新数据'),
+          content: Row(
+            children: [
+              CircularProgressIndicator(),
+              ValueListenableBuilder<String>(
+                valueListenable: showtext,
+                builder: (context, value, child) => Text(value),
+              ),
+            ],
+          ),
+        ),
+      ).then((_) {
+        operation?.cancel();
+      });
+      operation = CancelableOperation.fromFuture(Future.wait([update()]));
+      await operation.value;
     } catch (e, strack) {
       if (!context.mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(
@@ -483,29 +504,34 @@ class Dataupdate {
   static Future<void> updateNearcadeShopData({
     required BuildContext context,
   }) async {
-    final showtext = ValueNotifier<String>('更新数据');
-    showDialog(
-      barrierDismissible: false,
-      context: context,
-      builder: (context) => AlertDialog(
-        title: Text('更新数据'),
-        content: Row(
-          children: [
-            CircularProgressIndicator(),
-            ValueListenableBuilder<String>(
-              valueListenable: showtext,
-              builder: (context, value, child) => Text(value),
-            ),
-          ],
-        ),
-      ),
-    );
     try {
+      final showtext = ValueNotifier<String>('更新数据');
+      CancelableOperation<void>? operation;
+      showDialog(
+        barrierDismissible: false,
+        context: context,
+        builder: (context) => AlertDialog(
+          title: Text('更新数据'),
+          content: Row(
+            children: [
+              CircularProgressIndicator(),
+              ValueListenableBuilder<String>(
+                valueListenable: showtext,
+                builder: (context, value, child) => Text(value),
+              ),
+            ],
+          ),
+        ),
+      ).then((_) {
+        operation?.cancel();
+      });
       final directory = await getApplicationSupportDirectory();
-
       final path = Directory('${directory.path}/res');
       showtext.value = '更新机厅数据';
-      await saveNearcadeAllShop();
+      operation = CancelableOperation.fromFuture(
+        Future.wait([saveNearcadeAllShop()]),
+      );
+      await operation.value;
       showtext.value = '完成';
       log('保存到 ${path.path}/nearcadeshops.json');
     } catch (e, strack) {
@@ -525,35 +551,41 @@ class Dataupdate {
   }
 
   static Future<void> updateBaseData({required BuildContext context}) async {
-    final showtext = ValueNotifier<String>('更新数据');
-    showDialog(
-      barrierDismissible: false,
-      context: context,
-      builder: (context) => AlertDialog(
-        title: Text('更新数据'),
-        content: Row(
-          children: [
-            CircularProgressIndicator(),
-            ValueListenableBuilder<String>(
-              valueListenable: showtext,
-              builder: (context, value, child) => Text(value),
-            ),
-          ],
-        ),
-      ),
-    );
     try {
-      await Future.wait([
-        saveTrophiesData(),
-        savePlatesData(),
-        saveIconsData(),
-        saveCharactersData(),
-        saveLobbyData(),
-        saveAliasData(),
-        saveSongdata(),
-        saveLatestVersion(),
-        saveLinkedVerseData(),
-      ]);
+      final showtext = ValueNotifier<String>('更新数据');
+      CancelableOperation<void>? operation;
+      showDialog(
+        barrierDismissible: false,
+        context: context,
+        builder: (context) => AlertDialog(
+          title: Text('更新数据'),
+          content: Row(
+            children: [
+              CircularProgressIndicator(),
+              ValueListenableBuilder<String>(
+                valueListenable: showtext,
+                builder: (context, value, child) => Text(value),
+              ),
+            ],
+          ),
+        ),
+      ).then((_) {
+        operation?.cancel();
+      });
+      operation = CancelableOperation.fromFuture(
+        Future.wait([
+          saveTrophiesData(),
+          savePlatesData(),
+          saveIconsData(),
+          saveCharactersData(),
+          saveLobbyData(),
+          saveAliasData(),
+          saveSongdata(),
+          saveLatestVersion(),
+          saveLinkedVerseData(),
+        ]),
+      );
+      await operation.value;
     } catch (e, strack) {
       if (!context.mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(
@@ -573,30 +605,35 @@ class Dataupdate {
   static Future<void> updatezxzrsongsData({
     required BuildContext context,
   }) async {
-    final showtext = ValueNotifier<String>('更新数据');
-    showDialog(
-      barrierDismissible: false,
-      context: context,
-      builder: (context) => AlertDialog(
-        title: Text('更新数据'),
-        content: Row(
-          children: [
-            CircularProgressIndicator(),
-            ValueListenableBuilder<String>(
-              valueListenable: showtext,
-              builder: (context, value, child) => Text(value),
-            ),
-          ],
-        ),
-      ),
-    );
     try {
+      final showtext = ValueNotifier<String>('更新数据');
+      CancelableOperation<void>? operation;
+      showDialog(
+        barrierDismissible: false,
+        context: context,
+        builder: (context) => AlertDialog(
+          title: Text('更新数据'),
+          content: Row(
+            children: [
+              CircularProgressIndicator(),
+              ValueListenableBuilder<String>(
+                valueListenable: showtext,
+                builder: (context, value, child) => Text(value),
+              ),
+            ],
+          ),
+        ),
+      );
+
       final directory = await getApplicationSupportDirectory();
 
       final path = Directory('${directory.path}/res');
       //下载最新最热资源
       showtext.value = '更新最新最热资源';
-      await savezxzrsongs();
+      operation = CancelableOperation.fromFuture(
+        Future.wait([savezxzrsongs()]),
+      );
+      await operation.value;
       showtext.value = '完成';
       log('保存到 ${path.path}/zxzrsongs.json');
     } catch (e, strack) {
