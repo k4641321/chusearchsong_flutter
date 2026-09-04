@@ -262,7 +262,7 @@ class _SettingsPageState extends State<SettingsPage> {
               // ── 第二组：开关项 ──
               _buildSwitchItem(
                 icon: Icons.vpn_key,
-                title: '谱面预览加速（实验性）',
+                title: '谱面预览与最新最热歌曲加速（实验性）',
                 subtitle: 'Vercel 代理，不确定是否可用',
                 value: chartproxy,
                 isFirst: true,

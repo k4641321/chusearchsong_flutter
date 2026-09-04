@@ -1,3 +1,4 @@
+import 'package:chusearchsong_flutter/function/fun.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart';
 import 'dart:convert';
@@ -102,8 +103,8 @@ Future<void> saveSongdata() async {
 }
 
 Future<void> savezxzrsongs() async {
-  List zxzrsongslist = await requestreiwaf5sisongs();
   log('请求reiwaf5sisongs');
+  List zxzrsongslist = await requestreiwaf5sisongs();
   List chunirecall = jsonDecode(zxzrsongslist[1]);
   List chunithmrecord = jsonDecode(zxzrsongslist[0]);
   log('请求beerpsisongs');
@@ -237,10 +238,20 @@ Future<void> savezxzrsongs() async {
 }
 
 Future<List> requestreiwaf5sisongs() async {
-  final chunithmrecorduri = Uri.parse(
-    'https://reiwa.f5.si/chunithm_record.json',
-  );
-  final chunirecalluri = Uri.parse('https://reiwa.f5.si/chunirec_all.json');
+  late final Uri chunithmrecorduri;
+  late final Uri chunirecalluri;
+  Map<String, dynamic> config = await loadConfig();
+  if (config['chartproxy']) {
+    chunithmrecorduri = Uri.parse(
+      'https://chusearchsong.devintom.top/api/chunithmrecord',
+    );
+    chunirecalluri = Uri.parse(
+      'https://chusearchsong.devintom.top/api/chunirecall',
+    );
+  } else {
+    chunithmrecorduri = Uri.parse('https://reiwa.f5.si/chunithm_record.json');
+    chunirecalluri = Uri.parse('https://reiwa.f5.si/chunirec_all.json');
+  }
   final chunirecall = await get(chunirecalluri);
   final chunithmrecord = await get(chunithmrecorduri);
   if (chunirecall.statusCode != 200) {

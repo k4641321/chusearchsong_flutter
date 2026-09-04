@@ -165,30 +165,36 @@ Future<void> interSongInfo({
 
 class Dataupdate {
   //初次启动调用的函数
-  static Future<void> ifres({required BuildContext context}) async {
-    final showtext = ValueNotifier<String>('初始化');
-    showDialog(
-      barrierDismissible: false,
-      context: context,
-      builder: (context) => AlertDialog(
-        title: Text('初始化'),
-        content: Row(
-          children: [
-            CircularProgressIndicator(),
-            ValueListenableBuilder<String>(
-              valueListenable: showtext,
-              builder: (context, value, child) => Text(value),
-            ),
-          ],
-        ),
-      ),
-    );
+  static Future<void> ifres({
+    required BuildContext context,
+    required void Function(String text) onProgress,
+  }) async {
+    // final showtext = ValueNotifier<String>('初始化');
+    // showDialog(
+    //   barrierDismissible: false,
+    //   context: context,
+    //   builder: (context) => AlertDialog(
+    //     title: Text('初始化'),
+    //     content: Row(
+    //       children: [
+    //         CircularProgressIndicator(),
+    //         ValueListenableBuilder<String>(
+    //           valueListenable: showtext,
+    //           builder: (context, value, child) => Text(value),
+    //         ),
+    //       ],
+    //     ),
+    //   ),
+    // );
+    onProgress('初始化...');
+
     //配置文件
     try {
       final directory = await getApplicationSupportDirectory();
       if (!File('${directory.path}/config.json').existsSync()) {
         if (!context.mounted) return;
-        showtext.value = '开始创建配置文件';
+        onProgress('开始创建配置文件');
+        // showtext.value = '开始创建配置文件';
         File('${directory.path}/config.json').createSync();
         Map<String, dynamic> config = {
           "theme": "light",
@@ -199,7 +205,8 @@ class Dataupdate {
         File(
           '${directory.path}/config.json',
         ).writeAsStringSync(jsonEncode(config));
-        showtext.value = '完成';
+        // showtext.value = '完成';
+        onProgress('完成');
       }
     } catch (e, strack) {
       if (!context.mounted) return;
@@ -211,12 +218,19 @@ class Dataupdate {
       );
       log('$e', name: 'main', level: 2000);
     }
+    // finally {
+    //   if (context.mounted) {
+    //     Navigator.of(context).pop();
+    //   }
+    // }
 
     //配置更新
     try {
-      showtext.value = '更新配置';
+      onProgress('更新配置');
+      // showtext.value = '更新配置';
       await updateconfig();
-      showtext.value = '完成';
+      // showtext.value = '完成';
+      onProgress('完成');
     } catch (e, strack) {
       if (!context.mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(
@@ -227,6 +241,11 @@ class Dataupdate {
       );
       log('$e\n$strack', name: 'fun.dart', level: 2000);
     }
+    // finally {
+    //   if (context.mounted) {
+    //     Navigator.of(context).pop();
+    //   }
+    // }
 
     //收藏文件
     try {
@@ -238,12 +257,14 @@ class Dataupdate {
       if (!context.mounted) return;
 
       if (!File('${path.path}/favorite.json').existsSync()) {
-        showtext.value = '创建收藏文件';
+        onProgress('创建收藏文件');
+        // showtext.value = '创建收藏文件';
         File('${path.path}/favorite.json').createSync();
         File(
           '${path.path}/favorite.json',
         ).writeAsStringSync(jsonEncode({'favorite': []}));
-        showtext.value = '完成';
+        // showtext.value = '完成';
+        onProgress('完成');
       }
     } catch (e, strack) {
       if (!context.mounted) return;
@@ -255,6 +276,11 @@ class Dataupdate {
       );
       log('$e', name: 'main', level: 2000);
     }
+    // finally {
+    //   if (context.mounted) {
+    //     Navigator.of(context).pop();
+    //   }
+    // }
 
     try {
       final directory = await getApplicationSupportDirectory();
@@ -266,8 +292,8 @@ class Dataupdate {
         path.createSync(recursive: true);
       }
       if (config['init'] == true) {
-        if (!context.mounted) return;
-        Navigator.of(context).pop();
+        // if (!context.mounted) return;
+        // Navigator.of(context).pop();
         return;
       }
       if (!File('${path.path}/songs.json').existsSync() |
@@ -279,27 +305,28 @@ class Dataupdate {
           !File('${path.path}/trophies.json').existsSync() |
           !File('${path.path}/zxzrsongs.json').existsSync() |
           !File('${path.path}/segachara.json').existsSync()) {
-        showtext.value = '下载必要资源';
+        onProgress('下载必要资源');
+        // showtext.value = '下载必要资源';
         if (!context.mounted) return;
-        showDialog(
-          context: context,
-          builder: (context) {
-            return AlertDialog(
-              title: Text('提示'),
-              content: Text('初次启动，将下载数据，并创建必要文件\n推荐前往关于界面阅读使用文档了解隐藏操作'),
-              actions: [
-                TextButton(
-                  onPressed: () {
-                    Navigator.of(context).pop();
-                  },
-                  child: Text('确定'),
-                ),
-              ],
-            );
-          },
-        );
+        // showDialog(
+        //   context: context,
+        //   builder: (context) {
+        //     return AlertDialog(
+        //       title: Text('提示'),
+        //       content: Text('初次启动，将下载数据，并创建必要文件\n推荐前往关于界面阅读使用文档了解隐藏操作'),
+        //       actions: [
+        //         TextButton(
+        //           onPressed: () {
+        //             Navigator.of(context).pop();
+        //           },
+        //           child: Text('确定'),
+        //         ),
+        //       ],
+        //     );
+        //   },
+        // );
         // 下载歌曲数据
-        showtext.value = '下载必要数据';
+        // showtext.value = '下载必要数据';
         await Future.wait([
           saveTrophiesData(),
           savePlatesData(),
@@ -308,12 +335,13 @@ class Dataupdate {
           saveLobbyData(),
           saveAliasData(),
           saveSongdata(),
-          savezxzrsongs(),
+          // savezxzrsongs(),
           saveSegaCharaData(),
           saveLatestVersion(),
           saveLinkedVerseData(),
         ]);
-        showtext.value = '完成';
+        // showtext.value = '完成';
+        onProgress('完成');
       }
 
       config['init'] = true;
@@ -321,6 +349,9 @@ class Dataupdate {
         '${directory.path}/config.json',
       ).writeAsStringSync(jsonEncode(config));
       print(directory);
+      // if (context.mounted) {
+      //   Navigator.of(context).pop();
+      // }
     } catch (e, strack) {
       if (!context.mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(
@@ -331,10 +362,11 @@ class Dataupdate {
       );
       log('$e', name: 'main', level: 2000);
     }
-
-    if (context.mounted) {
-      Navigator.of(context).pop();
-    }
+    // finally {
+    //   if (context.mounted) {
+    //     Navigator.of(context).pop();
+    //   }
+    // }
   }
 
   //更新数据
@@ -485,9 +517,11 @@ class Dataupdate {
         ),
       );
       log('$e', name: 'infopage.dart', level: 2000);
+    } finally {
+      if (context.mounted) {
+        Navigator.of(context).pop();
+      }
     }
-    if (!context.mounted) return;
-    Navigator.of(context).pop();
   }
 
   static Future<void> updateBaseData({required BuildContext context}) async {
@@ -529,9 +563,11 @@ class Dataupdate {
         ),
       );
       log('$e', name: 'infopage.dart', level: 2000);
+    } finally {
+      if (context.mounted) {
+        Navigator.of(context).pop();
+      }
     }
-    if (!context.mounted) return;
-    Navigator.of(context).pop();
   }
 
   static Future<void> updatezxzrsongsData({

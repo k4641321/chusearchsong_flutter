@@ -122,6 +122,7 @@ class _MyHomePageState extends State<MyHomePage> {
           builder: (context) => AlertDialog(
             title: Text(announcement[0]['title']),
             content: Text(announcement[0]['content']),
+            scrollable: true,
             actions: [
               TextButton(
                 onPressed: () => Navigator.pop(context),
@@ -192,7 +193,6 @@ class _MyHomePageState extends State<MyHomePage> {
 
   Future<void> showChangesLog() async {
     try {
-      final ScrollController controller = ScrollController();
       final packageinfo = await PackageInfo.fromPlatform();
       Map<String, dynamic> config = await loadConfig();
       if (config['version'] == packageinfo.version &&
@@ -206,17 +206,9 @@ class _MyHomePageState extends State<MyHomePage> {
             title: Text(
               '${changeslog['title']} - ${changeslog['description']}',
             ),
-            content: SizedBox(
-              height: MediaQuery.heightOf(context) * 0.7,
-              child: Scrollbar(
-                controller: controller,
-                child: SingleChildScrollView(
-                  controller: controller,
-                  child: Text(
-                    (changeslog['changes'] as List).join('\n').toString(),
-                  ),
-                ),
-              ),
+            scrollable: true,
+            content: Text(
+              (changeslog['changes'] as List).join('\n').toString(),
             ),
           ),
         );
@@ -235,9 +227,15 @@ class _MyHomePageState extends State<MyHomePage> {
   @override
   void initState() {
     super.initState();
-    // postusecount();
     WidgetsBinding.instance.addPostFrameCallback((_) async {
-      await Dataupdate.ifres(context: context);
+      await Dataupdate.ifres(
+        context: context,
+        onProgress: (text) {
+          setState(() {
+            showtext.value = text;
+          });
+        },
+      );
       showChangesLog();
       chechupdate();
       showannouncement();
@@ -248,6 +246,7 @@ class _MyHomePageState extends State<MyHomePage> {
     });
   }
 
+  final showtext = ValueNotifier<String>('初始化');
   String title = '搜索';
   int _currentIndex = 0;
   // Widget infopagebox =
@@ -275,7 +274,7 @@ class _MyHomePageState extends State<MyHomePage> {
               const SizedBox(height: 16),
               const CircularProgressIndicator(),
               const SizedBox(height: 12),
-              Text('加载中...'),
+              Text(showtext.value),
             ],
           ),
         ),
