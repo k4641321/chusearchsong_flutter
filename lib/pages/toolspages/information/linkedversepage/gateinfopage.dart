@@ -179,7 +179,7 @@ class _GateinfopageState extends State<Gateinfopage> {
                             SizedBox(width: 50),
                             Expanded(
                               child: Text(
-                                '${widget.gatedata['map']}',
+                                '${widget.gatedata['unconditional_unlocking'] ? '已无需跑图' : widget.gatedata['map']}',
                                 style: const TextStyle(fontSize: 15),
                               ),
                             ),
