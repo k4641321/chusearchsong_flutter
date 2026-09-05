@@ -338,7 +338,6 @@ class Dataupdate {
           saveSongdata(),
           // savezxzrsongs(),
           saveSegaCharaData(),
-          saveLatestVersion(),
           saveLinkedVerseData(),
         ]);
         // showtext.value = '完成';
@@ -346,10 +345,11 @@ class Dataupdate {
       }
 
       config['init'] = true;
-      File(
+      await File(
         '${directory.path}/config.json',
-      ).writeAsStringSync(jsonEncode(config));
+      ).writeAsString(jsonEncode(config));
       print(directory);
+      await saveLatestVersion();
       // if (context.mounted) {
       //   Navigator.of(context).pop();
       // }
