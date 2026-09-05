@@ -67,6 +67,9 @@ class _SearchsongzxzrpageState extends State<Searchsongzxzrpage> {
         searchResults = results;
       });
     } catch (e, strack) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('错误，可能文件缺失，请到关于界面更新数据\n$e\n$strack')),
+      );
       log('搜索错误: $e\n$strack', name: 'searchsongszxzrpage.dart', level: 1000);
       // 可以显示错误信息给用户
     }

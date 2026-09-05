@@ -23,7 +23,7 @@ Future<void> exportFavoriteSong({required BuildContext context}) async {
                 if (!context.mounted) return;
                 Navigator.pop(context);
                 final Uint8List dataBytes = utf8.encode(
-                  jsonEncode(favoriteSongs[i]),
+                  jsonEncode({i: favoriteSongs[i]}),
                 );
                 String? outputPath = await FilePicker.saveFile(
                   dialogTitle: '请选择收藏文件保存位置',
@@ -36,10 +36,6 @@ Future<void> exportFavoriteSong({required BuildContext context}) async {
                   log('取消导出');
                   return;
                 }
-                final outputFile = File(outputPath);
-                await outputFile.writeAsString(
-                  jsonEncode({i: favoriteSongs[i]}),
-                );
               },
             ),
           );

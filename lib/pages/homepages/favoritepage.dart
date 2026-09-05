@@ -49,7 +49,6 @@ class _FavoritePageState extends State<FavoritePage> {
   Future<void> _returnfavoriteResults() async {
     List<Widget> favoriteResults = [];
     Map<String, dynamic> favoriteListSong = await loadFavoriteSong();
-    print(favoriteListSong);
     for (var i in favoriteListSong[selectedName]) {
       String versionname = '';
       late Map<String, dynamic> songbasedata;
