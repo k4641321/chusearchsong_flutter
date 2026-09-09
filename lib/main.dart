@@ -242,7 +242,7 @@ class _MyHomePageState extends State<MyHomePage> {
       setState(() {
         _isLoading = false;
       });
-      // postusecount();
+      postusecount();
     });
   }
 
