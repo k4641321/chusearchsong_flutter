@@ -56,7 +56,7 @@ class _GenerateB50PageState extends State<GenerateB50Page> {
 
   Widget b50Body = Text('未生成');
   String selectedType = 'b50';
-
+  int? n50 = 0;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -155,6 +155,24 @@ class _GenerateB50PageState extends State<GenerateB50Page> {
                           notedesignerorartist: artist,
                         ),
                       );
+                    } else if (selectedType == 'N50') {
+                      final controller = TextEditingController();
+                      showDialog(
+                        context: context,
+                        builder: (context) => AlertDialog(
+                          title: Text('输入数量'),
+                          content: TextField(controller: controller),
+                          actions: [
+                            TextButton(
+                              onPressed: () {
+                                n50 = int.tryParse(controller.text);
+                                Navigator.of(context).pop();
+                              },
+                              child: Text('确定'),
+                            ),
+                          ],
+                        ),
+                      );
                     }
                   },
                 ),
@@ -184,6 +202,7 @@ class _GenerateB50PageState extends State<GenerateB50Page> {
                         allscoredata: allscoredata,
                         genre: genreorversion,
                         b50data: workingb50data,
+                        n50: n50,
                       );
                       setState(() {
                         if (result != null) {
@@ -222,19 +241,27 @@ class _GenerateB50PageState extends State<GenerateB50Page> {
                 child: TextButton(
                   onPressed: () async {
                     try {
-                      ScaffoldMessenger.of(
-                        context,
-                      ).showSnackBar(SnackBar(content: Text('正在生成，请不要重复点击')));
+                      showDialog(
+                        context: context,
+                        builder: (context) => SizedBox(
+                          height: 50,
+                          width: 50,
+                          child: CircularProgressIndicator(),
+                        ),
+                      );
                       final image = await captureWidget(_globalKey);
                       final byteData = await image?.toByteData(format: .png);
                       final pngBytes = byteData?.buffer.asUint8List();
+                      if (pngBytes == null) return;
                       final path = await getApplicationSupportDirectory();
                       if (!Directory('${path.path}/tmp').existsSync()) {
-                        Directory('${path.path}/tmp').create(recursive: true);
+                        Directory(
+                          '${path.path}/tmp',
+                        ).createSync(recursive: true);
                       }
                       File(
                         '${path.path}/tmp/b50.png',
-                      ).writeAsBytesSync(pngBytes!);
+                      ).writeAsBytesSync(pngBytes);
                       if (!context.mounted) return;
                       // final platform = Theme.of(context).platform;
                       // if (platform == TargetPlatform.windows ||
@@ -246,6 +273,8 @@ class _GenerateB50PageState extends State<GenerateB50Page> {
                         type: FileType.custom,
                         allowedExtensions: ['png'],
                       );
+                      if (!context.mounted) return;
+                      Navigator.pop(context);
                       // } else {
                       //   await SharePlus.instance.share(
                       //     ShareParams(

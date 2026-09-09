@@ -53,28 +53,52 @@ class _LxnsSettingsPageState extends State<LxnsSettingsPage> {
                 Row(
                   children: [
                     Expanded(
-                      child: InkWell(
-                        child: TextButton(
-                          onPressed: () async {
-                            try {
-                              String token = tokenController.text;
-                              await savelxnstokenconfig(
-                                lxnstoken: token,
-                                context: context,
-                              );
-                            } catch (e) {
-                              if (!context.mounted) return;
-                              ScaffoldMessenger.of(
-                                context,
-                              ).showSnackBar(SnackBar(content: Text('错误: $e')));
-                            }
-                          },
-                          child: Text(
-                            '保存设置',
-                            style: TextStyle(
-                              color: Theme.of(context).colorScheme.onSurface,
-                              fontSize: 20,
-                            ),
+                      child: TextButton(
+                        onPressed: () async {
+                          try {
+                            String token = tokenController.text;
+                            final showtext = ValueNotifier('保存Token');
+                            showDialog(
+                              context: context,
+                              builder: (context) => AlertDialog(
+                                title: Text('正在执行'),
+                                content: Row(
+                                  children: [
+                                    CircularProgressIndicator(),
+                                    Text(showtext.value),
+                                  ],
+                                ),
+                              ),
+                            );
+                            await savelxnstokenconfig(
+                              lxnstoken: token,
+                              context: context,
+                            );
+                            setState(() {
+                              showtext.value = '获取玩家数据';
+                            });
+                            await Future.wait([
+                              saveB50(),
+                              savePlayerInfo(),
+                              saveTrend(),
+                              saveAllScore(),
+                            ]);
+                            if (!context.mounted) return;
+
+                            Navigator.of(context).pop();
+                          } catch (e) {
+                            if (!context.mounted) return;
+                            ScaffoldMessenger.of(
+                              context,
+                            ).showSnackBar(SnackBar(content: Text('错误: $e')));
+                            Navigator.of(context).pop();
+                          }
+                        },
+                        child: Text(
+                          '保存设置',
+                          style: TextStyle(
+                            // color: Theme.of(context).colorScheme.onSurface,
+                            fontSize: 15,
                           ),
                         ),
                       ),

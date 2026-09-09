@@ -6,6 +6,26 @@ import 'dart:developer';
 import 'dart:io';
 import 'package:path_provider/path_provider.dart';
 
+Future<String> requestChunirecSongInfoPage(String chunirecid) async {
+  final uri = Uri.parse('https://db.chunirec.net/music/$chunirecid');
+  final response = await get(uri);
+  if (response.statusCode != 200) {
+    throw Exception('请求失败，状态码：${response.statusCode}');
+  }
+
+  return response.body;
+}
+
+Future<String> requestLilyFan() async {
+  final uri = Uri.parse('https://chusearchsong.devintom.top/api/lilyfan');
+  final response = await get(uri);
+  if (response.statusCode != 200) {
+    throw Exception('请求失败，状态码：${response.statusCode}');
+  }
+
+  return response.body;
+}
+
 Future<void> saveLinkedVerseData() async {
   final directory = await getApplicationSupportDirectory();
   final path = Directory('${directory.path}/res');
@@ -595,6 +615,7 @@ Future<void> saveB50() async {
     log('B50完成');
   } catch (e) {
     log('$e', name: 'settingspagefun.dart - request.dart', level: 1000);
+    throw Exception('$e');
   }
 }
 
@@ -619,6 +640,7 @@ Future<void> savePlayerInfo() async {
     log('玩家数据完成');
   } catch (e) {
     log('$e', name: 'settingspagefun.dart - request.dart', level: 1000);
+    throw Exception('$e');
   }
 }
 
@@ -643,6 +665,7 @@ Future<void> saveAllScore() async {
     log('所有成绩完成');
   } catch (e) {
     log('$e', name: 'settingspagefun.dart - request.dart', level: 1000);
+    throw Exception('$e');
   }
 }
 

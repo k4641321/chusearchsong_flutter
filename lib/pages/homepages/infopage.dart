@@ -1,5 +1,6 @@
 import 'package:chusearchsong_flutter/function/infopagefun/infopagefun.dart';
 import 'package:chusearchsong_flutter/pages/infopages/changeslogpage.dart';
+import 'package:chusearchsong_flutter/pages/infopages/lilyfanpage.dart';
 import 'package:chusearchsong_flutter/pages/infopages/sponsoredauthorpage.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -282,6 +283,14 @@ class _InfoState extends State<Info> {
                     ).showSnackBar(SnackBar(content: Text('错误：$e')));
                   }
                 },
+              ),
+              _buildMenuItem(
+                icon: Icons.people,
+                title: '制作人员',
+                onTap: () => Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => const Lilyfanpage()),
+                ),
               ),
               _buildDivider(),
               _buildMenuItem(

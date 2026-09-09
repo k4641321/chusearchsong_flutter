@@ -340,7 +340,7 @@ class _SongInfoPageState extends State<SongInfoPage> {
   Future<void> loadChartInfoAndSocre() async {
     try {
       Widget result = await returnChartInfoAndSocre(
-        songid: widget.songbasedata['id'],
+        songbasedata: widget.songbasedata,
         color: Theme.of(context).colorScheme.secondaryContainer,
         context: context,
       );

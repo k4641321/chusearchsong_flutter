@@ -67,6 +67,7 @@ List<List<Widget>> returnScoreList({
   required int scoredownfilter,
   required int scoreupfilter,
   required String fcfilter,
+  required String genrefilter,
 }) {
   List<Widget> scorewidgetlist = [];
   List<List<Widget>> scorewidgetlistresult = [];
@@ -127,6 +128,21 @@ List<List<Widget>> returnScoreList({
       }
     }
     filtersongs = versionfilterresult;
+  }
+
+  //流派筛选
+  if (genrefilter == 'all') {
+    log('跳过流派筛选');
+  } else {
+    List genrefilterresult = [];
+    for (var i in filtersongs) {
+      for (var j in songsdata['songs']) {
+        if (i['id'] == j['id'] && j['genre'] == genrefilter) {
+          genrefilterresult.add(i);
+        }
+      }
+    }
+    filtersongs = genrefilterresult;
   }
 
   // 定数筛选
@@ -412,7 +428,7 @@ List<List<Widget>> returnScoreList({
   if (scorewidgetlist.length <= 10) {
     scorewidgetlistresult.add(scorewidgetlist);
   }
-
+  log('结果有：${scorefilterresult.length}');
   return scorewidgetlistresult;
 }
 

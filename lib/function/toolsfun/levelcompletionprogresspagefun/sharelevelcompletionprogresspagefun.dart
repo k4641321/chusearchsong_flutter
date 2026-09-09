@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:chusearchsong_flutter/function/fun.dart';
 import 'package:chusearchsong_flutter/function/request.dart';
 import 'package:flutter/material.dart';
@@ -111,6 +112,8 @@ Future<Widget> returnShareLevelCompletionProgressPageFun({
   required Map<String, dynamic> songsdata,
   required Map<String, dynamic> allScoreData,
   required BuildContext context,
+  required bool subdivision,
+  required bool showRank,
 }) async {
   double defaultheight = 1422;
   //请求玩家信息
@@ -131,171 +134,256 @@ Future<Widget> returnShareLevelCompletionProgressPageFun({
   int othercount = 0;
   int completecount = 0;
   List resultMap = [];
+  Map levelvalueMap = {};
   for (var i in songsdata['songs']) {
     for (var j in i['difficulties']) {
       if (j['level_value'] >= level[0] && j['level_value'] <= level[1]) {
         resultMap.add(i);
+        if (subdivision) {
+          if (!levelvalueMap.keys.contains(j['level_value'])) {
+            levelvalueMap[j['level_value']] = [];
+            levelvalueMap[j['level_value']].add(i);
+          } else {
+            levelvalueMap[j['level_value']].add(i);
+          }
+        }
       }
     }
   }
+  //排序
+  if (subdivision) {
+    List keys = [];
+    keys = levelvalueMap.keys.toList()..sort((a, b) => a.compareTo(b));
+    Map result = {};
+    for (var i in keys) {
+      result[i] = levelvalueMap[i];
+    }
+    levelvalueMap = result;
+  }
+  // print(levelvalueMap);
   levelallcount = resultMap.length;
 
   List<Widget> picturelist = [];
   int rowcount = 0;
   int columncount = 0;
-  for (var i in resultMap) {
-    String versionname = '';
-    String rank = '';
-    Widget rankwidget = SizedBox.shrink();
-    late double diff;
-    for (var j in songsdata['versions']) {
-      if (j['version'] == i['version']) {
-        versionname = j['title'];
-      }
-    }
-    for (var l in i['difficulties']) {
-      if (l['level_value'] >= level[0] && l['level_value'] <= level[1]) {
-        diff = l['level_value'].toDouble();
-      }
-    }
-    for (var l in allScoreData['data']) {
-      if (l['level'] == returnlevelString(level: level) && i['id'] == l['id']) {
-        rank = l['rank'];
-        completecount++;
-        if (rank == 'sssp') {
-          ssspcount++;
-          rankwidget = Card(
-            margin: EdgeInsets.zero,
-            elevation: 0,
-            shape: const RoundedRectangleBorder(),
-            color: const Color.fromARGB(115, 158, 158, 158),
-            child: Image.asset(width: 100, height: 100, rankImg(rank: rank)),
-          );
-        } else if (rank == 'sss') {
-          ssscount++;
-          rankwidget = Card(
-            margin: EdgeInsets.zero,
-            elevation: 0,
-            shape: const RoundedRectangleBorder(),
-            color: const Color.fromARGB(115, 158, 158, 158),
-            child: Image.asset(width: 100, height: 100, rankImg(rank: rank)),
-          );
-        } else if (rank == 'ssp') {
-          sspcount++;
-          rankwidget = Card(
-            margin: EdgeInsets.zero,
-            elevation: 0,
-            shape: const RoundedRectangleBorder(),
-            color: const Color.fromARGB(115, 158, 158, 158),
-            child: Image.asset(width: 100, height: 100, rankImg(rank: rank)),
-          );
-        } else if (rank == 'ss') {
-          sscount++;
-          rankwidget = Card(
-            margin: EdgeInsets.zero,
-            elevation: 0,
-            shape: const RoundedRectangleBorder(),
-            color: const Color.fromARGB(115, 158, 158, 158),
-            child: Image.asset(width: 100, height: 100, rankImg(rank: rank)),
-          );
-        } else if (rank == 'sp') {
-          spcount++;
-          rankwidget = Card(
-            margin: EdgeInsets.zero,
-            elevation: 0,
-            shape: const RoundedRectangleBorder(),
-            color: const Color.fromARGB(115, 158, 158, 158),
-            child: Image.asset(width: 100, height: 100, rankImg(rank: rank)),
-          );
-        } else if (rank == 's') {
-          scount++;
-          rankwidget = Card(
-            margin: EdgeInsets.zero,
-            elevation: 0,
-            shape: const RoundedRectangleBorder(),
-            color: const Color.fromARGB(115, 158, 158, 158),
-            child: Image.asset(width: 100, height: 100, rankImg(rank: rank)),
-          );
-        } else if (rank == 'aaa') {
-          aaacount++;
-          rankwidget = Card(
-            margin: EdgeInsets.zero,
-            elevation: 0,
-            shape: const RoundedRectangleBorder(),
-            color: const Color.fromARGB(115, 158, 158, 158),
-            child: Image.asset(width: 100, height: 100, rankImg(rank: rank)),
-          );
-        } else {
-          othercount++;
-          rankwidget = Card(
-            margin: EdgeInsets.zero,
-            elevation: 0,
-            shape: const RoundedRectangleBorder(),
-            color: const Color.fromARGB(115, 158, 158, 158),
-            child: Image.asset(width: 100, height: 100, rankImg(rank: rank)),
-          );
+
+  void buildLevelWidget(List buildMap) {
+    for (var i in buildMap) {
+      String versionname = '';
+      String rank = '';
+      Widget rankwidget = SizedBox.shrink();
+      late double diff;
+      for (var j in songsdata['versions']) {
+        if (j['version'] == i['version']) {
+          versionname = j['title'];
         }
       }
-    }
-    picturelist.add(
-      InkWell(
-        onTap: () async {
-          interSongInfo(
-            songbasedata: i,
-            context: context,
-            versionname: versionname,
-          );
-        },
+      for (var l in i['difficulties']) {
+        if (l['level_value'] >= level[0] && l['level_value'] <= level[1]) {
+          diff = l['level_value'].toDouble();
+        }
+      }
+      for (var l in allScoreData['data']) {
+        if (l['level'] == returnlevelString(level: level) &&
+            i['id'] == l['id']) {
+          rank = l['rank'];
+          completecount++;
+          if (rank == 'sssp') {
+            ssspcount++;
+            rankwidget = Card(
+              margin: EdgeInsets.zero,
+              elevation: 0,
+              shape: const RoundedRectangleBorder(),
+              color: const Color.fromARGB(115, 158, 158, 158),
+              child: Image.asset(width: 100, height: 100, rankImg(rank: rank)),
+            );
+          } else if (rank == 'sss') {
+            ssscount++;
+            rankwidget = Card(
+              margin: EdgeInsets.zero,
+              elevation: 0,
+              shape: const RoundedRectangleBorder(),
+              color: const Color.fromARGB(115, 158, 158, 158),
+              child: Image.asset(width: 100, height: 100, rankImg(rank: rank)),
+            );
+          } else if (rank == 'ssp') {
+            sspcount++;
+            rankwidget = Card(
+              margin: EdgeInsets.zero,
+              elevation: 0,
+              shape: const RoundedRectangleBorder(),
+              color: const Color.fromARGB(115, 158, 158, 158),
+              child: Image.asset(width: 100, height: 100, rankImg(rank: rank)),
+            );
+          } else if (rank == 'ss') {
+            sscount++;
+            rankwidget = Card(
+              margin: EdgeInsets.zero,
+              elevation: 0,
+              shape: const RoundedRectangleBorder(),
+              color: const Color.fromARGB(115, 158, 158, 158),
+              child: Image.asset(width: 100, height: 100, rankImg(rank: rank)),
+            );
+          } else if (rank == 'sp') {
+            spcount++;
+            rankwidget = Card(
+              margin: EdgeInsets.zero,
+              elevation: 0,
+              shape: const RoundedRectangleBorder(),
+              color: const Color.fromARGB(115, 158, 158, 158),
+              child: Image.asset(width: 100, height: 100, rankImg(rank: rank)),
+            );
+          } else if (rank == 's') {
+            scount++;
+            rankwidget = Card(
+              margin: EdgeInsets.zero,
+              elevation: 0,
+              shape: const RoundedRectangleBorder(),
+              color: const Color.fromARGB(115, 158, 158, 158),
+              child: Image.asset(width: 100, height: 100, rankImg(rank: rank)),
+            );
+          } else if (rank == 'aaa') {
+            aaacount++;
+            rankwidget = Card(
+              margin: EdgeInsets.zero,
+              elevation: 0,
+              shape: const RoundedRectangleBorder(),
+              color: const Color.fromARGB(115, 158, 158, 158),
+              child: Image.asset(width: 100, height: 100, rankImg(rank: rank)),
+            );
+          } else {
+            othercount++;
+            rankwidget = Card(
+              margin: EdgeInsets.zero,
+              elevation: 0,
+              shape: const RoundedRectangleBorder(),
+              color: const Color.fromARGB(115, 158, 158, 158),
+              child: Image.asset(width: 100, height: 100, rankImg(rank: rank)),
+            );
+          }
+        }
+      }
+      if (!showRank) rankwidget = SizedBox.shrink();
+      picturelist.add(
+        InkWell(
+          onTap: () async {
+            interSongInfo(
+              songbasedata: i,
+              context: context,
+              versionname: versionname,
+            );
+          },
 
-        child: Card(
-          // color: Colors.white,
-          child: Column(
-            children: [
-              Padding(
-                padding: EdgeInsetsGeometry.all(4),
-                child: Stack(
-                  fit: StackFit.passthrough,
-                  children: [
-                    Image.network(
-                      'https://assets2.lxns.net/chunithm/jacket/${i['id']}.png',
-                      width: 100,
-                      height: 100,
-                      errorBuilder: (context, error, stackTrace) => Image.network(
+          child: Card(
+            // color: Colors.white,
+            child: Column(
+              children: [
+                Padding(
+                  padding: EdgeInsetsGeometry.all(4),
+                  child: Stack(
+                    fit: StackFit.passthrough,
+                    children: [
+                      CachedNetworkImage(
+                        imageUrl:
+                            'https://assets2.lxns.net/chunithm/jacket/${i['id']}.png',
                         width: 100,
                         height: 100,
-                        'https://assets2.lxns.net/chunithm/jacket/${((i['difficulties'] as List).last as Map)['origin_id']}.png',
-                        errorBuilder: (context, error, stackTrace) =>
-                            Text('错误：${error.toString()}'),
+                        errorWidget: (context, url, error) => CachedNetworkImage(
+                          imageUrl:
+                              'https://assets2.lxns.net/chunithm/jacket/${((i['difficulties'] as List).last as Map)['origin_id']}.png',
+                          width: 100,
+                          height: 100,
+                          errorWidget: (context, url, error) =>
+                              Text('错误：${error.toString()}'),
+                        ),
                       ),
-                    ),
-                    rankwidget,
-                  ],
+                      // Image.network(
+                      //   'https://assets2.lxns.net/chunithm/jacket/${i['id']}.png',
+                      //   width: 100,
+                      //   height: 100,
+                      //   errorBuilder: (context, error, stackTrace) => Image.network(
+                      //     width: 100,
+                      //     height: 100,
+                      //     'https://assets2.lxns.net/chunithm/jacket/${((i['difficulties'] as List).last as Map)['origin_id']}.png',
+                      //     errorBuilder: (context, error, stackTrace) =>
+                      //         Text('错误：${error.toString()}'),
+                      //   ),
+                      // ),
+                      rankwidget,
+                    ],
+                  ),
                 ),
-              ),
-              Text(
-                cuttitle(title: i['title']),
-                style: TextStyle(fontSize: 10, fontWeight: FontWeight.bold),
-              ),
-              Text('$diff', style: TextStyle(fontSize: 10)),
-            ],
+                Text(
+                  cuttitle(title: i['title']),
+                  style: TextStyle(fontSize: 10, fontWeight: FontWeight.bold),
+                ),
+                Text('$diff', style: TextStyle(fontSize: 10)),
+              ],
+            ),
           ),
         ),
-      ),
-    );
-    rowcount++;
-    if (rowcount == 25) {
+      );
+      rowcount++;
+      if (rowcount == 25) {
+        resultchildren.add(
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: picturelist,
+          ),
+        );
+        picturelist = [];
+        rowcount = 0;
+        columncount++;
+      }
+    }
+  }
+
+  if (subdivision) {
+    for (var l in levelvalueMap.keys.toList()..sort()) {
+      resultchildren.add(
+        Row(
+          children: [
+            Card(
+              color: const Color.fromARGB(194, 255, 255, 255),
+              child: Padding(
+                padding: EdgeInsetsGeometry.only(
+                  top: 8,
+                  bottom: 8,
+                  left: 50,
+                  right: 50,
+                ),
+                child: Text(
+                  '$l',
+                  style: TextStyle(fontSize: 30, color: Colors.black),
+                ),
+              ),
+            ),
+          ],
+        ),
+      );
+      // 每组重置计数
+      picturelist = [];
+      rowcount = 0;
+      buildLevelWidget(List.from(levelvalueMap[l]));
+      // 每组剩余不足一行的补上
+      if (picturelist.isNotEmpty) {
+        resultchildren.add(
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: picturelist,
+          ),
+        );
+        columncount++;
+      }
+    }
+  } else {
+    buildLevelWidget(List.from(resultMap));
+    if (picturelist.isNotEmpty) {
       resultchildren.add(
         Row(mainAxisAlignment: MainAxisAlignment.center, children: picturelist),
       );
-      picturelist = [];
-      rowcount = 0;
       columncount++;
     }
-  }
-  if (columncount == 0) {
-    resultchildren.add(
-      Row(mainAxisAlignment: MainAxisAlignment.center, children: picturelist),
-    );
   }
 
   //头部信息
@@ -529,8 +617,11 @@ Future<Widget> returnShareLevelCompletionProgressPageFun({
   );
 
   //我操了，怎么那么多歌，1422高度都装不下
-  if (columncount > 8) {
+  if (columncount > 8 && !subdivision) {
     defaultheight = defaultheight + 200 * (columncount - 8);
+  }
+  if (subdivision && columncount > 6) {
+    defaultheight = defaultheight + 200 * (columncount - 6);
   }
   Widget result = Container(
     width: 2948,

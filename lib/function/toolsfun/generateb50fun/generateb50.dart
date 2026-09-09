@@ -13,6 +13,7 @@ Future<Widget?> selectb50({
   required List allscoredata,
   required Map<String, dynamic> b50data,
   String? genre,
+  int? n50,
 }) async {
   if (b50type == 'b50' || b50type == '个人理论50' || b50type == '理论50') {
     return await generateb50Body(
@@ -44,13 +45,14 @@ Future<Widget?> selectb50({
       allscoredata: allscoredata,
     );
   } else {
-    return await generatecun50Body(
+    return await generateother50Body(
       context: context,
       songsData: songsData,
       playerdata: playerdata,
       allscoredata: allscoredata,
       type: b50type,
       genreorversion: genre,
+      n50: n50,
     );
   }
 }
@@ -613,7 +615,7 @@ Future<Widget> generateb50Body({
                                       216,
                                       216,
                                     ),
-                                    fontSize: 10,
+                                    fontSize: 13,
                                   ),
                                 ),
 
@@ -914,7 +916,7 @@ Future<Widget> generateb50Body({
                                       216,
                                       216,
                                     ),
-                                    fontSize: 10,
+                                    fontSize: 13,
                                   ),
                                 ),
 
@@ -1179,7 +1181,7 @@ Future<Widget> generateb50Body({
 Widget buildTypeDropdownMenu({required ValueChanged onSelected}) {
   List<DropdownMenuEntry> dropdownMenuEntries = [
     DropdownMenuEntry(value: 'b50', label: 'B50'),
-    DropdownMenuEntry(value: 'random50', label: '随机b50'),
+    DropdownMenuEntry(value: 'random50', label: '随机B50'),
     DropdownMenuEntry(value: 'fc30', label: 'FC30'),
     DropdownMenuEntry(value: 'aj30', label: 'AJ30'),
     DropdownMenuEntry(value: '寸50', label: '寸50'),
@@ -1190,6 +1192,8 @@ Widget buildTypeDropdownMenu({required ValueChanged onSelected}) {
     DropdownMenuEntry(value: '曲师50', label: '曲师50'),
     DropdownMenuEntry(value: '个人理论50', label: '个人理论50'),
     DropdownMenuEntry(value: '理论50', label: '理论50'),
+    DropdownMenuEntry(value: 'N50', label: 'N50'),
+    DropdownMenuEntry(value: '世界末日50', label: '世界末日50'),
   ];
   return DropdownMenu(
     selectOnly: true,

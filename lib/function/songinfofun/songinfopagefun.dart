@@ -2,6 +2,7 @@ import 'dart:developer';
 import 'dart:io';
 import 'dart:convert';
 import 'package:chusearchsong_flutter/function/toolsfun/searchcollectiblespagefun.dart';
+import 'package:chusearchsong_flutter/pages/songinfopages/songratepage.dart';
 import 'package:chusearchsong_flutter/pages/toolspages/tools/ratingcalculatorpage.dart';
 import 'package:flutter/material.dart';
 import 'package:marquee/marquee.dart';
@@ -285,13 +286,13 @@ Future<Widget> returnscore({
 }
 
 Future<List<Widget>> returnDiffTabBarView({
-  required Map<String, dynamic> song,
+  required Map<String, dynamic> songbasedata,
   required Color color,
   required BuildContext context,
 }) async {
   List<Widget> result = [];
   try {
-    Map<String, dynamic> songInfo = await getSongInfo(song['id']);
+    Map<String, dynamic> songInfo = await getSongInfo(songbasedata['id']);
     List diffs = songInfo['difficulties'];
     //添加谱面信息
     if (!context.mounted) return result;
@@ -303,7 +304,7 @@ Future<List<Widget>> returnDiffTabBarView({
           onTap: () => Navigator.of(context).push(
             MaterialPageRoute(
               builder: (context) => ChartViewPage(
-                songid: song['id'],
+                songid: songbasedata['id'],
                 diffindex: song2['difficulty'],
               ),
             ),
@@ -384,221 +385,35 @@ Future<List<Widget>> returnDiffTabBarView({
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                       children: [
-                        Expanded(
-                          child: Padding(
-                            padding: EdgeInsetsGeometry.all(3),
-                            child: Container(
-                              decoration: BoxDecoration(
-                                color: Theme.of(context)
-                                    .colorScheme
-                                    .onPrimaryContainer
-                                    .withValues(alpha: 0.2),
-                                border: Border.all(
-                                  width: 1,
-                                  color: Theme.of(context).colorScheme.outline,
-                                ),
-                                borderRadius: BorderRadius.circular(8),
-                              ),
-                              child: Text.rich(
-                                TextSpan(
-                                  text: 'Total\n',
-                                  children: [
-                                    TextSpan(
-                                      text: '${song2['notes']['total']}',
-                                      style: TextStyle(
-                                        fontSize: 15,
-                                        color: Theme.of(
-                                          context,
-                                        ).colorScheme.onPrimary,
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                                textAlign: TextAlign.center,
-                                style: TextStyle(fontSize: 10),
-                              ),
-                            ),
-                          ),
+                        _noteWidget(
+                          context: context,
+                          song2: song2,
+                          notetype: 'total',
                         ),
-                        Expanded(
-                          child: Padding(
-                            padding: EdgeInsetsGeometry.all(3),
-                            child: Container(
-                              decoration: BoxDecoration(
-                                color: Theme.of(context)
-                                    .colorScheme
-                                    .onPrimaryContainer
-                                    .withValues(alpha: 0.2),
-                                border: Border.all(
-                                  width: 1,
-                                  color: Theme.of(context).colorScheme.outline,
-                                ),
-                                borderRadius: BorderRadius.circular(8),
-                              ),
-                              child: Text.rich(
-                                TextSpan(
-                                  text: 'Tap\n',
-                                  children: [
-                                    TextSpan(
-                                      text: '${song2['notes']['tap']}',
-                                      style: TextStyle(
-                                        fontSize: 15,
-                                        color: Theme.of(
-                                          context,
-                                        ).colorScheme.onPrimary,
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                                textAlign: TextAlign.center,
-                                style: TextStyle(fontSize: 10),
-                              ),
-                            ),
-                          ),
+                        _noteWidget(
+                          context: context,
+                          song2: song2,
+                          notetype: 'tap',
                         ),
-                        Expanded(
-                          child: Padding(
-                            padding: EdgeInsetsGeometry.all(3),
-                            child: Container(
-                              decoration: BoxDecoration(
-                                color: Theme.of(context)
-                                    .colorScheme
-                                    .onPrimaryContainer
-                                    .withValues(alpha: 0.2),
-                                border: Border.all(
-                                  width: 1,
-                                  color: Theme.of(context).colorScheme.outline,
-                                ),
-                                borderRadius: BorderRadius.circular(8),
-                              ),
-                              child: Text.rich(
-                                TextSpan(
-                                  text: 'Hold\n',
-                                  children: [
-                                    TextSpan(
-                                      text: '${song2['notes']['hold']}',
-                                      style: TextStyle(
-                                        fontSize: 15,
-                                        color: Theme.of(
-                                          context,
-                                        ).colorScheme.onPrimary,
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                                textAlign: TextAlign.center,
-                                style: TextStyle(fontSize: 10),
-                              ),
-                            ),
-                          ),
+                        _noteWidget(
+                          context: context,
+                          song2: song2,
+                          notetype: 'hold',
                         ),
-                        Expanded(
-                          child: Padding(
-                            padding: EdgeInsetsGeometry.all(3),
-                            child: Container(
-                              decoration: BoxDecoration(
-                                color: Theme.of(context)
-                                    .colorScheme
-                                    .onPrimaryContainer
-                                    .withValues(alpha: 0.2),
-                                border: Border.all(
-                                  width: 1,
-                                  color: Theme.of(context).colorScheme.outline,
-                                ),
-                                borderRadius: BorderRadius.circular(8),
-                              ),
-                              child: Text.rich(
-                                TextSpan(
-                                  text: 'Slide\n',
-                                  children: [
-                                    TextSpan(
-                                      text: '${song2['notes']['slide']}',
-                                      style: TextStyle(
-                                        fontSize: 15,
-                                        color: Theme.of(
-                                          context,
-                                        ).colorScheme.onPrimary,
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                                textAlign: TextAlign.center,
-                                style: TextStyle(fontSize: 10),
-                              ),
-                            ),
-                          ),
+                        _noteWidget(
+                          context: context,
+                          song2: song2,
+                          notetype: 'slide',
                         ),
-                        Expanded(
-                          child: Padding(
-                            padding: EdgeInsetsGeometry.all(3),
-                            child: Container(
-                              decoration: BoxDecoration(
-                                color: Theme.of(context)
-                                    .colorScheme
-                                    .onPrimaryContainer
-                                    .withValues(alpha: 0.2),
-                                border: Border.all(
-                                  width: 1,
-                                  color: Theme.of(context).colorScheme.outline,
-                                ),
-                                borderRadius: BorderRadius.circular(8),
-                              ),
-                              child: Text.rich(
-                                TextSpan(
-                                  text: 'Air\n',
-                                  children: [
-                                    TextSpan(
-                                      text: '${song2['notes']['air']}',
-                                      style: TextStyle(
-                                        fontSize: 15,
-                                        color: Theme.of(
-                                          context,
-                                        ).colorScheme.onPrimary,
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                                textAlign: TextAlign.center,
-                                style: TextStyle(fontSize: 10),
-                              ),
-                            ),
-                          ),
+                        _noteWidget(
+                          context: context,
+                          song2: song2,
+                          notetype: 'air',
                         ),
-                        Expanded(
-                          child: Padding(
-                            padding: EdgeInsetsGeometry.all(3),
-                            child: Container(
-                              decoration: BoxDecoration(
-                                color: Theme.of(context)
-                                    .colorScheme
-                                    .onPrimaryContainer
-                                    .withValues(alpha: 0.2),
-                                border: Border.all(
-                                  width: 1,
-                                  color: Theme.of(context).colorScheme.outline,
-                                ),
-                                borderRadius: BorderRadius.circular(8),
-                              ),
-                              child: Text.rich(
-                                TextSpan(
-                                  text: 'Flick\n',
-                                  children: [
-                                    TextSpan(
-                                      text: '${song2['notes']['flick']}',
-                                      style: TextStyle(
-                                        fontSize: 15,
-                                        color: Theme.of(
-                                          context,
-                                        ).colorScheme.onPrimary,
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                                textAlign: TextAlign.center,
-                                style: TextStyle(fontSize: 10),
-                              ),
-                            ),
-                          ),
+                        _noteWidget(
+                          context: context,
+                          song2: song2,
+                          notetype: 'flick',
                         ),
                       ],
                     ),
@@ -617,7 +432,7 @@ Future<List<Widget>> returnDiffTabBarView({
       result2.insert(
         0,
         await returnscore(
-          song: song['id'],
+          song: songbasedata['id'],
           i: i,
           corlor: color,
           context: context,
@@ -638,13 +453,34 @@ Future<List<Widget>> returnDiffTabBarView({
                   Navigator.push(
                     context,
                     MaterialPageRoute(
-                      builder: (builder) =>
-                          RankingListPage(songid: song['id'], levelindex: i),
+                      builder: (builder) => RankingListPage(
+                        songid: songbasedata['id'],
+                        levelindex: i,
+                      ),
                     ),
                   );
                 },
                 child: Text(
                   '查看排行榜',
+                  style: TextStyle(
+                    color: Theme.of(context).colorScheme.onSurface,
+                  ),
+                ),
+              ),
+            ),
+            Expanded(
+              child: TextButton(
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (builder) =>
+                          Songratepage(songid: songbasedata['id'], index: i),
+                    ),
+                  );
+                },
+                child: Text(
+                  '查看Chunirec鸟率',
                   style: TextStyle(
                     color: Theme.of(context).colorScheme.onSurface,
                   ),
@@ -657,10 +493,12 @@ Future<List<Widget>> returnDiffTabBarView({
       result.add(Column(children: result2));
     }
   } catch (e, strack) {
-    int length = song['difficulties'].length;
+    int length = songbasedata['difficulties'].length;
     for (var i = 0; i < length; i++) {
       List<Widget> result2 = [];
-      result2.add(Row(children: [Text('获取谱面信息失败,$e\n $strack')]));
+      result2.add(
+        Row(children: [Expanded(child: Text('获取谱面信息失败,$e\n $strack'))]),
+      );
       if (!context.mounted) {
         result.add(Column(children: result2));
         return result;
@@ -668,7 +506,7 @@ Future<List<Widget>> returnDiffTabBarView({
       result2.insert(
         0,
         await returnscore(
-          song: song['id'],
+          song: songbasedata['id'],
           i: i,
           corlor: color,
           context: context,
@@ -685,17 +523,37 @@ Future<List<Widget>> returnDiffTabBarView({
             Expanded(
               child: TextButton(
                 onPressed: () {
-                  log('message');
                   Navigator.push(
                     context,
                     MaterialPageRoute(
-                      builder: (builder) =>
-                          RankingListPage(songid: song['id'], levelindex: i),
+                      builder: (builder) => RankingListPage(
+                        songid: songbasedata['id'],
+                        levelindex: i,
+                      ),
                     ),
                   );
                 },
                 child: Text(
                   '查看排行榜',
+                  style: TextStyle(
+                    color: Theme.of(context).colorScheme.onSurface,
+                  ),
+                ),
+              ),
+            ),
+            Expanded(
+              child: TextButton(
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (builder) =>
+                          Songratepage(songid: songbasedata['id'], index: i),
+                    ),
+                  );
+                },
+                child: Text(
+                  '查看Chunirec鸟率',
                   style: TextStyle(
                     color: Theme.of(context).colorScheme.onSurface,
                   ),
@@ -973,31 +831,25 @@ Future<List<Widget>> returnRelatedCollectibles({
 }
 
 Future<Widget> returnChartInfoAndSocre({
-  required int songid,
+  required Map<String, dynamic> songbasedata,
   required Color color,
   required BuildContext context,
 }) async {
-  Map<String, dynamic> songdata = await getSongInfo(songid);
-
   if (!context.mounted) {
     return const Text('加载失败');
   }
+  List<Widget> children = await returnDiffTabBarView(
+    songbasedata: songbasedata,
+    color: color,
+    context: context,
+  );
   Widget result = DefaultTabController(
-    length: songdata['difficulties'].length,
-
+    length: songbasedata['difficulties'].length,
     child: Column(
+      mainAxisSize: MainAxisSize.min,
       children: [
-        TabBar(tabs: returnDiffTabBar(song: songdata)),
-        SizedBox(
-          height: 700, //MediaQuery.of(context).size.height * 0.8,
-          child: TabBarView(
-            children: await returnDiffTabBarView(
-              song: songdata,
-              color: color,
-              context: context,
-            ),
-          ),
-        ),
+        TabBar(tabs: returnDiffTabBar(song: songbasedata)),
+        SizedBox(height: 700, child: TabBarView(children: children)),
       ],
     ),
   );
@@ -1051,3 +903,43 @@ Widget autoMarqueeText(String text) {
 //     return
 //   }
 // }
+
+Widget _noteWidget({
+  required BuildContext context,
+  required Map<String, dynamic> song2,
+  required String notetype,
+}) {
+  return Expanded(
+    child: Padding(
+      padding: EdgeInsetsGeometry.all(3),
+      child: Container(
+        decoration: BoxDecoration(
+          color: Theme.of(
+            context,
+          ).colorScheme.onPrimaryContainer.withValues(alpha: 0.2),
+          border: Border.all(
+            width: 1,
+            color: Theme.of(context).colorScheme.outline,
+          ),
+          borderRadius: BorderRadius.circular(8),
+        ),
+        child: Text.rich(
+          TextSpan(
+            text: '${notetype[0].toUpperCase()}${notetype.substring(1)}\n',
+            children: [
+              TextSpan(
+                text: '${song2['notes'][notetype]}',
+                style: TextStyle(
+                  fontSize: 15,
+                  color: Theme.of(context).colorScheme.onPrimary,
+                ),
+              ),
+            ],
+          ),
+          textAlign: TextAlign.center,
+          style: TextStyle(fontSize: 10),
+        ),
+      ),
+    ),
+  );
+}

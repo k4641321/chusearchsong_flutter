@@ -70,65 +70,11 @@ Future<void> savelxnstokenconfig({
     }
     config['lxns']['token'] = lxnstoken;
     await file.writeAsString(json.encode(config));
-    if (!context.mounted) return;
-    ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('成功')));
   } catch (e) {
     if (!context.mounted) return;
     ScaffoldMessenger.of(
       context,
     ).showSnackBar(SnackBar(content: Text('错误，保存Token失败，请检查是否配置正确 $e')));
-  }
-  try {
-    await saveAllScore();
-    if (!context.mounted) return;
-    ScaffoldMessenger.of(
-      context,
-    ).showSnackBar(SnackBar(content: Text('获取成绩成功')));
-  } catch (e) {
-    if (!context.mounted) return;
-    ScaffoldMessenger.of(
-      context,
-    ).showSnackBar(SnackBar(content: Text('错误，获取成绩失败 $e')));
-    log('$e', name: 'settingspagefun.dart', level: 1000);
-  }
-  try {
-    await saveTrend();
-    if (!context.mounted) return;
-    ScaffoldMessenger.of(
-      context,
-    ).showSnackBar(SnackBar(content: Text('获取Rating趋势成功')));
-  } catch (e) {
-    if (!context.mounted) return;
-    ScaffoldMessenger.of(
-      context,
-    ).showSnackBar(SnackBar(content: Text('错误，获取Rating趋势失败 $e')));
-    log('$e', name: 'settingspagefun.dart', level: 1000);
-  }
-  try {
-    await saveB50();
-    if (!context.mounted) return;
-    ScaffoldMessenger.of(
-      context,
-    ).showSnackBar(SnackBar(content: Text('获取B50成功')));
-  } catch (e) {
-    if (!context.mounted) return;
-    ScaffoldMessenger.of(
-      context,
-    ).showSnackBar(SnackBar(content: Text('错误，获取B50失败 $e')));
-    log('$e', name: 'settingspagefun.dart', level: 1000);
-  }
-  try {
-    await savePlayerInfo();
-    if (!context.mounted) return;
-    ScaffoldMessenger.of(
-      context,
-    ).showSnackBar(SnackBar(content: Text('获取玩家信息成功')));
-  } catch (e) {
-    if (!context.mounted) return;
-    ScaffoldMessenger.of(
-      context,
-    ).showSnackBar(SnackBar(content: Text('错误，获取玩家信息失败 $e')));
-    log('$e', name: 'settingspagefun.dart', level: 1000);
   }
 }
 

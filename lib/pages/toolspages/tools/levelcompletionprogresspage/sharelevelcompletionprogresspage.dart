@@ -29,6 +29,9 @@ class _SharelevelcompletionprogresspageState
     extends State<Sharelevelcompletionprogresspage> {
   final GlobalKey _globalKey = GlobalKey();
   Widget result = Text('未生成');
+  bool subdivision = false;
+  bool showscore = true;
+  IconData iconData = Icons.grade;
 
   Future<ui.Image?> captureWidget(GlobalKey key) async {
     final boundary =
@@ -46,7 +49,36 @@ class _SharelevelcompletionprogresspageState
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text('分享等级完成进度')),
+      appBar: AppBar(
+        title: Text('分享等级完成进度'),
+        actions: [
+          IconButton(
+            onPressed: () {
+              showscore = !showscore;
+              setState(() {
+                if (showscore) {
+                  iconData = Icons.grade;
+                } else {
+                  iconData = Icons.grade_outlined;
+                }
+              });
+              ScaffoldMessenger.of(
+                context,
+              ).showSnackBar(SnackBar(content: Text('展示评级：$showscore')));
+            },
+            icon: Icon(iconData),
+          ),
+          IconButton(
+            onPressed: () {
+              subdivision = !subdivision;
+              ScaffoldMessenger.of(
+                context,
+              ).showSnackBar(SnackBar(content: Text('细分定数：$subdivision')));
+            },
+            icon: Icon(Icons.swap_horiz),
+          ),
+        ],
+      ),
       body: Column(
         children: [
           Text('生成时请保证网络通常，资源都来源于网络'),
@@ -62,6 +94,8 @@ class _SharelevelcompletionprogresspageState
                             songsdata: widget.songsdata,
                             allScoreData: widget.allScoreData,
                             context: context,
+                            subdivision: subdivision,
+                            showRank: showscore,
                           );
                       if (!mounted) return;
                       setState(() {
@@ -82,9 +116,14 @@ class _SharelevelcompletionprogresspageState
                 child: TextButton(
                   onPressed: () async {
                     try {
-                      ScaffoldMessenger.of(
-                        context,
-                      ).showSnackBar(SnackBar(content: Text('正在生成，请不要重复点击')));
+                      showDialog(
+                        context: context,
+                        builder: (context) => SizedBox(
+                          height: 50,
+                          width: 50,
+                          child: CircularProgressIndicator(),
+                        ),
+                      );
                       final image = await captureWidget(_globalKey);
                       final byteData = await image?.toByteData(format: .png);
                       final pngBytes = byteData?.buffer.asUint8List();
@@ -106,6 +145,8 @@ class _SharelevelcompletionprogresspageState
                         type: FileType.custom,
                         allowedExtensions: ['png'],
                       );
+                      if (!context.mounted) return;
+                      Navigator.pop(context);
                       // } else {
                       //   await SharePlus.instance.share(
                       //     ShareParams(

@@ -47,6 +47,7 @@ class _RankingListPageState extends State<RankingListPage> {
           ),
         );
       }
+      if (!mounted) return;
       setState(() {
         children = cardList;
       });

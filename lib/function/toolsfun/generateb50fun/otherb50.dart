@@ -3,16 +3,16 @@ import 'package:chusearchsong_flutter/function/toolsfun/generateb50fun/generateb
 import 'package:flutter/material.dart';
 
 //寸B50
-Future<Widget> generatecun50Body({
+Future<Widget> generateother50Body({
   required BuildContext context,
   required Map<String, dynamic> songsData,
   required Map<String, dynamic> playerdata,
   required List allscoredata,
   required String type,
   required String? genreorversion,
+  int? n50,
 }) async {
   //筛选曲目
-
   List resultScoreList = [];
   if (type == '寸50') {
     for (var i in allscoredata) {
@@ -20,8 +20,7 @@ Future<Widget> generatecun50Body({
         resultScoreList.add(i);
       }
     }
-  }
-  if (type == '寸鸟50') {
+  } else if (type == '寸鸟50') {
     for (var i in allscoredata) {
       if (i['score'] < 1009000 && i['score'] >= 1008900) {
         resultScoreList.add(i);
@@ -65,10 +64,26 @@ Future<Widget> generatecun50Body({
         }
       }
     }
+  } else if (type == '世界末日50') {
+    for (var i in allscoredata) {
+      if (i['level_index'] == 5) {
+        resultScoreList.add(i);
+      }
+    }
+    resultScoreList.sort((a, b) => b['score'].compareTo(a['score']));
+  } else {
+    resultScoreList = allscoredata;
   }
-  resultScoreList.sort((a, b) => b['rating'].compareTo(a['rating']));
-  if (resultScoreList.length > 50) {
-    resultScoreList = resultScoreList.sublist(0, 50);
+  if (type != '世界末日50') {
+    resultScoreList.sort((a, b) => b['rating'].compareTo(a['rating']));
+  }
+  if (type == 'N50' && n50 != null) {
+    n50 = n50.clamp(0, resultScoreList.length);
+    resultScoreList = resultScoreList.sublist(0, n50);
+  } else {
+    if (resultScoreList.length > 50) {
+      resultScoreList = resultScoreList.sublist(0, 50);
+    }
   }
 
   //先定义所需的变量
@@ -161,7 +176,7 @@ Future<Widget> generatecun50Body({
             right: 20,
           ),
           child: Text(
-            'B50',
+            'B${type != 'N50' ? 50 : n50}',
             style: TextStyle(fontSize: 30, color: Colors.white),
           ),
         ),
@@ -174,7 +189,7 @@ Future<Widget> generatecun50Body({
     mainAxisAlignment: MainAxisAlignment.center,
     children: [
       Text(
-        '此 $type B50由chusearchsong（中二查歌）生成，生成时间：${DateTime.now()}',
+        '此 $type B${type != 'N50' ? 50 : n50}由chusearchsong（中二查歌）生成，生成时间：${DateTime.now()}',
         style: TextStyle(fontWeight: FontWeight.bold, color: Colors.black),
       ),
     ],
@@ -188,6 +203,11 @@ Future<Widget> generatecun50Body({
   int row = 0;
   int songcount = 1;
   for (var i in resultScoreList) {
+    if (type == '世界末日50') {
+      if (i['level_index'] != 5) continue;
+    } else {
+      if (i['level_index'] == 5) continue;
+    }
     String songname;
     if ((i['song_name'] as String).length > 14) {
       songname = i['song_name'].substring(0, 14) + '...';
@@ -195,11 +215,15 @@ Future<Widget> generatecun50Body({
       songname = i['song_name'];
     }
     double diffvalue = 0;
+    int originid = i['id'];
     for (var j in songsData['songs']) {
       if (i['id'] == j['id']) {
         for (var k in j['difficulties']) {
           if (i['level_index'] == k['difficulty']) {
             diffvalue = k['level_value'].toDouble();
+            if (type == '世界末日50') {
+              originid = k['origin_id'];
+            }
           }
         }
         break;
@@ -271,7 +295,7 @@ Future<Widget> generatecun50Body({
                                 right: 3,
                               ),
                               child: Image.network(
-                                'https://assets2.lxns.net/chunithm/jacket/${i['id']}.png',
+                                'https://assets2.lxns.net/chunithm/jacket/$originid.png',
                                 width: 115,
                                 height: 115,
                                 errorBuilder: (context, error, stackTrace) {
@@ -300,7 +324,7 @@ Future<Widget> generatecun50Body({
                                       216,
                                       216,
                                     ),
-                                    fontSize: 10,
+                                    fontSize: 13,
                                   ),
                                 ),
 
@@ -472,10 +496,16 @@ Future<Widget> generatecun50Body({
     b50body.add(b50row);
   }
 
+  double extraHeight = 0.0;
+
+  if (b50body.length > 5) {
+    extraHeight = 219 * (b50body.length - 5);
+  }
+
   //背景绘制
   Widget result = Container(
     width: 5896 / 2,
-    height: 2844 / 2,
+    height: 2844 / 2 + extraHeight,
     decoration: BoxDecoration(
       image: DecorationImage(
         image: AssetImage('res/background.png'),

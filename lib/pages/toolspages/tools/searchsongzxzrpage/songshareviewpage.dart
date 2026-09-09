@@ -66,9 +66,14 @@ class _SongshareviewpageState extends State<Songshareviewpage> {
                   child: TextButton(
                     onPressed: () async {
                       try {
-                        ScaffoldMessenger.of(
-                          context,
-                        ).showSnackBar(SnackBar(content: Text('正在生成，请不要重复点击')));
+                        showDialog(
+                          context: context,
+                          builder: (context) => SizedBox(
+                            height: 50,
+                            width: 50,
+                            child: CircularProgressIndicator(),
+                          ),
+                        );
                         final image = await captureWidget(_globalKey);
                         final byteData = await image?.toByteData(format: .png);
                         final pngBytes = byteData?.buffer.asUint8List();
@@ -90,6 +95,8 @@ class _SongshareviewpageState extends State<Songshareviewpage> {
                           type: FileType.custom,
                           allowedExtensions: ['png'],
                         );
+                        if (!context.mounted) return;
+                        Navigator.pop(context);
                         // } else {
                         //   await SharePlus.instance.share(
                         //     ShareParams(

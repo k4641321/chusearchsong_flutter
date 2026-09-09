@@ -248,7 +248,7 @@ Future<Widget> fc50Body({
                                       216,
                                       216,
                                     ),
-                                    fontSize: 10,
+                                    fontSize: 13,
                                   ),
                                 ),
 
