@@ -12,6 +12,7 @@ class Linklevelpage extends StatefulWidget {
 class _LinklevelpageState extends State<Linklevelpage> {
   List<DataRow> datarowlist = [];
   final ScrollController _datatable1 = ScrollController();
+  final ScrollController _datatable2 = ScrollController();
   final ScrollController _bodyController = ScrollController();
 
   String diffindextoString(int diffindex) {
@@ -105,6 +106,81 @@ class _LinklevelpageState extends State<Linklevelpage> {
                       DataColumn(label: Text('支持难度')),
                     ],
                     rows: datarowlist,
+                  ),
+                ),
+              ),
+              Scrollbar(
+                controller: _datatable2,
+                child: SingleChildScrollView(
+                  controller: _datatable2,
+                  scrollDirection: Axis.horizontal,
+                  child: DataTable(
+                    columns: [
+                      DataColumn(label: Text('Linked LEVEL')),
+                      DataColumn(label: Text('GAUGE 最大値')),
+                      DataColumn(label: Text('Justice')),
+                      DataColumn(label: Text('Attack')),
+                      DataColumn(label: Text('Miss')),
+                      DataColumn(label: Text('回复量(自身以外)')),
+                      DataColumn(label: Text('难度')),
+                    ],
+                    rows: [
+                      DataRow(
+                        cells: [
+                          DataCell(Text('Ⅴ')),
+                          DataCell(Text('1000')),
+                          DataCell(Text('-50')),
+                          DataCell(Text('-100')),
+                          DataCell(Text('-200')),
+                          DataCell(Text('+30')),
+                          DataCell(requireddiffWidget([3])),
+                        ],
+                      ),
+                      DataRow(
+                        cells: [
+                          DataCell(Text('Ⅳ')),
+                          DataCell(Text('3000')),
+                          DataCell(Text('-50')),
+                          DataCell(Text('-100')),
+                          DataCell(Text('-200')),
+                          DataCell(Text('+90')),
+                          DataCell(requireddiffWidget([3])),
+                        ],
+                      ),
+                      DataRow(
+                        cells: [
+                          DataCell(Text('Ⅲ')),
+                          DataCell(Text('5000')),
+                          DataCell(Text('-50')),
+                          DataCell(Text('-100')),
+                          DataCell(Text('-200')),
+                          DataCell(Text('+180')),
+                          DataCell(requireddiffWidget([3])),
+                        ],
+                      ),
+                      DataRow(
+                        cells: [
+                          DataCell(Text('Ⅱ')),
+                          DataCell(Text('5000')),
+                          DataCell(Text('-50')),
+                          DataCell(Text('-100')),
+                          DataCell(Text('-200')),
+                          DataCell(Text('+200')),
+                          DataCell(requireddiffWidget([2, 3, 4])),
+                        ],
+                      ),
+                      DataRow(
+                        cells: [
+                          DataCell(Text('Ⅰ')),
+                          DataCell(Text('5000')),
+                          DataCell(Text('-50')),
+                          DataCell(Text('-50')),
+                          DataCell(Text('-50')),
+                          DataCell(Text('+200')),
+                          DataCell(requireddiffWidget([0, 1, 2, 3, 4])),
+                        ],
+                      ),
+                    ],
                   ),
                 ),
               ),
