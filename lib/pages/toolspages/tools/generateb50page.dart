@@ -35,7 +35,7 @@ class _GenerateB50PageState extends State<GenerateB50Page> {
     //加载所有成绩
     allscoredata = (await loadAllScoreData())['data'];
     //加载b50数据
-    b50data = (await loadb50ScoreData())['data'];
+    b50data = await loadb50ScoreData();
     workingplayerdata = Map.from(b50data);
   }
 

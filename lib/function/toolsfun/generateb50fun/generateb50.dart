@@ -15,7 +15,11 @@ Future<Widget?> selectb50({
   String? genre,
   int? n50,
 }) async {
-  if (b50type == 'b50' || b50type == '个人理论50' || b50type == '理论50') {
+  if (b50type == 'b50' ||
+      b50type == '个人理论50' ||
+      b50type == '理论50' ||
+      b50type == '带S10的50' ||
+      b50type == '带S10的理论50') {
     return await generateb50Body(
       context: context,
       songsData: songsData,
@@ -316,7 +320,7 @@ LinearGradient rankColor({required String rank}) {
   }
 }
 
-//普通B50与理论B50
+//普通B50与理论B50与带S10的50
 Future<Widget> generateb50Body({
   required BuildContext context,
   required Map<String, dynamic> songsData,
@@ -424,6 +428,7 @@ Future<Widget> generateb50Body({
   Widget b30 = Column(children: b30body);
   List<Widget> b20body = [];
   Widget b20 = Column(children: b20body);
+  Widget s10 = SizedBox.shrink();
   double trophywidth = 525;
   if (playerdata['trophy']['name'].length > 17) {
     trophywidth = trophywidth + (playerdata['trophy']['name'].length - 17) * 10;
@@ -431,61 +436,8 @@ Future<Widget> generateb50Body({
 
   // final ScrollController _scrollController = ScrollController();
   //b30文字
-  Widget b30text = Row(
-    mainAxisAlignment: MainAxisAlignment.center,
-    children: [
-      Card(
-        color: Color.fromARGB(255, 0, 64, 99),
-        child: Padding(
-          padding: EdgeInsetsGeometry.only(
-            top: 5,
-            bottom: 5,
-            left: 20,
-            right: 20,
-          ),
-          child: Text(
-            'B30',
-            style: TextStyle(fontSize: 30, color: Colors.white),
-          ),
-        ),
-      ),
-    ],
-  );
-  //b20文字
-  Widget b20text = Row(
-    mainAxisAlignment: MainAxisAlignment.center,
-    children: [
-      Card(
-        color: Color.fromARGB(255, 0, 64, 99),
-        child: Padding(
-          padding: EdgeInsetsGeometry.only(
-            top: 5,
-            bottom: 5,
-            left: 20,
-            right: 20,
-          ),
-          child: Text(
-            'B20',
-            style: TextStyle(fontSize: 30, color: Colors.white),
-          ),
-        ),
-      ),
-    ],
-  );
-  //底部信息
-  String theory50 = '';
-  if (type != 'b50') {
-    theory50 = type;
-  }
-  Widget fontter = Row(
-    mainAxisAlignment: MainAxisAlignment.center,
-    children: [
-      Text(
-        '此 $theory50 B50由chusearchsong（中二查歌）生成，生成时间：${DateTime.now()}',
-        style: TextStyle(fontWeight: FontWeight.bold, color: Colors.black),
-      ),
-    ],
-  );
+  Widget b30text = buildB50Text("B30");
+
   //b30绘制
   List<Widget> b30rowbody = [];
   Widget b30row = Row(
@@ -512,7 +464,7 @@ Future<Widget> generateb50Body({
         break;
       }
     }
-    if (type != 'b50') {
+    if (type != 'b50' && type != '带S10的50') {
       i['score'] = 1010000;
       i['rank'] = 'sssp';
       i['clear'] = 'clear';
@@ -528,246 +480,16 @@ Future<Widget> generateb50Body({
       fontSize = 8;
     }
 
+    if (!context.mounted) return SizedBox.shrink();
     b30rowbody.add(
-      InkWell(
-        onTap: () async {
-          Map<String, dynamic>? songdata;
-          String? versionname;
-          for (var j in songsData['songs']) {
-            if (i['id'] == j['id']) {
-              songdata = j;
-              for (var k in songsData['versions']) {
-                if (j['version'] == k['version']) {
-                  versionname = k['title'];
-                  break;
-                }
-              }
-              break;
-            }
-          }
-          if (!context.mounted) return;
-          if (songdata == null || versionname == null) return;
-          await interSongInfo(
-            songbasedata: songdata,
-            context: context,
-            versionname: versionname,
-          );
-        },
-        child: SizedBox(
-          width: 292,
-          height: 219,
-          child: Padding(
-            padding: EdgeInsetsGeometry.all(8),
-            child: Card(
-              child: Column(
-                // crossAxisAlignment: CrossAxisAlignment.start,
-                // mainAxisAlignment: MainAxisAlignment.start,
-                children: [
-                  Card(
-                    color: diffcolor(diffindex: i['level_index']),
-                    child: Padding(
-                      padding: EdgeInsetsGeometry.only(
-                        bottom: 5,
-                        top: 5,
-                        left: 7,
-                        right: 5,
-                      ),
-                      child: Row(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        children: [
-                          Container(
-                            color: Colors.white,
-                            child: Padding(
-                              padding: EdgeInsetsGeometry.only(
-                                top: 3,
-                                left: 3,
-                                bottom: 3,
-                                right: 3,
-                              ),
-                              child: Image.network(
-                                'https://assets2.lxns.net/chunithm/jacket/${i['id']}.png',
-                                width: 115,
-                                height: 115,
-                                errorBuilder: (context, error, stackTrace) {
-                                  return const Text('图片加载失败');
-                                },
-                              ),
-                            ),
-                          ),
-                          Padding(
-                            padding: EdgeInsetsGeometry.only(
-                              left: 10,
-                              bottom: 5,
-                            ),
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              mainAxisAlignment: MainAxisAlignment.start,
-                              children: [
-                                Text(
-                                  '#$songcount',
-                                  // style: TextStyle(fontSize: ),
-                                  textAlign: TextAlign.end,
-                                  style: TextStyle(
-                                    color: const Color.fromARGB(
-                                      255,
-                                      216,
-                                      216,
-                                      216,
-                                    ),
-                                    fontSize: 13,
-                                  ),
-                                ),
-
-                                Text(
-                                  i['score'].toString(),
-                                  style: TextStyle(
-                                    fontSize: 27,
-                                    color: Colors.white,
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                                ),
-
-                                Padding(
-                                  padding: EdgeInsetsGeometry.only(bottom: 5),
-                                  child: Container(
-                                    decoration: BoxDecoration(
-                                      borderRadius: BorderRadius.all(
-                                        Radius.circular(25),
-                                      ),
-                                      gradient: rankColor(rank: i['rank']),
-                                    ),
-                                    child: SizedBox(
-                                      width: 70,
-                                      child: Padding(
-                                        padding: EdgeInsetsGeometry.only(
-                                          left: 5,
-                                        ),
-                                        child: Padding(
-                                          padding: EdgeInsetsGeometry.only(
-                                            left: 0,
-                                            right: 3,
-                                            top: 0,
-                                            bottom: 3,
-                                          ),
-                                          child: Text(
-                                            '${i['rank'].toUpperCase().replaceAll('P', '+')}',
-                                            style: TextStyle(
-                                              fontSize: 20,
-                                              color: Colors.black,
-                                              fontWeight: FontWeight.bold,
-                                            ),
-                                            textAlign: TextAlign.center,
-                                          ),
-                                        ),
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                                // Image.asset(
-                                //   clearImg(clear: i['clear']),
-                                //   height: 18,
-                                // ),
-                                Row(
-                                  children: [
-                                    Container(
-                                      decoration: BoxDecoration(
-                                        color: clearColor(clear: i['clear']),
-                                        border: Border.all(
-                                          color: clearBroder(clear: i['clear']),
-                                          width: 3,
-                                        ),
-                                        borderRadius: BorderRadius.all(
-                                          Radius.circular(8),
-                                        ),
-                                      ),
-                                      child: Padding(
-                                        padding: EdgeInsetsGeometry.only(
-                                          bottom: 2,
-                                          top: 2,
-                                          left: 7,
-                                          right: 7,
-                                        ),
-                                        child: Text(
-                                          '${i['clear'].toUpperCase()}',
-                                          style: TextStyle(
-                                            fontWeight: FontWeight.bold,
-                                            color: Colors.black,
-                                            fontSize: fontSize,
-                                          ),
-                                        ),
-                                      ),
-                                    ),
-                                    i['full_combo'] != null
-                                        ? Padding(
-                                            padding: EdgeInsetsGeometry.only(
-                                              left: 5,
-                                            ),
-                                            child: Container(
-                                              decoration: BoxDecoration(
-                                                color: fullcombocolor(
-                                                  fullcombo: i['full_combo'],
-                                                ),
-                                                border: Border.all(
-                                                  color: fullcomboBrodercolor(
-                                                    fullcombo: i['full_combo'],
-                                                  ),
-                                                  width: 3,
-                                                ),
-                                                borderRadius: BorderRadius.all(
-                                                  Radius.circular(8),
-                                                ),
-                                              ),
-                                              child: Padding(
-                                                padding:
-                                                    EdgeInsetsGeometry.only(
-                                                      bottom: 2,
-                                                      top: 2,
-                                                      left: 7,
-                                                      right: 7,
-                                                    ),
-                                                child: Text(
-                                                  '${fullcomStringCut(fullcombo: i['full_combo'])}',
-                                                  style: TextStyle(
-                                                    fontWeight: FontWeight.bold,
-                                                    color: Colors.black,
-                                                  ),
-                                                ),
-                                              ),
-                                            ),
-                                          )
-                                        : SizedBox.shrink(),
-                                  ],
-                                ),
-                              ],
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
-                  Column(
-                    mainAxisAlignment: MainAxisAlignment.end,
-                    children: [
-                      Text(
-                        songname,
-                        maxLines: 1,
-                        style: TextStyle(
-                          fontSize: 16,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                      Text(
-                        '$diffvalue -> ${i['rating'].toString().length > 5 ? i['rating'].toString().substring(0, 5) : i['rating'].toString()}',
-                        style: TextStyle(fontSize: 15),
-                      ),
-                    ],
-                  ),
-                ],
-              ),
-            ),
-          ),
-        ),
+      buildB50SongCard(
+        songsData: songsData,
+        i: i,
+        fontSize: fontSize,
+        diffvalue: diffvalue,
+        songname: songname,
+        songcount: songcount,
+        context: context,
       ),
     );
     if (row == 9) {
@@ -786,6 +508,9 @@ Future<Widget> generateb50Body({
   if (b30rowbody.isNotEmpty) {
     b30body.add(b30row);
   }
+
+  //b20文字
+  Widget b20text = buildB50Text("B20");
 
   //b20绘制
   List<Widget> b20rowbody = [];
@@ -813,7 +538,7 @@ Future<Widget> generateb50Body({
         break;
       }
     }
-    if (type != 'b50') {
+    if (type != 'b50' && type != '带S10的50') {
       i['score'] = 1010000;
       i['rank'] = 'sssp';
       i['clear'] = 'clear';
@@ -829,246 +554,16 @@ Future<Widget> generateb50Body({
       fontSize = 8;
     }
 
+    if (!context.mounted) return SizedBox.shrink();
     b20rowbody.add(
-      InkWell(
-        onTap: () async {
-          Map<String, dynamic>? songdata;
-          String? versionname;
-          for (var j in songsData['songs']) {
-            if (i['id'] == j['id']) {
-              songdata = j;
-              for (var k in songsData['versions']) {
-                if (j['version'] == k['version']) {
-                  versionname = k['title'];
-                  break;
-                }
-              }
-              break;
-            }
-          }
-          if (!context.mounted) return;
-          if (songdata == null || versionname == null) return;
-          await interSongInfo(
-            songbasedata: songdata,
-            context: context,
-            versionname: versionname,
-          );
-        },
-        child: SizedBox(
-          width: 292,
-          height: 219,
-          child: Padding(
-            padding: EdgeInsetsGeometry.all(8),
-            child: Card(
-              child: Column(
-                // crossAxisAlignment: CrossAxisAlignment.start,
-                // mainAxisAlignment: MainAxisAlignment.start,
-                children: [
-                  Card(
-                    color: diffcolor(diffindex: i['level_index']),
-                    child: Padding(
-                      padding: EdgeInsetsGeometry.only(
-                        bottom: 5,
-                        top: 5,
-                        left: 7,
-                        right: 5,
-                      ),
-                      child: Row(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        children: [
-                          Container(
-                            color: Colors.white,
-                            child: Padding(
-                              padding: EdgeInsetsGeometry.only(
-                                top: 3,
-                                left: 3,
-                                bottom: 3,
-                                right: 3,
-                              ),
-                              child: Image.network(
-                                'https://assets2.lxns.net/chunithm/jacket/${i['id']}.png',
-                                width: 115,
-                                height: 115,
-                                errorBuilder: (context, error, stackTrace) {
-                                  return const Text('图片加载失败');
-                                },
-                              ),
-                            ),
-                          ),
-                          Padding(
-                            padding: EdgeInsetsGeometry.only(
-                              left: 10,
-                              bottom: 5,
-                            ),
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              mainAxisAlignment: MainAxisAlignment.start,
-                              children: [
-                                Text(
-                                  '#$songcount',
-                                  // style: TextStyle(fontSize: ),
-                                  textAlign: TextAlign.end,
-                                  style: TextStyle(
-                                    color: const Color.fromARGB(
-                                      255,
-                                      216,
-                                      216,
-                                      216,
-                                    ),
-                                    fontSize: 13,
-                                  ),
-                                ),
-
-                                Text(
-                                  i['score'].toString(),
-                                  style: TextStyle(
-                                    fontSize: 27,
-                                    color: Colors.white,
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                                ),
-
-                                Padding(
-                                  padding: EdgeInsetsGeometry.only(bottom: 5),
-                                  child: Container(
-                                    decoration: BoxDecoration(
-                                      borderRadius: BorderRadius.all(
-                                        Radius.circular(25),
-                                      ),
-                                      gradient: rankColor(rank: i['rank']),
-                                    ),
-                                    child: SizedBox(
-                                      width: 70,
-                                      child: Padding(
-                                        padding: EdgeInsetsGeometry.only(
-                                          left: 5,
-                                        ),
-                                        child: Padding(
-                                          padding: EdgeInsetsGeometry.only(
-                                            left: 0,
-                                            right: 3,
-                                            top: 0,
-                                            bottom: 3,
-                                          ),
-                                          child: Text(
-                                            '${i['rank'].toUpperCase().replaceAll('P', '+')}',
-                                            style: TextStyle(
-                                              fontSize: 20,
-                                              color: Colors.black,
-                                              fontWeight: FontWeight.bold,
-                                            ),
-                                            textAlign: TextAlign.center,
-                                          ),
-                                        ),
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                                // Image.asset(
-                                //   clearImg(clear: i['clear']),
-                                //   height: 18,
-                                // ),
-                                Row(
-                                  children: [
-                                    Container(
-                                      decoration: BoxDecoration(
-                                        color: clearColor(clear: i['clear']),
-                                        border: Border.all(
-                                          color: clearBroder(clear: i['clear']),
-                                          width: 3,
-                                        ),
-                                        borderRadius: BorderRadius.all(
-                                          Radius.circular(8),
-                                        ),
-                                      ),
-                                      child: Padding(
-                                        padding: EdgeInsetsGeometry.only(
-                                          bottom: 2,
-                                          top: 2,
-                                          left: 7,
-                                          right: 7,
-                                        ),
-                                        child: Text(
-                                          '${i['clear'].toUpperCase()}',
-                                          style: TextStyle(
-                                            fontWeight: FontWeight.bold,
-                                            color: Colors.black,
-                                            fontSize: fontSize,
-                                          ),
-                                        ),
-                                      ),
-                                    ),
-                                    i['full_combo'] != null
-                                        ? Padding(
-                                            padding: EdgeInsetsGeometry.only(
-                                              left: 5,
-                                            ),
-                                            child: Container(
-                                              decoration: BoxDecoration(
-                                                color: fullcombocolor(
-                                                  fullcombo: i['full_combo'],
-                                                ),
-                                                border: Border.all(
-                                                  color: fullcomboBrodercolor(
-                                                    fullcombo: i['full_combo'],
-                                                  ),
-                                                  width: 3,
-                                                ),
-                                                borderRadius: BorderRadius.all(
-                                                  Radius.circular(8),
-                                                ),
-                                              ),
-                                              child: Padding(
-                                                padding:
-                                                    EdgeInsetsGeometry.only(
-                                                      bottom: 2,
-                                                      top: 2,
-                                                      left: 7,
-                                                      right: 7,
-                                                    ),
-                                                child: Text(
-                                                  '${fullcomStringCut(fullcombo: i['full_combo'])}',
-                                                  style: TextStyle(
-                                                    fontWeight: FontWeight.bold,
-                                                    color: Colors.black,
-                                                  ),
-                                                ),
-                                              ),
-                                            ),
-                                          )
-                                        : SizedBox.shrink(),
-                                  ],
-                                ),
-                              ],
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
-                  Column(
-                    mainAxisAlignment: MainAxisAlignment.end,
-                    children: [
-                      Text(
-                        songname,
-                        maxLines: 1,
-                        style: TextStyle(
-                          fontSize: 16,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                      Text(
-                        '$diffvalue -> ${i['rating'].toString().length > 5 ? i['rating'].toString().substring(0, 5) : i['rating'].toString()}',
-                        style: TextStyle(fontSize: 15),
-                      ),
-                    ],
-                  ),
-                ],
-              ),
-            ),
-          ),
-        ),
+      buildB50SongCard(
+        songsData: songsData,
+        i: i,
+        fontSize: fontSize,
+        diffvalue: diffvalue,
+        songname: songname,
+        songcount: songcount,
+        context: context,
       ),
     );
     if (row == 9) {
@@ -1088,7 +583,99 @@ Future<Widget> generateb50Body({
     b20body.add(b20row);
   }
 
+  //s10文字
+  Widget s10text = SizedBox.shrink();
+  if (type == '带S10的50' || type == '带S10的理论50') {
+    s10text = buildB50Text("S10");
+    //s10绘制
+    List<Widget> s10body = [];
+    List<Widget> s10rowbody = [];
+    Widget s10row = Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: s10rowbody,
+    );
+    row = 0;
+    for (var i in b50data['selections']) {
+      double diffvalue = 0;
+      String songname;
+      if ((i['song_name'] as String).length > 14) {
+        songname = i['song_name'].substring(0, 14) + '...';
+      } else {
+        songname = i['song_name'];
+      }
+
+      for (var j in songsData['songs']) {
+        if (i['id'] == j['id']) {
+          for (var k in j['difficulties']) {
+            if (i['level_index'] == k['difficulty']) {
+              diffvalue = k['level_value'].toDouble();
+            }
+          }
+          break;
+        }
+      }
+      if (type != 'b50' && type != '带S10的50') {
+        i['score'] = 1010000;
+        i['rank'] = 'sssp';
+        i['clear'] = 'clear';
+        i['full_combo'] = 'alljusticecritical';
+        i['rating'] = diffvalue + 2.15;
+        totalRating = totalRating + i['rating'];
+      }
+
+      double fontSize = 14;
+      if (i['clear'] == 'catastrophy' && i['full_combo'] == null) {
+        fontSize = 6;
+      } else if (i['clear'] == 'absolute' && i['full_combo'] == null) {
+        fontSize = 8;
+      }
+
+      if (!context.mounted) return SizedBox.shrink();
+      s10rowbody.add(
+        buildB50SongCard(
+          songsData: songsData,
+          i: i,
+          fontSize: fontSize,
+          diffvalue: diffvalue,
+          songname: songname,
+          songcount: songcount,
+          context: context,
+        ),
+      );
+      if (row == 9) {
+        s10body.add(s10row);
+        row = 0;
+        s10rowbody = [];
+        s10row = Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: s10rowbody,
+        );
+      } else {
+        row++;
+      }
+      songcount++;
+    }
+    if (s10rowbody.isNotEmpty) {
+      s10body.add(s10row);
+    }
+    s10 = Column(children: s10body);
+  }
+
+  //底部信息
+  String theory50 = '';
   if (type != 'b50') {
+    theory50 = type;
+  }
+  Widget fontter = Row(
+    mainAxisAlignment: MainAxisAlignment.center,
+    children: [
+      Text(
+        '此 $theory50 B50由chusearchsong（中二查歌）生成，生成时间：${DateTime.now()}',
+        style: TextStyle(fontWeight: FontWeight.bold, color: Colors.black),
+      ),
+    ],
+  );
+  if (type != 'b50' && type != '带S10的50') {
     totalRating = totalRating / songcount;
     playerdata['rating'] = double.parse(
       totalRating.toString().length > 5
@@ -1161,9 +748,14 @@ Future<Widget> generateb50Body({
   );
   //背景绘制
 
+  double extraHeight = 0;
+  if (type == "带S10的50" || type == '带S10的理论50') {
+    extraHeight = 300;
+  }
+
   Widget result = Container(
     width: 5896 / 2,
-    height: 2844 / 2,
+    height: 2844 / 2 + extraHeight,
     decoration: BoxDecoration(
       image: DecorationImage(
         image: AssetImage('res/background.png'),
@@ -1171,7 +763,9 @@ Future<Widget> generateb50Body({
       ),
     ),
     child: Center(
-      child: Column(children: [title, b30text, b30, b20text, b20, fontter]),
+      child: Column(
+        children: [title, b30text, b30, b20text, b20, s10text, s10, fontter],
+      ),
     ),
   );
 
@@ -1181,15 +775,17 @@ Future<Widget> generateb50Body({
 Widget buildTypeDropdownMenu({required ValueChanged onSelected}) {
   List<DropdownMenuEntry> dropdownMenuEntries = [
     DropdownMenuEntry(value: 'b50', label: 'B50'),
+    DropdownMenuEntry(value: '带S10的50', label: '带S10的50'),
     DropdownMenuEntry(value: 'random50', label: '随机B50'),
-    DropdownMenuEntry(value: 'fc30', label: 'FC30'),
-    DropdownMenuEntry(value: 'aj30', label: 'AJ30'),
+    DropdownMenuEntry(value: 'fc30', label: 'FC50'),
+    DropdownMenuEntry(value: 'aj30', label: 'AJ50'),
     DropdownMenuEntry(value: '寸50', label: '寸50'),
     DropdownMenuEntry(value: '寸鸟50', label: '寸鸟50'),
     DropdownMenuEntry(value: '流派50', label: '流派50'),
     DropdownMenuEntry(value: '版本50', label: '版本50'),
     DropdownMenuEntry(value: '谱师50', label: '谱师50'),
     DropdownMenuEntry(value: '曲师50', label: '曲师50'),
+    DropdownMenuEntry(value: '带S10的理论50', label: '带S10的理论50'),
     DropdownMenuEntry(value: '个人理论50', label: '个人理论50'),
     DropdownMenuEntry(value: '理论50', label: '理论50'),
     DropdownMenuEntry(value: 'N50', label: 'N50'),
@@ -1266,4 +862,264 @@ class _NoteDesignerOrArtistState extends State<NoteDesignerOrArtist> {
       ),
     );
   }
+}
+
+Widget buildB50SongCard({
+  required Map<String, dynamic> songsData,
+  required Map<String, dynamic> i,
+  required int songcount,
+  required String songname,
+  required double diffvalue,
+  required double fontSize,
+  required BuildContext context,
+  int? orignid,
+}) {
+  return InkWell(
+    onTap: () async {
+      Map<String, dynamic>? songdata;
+      String? versionname;
+      for (var j in songsData['songs']) {
+        if (i['id'] == j['id']) {
+          songdata = j;
+          for (var k in songsData['versions']) {
+            if (j['version'] == k['version']) {
+              versionname = k['title'];
+              break;
+            }
+          }
+          break;
+        }
+      }
+      if (songdata == null || versionname == null) return;
+      await interSongInfo(
+        songbasedata: songdata,
+        context: context,
+        versionname: versionname,
+      );
+    },
+    child: SizedBox(
+      width: 292,
+      height: 219,
+      child: Padding(
+        padding: EdgeInsetsGeometry.all(8),
+        child: Card(
+          child: Column(
+            // crossAxisAlignment: CrossAxisAlignment.start,
+            // mainAxisAlignment: MainAxisAlignment.start,
+            children: [
+              Card(
+                color: diffcolor(diffindex: i['level_index']),
+                child: Padding(
+                  padding: EdgeInsetsGeometry.only(
+                    bottom: 5,
+                    top: 5,
+                    left: 7,
+                    right: 5,
+                  ),
+                  child: Row(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children: [
+                      Container(
+                        color: Colors.white,
+                        child: Padding(
+                          padding: EdgeInsetsGeometry.only(
+                            top: 3,
+                            left: 3,
+                            bottom: 3,
+                            right: 3,
+                          ),
+                          child: Image.network(
+                            'https://assets2.lxns.net/chunithm/jacket/${orignid ?? i['id']}.png',
+                            width: 115,
+                            height: 115,
+                            errorBuilder: (context, error, stackTrace) {
+                              return const Text('图片加载失败');
+                            },
+                          ),
+                        ),
+                      ),
+                      Padding(
+                        padding: EdgeInsetsGeometry.only(left: 10, bottom: 5),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          children: [
+                            Text(
+                              '#$songcount',
+                              // style: TextStyle(fontSize: ),
+                              textAlign: TextAlign.end,
+                              style: TextStyle(
+                                color: const Color.fromARGB(255, 216, 216, 216),
+                                fontSize: 13,
+                              ),
+                            ),
+
+                            Text(
+                              i['score'].toString(),
+                              style: TextStyle(
+                                fontSize: 27,
+                                color: Colors.white,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+
+                            Padding(
+                              padding: EdgeInsetsGeometry.only(bottom: 5),
+                              child: Container(
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.all(
+                                    Radius.circular(25),
+                                  ),
+                                  gradient: rankColor(rank: i['rank']),
+                                ),
+                                child: SizedBox(
+                                  width: 70,
+                                  child: Padding(
+                                    padding: EdgeInsetsGeometry.only(left: 5),
+                                    child: Padding(
+                                      padding: EdgeInsetsGeometry.only(
+                                        left: 0,
+                                        right: 3,
+                                        top: 0,
+                                        bottom: 3,
+                                      ),
+                                      child: Text(
+                                        '${i['rank'].toUpperCase().replaceAll('P', '+')}',
+                                        style: TextStyle(
+                                          fontSize: 20,
+                                          color: Colors.black,
+                                          fontWeight: FontWeight.bold,
+                                        ),
+                                        textAlign: TextAlign.center,
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ),
+                            // Image.asset(
+                            //   clearImg(clear: i['clear']),
+                            //   height: 18,
+                            // ),
+                            Row(
+                              children: [
+                                Container(
+                                  decoration: BoxDecoration(
+                                    color: clearColor(clear: i['clear']),
+                                    border: Border.all(
+                                      color: clearBroder(clear: i['clear']),
+                                      width: 3,
+                                    ),
+                                    borderRadius: BorderRadius.all(
+                                      Radius.circular(8),
+                                    ),
+                                  ),
+                                  child: Padding(
+                                    padding: EdgeInsetsGeometry.only(
+                                      bottom: 2,
+                                      top: 2,
+                                      left: 7,
+                                      right: 7,
+                                    ),
+                                    child: Text(
+                                      '${i['clear'].toUpperCase()}',
+                                      style: TextStyle(
+                                        fontWeight: FontWeight.bold,
+                                        color: Colors.black,
+                                        fontSize: fontSize,
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                                i['full_combo'] != null
+                                    ? Padding(
+                                        padding: EdgeInsetsGeometry.only(
+                                          left: 5,
+                                        ),
+                                        child: Container(
+                                          decoration: BoxDecoration(
+                                            color: fullcombocolor(
+                                              fullcombo: i['full_combo'],
+                                            ),
+                                            border: Border.all(
+                                              color: fullcomboBrodercolor(
+                                                fullcombo: i['full_combo'],
+                                              ),
+                                              width: 3,
+                                            ),
+                                            borderRadius: BorderRadius.all(
+                                              Radius.circular(8),
+                                            ),
+                                          ),
+                                          child: Padding(
+                                            padding: EdgeInsetsGeometry.only(
+                                              bottom: 2,
+                                              top: 2,
+                                              left: 7,
+                                              right: 7,
+                                            ),
+                                            child: Text(
+                                              '${fullcomStringCut(fullcombo: i['full_combo'])}',
+                                              style: TextStyle(
+                                                fontWeight: FontWeight.bold,
+                                                color: Colors.black,
+                                              ),
+                                            ),
+                                          ),
+                                        ),
+                                      )
+                                    : SizedBox.shrink(),
+                              ],
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+              Column(
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: [
+                  Text(
+                    songname,
+                    maxLines: 1,
+                    style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                  ),
+                  Text(
+                    '$diffvalue -> ${i['rating'].toString().length > 5 ? i['rating'].toString().substring(0, 5) : i['rating'].toString()}',
+                    style: TextStyle(fontSize: 15),
+                  ),
+                ],
+              ),
+            ],
+          ),
+        ),
+      ),
+    ),
+  );
+}
+
+Widget buildB50Text(String text) {
+  return Row(
+    mainAxisAlignment: MainAxisAlignment.center,
+    children: [
+      Card(
+        color: Color.fromARGB(255, 0, 64, 99),
+        child: Padding(
+          padding: EdgeInsetsGeometry.only(
+            top: 5,
+            bottom: 5,
+            left: 20,
+            right: 20,
+          ),
+          child: Text(
+            text,
+            style: TextStyle(fontSize: 30, color: Colors.white),
+          ),
+        ),
+      ),
+    ],
+  );
 }

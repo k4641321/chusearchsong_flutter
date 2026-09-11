@@ -508,12 +508,21 @@ Future<void> saveLatestVersion() async {
 
 Future<String> requestLatestVersion() async {
   final response = await get(
-    Uri.parse('https://www.diving-fish.com/api/chunithmprober/latest_version'),
+    Uri.parse('https://chusearchsong.devintom.top/api/latest_version'),
   );
   if (response.statusCode != 200) {
-    throw Exception('请求失败，状态码：${response.statusCode}');
+    final response1 = await get(
+      Uri.parse(
+        'https://www.diving-fish.com/api/chunithmprober/latest_version',
+      ),
+    );
+    if (response1.statusCode != 200) {
+      throw Exception('请求失败，状态码：${response.statusCode}');
+    }
+    return response1.body;
+  } else {
+    return response.body;
   }
-  return response.body;
 }
 
 Future<String> requestRankingList({required int id, required int diff}) async {

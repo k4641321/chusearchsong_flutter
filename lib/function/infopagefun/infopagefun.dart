@@ -128,3 +128,21 @@ Future<void> lanuchifdian({required BuildContext context}) async {
     ).showSnackBar(SnackBar(content: Text('无法打开链接')));
   }
 }
+
+Future<void> lanucharbitrary({
+  required BuildContext context,
+  required String url,
+}) async {
+  final githuburl = Uri.parse(url);
+  try {
+    if (!await launchUrl(githuburl)) {
+      if (!context.mounted) return;
+      throw Exception('Could not launch $githuburl');
+    }
+  } catch (e) {
+    if (!context.mounted) return;
+    ScaffoldMessenger.of(
+      context,
+    ).showSnackBar(SnackBar(content: Text('无法打开链接')));
+  }
+}

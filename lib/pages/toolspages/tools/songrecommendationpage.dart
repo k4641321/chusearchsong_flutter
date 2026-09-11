@@ -1,3 +1,4 @@
+import 'package:chusearchsong_flutter/function/fun.dart';
 import 'package:flutter/material.dart';
 import '../../../function/toolsfun/songrecommendationpagefun.dart';
 import '../../../function/list.dart';
@@ -23,6 +24,7 @@ class _SongRecommendationPageState extends State<SongRecommendationPage>
   int? selectedSpecialFilter = 0;
   bool isMinRatingChanged = false;
   bool _ready = false;
+  bool recommendedFixedValueDifference = false;
 
   List<String> selectedGenre = ['-1'];
   List<Widget> genreWidgetList = [];
@@ -38,6 +40,8 @@ class _SongRecommendationPageState extends State<SongRecommendationPage>
   List<Widget> searchResults = [];
   Map<String, dynamic> songsData = {};
   Map<String, dynamic> aliasData = {};
+  Map<String, dynamic> config = {};
+  List playhistory = [];
 
   final TextEditingController _searchController = TextEditingController();
   final TextEditingController _bpmup = TextEditingController();
@@ -138,6 +142,7 @@ class _SongRecommendationPageState extends State<SongRecommendationPage>
       Map<String, dynamic> resultsMap = await filter(
         songsData,
         aliasData,
+        playhistory,
         searchTitle,
         selectedGenre,
         selectedVersion,
@@ -150,6 +155,7 @@ class _SongRecommendationPageState extends State<SongRecommendationPage>
         null,
         0,
         selectedOnlySearch,
+        -1,
       );
       return resultsMap['songs'];
     } catch (e, strack) {
@@ -192,6 +198,9 @@ class _SongRecommendationPageState extends State<SongRecommendationPage>
             minRating: _minRatingController.text,
             context: context,
             expectedScore: _preScoreController.text,
+            songsdata: songsData,
+            config: config,
+            // recommendedFixedValueDifference: recommendedFixedValueDifference,
           );
         } else {
           // log('新歌');
@@ -202,6 +211,9 @@ class _SongRecommendationPageState extends State<SongRecommendationPage>
             minRating: _minRatingController.text,
             context: context,
             expectedScore: _preScoreController.text,
+            songsdata: songsData,
+            config: config,
+            // recommendedFixedValueDifference: recommendedFixedValueDifference,
           );
         }
       }
@@ -227,6 +239,8 @@ class _SongRecommendationPageState extends State<SongRecommendationPage>
     try {
       songsData = await loadSongs();
       aliasData = await loadAlias();
+      playhistory = await loadPlayHistory();
+      config = await loadConfig();
       buildGenreWidget();
       buildVersionWidget();
       double? result = await initminRating(isNew: isNew);
@@ -293,6 +307,35 @@ class _SongRecommendationPageState extends State<SongRecommendationPage>
       appBar: AppBar(
         title: const Text('吃分推荐'),
         actions: [
+          IconButton(
+            onPressed: () async {
+              try {
+                Map<String, dynamic> b50 = await loadb50ScoreData();
+                List result = calculateRecommendedFixedValueDifference(
+                  b50,
+                  songsData,
+                );
+                if (!context.mounted) return;
+                setState(() {
+                  _difficultydown.value = TextEditingValue(
+                    text: result[0].toString(),
+                  );
+                  _difficultyup.value = TextEditingValue(
+                    text: result[1].toString(),
+                  );
+                });
+                ScaffoldMessenger.of(
+                  context,
+                ).showSnackBar(SnackBar(content: Text('已自动填充定数差值并计算')));
+              } catch (e, strack) {
+                log('$e\n$strack', name: 'songrecommendationpage.dart');
+                ScaffoldMessenger.of(
+                  context,
+                ).showSnackBar(SnackBar(content: Text('自动填充失败\n$e\n$strack')));
+              }
+            },
+            icon: Icon(Icons.difference),
+          ),
           IconButton(
             onPressed: () {
               if (_showfilter == false) {
@@ -513,13 +556,99 @@ class _SongRecommendationPageState extends State<SongRecommendationPage>
                                                     },
                                                   ),
                                                 ),
-                                                Padding(
-                                                  padding:
-                                                      EdgeInsetsGeometry.only(
-                                                        left: 10,
-                                                        right: 10,
+                                                InkWell(
+                                                  onTap: () {
+                                                    final TextEditingController
+                                                    down =
+                                                        TextEditingController();
+                                                    final TextEditingController
+                                                    up =
+                                                        TextEditingController();
+                                                    showDialog(
+                                                      context: context,
+                                                      builder: (context) => AlertDialog(
+                                                        title: Text('输入定数'),
+                                                        content: Row(
+                                                          children: [
+                                                            Expanded(
+                                                              child: TextField(
+                                                                decoration:
+                                                                    InputDecoration(
+                                                                      hintText:
+                                                                          '难度下限',
+                                                                    ),
+                                                                controller:
+                                                                    down,
+                                                              ),
+                                                            ),
+                                                            Text('~'),
+                                                            Expanded(
+                                                              child: TextField(
+                                                                decoration:
+                                                                    InputDecoration(
+                                                                      hintText:
+                                                                          '难度上限',
+                                                                    ),
+                                                                controller: up,
+                                                              ),
+                                                            ),
+                                                          ],
+                                                        ),
+                                                        actions: [
+                                                          TextButton(
+                                                            onPressed: () {
+                                                              Navigator.of(
+                                                                context,
+                                                              ).pop();
+                                                            },
+                                                            child: Text('取消'),
+                                                          ),
+                                                          TextButton(
+                                                            onPressed: () {
+                                                              setState(() {
+                                                                _difficultydown
+                                                                        .value =
+                                                                    down.value;
+                                                                _difficultyup
+                                                                        .value =
+                                                                    up.value;
+                                                              });
+                                                              Navigator.of(
+                                                                context,
+                                                              ).pop();
+                                                            },
+                                                            child: Text('确定'),
+                                                          ),
+                                                        ],
                                                       ),
-                                                  child: Text('~'),
+                                                    );
+                                                  },
+                                                  child: Padding(
+                                                    padding:
+                                                        EdgeInsetsGeometry.only(
+                                                          left: 10,
+                                                          right: 10,
+                                                        ),
+                                                    child: Padding(
+                                                      padding:
+                                                          EdgeInsetsGeometry.only(
+                                                            left: 10,
+                                                            right: 10,
+                                                            // top: 10,
+                                                          ),
+                                                      child: SizedBox(
+                                                        height: 50,
+                                                        width: 20,
+                                                        child: Center(
+                                                          child: Text(
+                                                            '~',
+                                                            textAlign: TextAlign
+                                                                .center,
+                                                          ),
+                                                        ),
+                                                      ),
+                                                    ),
+                                                  ),
                                                 ),
                                                 Expanded(
                                                   child: buildDifficultyUpDropdownMenu(

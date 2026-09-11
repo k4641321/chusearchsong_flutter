@@ -149,6 +149,7 @@ Future<List<Widget>> search({
 Future<Map<String, dynamic>> filter(
   Map<String, dynamic> songsData,
   Map<String, dynamic> aliasData,
+  List playhistory,
   String title,
   List genre,
   List version,
@@ -161,24 +162,10 @@ Future<Map<String, dynamic>> filter(
   int? count,
   int? specialfilter,
   int? onlysearch,
+  int? difficultyIndex,
 ) async {
-  // 加载曲目数据
-  final dataPath = await getApplicationSupportDirectory();
-
-  //加载游玩记录
-  List playhistory = [];
-  if (File('${dataPath.path}/res/allscore.json').existsSync()) {
-    String playhistorystr = await File(
-      '${dataPath.path}/res/allscore.json',
-    ).readAsString();
-    Map<String, dynamic> playhistoryjson = json.decode(playhistorystr);
-    playhistory = playhistoryjson['data'];
-  } else {
-    log('无游玩记录文件');
-  }
-
   log(
-    '$title $genre $version $difficultydown $difficultyup $ifplay $bpmup $bpmdown $specialfilter $onlysearch',
+    '$title $genre $version $difficultydown $difficultyup $ifplay $bpmup $bpmdown $isSearch $count $specialfilter $onlysearch $difficultyIndex',
   );
 
   //信息展示
@@ -195,7 +182,8 @@ Future<Map<String, dynamic>> filter(
         ifplay == '-1' &&
         bpmup == null &&
         bpmdown == null &&
-        isSearch == true) {
+        isSearch == true &&
+        difficultyIndex == -1) {
       log('未选择条件');
       return {};
     }
@@ -287,6 +275,7 @@ Future<Map<String, dynamic>> filter(
   }
 
   if (specialfilter == 1) {
+    final dataPath = await getApplicationSupportDirectory();
     List songData = json.decode(
       File('${dataPath.path}/res/zxzrsongs.json').readAsStringSync(),
     );
@@ -401,38 +390,40 @@ Future<Map<String, dynamic>> filter(
   if (ifplay == '-1') {
     log('跳过游玩记录筛选');
   } else if (ifplay == '1') {
-    //已游玩
-    log('已游玩');
-    List<int> songresult5 = [];
-    List playhistoryid = [];
-    for (var i in playhistory) {
-      if (!playhistoryid.contains(i['id'])) {
-        playhistoryid.add(i['id']);
+    if (playhistory.isNotEmpty) {
+      //已游玩
+      log('已游玩');
+      List<int> songresult5 = [];
+      List playhistoryid = [];
+      for (var i in playhistory) {
+        if (!playhistoryid.contains(i['id'])) {
+          playhistoryid.add(i['id']);
+        }
       }
-    }
 
-    for (var i in songresult) {
-      if (playhistoryid.contains(i)) {
-        songresult5.add(i);
+      for (var i in songresult) {
+        if (playhistoryid.contains(i)) {
+          songresult5.add(i);
+        }
       }
-    }
-    songresult = songresult5.toSet();
-  } else if (ifplay == '0') {
-    //未游玩
-    log('未游玩');
-    List<int> songresult5 = [];
-    List playhistoryid = [];
-    for (var i in playhistory) {
-      if (!playhistoryid.contains(i['id'])) {
-        playhistoryid.add(i['id']);
+      songresult = songresult5.toSet();
+    } else if (ifplay == '0') {
+      //未游玩
+      log('未游玩');
+      List<int> songresult5 = [];
+      List playhistoryid = [];
+      for (var i in playhistory) {
+        if (!playhistoryid.contains(i['id'])) {
+          playhistoryid.add(i['id']);
+        }
       }
-    }
-    for (var i in songresult) {
-      if (!playhistoryid.contains(i)) {
-        songresult5.add(i);
+      for (var i in songresult) {
+        if (!playhistoryid.contains(i)) {
+          songresult5.add(i);
+        }
       }
+      songresult = songresult5.toSet();
     }
-    songresult = songresult5.toSet();
   }
 
   List songresultMap = [];
@@ -484,7 +475,9 @@ Future<Map<String, dynamic>> filter(
   //筛选难度
   if (double.tryParse(difficultydown) != null &&
       double.tryParse(difficultyup) != null) {
-    if (difficultydown == '-1' && difficultyup == '-1') {
+    if (difficultydown == '-1' &&
+        difficultyup == '-1' &&
+        difficultyIndex == -1) {
       log('跳过难度');
     } else {
       if (difficultyup == '-1') {
@@ -493,6 +486,9 @@ Future<Map<String, dynamic>> filter(
       List songresult4 = [];
       for (var i in songresultMap) {
         for (var j in i['difficulties']) {
+          if (difficultyIndex != -1 && j['difficulty'] != difficultyIndex) {
+            continue;
+          }
           if (double.parse(difficultydown) <= j['level_value'] &&
               j['level_value'] <= double.parse(difficultyup)) {
             songresult4.add(i);
@@ -504,6 +500,7 @@ Future<Map<String, dynamic>> filter(
     }
   }
 
+  //随机筛选
   if (isSearch == false) {
     List idlist = [];
     for (var i in songresultMap) {

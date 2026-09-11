@@ -20,11 +20,14 @@ class _SearchPageState extends State<SearchPage> {
   String? selectedifPlay = '-1';
   int? selectedSpecialFilter = 0;
   int? selectedOnlySearch = 0;
+  int? selectedDifficultyIndex = -1;
   int? bpmup;
   int? bpmdown;
   List<Widget> searchResults = [];
   Map<String, dynamic> songsData = {};
   Map<String, dynamic> aliasData = {};
+  List playhistory = [];
+
   // Future result;
   final TextEditingController _searchController = TextEditingController();
   final TextEditingController _bpmup = TextEditingController();
@@ -65,6 +68,7 @@ class _SearchPageState extends State<SearchPage> {
       Map<String, dynamic> resultsMap = await filter(
         songsData,
         aliasData,
+        playhistory,
         searchTitle,
         selectedGenre,
         selectedVersion,
@@ -77,6 +81,7 @@ class _SearchPageState extends State<SearchPage> {
         null,
         selectedSpecialFilter,
         selectedOnlySearch,
+        selectedDifficultyIndex,
       );
       if (!mounted) return;
       List<Widget> results = await search(
@@ -172,6 +177,7 @@ class _SearchPageState extends State<SearchPage> {
     try {
       songsData = await loadSongs();
       aliasData = await loadAlias();
+      playhistory = await loadPlayHistory();
       buildGenreWidget();
       buildVersionWidget();
     } catch (e, strack) {
@@ -413,12 +419,84 @@ class _SearchPageState extends State<SearchPage> {
                                                 },
                                               ),
                                         ),
-                                        Padding(
-                                          padding: EdgeInsetsGeometry.only(
-                                            left: 10,
-                                            right: 10,
+
+                                        InkWell(
+                                          onTap: () {
+                                            final TextEditingController down =
+                                                TextEditingController();
+                                            final TextEditingController up =
+                                                TextEditingController();
+                                            showDialog(
+                                              context: context,
+                                              builder: (context) => AlertDialog(
+                                                title: Text('输入定数'),
+                                                content: Row(
+                                                  children: [
+                                                    Expanded(
+                                                      child: TextField(
+                                                        decoration:
+                                                            InputDecoration(
+                                                              hintText: '难度下限',
+                                                            ),
+                                                        controller: down,
+                                                      ),
+                                                    ),
+                                                    Text('~'),
+                                                    Expanded(
+                                                      child: TextField(
+                                                        decoration:
+                                                            InputDecoration(
+                                                              hintText: '难度上限',
+                                                            ),
+                                                        controller: up,
+                                                      ),
+                                                    ),
+                                                  ],
+                                                ),
+                                                actions: [
+                                                  TextButton(
+                                                    onPressed: () {
+                                                      Navigator.of(
+                                                        context,
+                                                      ).pop();
+                                                    },
+                                                    child: Text('取消'),
+                                                  ),
+                                                  TextButton(
+                                                    onPressed: () {
+                                                      setState(() {
+                                                        _difficultydown.value =
+                                                            down.value;
+                                                        _difficultyup.value =
+                                                            up.value;
+                                                      });
+                                                      Navigator.of(
+                                                        context,
+                                                      ).pop();
+                                                    },
+                                                    child: Text('确定'),
+                                                  ),
+                                                ],
+                                              ),
+                                            );
+                                          },
+                                          child: Padding(
+                                            padding: EdgeInsetsGeometry.only(
+                                              left: 10,
+                                              right: 10,
+                                              // top: 10,
+                                            ),
+                                            child: SizedBox(
+                                              height: 50,
+                                              width: 20,
+                                              child: Center(
+                                                child: Text(
+                                                  '~',
+                                                  textAlign: TextAlign.center,
+                                                ),
+                                              ),
+                                            ),
                                           ),
-                                          child: Text('~'),
                                         ),
                                         Expanded(
                                           child: buildDifficultyUpDropdownMenu(
@@ -637,6 +715,32 @@ class _SearchPageState extends State<SearchPage> {
                                               }
                                             },
                                           ),
+                                        ),
+                                        Expanded(
+                                          child:
+                                              buildDifficultyIndexDropdownMenu(
+                                                initialSelection:
+                                                    selectedDifficultyIndex,
+                                                onSelected: (int? value) {
+                                                  setState(() {
+                                                    selectedDifficultyIndex =
+                                                        value;
+                                                  });
+                                                  try {
+                                                    _performSearch();
+                                                  } catch (e) {
+                                                    ScaffoldMessenger.of(
+                                                      context,
+                                                    ).showSnackBar(
+                                                      SnackBar(
+                                                        content: Text(
+                                                          '搜索失败，可能是数据丢失',
+                                                        ),
+                                                      ),
+                                                    );
+                                                  }
+                                                },
+                                              ),
                                         ),
                                       ],
                                     )

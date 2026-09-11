@@ -105,21 +105,19 @@ Future<List<List<Widget>>> songRecommendation({
   required String minRating,
   required BuildContext context,
   required String expectedScore,
+  required Map<String, dynamic> songsdata,
+  required Map<String, dynamic> config,
+  // required bool recommendedFixedValueDifference,
 }) async {
   List<Widget> songresultWidget = [];
   List<List<Widget>> songresultWidgetList = [];
   try {
-    final path = await getApplicationSupportDirectory();
     //加载歌曲列表
-    Map<String, dynamic> songsdata = jsonDecode(
-      await File("${path.path}/res/songs.json").readAsString(),
-    );
+    // Map<String, dynamic> songsdata = await loadSongs();
     // log(songsdata['songs'].length.toString());
 
     //获取旧版本号
-    Map<String, dynamic> config = jsonDecode(
-      await File("${path.path}/config.json").readAsString(),
-    );
+    // Map<String, dynamic> config = await loadConfig();
     List newversions = config['latest_version'];
     List<int> version = [];
     if (isNew == true) {
@@ -350,4 +348,45 @@ Future<List<List<Widget>>> songRecommendation({
   }
 
   return songresultWidgetList;
+}
+
+List calculateRecommendedFixedValueDifference(
+  Map<String, dynamic> b50,
+  Map<String, dynamic> songsData,
+) {
+  double maxrating = 0;
+  for (var i in b50['bests']) {
+    for (var k in songsData['songs']) {
+      if (i['id'] == k['id']) {
+        for (var j in k['difficulties']) {
+          if (i['level_index'] == j['difficulty']) {
+            maxrating =
+                maxrating +
+                calculatorRating(
+                  scorestr: '1010000',
+                  diffstr: j['level_value'].toString(),
+                );
+          }
+        }
+      }
+    }
+  }
+  for (var i in b50['new_bests']) {
+    for (var k in songsData['songs']) {
+      if (i['id'] == k['id']) {
+        for (var j in k['difficulties']) {
+          if (i['level_index'] == j['difficulty']) {
+            maxrating =
+                maxrating +
+                calculatorRating(
+                  scorestr: '1010000',
+                  diffstr: j['level_value'].toString(),
+                );
+          }
+        }
+      }
+    }
+  }
+  double avgdiff = maxrating / 50 - 2.15;
+  return [avgdiff.toStringAsFixed(2), (avgdiff + 0.5).toStringAsFixed(2)];
 }

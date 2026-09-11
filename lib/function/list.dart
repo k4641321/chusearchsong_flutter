@@ -15,12 +15,12 @@ String fix2dp(double value) {
   return '$sign${abs ~/ 100}.${(abs % 100).toString().padLeft(2, '0')}';
 }
 
-//加载所有成绩
+//加载B50成绩
 Future<Map<String, dynamic>> loadb50ScoreData() async {
   final directory = await getApplicationSupportDirectory();
   final file = File('${directory.path}/res/b50.json');
   final json = jsonDecode(await file.readAsString());
-  return json;
+  return json['data'];
 }
 
 //加载所有成绩
@@ -39,12 +39,20 @@ Future<Map<String, dynamic>> loadPlayerData() async {
   return json;
 }
 
-//加载歌曲数据
+//加载最新最热歌曲数据
 Future<List> loadzxzrSongs() async {
   final directory = await getApplicationSupportDirectory();
   final file = File('${directory.path}/res/zxzrsongs.json');
   final json = jsonDecode(await file.readAsString());
   return json;
+}
+
+//加载歌曲数据
+Future<List> loadTrophies() async {
+  final directory = await getApplicationSupportDirectory();
+  final file = File('${directory.path}/res/trophies.json');
+  final json = jsonDecode(await file.readAsString());
+  return json['trophies'];
 }
 
 //加载歌曲数据
@@ -61,6 +69,22 @@ Future<Map<String, dynamic>> loadAlias() async {
   final file = File('${directory.path}/res/alias.json');
   final json = jsonDecode(await file.readAsString());
   return json;
+}
+
+//加载游玩记录
+Future<List> loadPlayHistory() async {
+  final dataPath = await getApplicationSupportDirectory();
+  List playhistory = [];
+  if (File('${dataPath.path}/res/allscore.json').existsSync()) {
+    String playhistorystr = await File(
+      '${dataPath.path}/res/allscore.json',
+    ).readAsString();
+    Map<String, dynamic> playhistoryjson = json.decode(playhistorystr);
+    playhistory = playhistoryjson['data'];
+  } else {
+    log('无游玩记录文件');
+  }
+  return playhistory;
 }
 
 //版本Wrap列表
@@ -456,6 +480,8 @@ Future<Widget> buildVersionDropdownMenu({
         value: '22500',
       ),
       DropdownMenuEntry<String>(label: 'CHUNITHM VERSE', value: '23000'),
+      DropdownMenuEntry<String>(label: 'CHUNITHM X-VERSE', value: '24000'),
+      DropdownMenuEntry<String>(label: 'CHUNITHM X-VERSE-X', value: '24500'),
     ];
   }
   return DropdownMenu<String>(
@@ -620,6 +646,29 @@ Widget buildOnlySearchDropdownMenu({
       DropdownMenuEntry<int>(label: '仅搜Id', value: 3),
       DropdownMenuEntry<int>(label: '仅搜别名', value: 4),
       DropdownMenuEntry<int>(label: '仅搜谱师', value: 5),
+    ],
+  );
+}
+
+//选择搜索
+Widget buildDifficultyIndexDropdownMenu({
+  int? initialSelection,
+  ValueChanged<int?>? onSelected,
+}) {
+  return DropdownMenu<int>(
+    menuHeight: 300.0,
+    width: double.infinity,
+    initialSelection: initialSelection ?? -1,
+    selectOnly: true,
+    onSelected: onSelected,
+    dropdownMenuEntries: const [
+      DropdownMenuEntry<int>(label: '搜索全部难度', value: -1),
+      DropdownMenuEntry<int>(label: '仅BAS', value: 0),
+      DropdownMenuEntry<int>(label: '仅ADV', value: 1),
+      DropdownMenuEntry<int>(label: '仅EXP', value: 2),
+      DropdownMenuEntry<int>(label: '仅MAS', value: 3),
+      DropdownMenuEntry<int>(label: '仅ULT', value: 4),
+      DropdownMenuEntry<int>(label: '仅We', value: 5),
     ],
   );
 }
