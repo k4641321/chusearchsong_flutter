@@ -309,44 +309,7 @@ class Dataupdate {
           !File('${path.path}/segachara.json').existsSync()) {
         onProgress('下载必要资源');
         // showtext.value = '下载必要资源';
-        if (!context.mounted) return;
-        showDialog(
-          barrierDismissible: false,
-          context: context,
-          builder: (context) {
-            return AlertDialog(
-              title: Text('提示'),
-              content: Text.rich(
-                TextSpan(
-                  text: '给 我 去 读 帮 助 文 档！\n',
-                  children: [
-                    TextSpan(
-                      text: '初次启动，将下载数据，并创建必要文件\n推荐前往关于界面阅读使用文档了解隐藏操作',
-                      style: TextStyle(
-                        fontSize: 15,
-                        fontWeight: FontWeight.normal,
-                      ),
-                    ),
-                  ],
-                  style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-                ),
-              ),
-              actions: [
-                TextButton(
-                  onPressed: () {
-                    lanucharbitrary(
-                      context: context,
-                      url:
-                          'https://blog.devintom.top/chusearchsong_flutter/helper/',
-                    );
-                    Navigator.of(context).pop();
-                  },
-                  child: Text('确定'),
-                ),
-              ],
-            );
-          },
-        );
+
         // 下载歌曲数据
         // showtext.value = '下载必要数据';
         await Future.wait([
@@ -374,6 +337,44 @@ class Dataupdate {
       // if (context.mounted) {
       //   Navigator.of(context).pop();
       // }
+      if (!context.mounted) return;
+      await showDialog(
+        barrierDismissible: false,
+        context: context,
+        builder: (context) {
+          return AlertDialog(
+            title: Text('提示'),
+            content: Text.rich(
+              TextSpan(
+                text: '给 我 去 读 帮 助 文 档！\n',
+                children: [
+                  TextSpan(
+                    text: '初次启动，将下载数据，并创建必要文件\n推荐前往关于界面阅读使用文档了解隐藏操作',
+                    style: TextStyle(
+                      fontSize: 15,
+                      fontWeight: FontWeight.normal,
+                    ),
+                  ),
+                ],
+                style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+              ),
+            ),
+            actions: [
+              TextButton(
+                onPressed: () {
+                  lanucharbitrary(
+                    context: context,
+                    url:
+                        'https://blog.devintom.top/chusearchsong_flutter/helper/',
+                  );
+                  Navigator.of(context).pop();
+                },
+                child: Text('确定'),
+              ),
+            ],
+          );
+        },
+      );
     } catch (e, strack) {
       if (!context.mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(
