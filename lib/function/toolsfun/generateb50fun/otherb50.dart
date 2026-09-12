@@ -15,7 +15,7 @@ Future<Widget> generateother50Body({
   List resultScoreList = [];
   if (type == '寸50') {
     for (var i in allscoredata) {
-      if (i['score'] < 1007499 && i['score'] >= 1007000) {
+      if (i['score'] < 1007500 && i['score'] >= 1007000) {
         resultScoreList.add(i);
       }
     }
