@@ -728,10 +728,10 @@ Future<Widget> generateb50Body({
                         ),
                       ),
                       Text(
-                        'Rating:   ${playerdata['rating']}',
+                        'Rating:   ${playerdata['rating'].toDouble().toStringAsFixed(2)}',
                         style: TextStyle(
                           fontSize: 25,
-                          color: ratingColor(rating: playerdata['rating']),
+                          color: ratingColor(rating: playerdata['rating'].toDouble()),
                           shadows: [Shadow(color: Colors.black, blurRadius: 3)],
                         ),
                       ),
@@ -788,7 +788,7 @@ Widget buildTypeDropdownMenu({required ValueChanged onSelected}) {
     DropdownMenuEntry(value: '带S10的理论50', label: '带S10的理论50'),
     DropdownMenuEntry(value: '个人理论50', label: '个人理论50'),
     DropdownMenuEntry(value: '理论50', label: '理论50'),
-    DropdownMenuEntry(value: 'N50', label: 'N50'),
+    DropdownMenuEntry(value: 'BN', label: 'BN'),
     DropdownMenuEntry(value: '世界末日50', label: '世界末日50'),
   ];
   return DropdownMenu(

@@ -155,7 +155,7 @@ class _GenerateB50PageState extends State<GenerateB50Page> {
                           notedesignerorartist: artist,
                         ),
                       );
-                    } else if (selectedType == 'N50') {
+                    } else if (selectedType == 'BN') {
                       final controller = TextEditingController();
                       showDialog(
                         context: context,

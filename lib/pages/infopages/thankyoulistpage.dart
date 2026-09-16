@@ -92,6 +92,8 @@ class ThankYouListPage extends StatelessWidget {
             name: 'NANY',
             description: '发现单曲Rating计算器 苹果端无法输入小数点的问题',
           ),
+          _buildThanksItem(context, name: 'Re5mant5', description: '发现了1007499不是鸟寸的问题'),
+          _buildThanksItem(context, name: '空白AllBlank', description: '发现了整数Rating无法生成B50的问题'),
 
           const Divider(),
           // 尾部

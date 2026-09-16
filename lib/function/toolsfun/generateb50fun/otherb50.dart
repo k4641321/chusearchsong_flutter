@@ -76,7 +76,7 @@ Future<Widget> generateother50Body({
   if (type != '世界末日50') {
     resultScoreList.sort((a, b) => b['rating'].compareTo(a['rating']));
   }
-  if (type == 'N50' && n50 != null) {
+  if (type == 'BN' && n50 != null) {
     n50 = n50.clamp(0, resultScoreList.length);
     resultScoreList = resultScoreList.sublist(0, n50);
   } else {
@@ -142,10 +142,10 @@ Future<Widget> generateother50Body({
                         ),
                       ),
                       Text(
-                        'Rating:   ${playerdata['rating']}',
+                        'Rating:   ${playerdata['rating'].toDouble().toStringAsFixed(2)}',
                         style: TextStyle(
                           fontSize: 25,
-                          color: ratingColor(rating: playerdata['rating']),
+                          color: ratingColor(rating: playerdata['rating'].toDouble()),
                           shadows: [Shadow(color: Colors.black, blurRadius: 3)],
                         ),
                       ),
@@ -175,7 +175,7 @@ Future<Widget> generateother50Body({
             right: 20,
           ),
           child: Text(
-            'B${type != 'N50' ? 50 : n50}',
+            'B${type != 'BN' ? 50 : n50}',
             style: TextStyle(fontSize: 30, color: Colors.white),
           ),
         ),
@@ -188,7 +188,7 @@ Future<Widget> generateother50Body({
     mainAxisAlignment: MainAxisAlignment.center,
     children: [
       Text(
-        '此 $type B${type != 'N50' ? 50 : n50}由chusearchsong（中二查歌）生成，生成时间：${DateTime.now()}',
+        '此 $type B${type != 'BN' ? 50 : n50}由chusearchsong（中二查歌）生成，生成时间：${DateTime.now()}',
         style: TextStyle(fontWeight: FontWeight.bold, color: Colors.black),
       ),
     ],

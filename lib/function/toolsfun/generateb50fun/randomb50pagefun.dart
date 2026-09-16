@@ -80,11 +80,11 @@ Future<Widget> randomb50Body({
                         ),
                       ),
                       Text(
-                        'Rating:   ${playerdata['rating']}',
+                        'Rating:   ${playerdata['rating'].toDouble().toStringAsFixed(2)}',
 
                         style: TextStyle(
                           fontSize: 25,
-                          color: ratingColor(rating: playerdata['rating']),
+                          color: ratingColor(rating: playerdata['rating'].toDouble()),
                           shadows: [Shadow(color: Colors.black, blurRadius: 3)],
                         ),
                       ),

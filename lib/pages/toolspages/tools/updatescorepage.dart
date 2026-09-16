@@ -15,6 +15,8 @@ class _UpdatescorepageState extends State<Updatescorepage> {
       appBar: AppBar(title: Text('更新成绩')),
       body: Column(
         children: [
+          Text('选择更新成绩的方式'),
+          const Divider(),
           Row(
             children: [
               Expanded(
@@ -39,7 +41,7 @@ class _UpdatescorepageState extends State<Updatescorepage> {
               ),
             ],
           ),
-          Text('后面可能会更新OCR识别更新成绩，界面先这样'),
+          Text('后面可能,会更新OCR识别更新成绩，界面先这样'),
         ],
       ),
     );
