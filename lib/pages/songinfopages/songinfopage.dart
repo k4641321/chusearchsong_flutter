@@ -54,6 +54,10 @@ class _SongInfoPageState extends State<SongInfoPage> {
                 )) {
                   favoriteSongs[i].add(widget.songbasedata['id']);
                 } else {
+                  Navigator.pop(context);
+                  ScaffoldMessenger.of(
+                  context,
+                ).showSnackBar(SnackBar(content: Text('已添加过该曲目')));
                   return;
                 }
                 saveFavoriteSong(favoriteSongs);
@@ -544,9 +548,11 @@ class _SongInfoPageState extends State<SongInfoPage> {
                           );
                         },
                       );
-                      final Uri url = Uri.parse(
-                        'bilibili://search?keyword=${widget.songbasedata['title']} $selectdiff 谱面确认',
-                      );
+                      final keyword = '${widget.songbasedata['title'] ?? ''} $selectdiff 谱面确认';
+
+final Uri url = Uri.parse('bilibili://search').replace(
+  queryParameters: {'keyword': keyword},
+);
                       if (await canLaunchUrl(url)) {
                         await launchUrl(url);
                       } else if (!await canLaunchUrl(url)) {
