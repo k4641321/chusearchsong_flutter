@@ -13,6 +13,8 @@ Future<List<Widget>> searchCollectibles({
   required BuildContext context,
   required String searchtype,
   required bool isSonginfo,
+  String? color,
+  bool? onlysearchtrophty
 }) async {
   List<Widget> collectibles = [];
   final directory = await getApplicationSupportDirectory();
@@ -155,7 +157,7 @@ Future<List<Widget>> searchCollectibles({
   if ((searchtype == 'icon' ||
           searchtype == 'all' ||
           searchtype == 'required') &&
-      isSonginfo == false) {
+      isSonginfo == false&&onlysearchtrophty==false) {
     String iconJsonStr = await File('${path.path}/icons.json').readAsString();
     Map<String, dynamic> iconJson = json.decode(iconJsonStr);
     for (var i in iconJson['icons']) {
@@ -183,7 +185,7 @@ Future<List<Widget>> searchCollectibles({
   if ((searchtype == 'plate' ||
           searchtype == 'all' ||
           searchtype == 'required') &&
-      isSonginfo == false) {
+      isSonginfo == false&&onlysearchtrophty==false) {
     String plateJsonStr = await File('${path.path}/plates.json').readAsString();
     Map<String, dynamic> plateJson = json.decode(plateJsonStr);
     for (var i in plateJson['plates']) {
@@ -217,9 +219,9 @@ Future<List<Widget>> searchCollectibles({
     ).readAsString();
     Map<String, dynamic> trophyJson = json.decode(trophyJsonStr);
     for (var i in trophyJson['trophies']) {
-      if ((i['name'].toLowerCase().contains(searchtext.toLowerCase()) ||
-          i['description'].toLowerCase().contains(searchtext.toLowerCase()) ||
-          i['color'].toString().contains(searchtext) ||
+      if (color !=null && i['color']==color){
+        if ((i['name'].toLowerCase().contains(searchtext.toLowerCase()) ||
+          i['description'].toLowerCase().contains(searchtext.toLowerCase())  ||
           i['id'].toString().contains(searchtext))) {
         if (searchtype == 'required' &&
             !(i as Map<String, dynamic>).containsKey('required')) {
@@ -227,6 +229,18 @@ Future<List<Widget>> searchCollectibles({
         }
         collectibles.add(returnWidget(data: i, type: '称号'));
       }
+      }else if (color == null || color =='all'){
+if ((i['name'].toLowerCase().contains(searchtext.toLowerCase()) ||
+          i['description'].toLowerCase().contains(searchtext.toLowerCase())  ||
+          i['id'].toString().contains(searchtext))) {
+        if (searchtype == 'required' &&
+            !(i as Map<String, dynamic>).containsKey('required')) {
+          continue;
+        }
+        collectibles.add(returnWidget(data: i, type: '称号'));
+      }
+      }
+      
     }
   } else if (searchtype == 'trophy' && isSonginfo == true) {
     String trophyJsonStr = await File(
@@ -245,7 +259,7 @@ Future<List<Widget>> searchCollectibles({
   if ((searchtype == 'character' ||
           searchtype == 'all' ||
           searchtype == 'required') &&
-      isSonginfo == false) {
+      isSonginfo == false&&onlysearchtrophty==false) {
     String characterJsonStr = await File(
       '${path.path}/characters.json',
     ).readAsString();

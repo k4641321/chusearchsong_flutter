@@ -55,8 +55,8 @@ class _SearchlobbynewpageState extends State<Searchlobbynewpage> {
         ),
       );
       final path = await getApplicationSupportDirectory();
-      if (!File('${path.path}/res/nearcadeshops.json').existsSync() ||
-          !File('${path.path}/res/nearcadegames.json').existsSync()) {
+      if (!File('${path.path}/res/nearcadeshops.json').existsSync() 
+          ) {
         setState(() {
           loadsText = '本地缓存缺失，正在下载，并解析';
         });
@@ -65,7 +65,7 @@ class _SearchlobbynewpageState extends State<Searchlobbynewpage> {
           decodeShopList,
           File('${path.path}/res/nearcadeshops.json').readAsStringSync(),
         );
-
+        log('$shopList');
         for (var i in shopList) {
           for (var j in i['games']) {
             gameList['${j['titleId']}'] = '${j['name']}';

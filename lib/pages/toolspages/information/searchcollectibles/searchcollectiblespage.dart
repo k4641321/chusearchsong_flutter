@@ -12,6 +12,8 @@ class _SearchCollectiblesState extends State<SearchCollectiblesPage> {
   final TextEditingController _controller = TextEditingController();
   List<Widget> result = [];
   String initialSelection = 'all';
+  String color = 'all';
+  bool onlysearchtrophty = false;
   final ScrollController _scrollController = ScrollController();
 
   @override
@@ -51,34 +53,7 @@ class _SearchCollectiblesState extends State<SearchCollectiblesPage> {
                     },
                   ),
                 ),
-                DropdownMenu(
-                  selectOnly: true,
-                  initialSelection: initialSelection,
-                  dropdownMenuEntries: [
-                    DropdownMenuEntry(value: 'all', label: '全部'),
-                    DropdownMenuEntry(value: 'character', label: '角色'),
-                    DropdownMenuEntry(value: 'plate', label: '名牌板'),
-                    DropdownMenuEntry(value: 'icon', label: '头像'),
-                    DropdownMenuEntry(value: 'trophy', label: '称号'),
-                    DropdownMenuEntry(value: 'required', label: '仅曲目需求'),
-                  ],
-                  onSelected: (value) async {
-                    List<Widget> result2 = [];
-                    setState(() {
-                      initialSelection = value ?? 'all';
-                    });
-                    result2 = await searchCollectibles(
-                      context: context,
-                      searchtext: _controller.text,
-                      searchtype: initialSelection,
-                      isSonginfo: false,
-                    );
-                    if (!mounted) return;
-                    setState(() {
-                      result = result2;
-                    });
-                  },
-                ),
+
                 IconButton(
                   onPressed: () async {
                     List<Widget> result2 = [];
@@ -88,6 +63,8 @@ class _SearchCollectiblesState extends State<SearchCollectiblesPage> {
                         searchtext: _controller.text,
                         searchtype: initialSelection,
                         isSonginfo: false,
+                        color: color,
+                        onlysearchtrophty: onlysearchtrophty,
                       );
                       if (!mounted) return;
                       setState(() {
@@ -101,6 +78,83 @@ class _SearchCollectiblesState extends State<SearchCollectiblesPage> {
                     }
                   },
                   icon: Icon(Icons.search),
+                ),
+              ],
+            ),
+            Row(
+              children: [
+                Expanded(
+                  child: DropdownMenu(
+                    selectOnly: true,
+                    initialSelection: initialSelection,
+                    width: double.infinity,
+                    dropdownMenuEntries: [
+                      DropdownMenuEntry(value: 'all', label: '全部'),
+                      DropdownMenuEntry(value: 'character', label: '角色'),
+                      DropdownMenuEntry(value: 'plate', label: '名牌板'),
+                      DropdownMenuEntry(value: 'icon', label: '头像'),
+                      DropdownMenuEntry(value: 'trophy', label: '称号'),
+                      DropdownMenuEntry(value: 'required', label: '仅曲目需求'),
+                    ],
+                    onSelected: (value) async {
+                      List<Widget> result2 = [];
+                      setState(() {
+                        initialSelection = value ?? 'all';
+                        if (value != 'all') {
+                          onlysearchtrophty = true;
+                        }
+                      });
+                      result2 = await searchCollectibles(
+                        context: context,
+                        searchtext: _controller.text,
+                        searchtype: initialSelection,
+                        isSonginfo: false,
+                        color: color,
+                        onlysearchtrophty: onlysearchtrophty,
+                      );
+                      if (!mounted) return;
+                      setState(() {
+                        result = result2;
+                      });
+                    },
+                  ),
+                ),
+                Expanded(
+                  child: DropdownMenu(
+                    selectOnly: true,
+                    initialSelection: color,
+                    width: double.infinity,
+                    dropdownMenuEntries: [
+                      DropdownMenuEntry(value: 'all', label: '全部颜色'),
+                      DropdownMenuEntry(value: 'normal', label: 'normal'),
+                      DropdownMenuEntry(value: 'silver', label: 'silver'),
+                      DropdownMenuEntry(value: 'gold', label: 'gold'),
+                      DropdownMenuEntry(value: 'platinum', label: 'platinum'),
+                      DropdownMenuEntry(value: 'rainbow', label: 'rainbow'),
+                      DropdownMenuEntry(value: 'image', label: 'image'),
+                    ],
+                    onSelected: (value) async {
+                      List<Widget> result2 = [];
+                      setState(() {
+                        color = value ?? 'all';
+                        if (value != 'all') {
+                          onlysearchtrophty = true;
+                        }
+                      });
+                      result2 = await searchCollectibles(
+                        context: context,
+                        searchtext: _controller.text,
+                        searchtype: initialSelection,
+                        isSonginfo: false,
+                        color: color,
+                        onlysearchtrophty: onlysearchtrophty,
+                      );
+                      if (!mounted) return;
+                      setState(() {
+                        result = result2;
+                      });
+                    },
+                  ),
                 ),
               ],
             ),

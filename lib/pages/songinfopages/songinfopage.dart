@@ -548,11 +548,14 @@ class _SongInfoPageState extends State<SongInfoPage> {
                           );
                         },
                       );
-                      final keyword = '${widget.songbasedata['title'] ?? ''} $selectdiff 谱面确认';
-
-final Uri url = Uri.parse('bilibili://search').replace(
-  queryParameters: {'keyword': keyword},
-);
+                      final Uri url = Uri(
+                        scheme: 'bilibili',
+                        host: 'search',
+                        queryParameters: {
+                          'keyword':
+                              '${widget.songbasedata['title']} $selectdiff 谱面确认',
+                        },
+                      );
                       if (await canLaunchUrl(url)) {
                         await launchUrl(url);
                       } else if (!await canLaunchUrl(url)) {

@@ -289,7 +289,9 @@ Future<void> saveNearcadeAllShop() async {
     List shopsList = [];
     final path = await getApplicationSupportDirectory();
     bool hasNext = true;
-
+    if (!File('${path.path}/res/nearcadeshops.json').existsSync()) {
+      File('${path.path}/res/nearcadeshops.json').createSync();
+    }
     while (hasNext) {
       final rawJson = await requestNearcadeAllShop(page: page); // 请求当前页
       final result = await jsonDecode(rawJson) as Map<String, dynamic>;
@@ -297,10 +299,22 @@ Future<void> saveNearcadeAllShop() async {
       if (result.containsKey('shops')) {
         shopsList.addAll(result['shops']);
       }
-      hasNext = result['hasNextPage'] == true;
+      hasNext = result['hasNextPage'];
       log('有下一页');
       page++;
     }
+    Map<String, dynamic> gameList = {};
+    for (var i in shopsList) {
+      for (var j in i['games']) {
+        gameList['${j['titleId']}'] = '${j['name']}';
+      }
+    }
+    if (!File('${path.path}/res/nearcadegames.json').existsSync()) {
+      File('${path.path}/res/nearcadegames.json').createSync();
+    }
+    File(
+      '${path.path}/res/nearcadegames.json',
+    ).writeAsStringSync(jsonEncode(gameList));
     await File(
       '${path.path}/res/nearcadeshops.json',
     ).writeAsString(jsonEncode(shopsList), encoding: utf8);
