@@ -1,7 +1,5 @@
 import 'dart:developer';
-
-import 'package:chusearchsong_flutter/function/fun.dart';
-import 'package:chusearchsong_flutter/function/list.dart';
+import 'package:chusearchsong_flutter/function/writeandreadfun.dart';
 import 'package:chusearchsong_flutter/pages/toolspages/information/linkedversepage/baseinfopage.dart';
 import 'package:chusearchsong_flutter/pages/toolspages/information/linkedversepage/gateinfopage.dart';
 import 'package:chusearchsong_flutter/pages/toolspages/information/linkedversepage/linklevelpage.dart';
@@ -21,8 +19,8 @@ class _LinkedversepageState extends State<Linkedversepage> {
 
   Future<void> init() async {
     try {
-      linkedverseData = await loadLinkedVerseData();
-      songsData = await loadSongs();
+      linkedverseData = await (await ReadData.create()).readLinkedVerseData();
+      songsData = await (await ReadData.create()).readSongsData();
       List<Widget> children = [];
       for (var i in linkedverseData['gate']) {
         if (!i['go_online']) continue;

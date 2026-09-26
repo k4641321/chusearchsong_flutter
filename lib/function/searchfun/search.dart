@@ -1,10 +1,8 @@
-import 'dart:convert';
 import 'dart:developer';
-import 'dart:io';
+import 'package:chusearchsong_flutter/function/commonfun.dart';
 import 'package:chusearchsong_flutter/function/toolsfun/generateb50fun/generateb50.dart';
+import 'package:chusearchsong_flutter/function/writeandreadfun.dart';
 import 'package:flutter/material.dart';
-import 'package:path_provider/path_provider.dart';
-import '../fun.dart';
 import 'dart:math' as math;
 //我操了，自己都快看力竭了，太石了，自己都要看不懂了
 
@@ -275,10 +273,7 @@ Future<Map<String, dynamic>> filter(
   }
 
   if (specialfilter == 1) {
-    final dataPath = await getApplicationSupportDirectory();
-    List songData = json.decode(
-      File('${dataPath.path}/res/zxzrsongs.json').readAsStringSync(),
-    );
+    List songData = await (await ReadData.create()).readzxzrSongsData();
     try {
       //多种音符组合筛选
       if (title.contains('|')) {

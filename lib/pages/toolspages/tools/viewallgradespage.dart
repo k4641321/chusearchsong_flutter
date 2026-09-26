@@ -1,11 +1,8 @@
-import 'dart:convert';
 import 'dart:developer';
-import 'dart:io';
-
 import 'package:chusearchsong_flutter/function/toolsfun/viewallgradespagefun.dart';
+import 'package:chusearchsong_flutter/function/writeandreadfun.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:path_provider/path_provider.dart';
 
 class Viewallgradespage extends StatefulWidget {
   const Viewallgradespage({super.key});
@@ -82,13 +79,8 @@ class _ViewallgradespageState extends State<Viewallgradespage> {
 
   Future<void> loadallscore() async {
     try {
-      final path = await getApplicationSupportDirectory();
-      allscore = jsonDecode(
-        File('${path.path}/res/allscore.json').readAsStringSync(),
-      )['data'];
-      songsdata = jsonDecode(
-        File('${path.path}/res/songs.json').readAsStringSync(),
-      );
+      allscore = await (await ReadData.create()).readPlayerAllScoreData();
+      songsdata = await (await ReadData.create()).readSongsData();
       init();
     } catch (e, strack) {
       log('$e\n$strack');

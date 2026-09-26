@@ -1,8 +1,9 @@
-﻿import 'package:chusearchsong_flutter/function/fun.dart';
+﻿import 'package:chusearchsong_flutter/function/commonfun.dart';
 import 'package:chusearchsong_flutter/function/toolsfun/generateb50fun/aj50fun.dart';
 import 'package:chusearchsong_flutter/function/toolsfun/generateb50fun/fc50fun.dart';
 import 'package:chusearchsong_flutter/function/toolsfun/generateb50fun/otherb50.dart';
 import 'package:chusearchsong_flutter/function/toolsfun/generateb50fun/randomb50pagefun.dart';
+import 'package:chusearchsong_flutter/function/writeandreadfun.dart';
 import 'package:flutter/material.dart';
 
 Future<Widget?> selectb50({
@@ -355,7 +356,7 @@ Future<Widget> generateb50Body({
       (a, b) => b['level_value']!.compareTo(a['level_value']!),
     );
   } else if (type == '理论50') {
-    Map<String, dynamic> config = await loadConfig();
+    Map<String, dynamic> config = await (await ReadData.create()).readConfig();
     List lasteversionname = config['latest_version'];
     List lasteversion = [];
     for (var i in songsData['versions']) {
@@ -731,7 +732,9 @@ Future<Widget> generateb50Body({
                         'Rating:   ${playerdata['rating'].toDouble().toStringAsFixed(2)}',
                         style: TextStyle(
                           fontSize: 25,
-                          color: ratingColor(rating: playerdata['rating'].toDouble()),
+                          color: ratingColor(
+                            rating: playerdata['rating'].toDouble(),
+                          ),
                           shadows: [Shadow(color: Colors.black, blurRadius: 3)],
                         ),
                       ),

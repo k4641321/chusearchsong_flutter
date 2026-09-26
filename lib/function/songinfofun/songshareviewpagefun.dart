@@ -1,11 +1,9 @@
 import 'dart:convert';
 import 'dart:developer';
-import 'dart:io';
-
 import 'package:chusearchsong_flutter/function/request.dart';
 import 'package:chusearchsong_flutter/function/toolsfun/generateb50fun/generateb50.dart';
+import 'package:chusearchsong_flutter/function/writeandreadfun.dart';
 import 'package:flutter/material.dart';
-import 'package:path_provider/path_provider.dart';
 
 Future<Widget> returnSongShareView({required int songid}) async {
   List<Widget> result = [];
@@ -51,10 +49,8 @@ Future<Widget> returnSongShareView({required int songid}) async {
 
   Future<String> returnVersionName({required int versionvalue}) async {
     String versiontitle = '获取失败';
-    final directory = await getApplicationSupportDirectory();
-    Map<String, dynamic> songdata = await jsonDecode(
-      File('${directory.path}/res/songs.json').readAsStringSync(),
-    );
+    Map<String, dynamic> songdata = await (await ReadData.create())
+        .readSongsData();
     for (var i in songdata['versions']) {
       if (i['version'] == versionvalue) {
         versiontitle = i['title'];

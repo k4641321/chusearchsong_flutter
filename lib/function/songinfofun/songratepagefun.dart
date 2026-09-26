@@ -1,8 +1,7 @@
 import 'dart:convert';
 import 'dart:developer';
+import 'package:chusearchsong_flutter/function/writeandreadfun.dart';
 import 'package:intl/intl.dart';
-
-import 'package:chusearchsong_flutter/function/list.dart';
 import 'package:chusearchsong_flutter/function/request.dart';
 import 'package:chusearchsong_flutter/function/toolsfun/generateb50fun/generateb50.dart';
 import 'package:chusearchsong_flutter/function/toolsfun/searchsongzxzrpagefun/songinfopagefun.dart';
@@ -13,7 +12,7 @@ Future<Widget> buildChildren({required int songid, int? index}) async {
   try {
     index ??= 0;
     final formatter = NumberFormat.percentPattern();
-    List zxzrsongs = await loadzxzrSongs();
+    List zxzrsongs = await (await ReadData.create()).readzxzrSongsData();
     String? chunirecId;
     for (var i in zxzrsongs) {
       if (i['id'] == songid) {

@@ -1,15 +1,14 @@
 import 'dart:developer';
-import 'dart:io';
 import 'dart:convert';
 import 'package:chusearchsong_flutter/function/toolsfun/searchcollectiblespagefun.dart';
+import 'package:chusearchsong_flutter/function/writeandreadfun.dart';
 import 'package:chusearchsong_flutter/pages/songinfopages/songratepage.dart';
 import 'package:chusearchsong_flutter/pages/toolspages/tools/ratingcalculatorpage.dart';
 import 'package:flutter/material.dart';
 import 'package:marquee/marquee.dart';
-import 'package:path_provider/path_provider.dart';
+import '../commonfun.dart';
 import '../request.dart';
 import '../../pages/toolspages/tools/faulttoterantcomputationpage.dart';
-import '../fun.dart';
 import '../../pages/songinfopages/scorehistorypage.dart';
 import '../../pages/songinfopages/rankinglistpage.dart';
 import '../../pages/songinfopages/chartviewpage.dart';
@@ -55,10 +54,7 @@ Future<Widget> returnscore({
   //加载成绩
   Widget result = const Text('无成绩');
   try {
-    final path = await getApplicationSupportDirectory();
-    final file = File('${path.path}/res/allscore.json');
-    Map<String, dynamic> allscore1 = json.decode(file.readAsStringSync());
-    List allscore = allscore1['data'];
+    List allscore = await (await ReadData.create()).readPlayerAllScoreData();
 
     // print(i);
     if (!context.mounted) return result;
@@ -715,9 +711,8 @@ Future<List<Widget>> returnAlias({
 }) async {
   List<Widget> result = [];
   try {
-    final path = await getApplicationSupportDirectory();
-    final aliasstr = File('${path.path}/res/alias.json').readAsStringSync();
-    Map<String, dynamic> aliasjson = await json.decode(aliasstr);
+    Map<String, dynamic> aliasjson = await (await ReadData.create())
+        .readAliasData();
     List alias = aliasjson['aliases'];
     for (var i in alias) {
       if (i['song_id'] == id) {

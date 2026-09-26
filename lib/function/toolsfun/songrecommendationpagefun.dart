@@ -1,19 +1,16 @@
 import 'dart:developer';
-import 'dart:io';
-import 'dart:convert';
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:chusearchsong_flutter/function/fun.dart';
+import 'package:chusearchsong_flutter/function/commonfun.dart';
+import 'package:chusearchsong_flutter/function/writeandreadfun.dart';
 import 'package:flutter/material.dart';
-import 'package:path_provider/path_provider.dart';
 import 'ratingcalculatorpagefun.dart';
 import 'generateb50fun/generateb50.dart';
 
 Future<double?> initminRating({required bool isNew}) async {
   try {
     //获取b50
-    final path = await getApplicationSupportDirectory();
-    String b50str = await File("${path.path}/res/b50.json").readAsString();
-    Map<String, dynamic> b50 = jsonDecode(b50str)['data'];
+    Map<String, dynamic> b50 = await (await ReadData.create())
+        .readPlayerB50Data();
     //获取b30
     if (isNew == false) {
       List b30 = b50['bests'];

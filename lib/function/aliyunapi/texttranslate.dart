@@ -1,7 +1,6 @@
 import 'dart:convert';
 import 'dart:math';
-
-import 'package:chusearchsong_flutter/function/fun.dart';
+import 'package:chusearchsong_flutter/function/writeandreadfun.dart';
 import 'package:crypto/crypto.dart';
 import 'package:http/http.dart' as http;
 import 'package:intl/intl.dart';
@@ -27,7 +26,8 @@ class AliTextTranslate {
   }
 
   Future<void> _init() async {
-    final config = await loadConfig();
+    final config = await (await ReadData.create()).readConfig();
+
     accessKeyId = config['texttranslate']?['accessKeyId'] ?? '';
     accessKeySecret = config['texttranslate']?['accessKeySecret'] ?? '';
   }

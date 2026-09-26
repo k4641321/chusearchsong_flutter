@@ -1,7 +1,6 @@
-import 'dart:convert';
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:chusearchsong_flutter/function/fun.dart';
-import 'package:chusearchsong_flutter/function/request.dart';
+import 'package:chusearchsong_flutter/function/commonfun.dart';
+import 'package:chusearchsong_flutter/function/writeandreadfun.dart';
 import 'package:flutter/material.dart';
 
 String returnlevelString({required List level}) {
@@ -110,15 +109,15 @@ String cuttitle({required String title}) {
 Future<Widget> returnShareLevelCompletionProgressPageFun({
   required List level,
   required Map<String, dynamic> songsdata,
-  required Map<String, dynamic> allScoreData,
+  required List allScoreData,
   required BuildContext context,
   required bool subdivision,
   required bool showRank,
 }) async {
   double defaultheight = 1422;
   //请求玩家信息
-  String playerdatastr = await requestPlayerInfo();
-  Map<String, dynamic> playerdata = (jsonDecode(playerdatastr) as Map)['data'];
+  Map<String, dynamic> playerdata = await (await ReadData.create())
+      .readPlayerInfoData();
 
   List<Widget> resultchildren = [];
 
@@ -183,7 +182,7 @@ Future<Widget> returnShareLevelCompletionProgressPageFun({
           diff = l['level_value'].toDouble();
         }
       }
-      for (var l in allScoreData['data']) {
+      for (var l in allScoreData) {
         if (l['level'] == returnlevelString(level: level) &&
             i['id'] == l['id']) {
           rank = l['rank'];

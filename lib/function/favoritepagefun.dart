@@ -2,14 +2,14 @@ import 'dart:convert';
 import 'dart:developer';
 import 'dart:io';
 import 'dart:typed_data';
-import 'package:chusearchsong_flutter/function/fun.dart';
+import 'package:chusearchsong_flutter/function/writeandreadfun.dart';
 import 'package:flutter/material.dart';
-import 'package:path_provider/path_provider.dart';
 import 'package:file_picker/file_picker.dart';
 
 Future<void> exportFavoriteSong({required BuildContext context}) async {
   try {
-    Map<String, dynamic> favoriteSongs = await loadFavoriteSong();
+    Map<String, dynamic> favoriteSongs = await (await ReadData.create())
+        .readFavoriteSongs();
     if (!context.mounted) return;
     showDialog(
       context: context,
@@ -49,8 +49,6 @@ Future<void> exportFavoriteSong({required BuildContext context}) async {
 }
 
 Future<void> importFavoriteSong({required BuildContext context}) async {
-  final path = await getApplicationSupportDirectory();
-
   try {
     FilePickerResult? result = await FilePicker.pickFiles(
       type: FileType.custom,
@@ -84,7 +82,8 @@ Future<void> importFavoriteSong({required BuildContext context}) async {
               ),
               TextButton(
                 onPressed: () async {
-                  Map<String, dynamic> favoriteSongs = await loadFavoriteSong();
+                  Map<String, dynamic> favoriteSongs =
+                      await (await ReadData.create()).readFavoriteSongs();
                   List favoriteListSongsKeys = favoriteSongs.keys.toList();
                   if (favoriteListSongsKeys.contains(controller.text)) {
                     if (!context.mounted) return;
@@ -100,12 +99,12 @@ Future<void> importFavoriteSong({required BuildContext context}) async {
                             child: Text('取消'),
                           ),
                           TextButton(
-                            onPressed: () {
+                            onPressed: () async {
                               favoriteSongs[controller.text] =
                                   importFavoriteSongs.values.first;
-                              File(
-                                '${path.path}/files/favorite.json',
-                              ).writeAsStringSync(jsonEncode(favoriteSongs));
+                              (await WriteData.create()).writeFavoriteSongs(
+                                favoriteSongs,
+                              );
                               if (!context.mounted) return;
                               Navigator.pop(context);
                               Navigator.pop(context);
@@ -118,9 +117,9 @@ Future<void> importFavoriteSong({required BuildContext context}) async {
                   } else {
                     favoriteSongs[controller.text] =
                         importFavoriteSongs.values.first;
-                    File(
-                      '${path.path}/files/favorite.json',
-                    ).writeAsStringSync(jsonEncode(favoriteSongs));
+                    (await WriteData.create()).writeFavoriteSongs(
+                      favoriteSongs,
+                    );
                     if (!context.mounted) return;
                     Navigator.pop(context);
                   }

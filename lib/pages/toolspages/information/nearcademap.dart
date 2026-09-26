@@ -1,30 +1,28 @@
 import 'dart:convert';
 import 'dart:developer';
-import 'dart:io';
 import 'dart:ui';
-import 'package:chusearchsong_flutter/function/request.dart';
-import 'package:chusearchsong_flutter/function/toolsfun/searchlobbynewpagefun.dart';
-import 'package:flutter/foundation.dart';
+import 'package:chusearchsong_flutter/function/toolsfun/nearcademapfun.dart';
+import 'package:chusearchsong_flutter/function/writeandreadfun.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:flutter_map_marker_cluster_plus/flutter_map_marker_cluster_plus.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:geolocator/geolocator.dart';
-import 'package:path_provider/path_provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 List decodeShopList(String raw) => jsonDecode(raw) as List;
 
 Map<String, dynamic> decodeGameListJson(String raw) =>
     jsonDecode(raw) as Map<String, dynamic>;
 
-class Searchlobbynewpage extends StatefulWidget {
-  const Searchlobbynewpage({super.key});
+class Nearcademap extends StatefulWidget {
+  const Nearcademap({super.key});
 
   @override
-  State<Searchlobbynewpage> createState() => _SearchlobbynewpageState();
+  State<Nearcademap> createState() => _NearcademapState();
 }
 
-class _SearchlobbynewpageState extends State<Searchlobbynewpage> {
+class _NearcademapState extends State<Nearcademap> {
   final MapController _mapController = MapController();
   final TextEditingController _searchController = TextEditingController();
 
@@ -54,37 +52,18 @@ class _SearchlobbynewpageState extends State<Searchlobbynewpage> {
           ),
         ),
       );
-      final path = await getApplicationSupportDirectory();
-      if (!File('${path.path}/res/nearcadeshops.json').existsSync() 
-          ) {
-        setState(() {
-          loadsText = '本地缓存缺失，正在下载，并解析';
-        });
-        await saveNearcadeAllShop();
-        shopList = await compute(
-          decodeShopList,
-          File('${path.path}/res/nearcadeshops.json').readAsStringSync(),
-        );
-        log('$shopList');
-        for (var i in shopList) {
-          for (var j in i['games']) {
-            gameList['${j['titleId']}'] = '${j['name']}';
-          }
-        }
-        File(
-          '${path.path}/res/nearcadegames.json',
-        ).writeAsStringSync(jsonEncode(gameList));
-        // print(gameList);
+      final prefs = await SharedPreferences.getInstance();
+      if (!prefs.containsKey('NearcadeAllShopData') ||
+          !prefs.containsKey('NearcadeGamesData')) {
+        loadsText = '本地缓存不存在，正在下载...';
+        await (await WriteData.create()).writeNearcadeAllShopAndNearcadeGames();
+        shopList = decodeShopList(prefs.getString('NearcadeAllShopData')!);
+        gameList = decodeGameListJson(prefs.getString('NearcadeGamesData')!);
       } else {
-        shopList = await compute(
-          decodeShopList,
-          File('${path.path}/res/nearcadeshops.json').readAsStringSync(),
-        );
-        gameList = await compute(
-          decodeGameListJson,
-          File('${path.path}/res/nearcadegames.json').readAsStringSync(),
-        );
+        shopList = decodeShopList(prefs.getString('NearcadeAllShopData')!);
+        gameList = decodeGameListJson(prefs.getString('NearcadeGamesData')!);
       }
+
       if (!mounted) return;
       markersList = createMarkers(
         shopList: shopList,

@@ -1,7 +1,8 @@
 ﻿import 'dart:convert';
 import 'dart:developer';
 import 'dart:io';
-import 'package:chusearchsong_flutter/function/list.dart';
+import 'package:chusearchsong_flutter/function/writeandreadfun.dart';
+import 'package:flutter/foundation.dart';
 import 'package:path_provider/path_provider.dart';
 import '../../../function/toolsfun/generateb50fun/generateb50.dart';
 import 'package:flutter/material.dart';
@@ -28,14 +29,14 @@ class _GenerateB50PageState extends State<GenerateB50Page> {
 
   Future<void> init() async {
     //加载曲目信息
-    songsData = await loadSongs();
+    songsData = await (await ReadData.create()).readSongsData();
     //加载玩家信息
-    playerdata = await loadPlayerData();
+    playerdata = await (await ReadData.create()).readPlayerInfoData();
     playerdata = playerdata['data'];
     //加载所有成绩
-    allscoredata = (await loadAllScoreData())['data'];
+    allscoredata = await (await ReadData.create()).readPlayerAllScoreData();
     //加载b50数据
-    b50data = await loadb50ScoreData();
+    b50data = await (await ReadData.create()).readPlayerB50Data();
     workingplayerdata = Map.from(b50data);
   }
 
@@ -241,6 +242,12 @@ class _GenerateB50PageState extends State<GenerateB50Page> {
                 child: TextButton(
                   onPressed: () async {
                     try {
+                      if (kIsWeb) {
+                        ScaffoldMessenger.of(
+                          context,
+                        ).showSnackBar(SnackBar(content: Text('网页不支持分享')));
+                        return;
+                      }
                       showDialog(
                         context: context,
                         builder: (context) => SizedBox(

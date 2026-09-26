@@ -1,7 +1,9 @@
 import 'dart:developer';
-import 'package:chusearchsong_flutter/function/writeandreadfun.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'dart:convert';
+import 'dart:io';
+import 'package:path_provider/path_provider.dart';
 import 'toolsfun/ratingcalculatorpagefun.dart';
 
 //麻痹的，开始学不知道，现在知道可以不用加<String>，来不及改了
@@ -11,6 +13,78 @@ String fix2dp(double value) {
   final sign = truncated < 0 ? '-' : '';
   final abs = truncated.abs();
   return '$sign${abs ~/ 100}.${(abs % 100).toString().padLeft(2, '0')}';
+}
+
+//加载B50成绩
+Future<Map<String, dynamic>> loadb50ScoreData() async {
+  final directory = await getApplicationSupportDirectory();
+  final file = File('${directory.path}/res/b50.json');
+  final json = jsonDecode(await file.readAsString());
+  return json['data'];
+}
+
+//加载所有成绩
+Future<Map<String, dynamic>> loadAllScoreData() async {
+  final directory = await getApplicationSupportDirectory();
+  final file = File('${directory.path}/res/allscore.json');
+  final json = jsonDecode(await file.readAsString());
+  return json;
+}
+
+//加载玩家数据
+Future<Map<String, dynamic>> loadPlayerData() async {
+  final directory = await getApplicationSupportDirectory();
+  final file = File('${directory.path}/res/playerinfo.json');
+  final json = jsonDecode(await file.readAsString());
+  return json;
+}
+
+//加载最新最热歌曲数据
+Future<List> loadzxzrSongs() async {
+  final directory = await getApplicationSupportDirectory();
+  final file = File('${directory.path}/res/zxzrsongs.json');
+  final json = jsonDecode(await file.readAsString());
+  return json;
+}
+
+//加载歌曲数据
+Future<List> loadTrophies() async {
+  final directory = await getApplicationSupportDirectory();
+  final file = File('${directory.path}/res/trophies.json');
+  final json = jsonDecode(await file.readAsString());
+  return json['trophies'];
+}
+
+//加载歌曲数据
+Future<Map<String, dynamic>> loadSongs() async {
+  final directory = await getApplicationSupportDirectory();
+  final file = File('${directory.path}/res/songs.json');
+  final json = jsonDecode(await file.readAsString());
+  return json;
+}
+
+//加载别名数据
+Future<Map<String, dynamic>> loadAlias() async {
+  final directory = await getApplicationSupportDirectory();
+  final file = File('${directory.path}/res/alias.json');
+  final json = jsonDecode(await file.readAsString());
+  return json;
+}
+
+//加载游玩记录
+Future<List> loadPlayHistory() async {
+  final dataPath = await getApplicationSupportDirectory();
+  List playhistory = [];
+  if (File('${dataPath.path}/res/allscore.json').existsSync()) {
+    String playhistorystr = await File(
+      '${dataPath.path}/res/allscore.json',
+    ).readAsString();
+    Map<String, dynamic> playhistoryjson = json.decode(playhistorystr);
+    playhistory = playhistoryjson['data'];
+  } else {
+    log('无游玩记录文件');
+  }
+  return playhistory;
 }
 
 //版本Wrap列表
@@ -207,22 +281,6 @@ List<Widget> buildVersionWrapList({
           onChange();
         },
       ),
-      FilterChip(
-        label: Text('CHUNITHM X-VERSE'),
-        selected: currentVersion.contains('24000'),
-        onSelected: (_) {
-          onGenreSelected('24000');
-          onChange();
-        },
-      ),
-      FilterChip(
-        label: Text('CHUNITHM X-VERSE-X'),
-        selected: currentVersion.contains('24500'),
-        onSelected: (_) {
-          onGenreSelected('24500');
-          onChange();
-        },
-      ),
     ];
   }
   return wrapList;
@@ -231,6 +289,7 @@ List<Widget> buildVersionWrapList({
 //流派Wrap列表
 List<Widget> buildGenreWrapList({
   required Map<String, dynamic> songsdata,
+
   required List currentGenre,
   required VoidCallback onChange,
   required ValueChanged onGenreSelected,
@@ -329,6 +388,110 @@ List<Widget> buildGenreWrapList({
     ];
   }
   return wrapList;
+}
+
+// 流派
+Future<Widget> buildGenreDropdownMenu({
+  String? initialSelection,
+  ValueChanged<String?>? onSelected,
+}) async {
+  List<DropdownMenuEntry<String>> dropdownMenuEntries = [];
+  try {
+    Map<String, dynamic> data = await loadSongs();
+    dropdownMenuEntries.add(
+      DropdownMenuEntry<String>(label: '分类', value: '-1'),
+    );
+    for (var i in data['genres']) {
+      dropdownMenuEntries.add(
+        DropdownMenuEntry<String>(label: i['genre'], value: i['id'].toString()),
+      );
+    }
+  } catch (e) {
+    log('创建流派失败 $e 返回默认流派列表');
+    dropdownMenuEntries = const [
+      DropdownMenuEntry<String>(label: '分类', value: '-1'),
+      DropdownMenuEntry<String>(label: '流行 & 动漫', value: '0'),
+      DropdownMenuEntry<String>(label: 'niconico', value: '2'),
+      DropdownMenuEntry<String>(label: '东方Project', value: '3'),
+      DropdownMenuEntry<String>(label: '原创', value: '5'),
+      DropdownMenuEntry<String>(label: '其他游戏', value: '6'),
+      DropdownMenuEntry<String>(label: '彩绿', value: '7'),
+      DropdownMenuEntry<String>(label: '音击舞萌', value: '9'),
+    ];
+  }
+
+  return DropdownMenu<String>(
+    menuHeight: 300.0,
+    width: double.infinity,
+    initialSelection: initialSelection ?? '-1',
+    selectOnly: true,
+    onSelected: onSelected,
+    dropdownMenuEntries: dropdownMenuEntries,
+    decorationBuilder: (context, controller) => InputDecoration(),
+  );
+}
+
+// 版本
+Future<Widget> buildVersionDropdownMenu({
+  String? initialSelection,
+  ValueChanged<String?>? onSelected,
+}) async {
+  List<DropdownMenuEntry<String>> dropdownMenuEntries = [];
+  try {
+    Map<String, dynamic> data = await loadSongs();
+    dropdownMenuEntries.add(
+      DropdownMenuEntry<String>(label: '版本', value: '-1'),
+    );
+    for (var i in data['versions']) {
+      dropdownMenuEntries.add(
+        DropdownMenuEntry<String>(
+          label: i['title'],
+          value: i['version'].toString(),
+        ),
+      );
+    }
+  } catch (e) {
+    log('创建版本失败 $e 返回默认版本列表');
+
+    dropdownMenuEntries = const [
+      DropdownMenuEntry<String>(label: '版本', value: '-1'),
+      DropdownMenuEntry<String>(label: 'CHUNITHM', value: '10000'),
+      DropdownMenuEntry<String>(label: 'CHUNITHM PLUS', value: '10500'),
+      DropdownMenuEntry<String>(label: 'CHUNITHM AIR', value: '11000'),
+      DropdownMenuEntry<String>(label: 'CHUNITHM AIR PLUS', value: '11500'),
+      DropdownMenuEntry<String>(label: 'CHUNITHM STAR', value: '12000'),
+      DropdownMenuEntry<String>(label: 'CHUNITHM STAR PLUS', value: '12500'),
+      DropdownMenuEntry<String>(label: 'CHUNITHM AMAZON', value: '13000'),
+      DropdownMenuEntry<String>(label: 'CHUNITHM AMAZON PLUS', value: '13500'),
+      DropdownMenuEntry<String>(label: 'CHUNITHM CRYSTAL', value: '14000'),
+      DropdownMenuEntry<String>(label: 'CHUNITHM CRYSTAL PLUS', value: '14500'),
+      DropdownMenuEntry<String>(label: 'CHUNITHM PARADISE', value: '15000'),
+      DropdownMenuEntry<String>(
+        label: 'CHUNITHM PARADISE LOST',
+        value: '15500',
+      ),
+      DropdownMenuEntry<String>(label: 'CHUNITHM NEW', value: '20000'),
+      DropdownMenuEntry<String>(label: 'CHUNITHM NEW PLUS', value: '20500'),
+      DropdownMenuEntry<String>(label: 'CHUNITHM SUN', value: '21000'),
+      DropdownMenuEntry<String>(label: 'CHUNITHM SUN PLUS', value: '21500'),
+      DropdownMenuEntry<String>(label: 'CHUNITHM LUMINOUS', value: '22000'),
+      DropdownMenuEntry<String>(
+        label: 'CHUNITHM LUMINOUS PLUS',
+        value: '22500',
+      ),
+      DropdownMenuEntry<String>(label: 'CHUNITHM VERSE', value: '23000'),
+      DropdownMenuEntry<String>(label: 'CHUNITHM X-VERSE', value: '24000'),
+      DropdownMenuEntry<String>(label: 'CHUNITHM X-VERSE-X', value: '24500'),
+    ];
+  }
+  return DropdownMenu<String>(
+    menuHeight: 300.0,
+    width: double.infinity,
+    initialSelection: initialSelection ?? '-1',
+    selectOnly: true,
+    onSelected: onSelected,
+    dropdownMenuEntries: dropdownMenuEntries,
+  );
 }
 
 // 难度下限
@@ -447,7 +610,7 @@ Widget buildIfPlayDropdownMenu({
   );
 }
 
-//特殊筛选
+//是否游玩
 Widget buildSpecialFilterDropdownMenu({
   int? initialSelection,
   ValueChanged<int?>? onSelected,
@@ -487,7 +650,7 @@ Widget buildOnlySearchDropdownMenu({
   );
 }
 
-//搜索难度
+//选择搜索
 Widget buildDifficultyIndexDropdownMenu({
   int? initialSelection,
   ValueChanged<int?>? onSelected,
@@ -1134,10 +1297,13 @@ List<DataRow> ratingCalculator({
   return rowsData;
 }
 
-Future<List<DropdownMenuEntry<String>>>
-buildWahlapLobbyDropdownMenuEntries() async {
+Future<List<DropdownMenuEntry<String>>> getlobby() async {
   List<DropdownMenuEntry<String>> dropdownMenuEntries = [];
-  List lobbyDataJson = await (await ReadData.create()).readWahlapLobbyData();
+  final dataPath = await getApplicationSupportDirectory();
+  String lobbyDataStr = await File(
+    '${dataPath.path}/res/location.json',
+  ).readAsString();
+  final lobbyDataJson = json.decode(lobbyDataStr) as List;
   final Set<String> location = {};
   for (var i in lobbyDataJson) {
     location.add(i['province']);

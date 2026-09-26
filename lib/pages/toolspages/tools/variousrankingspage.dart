@@ -1,8 +1,7 @@
 import 'dart:convert';
 import 'dart:developer';
-
-import 'package:chusearchsong_flutter/function/list.dart';
 import 'package:chusearchsong_flutter/function/toolsfun/variousrankingspagefun.dart';
+import 'package:chusearchsong_flutter/function/writeandreadfun.dart';
 import 'package:flutter/material.dart';
 
 class Variousrankingspage extends StatefulWidget {
@@ -21,8 +20,8 @@ class _VariousrankingspageState extends State<Variousrankingspage> {
   int selecteddiffindex = 0;
   Future<void> init() async {
     try {
-      songsData = await loadSongs();
-      zxzrSongsData = await loadzxzrSongs();
+      songsData = await (await ReadData.create()).readSongsData();
+      zxzrSongsData = await (await ReadData.create()).readzxzrSongsData();
     } catch (e, strack) {
       log('$e\n$strack');
       setState(() {

@@ -3,11 +3,10 @@ import 'dart:developer';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:chusearchsong_flutter/function/aliyunapi/texttranslate.dart';
 import 'package:chusearchsong_flutter/function/toolsfun/collectibleinfopagefun.dart';
+import 'package:chusearchsong_flutter/function/writeandreadfun.dart';
 import 'package:flutter/material.dart';
-import '../../../../function/fun.dart';
-import 'dart:io';
-import 'package:path_provider/path_provider.dart';
 import 'dart:convert';
+import '../../../../function/commonfun.dart';
 import '../../../../function/toolsfun/generateb50fun/generateb50.dart';
 import '../../../../function/toolsfun/playerinfopagefun.dart';
 import '../../../../function/request.dart';
@@ -54,10 +53,8 @@ class _CollectibleInfoPageState extends State<CollectibleInfoPage> {
       }
     } else if (type == 'character') {
       try {
-        final path = await getApplicationSupportDirectory();
-        List segacharadata = jsonDecode(
-          File('${path.path}/res/segachara.json').readAsStringSync(),
-        );
+        List segacharadata = await (await ReadData.create())
+            .readSegaCharaData();
         for (var i in segacharadata) {
           if (i['name'] == widget.data['name']) {
             List<Widget> cardresult = [
@@ -428,11 +425,8 @@ class _CollectibleInfoPageState extends State<CollectibleInfoPage> {
       if (requiredList.keys.contains('songs')) {
         List<dynamic> songs = requiredList['songs'];
         //加载曲目
-        final dataPath = await getApplicationSupportDirectory();
-        String jsonString = await File(
-          '${dataPath.path}/res/songs.json',
-        ).readAsString();
-        Map<String, dynamic> songData = json.decode(jsonString);
+        Map<String, dynamic> songData = await (await ReadData.create())
+            .readSongsData();
         result.add(
           Text(
             '关联曲目: ',

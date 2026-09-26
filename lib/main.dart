@@ -1,8 +1,9 @@
 import 'dart:developer';
-
 import 'package:chusearchsong_flutter/function/infopagefun/infopagefun.dart';
 import 'package:chusearchsong_flutter/function/request.dart';
+import 'package:chusearchsong_flutter/function/writeandreadfun.dart';
 import 'package:package_info_plus/package_info_plus.dart';
+import 'function/commonfun.dart';
 import 'theme.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -10,10 +11,7 @@ import 'pages/homepages/infopage.dart';
 import 'pages/homepages/searchpage.dart';
 import 'pages/homepages/favoritepage.dart';
 import 'pages/homepages/toolspage.dart';
-import 'function/fun.dart';
-import 'dart:io';
 import 'dart:convert';
-import 'package:path_provider/path_provider.dart';
 import 'package:dynamic_color/dynamic_color.dart';
 
 void main() {
@@ -34,17 +32,10 @@ class _MyAppState extends State<MyApp> {
   ThemeMode _themeMode = ThemeMode.light;
 
   Future<void> _loadTheme() async {
-    final path = await getApplicationSupportDirectory();
-    final file = File('${path.path}/config.json');
-    if (await file.exists()) {
-      String configStr = await file.readAsString();
-      Map<String, dynamic> config = await json.decode(configStr);
-      setState(() {
-        _themeMode = config['theme'] == 'dark'
-            ? ThemeMode.dark
-            : ThemeMode.light;
-      });
-    }
+    Map<String, dynamic> config = await (await ReadData.create()).readConfig();
+    setState(() {
+      _themeMode = config['theme'] == 'dark' ? ThemeMode.dark : ThemeMode.light;
+    });
   }
 
   void _handleThemeChanged() {
@@ -105,7 +96,8 @@ class _MyHomePageState extends State<MyHomePage> {
 
   Future<void> showannouncement() async {
     try {
-      Map<String, dynamic> config = await loadConfig();
+      Map<String, dynamic> config = await (await ReadData.create())
+          .readConfig();
       List announcement = jsonDecode(await requestAnnouncement());
       int value;
       if (!config.containsKey('announcement')) {
@@ -134,7 +126,7 @@ class _MyHomePageState extends State<MyHomePage> {
         config['announcement']['date'] = announcement[0]['date'];
         config['announcement']['value'] = announcement[0]['value'];
         config['announcement']['read'] = true;
-        saveConfig(config);
+        (await WriteData.create()).writeConfig(config);
       } else {
         log('没有新的公告');
       }
@@ -149,7 +141,8 @@ class _MyHomePageState extends State<MyHomePage> {
 
   Future<void> chechupdate() async {
     try {
-      Map<String, dynamic> config = await loadConfig();
+      Map<String, dynamic> config = await (await ReadData.create())
+          .readConfig();
       if (!config.containsKey('autocheckupdate')) {
         log('跳过更新检查');
         return;
@@ -194,7 +187,8 @@ class _MyHomePageState extends State<MyHomePage> {
   Future<void> showChangesLog() async {
     try {
       final packageinfo = await PackageInfo.fromPlatform();
-      Map<String, dynamic> config = await loadConfig();
+      Map<String, dynamic> config = await (await ReadData.create())
+          .readConfig();
       if (config['version'] == packageinfo.version &&
           config['changeslogread'] == false) {
         List requestresult = jsonDecode(await requestChangeslog());
@@ -213,7 +207,7 @@ class _MyHomePageState extends State<MyHomePage> {
           ),
         );
         config['changeslogread'] = true;
-        saveConfig(config);
+        await (await WriteData.create()).writeConfig(config);
       }
     } catch (e, strack) {
       log('$e\n$strack');
@@ -242,7 +236,7 @@ class _MyHomePageState extends State<MyHomePage> {
       setState(() {
         _isLoading = false;
       });
-      postusecount();
+      // postusecount();
     });
   }
 

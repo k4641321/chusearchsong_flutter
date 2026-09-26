@@ -1,10 +1,7 @@
-import 'dart:convert';
 import 'dart:developer';
-import 'dart:io';
-
 import 'package:chusearchsong_flutter/function/infopagefun/settingspagefun.dart';
+import 'package:chusearchsong_flutter/function/writeandreadfun.dart';
 import 'package:flutter/material.dart';
-import 'package:path_provider/path_provider.dart';
 import 'settingspage/lxnssettingspage.dart';
 import 'settingspage/texttranslatesettingspage.dart';
 import 'settingspage/mapsettingspage.dart';
@@ -25,15 +22,13 @@ class _SettingsPageState extends State<SettingsPage> {
   String darkmode = 'light';
 
   Future<void> darkmodechange() async {
-    final path = await getApplicationSupportDirectory();
-    final config = File('${path.path}/config.json');
-    final configStr = config.readAsStringSync();
-    final configJson = json.decode(configStr);
+    Map<String, dynamic> config = await (await ReadData.create()).readConfig();
+
     if (darkmode == 'light') {
       darkmode = 'dark';
       try {
-        configJson['theme'] = 'dark';
-        config.writeAsStringSync(json.encode(configJson));
+        config['theme'] = darkmode;
+        (await WriteData.create()).writeConfig(config);
       } catch (e) {
         log('$e', name: 'infopage', level: 500);
         if (!mounted) return;
@@ -44,8 +39,8 @@ class _SettingsPageState extends State<SettingsPage> {
     } else if (darkmode == 'dark') {
       darkmode = 'light';
       try {
-        configJson['theme'] = 'light';
-        config.writeAsStringSync(json.encode(configJson));
+        config['theme'] = darkmode;
+        (await WriteData.create()).writeConfig(config);
       } catch (e) {
         log('$e', name: 'infopage', level: 500);
         if (!mounted) return;
@@ -60,10 +55,9 @@ class _SettingsPageState extends State<SettingsPage> {
   }
 
   Future<void> confirmdarkmode() async {
-    final path = await getApplicationSupportDirectory();
     try {
-      String configStr = await File('${path.path}/config.json').readAsString();
-      Map<String, dynamic> config = json.decode(configStr);
+      Map<String, dynamic> config = await (await ReadData.create())
+          .readConfig();
       if (config['theme'] == 'light') {
         darkmode = 'light';
       } else if (config['theme'] == 'dark') {
@@ -81,10 +75,8 @@ class _SettingsPageState extends State<SettingsPage> {
 
   Future<void> init() async {
     try {
-      final path = await getApplicationSupportDirectory();
-      Map<String, dynamic> config = jsonDecode(
-        await File('${path.path}/config.json').readAsString(),
-      );
+      Map<String, dynamic> config = await (await ReadData.create())
+          .readConfig();
       setState(() {
         chartproxy = config['chartproxy'];
         if (!config.containsKey('autocheckupdate')) {
@@ -291,14 +283,10 @@ class _SettingsPageState extends State<SettingsPage> {
                 onChanged: (value) async {
                   try {
                     setState(() => autocheckupdate = value);
-                    final path = await getApplicationSupportDirectory();
-                    final config = jsonDecode(
-                      await File('${path.path}/config.json').readAsString(),
-                    );
+                    Map<String, dynamic> config =
+                        await (await ReadData.create()).readConfig();
                     config['autocheckupdate'] = autocheckupdate;
-                    await File(
-                      '${path.path}/config.json',
-                    ).writeAsString(jsonEncode(config));
+                    await (await WriteData.create()).writeConfig(config);
                   } catch (e, stack) {
                     log('$e\n$stack');
                     if (!context.mounted) return;

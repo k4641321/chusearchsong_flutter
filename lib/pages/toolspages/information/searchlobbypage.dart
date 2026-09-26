@@ -22,7 +22,7 @@ class _SearchLobbyPageState extends State<SearchLobbyPage> {
   }
 
   Future<void> _getdropdownMenuEntries() async {
-    dropdownMenuEntries = await getlobby();
+    dropdownMenuEntries = await buildWahlapLobbyDropdownMenuEntries();
     if (!mounted) return;
     setState(() {});
   }

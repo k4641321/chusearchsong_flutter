@@ -61690,7 +61690,7 @@
       "ADV": {
         "level": 5,
         "const": 5,
-        "maxcombo": 0,
+        "maxcombo": 481,
         "is_const_unknown": 0
       },
       "EXP": {
@@ -62828,7 +62828,7 @@
       "MAS": {
         "level": 14.5,
         "const": 14.7,
-        "maxcombo": 0,
+        "maxcombo": 1848,
         "is_const_unknown": 0
       }
     }
@@ -62924,7 +62924,7 @@
       "BAS": {
         "level": 4,
         "const": 4,
-        "maxcombo": 0,
+        "maxcombo": 512,
         "is_const_unknown": 0
       },
       "ADV": {
@@ -63170,7 +63170,7 @@
       "MAS": {
         "level": 14,
         "const": 14.1,
-        "maxcombo": 0,
+        "maxcombo": 2058,
         "is_const_unknown": 0
       }
     }
@@ -63436,7 +63436,7 @@
       "MAS": {
         "level": 14,
         "const": 14.4,
-        "maxcombo": 0,
+        "maxcombo": 1847,
         "is_const_unknown": 0
       }
     }
@@ -63582,13 +63582,13 @@
       "EXP": {
         "level": 9.5,
         "const": 9.5,
-        "maxcombo": 0,
+        "maxcombo": 1194,
         "is_const_unknown": 0
       },
       "MAS": {
         "level": 12.5,
         "const": 12.8,
-        "maxcombo": 0,
+        "maxcombo": 1468,
         "is_const_unknown": 0
       }
     }
@@ -64947,6 +64947,120 @@
   },
   {
     "meta": {
+      "id": "Your Reality (Kenji Mizuno Remix)",
+      "title": "Your Reality (Kenji Mizuno Remix)",
+      "artist": "Dan Salvato／水野健治",
+      "genre": "POPS&ANIME",
+      "bpm": 111,
+      "release": "2099-12-31",
+      "img": "140d3c0253db6498",
+      "idx": "3057"
+    },
+    "data": {
+      "BAS": {
+        "level": 2.0,
+        "const": 2.0,
+        "is_const_unknown": 0,
+        "maxcombo": 493
+      },
+      "ADV": {
+        "level": 6.0,
+        "const": 6.0,
+        "is_const_unknown": 0,
+        "maxcombo": 865
+      },
+      "EXP": {
+        "level": 10.0,
+        "const": 10.2,
+        "is_const_unknown": 0,
+        "maxcombo": 1334
+      },
+      "MAS": {
+        "level": 14.5,
+        "const": 14.6,
+        "is_const_unknown": 0,
+        "maxcombo": 1922
+      }
+    }
+  },
+  {
+    "meta": {
+      "id": "LaVI-Bavellabion",
+      "title": "LaVI-Bavellabion",
+      "artist": "三木谷奈々 SLAVE.V-V-R",
+      "genre": "POPS&ANIME",
+      "bpm": 142,
+      "release": "2099-12-31",
+      "img": "1c4aa68762d08b13",
+      "idx": "3058"
+    },
+    "data": {
+      "BAS": {
+        "level": 2.0,
+        "const": 2.0,
+        "is_const_unknown": 0,
+        "maxcombo": 405
+      },
+      "ADV": {
+        "level": 5.0,
+        "const": 5.0,
+        "is_const_unknown": 0,
+        "maxcombo": 732
+      },
+      "EXP": {
+        "level": 9.5,
+        "const": 9.5,
+        "is_const_unknown": 0,
+        "maxcombo": 1185
+      },
+      "MAS": {
+        "level": 13.5,
+        "const": 13.9,
+        "is_const_unknown": 0,
+        "maxcombo": 1813
+      }
+    }
+  },
+  {
+    "meta": {
+      "id": "Colossus",
+      "title": "Colossus",
+      "artist": "加藤 浩義（ノイジークローク）",
+      "genre": "POPS&ANIME",
+      "bpm": 155,
+      "release": "2099-12-31",
+      "img": "cea4a5cb576a26d7",
+      "idx": "3086"
+    },
+    "data": {
+      "BAS": {
+        "level": 2.0,
+        "const": 2.0,
+        "is_const_unknown": 0,
+        "maxcombo": 262
+      },
+      "ADV": {
+        "level": 6.0,
+        "const": 6.0,
+        "is_const_unknown": 0,
+        "maxcombo": 457
+      },
+      "EXP": {
+        "level": 10.0,
+        "const": 10.3,
+        "is_const_unknown": 0,
+        "maxcombo": 748
+      },
+      "MAS": {
+        "level": 14.0,
+        "const": 14.2,
+        "is_const_unknown": 0,
+        "maxcombo": 990
+      }
+    }
+  },
+  {
+    "meta": {
       "id": "Glitch Street",
       "title": "Glitch Street",
       "artist": "KARUT「ブルーアーカイブ -Blue Archive-」",
@@ -65251,6 +65365,234 @@
   },
   {
     "meta": {
+      "id": "Smell of the Game",
+      "title": "Smell of the Game",
+      "artist": "NAOKI「GUILTY GEAR -STRIVE-」",
+      "genre": "VARIETY",
+      "bpm": 208,
+      "release": "2099-12-31",
+      "img": "aa2c01242c3faf4e",
+      "idx": "3047"
+    },
+    "data": {
+      "BAS": {
+        "level": 3.0,
+        "const": 3.0,
+        "is_const_unknown": 0,
+        "maxcombo": 425
+      },
+      "ADV": {
+        "level": 7.5,
+        "const": 7.5,
+        "is_const_unknown": 0,
+        "maxcombo": 855
+      },
+      "EXP": {
+        "level": 10.5,
+        "const": 10.9,
+        "is_const_unknown": 0,
+        "maxcombo": 1147
+      },
+      "MAS": {
+        "level": 14.0,
+        "const": 14.1,
+        "is_const_unknown": 0,
+        "maxcombo": 1700
+      }
+    }
+  },
+  {
+    "meta": {
+      "id": "Find Your One Way",
+      "title": "Find Your One Way",
+      "artist": "NAOKI「GUILTY GEAR -STRIVE-」",
+      "genre": "VARIETY",
+      "bpm": 128,
+      "release": "2099-12-31",
+      "img": "4dfb09327c688bb1",
+      "idx": "3048"
+    },
+    "data": {
+      "BAS": {
+        "level": 2.0,
+        "const": 2.0,
+        "is_const_unknown": 0,
+        "maxcombo": 339
+      },
+      "ADV": {
+        "level": 7.0,
+        "const": 7.0,
+        "is_const_unknown": 0,
+        "maxcombo": 648
+      },
+      "EXP": {
+        "level": 10.0,
+        "const": 10.2,
+        "is_const_unknown": 0,
+        "maxcombo": 876
+      },
+      "MAS": {
+        "level": 14.0,
+        "const": 14.0,
+        "is_const_unknown": 0,
+        "maxcombo": 1642
+      }
+    }
+  },
+  {
+    "meta": {
+      "id": "Drift",
+      "title": "Drift",
+      "artist": "NAOKI「GUILTY GEAR -STRIVE-」",
+      "genre": "VARIETY",
+      "bpm": 207,
+      "release": "2099-12-31",
+      "img": "443e84680d28fb30",
+      "idx": "3049"
+    },
+    "data": {
+      "BAS": {
+        "level": 3.0,
+        "const": 3.0,
+        "is_const_unknown": 0,
+        "maxcombo": 563
+      },
+      "ADV": {
+        "level": 7.0,
+        "const": 7.0,
+        "is_const_unknown": 0,
+        "maxcombo": 985
+      },
+      "EXP": {
+        "level": 12.0,
+        "const": 12.3,
+        "is_const_unknown": 0,
+        "maxcombo": 1576
+      },
+      "MAS": {
+        "level": 14.5,
+        "const": 14.8,
+        "is_const_unknown": 0,
+        "maxcombo": 1896
+      }
+    }
+  },
+  {
+    "meta": {
+      "id": "The Disaster of Passion",
+      "title": "The Disaster of Passion",
+      "artist": "AISHA「GUILTY GEAR -STRIVE-」",
+      "genre": "VARIETY",
+      "bpm": 180,
+      "release": "2099-12-31",
+      "img": "79151b018f0d8c7f",
+      "idx": "3050"
+    },
+    "data": {
+      "BAS": {
+        "level": 3.0,
+        "const": 3.0,
+        "is_const_unknown": 0,
+        "maxcombo": 357
+      },
+      "ADV": {
+        "level": 7.0,
+        "const": 7.0,
+        "is_const_unknown": 0,
+        "maxcombo": 697
+      },
+      "EXP": {
+        "level": 9.5,
+        "const": 9.5,
+        "is_const_unknown": 0,
+        "maxcombo": 897
+      },
+      "MAS": {
+        "level": 13.0,
+        "const": 13.1,
+        "is_const_unknown": 0,
+        "maxcombo": 1255
+      }
+    }
+  },
+  {
+    "meta": {
+      "id": "JACKY [Remix]",
+      "title": "JACKY [Remix]",
+      "artist": "バーチャファイター",
+      "genre": "VARIETY",
+      "bpm": 135,
+      "release": "2099-12-31",
+      "img": "0b01ce1c72e9defc",
+      "idx": "3051"
+    },
+    "data": {
+      "BAS": {
+        "level": 2.0,
+        "const": 2.0,
+        "is_const_unknown": 0,
+        "maxcombo": 236
+      },
+      "ADV": {
+        "level": 7.5,
+        "const": 7.5,
+        "is_const_unknown": 0,
+        "maxcombo": 447
+      },
+      "EXP": {
+        "level": 11.5,
+        "const": 11.9,
+        "is_const_unknown": 0,
+        "maxcombo": 635
+      },
+      "MAS": {
+        "level": 14.0,
+        "const": 14.3,
+        "is_const_unknown": 0,
+        "maxcombo": 1095
+      }
+    }
+  },
+  {
+    "meta": {
+      "id": "奇々解体",
+      "title": "奇々解体",
+      "artist": "MURASAKI/かたたかんな",
+      "genre": "VARIETY",
+      "bpm": 148,
+      "release": "2099-12-31",
+      "img": "3b7a809d84a6c9b6",
+      "idx": "3059"
+    },
+    "data": {
+      "BAS": {
+        "level": 2.0,
+        "const": 2.0,
+        "is_const_unknown": 0,
+        "maxcombo": 395
+      },
+      "ADV": {
+        "level": 6.0,
+        "const": 6.0,
+        "is_const_unknown": 0,
+        "maxcombo": 562
+      },
+      "EXP": {
+        "level": 9.0,
+        "const": 9.0,
+        "is_const_unknown": 0,
+        "maxcombo": 897
+      },
+      "MAS": {
+        "level": 13.0,
+        "const": 13.4,
+        "is_const_unknown": 0,
+        "maxcombo": 1520
+      }
+    }
+  },
+  {
+    "meta": {
       "id": "On And On!!",
       "title": "On And On!!",
       "artist": "ETIA. feat. Jenga",
@@ -65271,7 +65613,7 @@
         "level": 8.0,
         "const": 8.0,
         "is_const_unknown": 0,
-        "maxcombo": 0
+        "maxcombo": 834
       },
       "EXP": {
         "level": 11.0,
@@ -65407,7 +65749,7 @@
       "title": "ふわパチ星雲PTL-3",
       "artist": "海茶、多良レイト feat. 桃寝ちのい",
       "genre": "ORIGINAL",
-      "bpm": 0,
+      "bpm": 160,
       "release": "2099-12-31",
       "img": "7a02f0c5cc16c52d",
       "idx": "3060"
@@ -65417,13 +65759,13 @@
         "level": 3.0,
         "const": 3.0,
         "is_const_unknown": 0,
-        "maxcombo": 0
+        "maxcombo": 383
       },
       "ADV": {
         "level": 6.0,
         "const": 6.0,
         "is_const_unknown": 0,
-        "maxcombo": 0
+        "maxcombo": 749
       },
       "EXP": {
         "level": 10.0,
@@ -65435,7 +65777,7 @@
         "level": 13.0,
         "const": 13.2,
         "is_const_unknown": 0,
-        "maxcombo": 0
+        "maxcombo": 1613
       }
     }
   },
@@ -65445,7 +65787,7 @@
       "title": "Fox Hunt",
       "artist": "よしぶる feat.街風めい",
       "genre": "ORIGINAL",
-      "bpm": 0,
+      "bpm": 190,
       "release": "2099-12-31",
       "img": "62f64027ead02a9e",
       "idx": "3061"
@@ -65455,25 +65797,25 @@
         "level": 3.0,
         "const": 3.0,
         "is_const_unknown": 0,
-        "maxcombo": 0
+        "maxcombo": 573
       },
       "ADV": {
         "level": 7.0,
         "const": 7.0,
         "is_const_unknown": 0,
-        "maxcombo": 0
+        "maxcombo": 1001
       },
       "EXP": {
         "level": 10.0,
         "const": 10.4,
         "is_const_unknown": 0,
-        "maxcombo": 1101
+        "maxcombo": 1335
       },
       "MAS": {
         "level": 14.0,
         "const": 14.0,
         "is_const_unknown": 0,
-        "maxcombo": 0
+        "maxcombo": 2026
       }
     }
   },
@@ -65483,7 +65825,7 @@
       "title": "命スクリプト",
       "artist": "原口沙輔 feat.ななひら",
       "genre": "ORIGINAL",
-      "bpm": 0,
+      "bpm": 140,
       "release": "2099-12-31",
       "img": "edd45fa3fc22a59e",
       "idx": "3063"
@@ -65493,13 +65835,13 @@
         "level": 3.0,
         "const": 3.0,
         "is_const_unknown": 0,
-        "maxcombo": 0
+        "maxcombo": 436
       },
       "ADV": {
         "level": 6.0,
         "const": 6.0,
         "is_const_unknown": 0,
-        "maxcombo": 0
+        "maxcombo": 841
       },
       "EXP": {
         "level": 11.0,
@@ -65521,7 +65863,7 @@
       "title": "コトバノ廃都",
       "artist": "ぽりふぉ(PolyphonicBranch) feat. 松下",
       "genre": "ORIGINAL",
-      "bpm": 0,
+      "bpm": 200,
       "release": "2099-12-31",
       "img": "9aca645476a7827a",
       "idx": "3056"
@@ -65531,13 +65873,13 @@
         "level": 3.0,
         "const": 3.0,
         "is_const_unknown": 0,
-        "maxcombo": 0
+        "maxcombo": 641
       },
       "ADV": {
         "level": 7.5,
         "const": 7.5,
         "is_const_unknown": 0,
-        "maxcombo": 0
+        "maxcombo": 1176
       },
       "EXP": {
         "level": 10.5,
@@ -65550,6 +65892,158 @@
         "const": 14.6,
         "is_const_unknown": 0,
         "maxcombo": 2222
+      }
+    }
+  },
+  {
+    "meta": {
+      "id": "Prismatic Theory",
+      "title": "Prismatic Theory",
+      "artist": "荒谷サトル",
+      "genre": "ORIGINAL",
+      "bpm": 148,
+      "release": "2099-12-31",
+      "img": "9c09ad3ceda20c0a",
+      "idx": "3043"
+    },
+    "data": {
+      "BAS": {
+        "level": 3.0,
+        "const": 3.0,
+        "is_const_unknown": 0,
+        "maxcombo": 458
+      },
+      "ADV": {
+        "level": 8.5,
+        "const": 8.5,
+        "is_const_unknown": 0,
+        "maxcombo": 924
+      },
+      "EXP": {
+        "level": 13.0,
+        "const": 13.4,
+        "is_const_unknown": 0,
+        "maxcombo": 1433
+      },
+      "MAS": {
+        "level": 14.5,
+        "const": 14.6,
+        "is_const_unknown": 0,
+        "maxcombo": 1881
+      }
+    }
+  },
+  {
+    "meta": {
+      "id": "Knockout Ravebox",
+      "title": "Knockout Ravebox",
+      "artist": "Hommarju",
+      "genre": "ORIGINAL",
+      "bpm": 170,
+      "release": "2099-12-31",
+      "img": "83077f4a6a9f0f4e",
+      "idx": "3044"
+    },
+    "data": {
+      "BAS": {
+        "level": 3.0,
+        "const": 3.0,
+        "is_const_unknown": 0,
+        "maxcombo": 415
+      },
+      "ADV": {
+        "level": 7.5,
+        "const": 7.5,
+        "is_const_unknown": 0,
+        "maxcombo": 785
+      },
+      "EXP": {
+        "level": 12.0,
+        "const": 12.1,
+        "is_const_unknown": 0,
+        "maxcombo": 1285
+      },
+      "MAS": {
+        "level": 14.0,
+        "const": 14.1,
+        "is_const_unknown": 0,
+        "maxcombo": 1708
+      }
+    }
+  },
+  {
+    "meta": {
+      "id": "アンサレステラー",
+      "title": "アンサレステラー",
+      "artist": "花徒めと",
+      "genre": "ORIGINAL",
+      "bpm": 0,
+      "release": "2099-12-31",
+      "img": "27ba6e5202aefb62",
+      "idx": "3045"
+    },
+    "data": {
+      "BAS": {
+        "level": 3.0,
+        "const": 3.0,
+        "is_const_unknown": 0,
+        "maxcombo": 596
+      },
+      "ADV": {
+        "level": 8.0,
+        "const": 8.0,
+        "is_const_unknown": 0,
+        "maxcombo": 1120
+      },
+      "EXP": {
+        "level": 10.5,
+        "const": 10.7,
+        "is_const_unknown": 0,
+        "maxcombo": 1565
+      },
+      "MAS": {
+        "level": 14.5,
+        "const": 14.5,
+        "is_const_unknown": 0,
+        "maxcombo": 2452
+      }
+    }
+  },
+  {
+    "meta": {
+      "id": "[IMPERIALDISORDER]",
+      "title": "[IMPERIALDISORDER]",
+      "artist": "Blacklolita",
+      "genre": "ORIGINAL",
+      "bpm": 170,
+      "release": "2099-12-31",
+      "img": "396226dcdcbdf45d",
+      "idx": "3046"
+    },
+    "data": {
+      "BAS": {
+        "level": 4.0,
+        "const": 4.0,
+        "is_const_unknown": 0,
+        "maxcombo": 539
+      },
+      "ADV": {
+        "level": 9.0,
+        "const": 9.0,
+        "is_const_unknown": 0,
+        "maxcombo": 1062
+      },
+      "EXP": {
+        "level": 12.5,
+        "const": 12.8,
+        "is_const_unknown": 0,
+        "maxcombo": 1828
+      },
+      "MAS": {
+        "level": 15.0,
+        "const": 15.3,
+        "is_const_unknown": 0,
+        "maxcombo": 2700
       }
     }
   }

@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:chusearchsong_flutter/function/request.dart';
+import 'package:chusearchsong_flutter/function/writeandreadfun.dart';
 import 'package:flutter/material.dart';
 import '../../../function/infopagefun/settingspagefun.dart';
 
@@ -26,7 +27,7 @@ class _LxnsSettingsPageState extends State<LxnsSettingsPage> {
     });
   }
 
-  //YboiNUUXK0v4RR7GlOgvzF9Th44nAJ8_-mgf2aZ-I9A=
+  //YboiNUUXK0v4RR7GlOgvzF9Th44nAJ8_-mgf2aZ-I9A= 我真该睡了，把自己落雪Token写在这里
   @override
   void initState() {
     super.initState();
@@ -77,11 +78,12 @@ class _LxnsSettingsPageState extends State<LxnsSettingsPage> {
                             setState(() {
                               showtext.value = '获取玩家数据';
                             });
+                            final wirteDataclass = await WriteData.create();
                             await Future.wait([
-                              saveB50(),
-                              savePlayerInfo(),
-                              saveTrend(),
-                              saveAllScore(),
+                              wirteDataclass.writePlayerAllScoreData(),
+                              wirteDataclass.writePlayerB50Data(),
+                              wirteDataclass.writePlayerRatingTrendData(),
+                              wirteDataclass.writePlayerInfoData(),
                             ]);
                             if (!context.mounted) return;
 

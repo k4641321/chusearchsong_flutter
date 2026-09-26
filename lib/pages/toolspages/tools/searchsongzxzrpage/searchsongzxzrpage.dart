@@ -4,6 +4,7 @@ import 'package:chusearchsong_flutter/function/list.dart'
     show buildDifficultyDownDropdownMenu, buildDifficultyUpDropdownMenu;
 // buildIfPlayDropdownMenu;
 import 'package:chusearchsong_flutter/function/toolsfun/searchsongzxzrpagefun/searchsongzxzrpagefun.dart';
+import 'package:chusearchsong_flutter/function/writeandreadfun.dart';
 import 'package:flutter/material.dart';
 
 import '../../../../function/toolsfun/searchsongzxzrpagefun/searchfun.dart';
@@ -24,6 +25,7 @@ class _SearchsongzxzrpageState extends State<Searchsongzxzrpage> {
   int? bpmup;
   int? bpmdown;
   List<Widget> searchResults = [];
+  List songsData = [];
   // Future result;
   final TextEditingController _searchController = TextEditingController();
   final TextEditingController _bpmup = TextEditingController();
@@ -45,6 +47,7 @@ class _SearchsongzxzrpageState extends State<Searchsongzxzrpage> {
     try {
       // 使用 await 调用异步函数
       List<dynamic> resultsMap = await filter(
+        songsData,
         searchTitle,
         genre,
         version,
@@ -79,6 +82,7 @@ class _SearchsongzxzrpageState extends State<Searchsongzxzrpage> {
   Widget versionDropdownMenu = DropdownMenu<String>(dropdownMenuEntries: []);
   Future<void> _buildAllDropdownMenus() async {
     Widget genreDropdownMenu1 = await buildGenreDropdownMenu(
+      data: songsData,
       initialSelection: selectedGenre,
       onSelected: (String? value) {
         setState(() {
@@ -94,6 +98,7 @@ class _SearchsongzxzrpageState extends State<Searchsongzxzrpage> {
       },
     );
     Widget versionDropdownMenu1 = await buildVersionDropdownMenu(
+      data: songsData,
       initialSelection: selectedVersion,
       onSelected: (String? value) {
         setState(() {
@@ -131,12 +136,18 @@ class _SearchsongzxzrpageState extends State<Searchsongzxzrpage> {
     _performSearch();
   }
 
+  Future<void> init() async {
+    songsData = await (await ReadData.create()).readzxzrSongsData();
+    await _buildAllDropdownMenus();
+  }
+
   @override
   void initState() {
     super.initState();
-    _buildAllDropdownMenus();
+
     _difficultyup.addListener(_onDifficultyUpInput);
     _difficultydown.addListener(_onDifficultyDownInput);
+    init();
     WidgetsBinding.instance.addPostFrameCallback((_) {
       _ready = true;
     });

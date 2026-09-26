@@ -4,6 +4,7 @@ import 'dart:ui' as ui;
 
 import 'package:chusearchsong_flutter/function/toolsfun/levelcompletionprogresspagefun/sharelevelcompletionprogresspagefun.dart';
 import 'package:file_picker/file_picker.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:path_provider/path_provider.dart';
@@ -11,7 +12,7 @@ import 'package:path_provider/path_provider.dart';
 class Sharelevelcompletionprogresspage extends StatefulWidget {
   final List level;
   final Map<String, dynamic> songsdata;
-  final Map<String, dynamic> allScoreData;
+  final List allScoreData;
 
   const Sharelevelcompletionprogresspage({
     super.key,
@@ -116,6 +117,12 @@ class _SharelevelcompletionprogresspageState
                 child: TextButton(
                   onPressed: () async {
                     try {
+                      if (kIsWeb) {
+                        ScaffoldMessenger.of(
+                          context,
+                        ).showSnackBar(SnackBar(content: Text('网页不支持分享')));
+                        return;
+                      }
                       showDialog(
                         context: context,
                         builder: (context) => SizedBox(

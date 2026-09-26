@@ -1,5 +1,5 @@
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:chusearchsong_flutter/function/fun.dart';
+import 'package:chusearchsong_flutter/function/commonfun.dart';
 import 'package:chusearchsong_flutter/function/toolsfun/generateb50fun/generateb50.dart';
 import 'package:flutter/material.dart';
 

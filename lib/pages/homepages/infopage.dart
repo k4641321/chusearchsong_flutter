@@ -6,7 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'dart:developer';
-import '../../function/fun.dart';
+import '../../function/commonfun.dart';
 import '../infopages/settingspage.dart';
 import '../infopages/thankyoulistpage.dart';
 import 'package:package_info_plus/package_info_plus.dart';

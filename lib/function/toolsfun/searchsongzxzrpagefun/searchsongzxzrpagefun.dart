@@ -1,27 +1,15 @@
-import 'dart:convert';
 import 'dart:developer';
-import 'dart:io';
-
 import 'package:flutter/material.dart';
-import 'package:path_provider/path_provider.dart';
-
-//加载歌曲数据
-Future<List> loadSongs() async {
-  final directory = await getApplicationSupportDirectory();
-  final file = File('${directory.path}/res/zxzrsongs.json');
-  final json = jsonDecode(await file.readAsString());
-  return json;
-}
 
 //流派
 Future<Widget> buildGenreDropdownMenu({
+  required List data,
   String? initialSelection,
   ValueChanged<String?>? onSelected,
 }) async {
   Set genreList = {};
   List<DropdownMenuEntry<String>> dropdownMenuEntries = [];
   try {
-    List data = await loadSongs();
     dropdownMenuEntries.add(
       DropdownMenuEntry<String>(label: '分类', value: '-1'),
     );
@@ -57,13 +45,13 @@ Future<Widget> buildGenreDropdownMenu({
 
 // 版本
 Future<Widget> buildVersionDropdownMenu({
+  required List data,
   String? initialSelection,
   ValueChanged<String?>? onSelected,
 }) async {
   Set versionList = {};
   List<DropdownMenuEntry<String>> dropdownMenuEntries = [];
   try {
-    List data = await loadSongs();
     dropdownMenuEntries.add(
       DropdownMenuEntry<String>(label: '版本', value: '-1'),
     );

@@ -1,10 +1,9 @@
 import 'dart:developer';
 
-import 'package:chusearchsong_flutter/function/list.dart';
+import 'package:chusearchsong_flutter/function/commonfun.dart';
+import 'package:chusearchsong_flutter/function/writeandreadfun.dart';
 import 'package:flutter/material.dart';
 import 'dart:io';
-import 'package:path_provider/path_provider.dart';
-import '../../function/fun.dart';
 import '../../function/favoritepagefun.dart';
 
 class FavoritePage extends StatefulWidget {
@@ -26,14 +25,14 @@ class _FavoritePageState extends State<FavoritePage> {
   String selectedName = 'favorite';
 
   Future<void> init() async {
-    path = await getApplicationSupportDirectory();
-    songsData = await loadSongs();
+    songsData = await (await ReadData.create()).readSongsData();
     await loadFavoriteList();
     await _returnfavoriteResults();
   }
 
   Future<void> loadFavoriteList() async {
-    Map<String, dynamic> favoriteListSong = await loadFavoriteSong();
+    Map<String, dynamic> favoriteListSong = await (await ReadData.create())
+        .readFavoriteSongs();
     List<DropdownMenuEntry> dropdownMenuEntries1 = [];
     List favoriteListSongKeys = favoriteListSong.keys.toList();
     for (var i in favoriteListSongKeys) {
@@ -48,7 +47,8 @@ class _FavoritePageState extends State<FavoritePage> {
 
   Future<void> _returnfavoriteResults() async {
     List<Widget> favoriteResults = [];
-    Map<String, dynamic> favoriteListSong = await loadFavoriteSong();
+    Map<String, dynamic> favoriteListSong = await (await ReadData.create())
+        .readFavoriteSongs();
     for (var i in favoriteListSong[selectedName]) {
       String versionname = '';
       late Map<String, dynamic> songbasedata;
@@ -191,7 +191,7 @@ class _FavoritePageState extends State<FavoritePage> {
                               try {
                                 final controller = TextEditingController();
                                 if (!context.mounted) return;
-                                final result = await showDialog<bool>(
+                                await showDialog<bool>(
                                   context: context,
                                   builder: (context) => AlertDialog(
                                     title: const Text('新建收藏夹'),
@@ -211,7 +211,8 @@ class _FavoritePageState extends State<FavoritePage> {
                                       FilledButton(
                                         onPressed: () async {
                                           final favoriteListSongs =
-                                              await loadFavoriteSong();
+                                              await (await ReadData.create())
+                                                  .readFavoriteSongs();
                                           if (favoriteListSongs.keys.contains(
                                             controller.text,
                                           )) {
@@ -227,9 +228,11 @@ class _FavoritePageState extends State<FavoritePage> {
                                           }
                                           favoriteListSongs[controller.text] =
                                               [];
-                                          await saveFavoriteSong(
-                                            favoriteListSongs,
-                                          );
+                                          await (await WriteData.create())
+                                              .writeFavoriteSongs(
+                                                favoriteListSongs,
+                                              );
+
                                           await loadFavoriteList();
                                           await _returnfavoriteResults();
                                           if (!context.mounted) return;
@@ -257,7 +260,8 @@ class _FavoritePageState extends State<FavoritePage> {
                             onTap: () async {
                               try {
                                 final favoriteListSongs =
-                                    await loadFavoriteSong();
+                                    await (await ReadData.create())
+                                        .readFavoriteSongs();
                                 final keys = favoriteListSongs.keys
                                     .where((k) => k != 'favorite')
                                     .toList();
@@ -274,9 +278,10 @@ class _FavoritePageState extends State<FavoritePage> {
                                             selectedName = 'favorite';
                                           }
                                           favoriteListSongs.remove(name);
-                                          await saveFavoriteSong(
-                                            favoriteListSongs,
-                                          );
+                                          await (await WriteData.create())
+                                              .writeFavoriteSongs(
+                                                favoriteListSongs,
+                                              );
                                           await loadFavoriteList();
                                           await _returnfavoriteResults();
                                           if (!context.mounted) return;

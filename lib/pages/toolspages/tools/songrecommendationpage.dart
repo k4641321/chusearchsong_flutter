@@ -1,4 +1,4 @@
-import 'package:chusearchsong_flutter/function/fun.dart';
+import 'package:chusearchsong_flutter/function/writeandreadfun.dart';
 import 'package:flutter/material.dart';
 import '../../../function/toolsfun/songrecommendationpagefun.dart';
 import '../../../function/list.dart';
@@ -237,10 +237,10 @@ class _SongRecommendationPageState extends State<SongRecommendationPage>
 
   Future<void> init({required bool isNew}) async {
     try {
-      songsData = await loadSongs();
-      aliasData = await loadAlias();
-      playhistory = await loadPlayHistory();
-      config = await loadConfig();
+      songsData = await (await ReadData.create()).readSongsData();
+      aliasData = await (await ReadData.create()).readAliasData();
+      playhistory = await (await ReadData.create()).readPlayerAllScoreData();
+      config = await (await ReadData.create()).readConfig();
       buildGenreWidget();
       buildVersionWidget();
       double? result = await initminRating(isNew: isNew);
@@ -310,7 +310,8 @@ class _SongRecommendationPageState extends State<SongRecommendationPage>
           IconButton(
             onPressed: () async {
               try {
-                Map<String, dynamic> b50 = await loadb50ScoreData();
+                Map<String, dynamic> b50 = await (await ReadData.create())
+                    .readPlayerB50Data();
                 List result = calculateRecommendedFixedValueDifference(
                   b50,
                   songsData,

@@ -2,7 +2,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:chusearchsong_flutter/function/toolsfun/viewallgradespagefun.dart';
 import 'package:flutter/material.dart';
 import 'dart:developer';
-import '../../fun.dart';
+import '../../commonfun.dart';
 import '../generateb50fun/generateb50.dart';
 
 Widget buildLevelDropdownMenu({required ValueChanged<dynamic>? onSelected}) {
@@ -48,7 +48,7 @@ Widget buildLevelDropdownMenu({required ValueChanged<dynamic>? onSelected}) {
 
 Widget buildsongList({
   required Map<String, dynamic> songsData,
-  required Map<String, dynamic> allScoreData,
+  required List allScoreData,
   required List level,
   required BuildContext context,
   required ScrollController scrollController,
@@ -125,7 +125,7 @@ Widget buildsongList({
             ),
           ),
         );
-        for (var l in allScoreData['data']) {
+        for (var l in allScoreData) {
           if (k['difficulty'] == l['level_index'] && i['id'] == l['id']) {
             score = l['score'];
             rating = l['rating'].toDouble();

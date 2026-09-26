@@ -1,12 +1,6 @@
-import 'dart:developer';
+import 'package:chusearchsong_flutter/function/writeandreadfun.dart';
 import 'package:url_launcher/url_launcher.dart';
-
-import '../request.dart';
 import 'package:flutter/material.dart';
-import 'dart:io';
-import 'package:path_provider/path_provider.dart';
-import 'dart:convert';
-import 'package:package_info_plus/package_info_plus.dart';
 
 Future<void> savetexttranslateconfig({
   required String secretId,
@@ -15,17 +9,14 @@ Future<void> savetexttranslateconfig({
   required BuildContext context,
 }) async {
   try {
-    final Directory directory = await getApplicationSupportDirectory();
-    final File file = File('${directory.path}/config.json');
-    final String configstr = await file.readAsString();
-    Map<String, dynamic> config = json.decode(configstr);
+    Map<String, dynamic> config = await (await ReadData.create()).readConfig();
     if (!config.containsKey('texttranslate')) {
       config['texttranslate'] = {};
     }
     config['texttranslate']['accessKeyId'] = secretId;
     config['texttranslate']['accessKeySecret'] = secretKey;
     // config['texttranslate']['projectId'] = projectId;
-    await file.writeAsString(json.encode(config));
+    await (await WriteData.create()).writeConfig(config);
     if (!context.mounted) return;
     ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('成功')));
   } catch (e) {
@@ -40,10 +31,7 @@ Future<Map<String, dynamic>> loadtexttranslateconfig(
   BuildContext context,
 ) async {
   try {
-    final Directory directory = await getApplicationSupportDirectory();
-    final File file = File('${directory.path}/config.json');
-    final String configstr = await file.readAsString();
-    Map<String, dynamic> config = json.decode(configstr);
+    Map<String, dynamic> config = await (await ReadData.create()).readConfig();
     // print(config);
     Map<String, dynamic> texttranslate = config['texttranslate'];
     return texttranslate;
@@ -61,15 +49,12 @@ Future<void> savelxnstokenconfig({
   required BuildContext context,
 }) async {
   try {
-    final Directory directory = await getApplicationSupportDirectory();
-    final File file = File('${directory.path}/config.json');
-    final String configstr = await file.readAsString();
-    Map<String, dynamic> config = json.decode(configstr);
+    Map<String, dynamic> config = await (await ReadData.create()).readConfig();
     if (!config.containsKey('lxns')) {
       config['lxns'] = {};
     }
     config['lxns']['token'] = lxnstoken;
-    await file.writeAsString(json.encode(config));
+    await (await WriteData.create()).writeConfig(config);
   } catch (e) {
     if (!context.mounted) return;
     ScaffoldMessenger.of(
@@ -80,10 +65,7 @@ Future<void> savelxnstokenconfig({
 
 Future<Map<String, dynamic>> loadlxnsconfig(BuildContext context) async {
   try {
-    final Directory directory = await getApplicationSupportDirectory();
-    final File file = File('${directory.path}/config.json');
-    final String configstr = await file.readAsString();
-    Map<String, dynamic> config = json.decode(configstr);
+    Map<String, dynamic> config = await (await ReadData.create()).readConfig();
     // print(config);
     Map<String, dynamic> lxns = config['lxns'];
     return lxns;
@@ -96,56 +78,9 @@ Future<Map<String, dynamic>> loadlxnsconfig(BuildContext context) async {
   }
 }
 
-Future<void> updateconfig() async {
-  final path = await getApplicationSupportDirectory();
-  final configstr = File('${path.path}/config.json').readAsStringSync();
-  final packageinfo = await PackageInfo.fromPlatform();
-  Map<String, dynamic> config = json.decode(configstr);
-  //地图配置
-  if (!config.containsKey('map')) config['map'] = 'amap';
-  //初始化
-  if (!config.containsKey('init')) config['init'] = true;
-  //谱面加速
-  if (!config.containsKey('chartproxy')) config['chartproxy'] = false;
-  //更新日志
-  if (!config.containsKey('changeslogread')) config['changeslogread'] = false;
-  //版本号
-  if (packageinfo.version != config['version']) {
-    config['changeslogread'] = false;
-  }
-  config['version'] = packageinfo.version;
-  //公告
-  if (!config.containsKey('announcement')) {
-    config['announcement'] = {};
-    config['announcement']['date'] = '0000-01-01';
-    config['announcement']['read'] = false;
-    config['announcement']['value'] = 0;
-  }
-  //收藏列表
-  if (!config.containsKey('favoriteFileUpdated')) {
-    List favroitesList = jsonDecode(
-      await File('${path.path}/files/favorite.json').readAsString(),
-    );
-    Map<String, dynamic> newFavoritesList = {};
-    newFavoritesList["favorite"] = [];
-    for (var i in favroitesList) {
-      (newFavoritesList["favorite"] as List).add(i['id']);
-    }
-    File(
-      '${path.path}/files/favorite.json',
-    ).writeAsString(jsonEncode(newFavoritesList));
-    config['favoriteFileUpdated'] = true;
-  }
-
-  File('${path.path}/config.json').writeAsStringSync(json.encode(config));
-}
-
 Future<String> loadmapconfig(BuildContext context) async {
   try {
-    final Directory directory = await getApplicationSupportDirectory();
-    final File file = File('${directory.path}/config.json');
-    final String configstr = await file.readAsString();
-    Map<String, dynamic> config = json.decode(configstr);
+    Map<String, dynamic> config = await (await ReadData.create()).readConfig();
     // print(config);
     String mapconfig = config['map'];
     return mapconfig;
@@ -160,12 +95,9 @@ Future<String> loadmapconfig(BuildContext context) async {
 
 Future<void> saveMapConfig(String map, BuildContext context) async {
   try {
-    final Directory directory = await getApplicationSupportDirectory();
-    final File file = File('${directory.path}/config.json');
-    final String configstr = await file.readAsString();
-    Map<String, dynamic> config = json.decode(configstr);
+    Map<String, dynamic> config = await (await ReadData.create()).readConfig();
     config['map'] = map;
-    await file.writeAsString(json.encode(config));
+    await (await WriteData.create()).writeConfig(config);
     if (!context.mounted) return;
     ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('成功')));
   } catch (e) {
@@ -177,12 +109,9 @@ Future<void> saveMapConfig(String map, BuildContext context) async {
 }
 
 Future<void> changeChartProxy({required bool state}) async {
-  final Directory directory = await getApplicationSupportDirectory();
-  final File file = File('${directory.path}/config.json');
-  final String configstr = await file.readAsString();
-  Map<String, dynamic> config = json.decode(configstr);
+  Map<String, dynamic> config = await (await ReadData.create()).readConfig();
   config['chartproxy'] = state;
-  await file.writeAsString(json.encode(config));
+  await (await WriteData.create()).writeConfig(config);
 }
 
 Future<void> openlxnsprofile() async {

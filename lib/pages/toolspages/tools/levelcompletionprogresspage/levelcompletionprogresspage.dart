@@ -1,11 +1,8 @@
-import 'dart:convert';
 import 'dart:developer';
-import 'dart:io';
-
 import 'package:chusearchsong_flutter/function/toolsfun/levelcompletionprogresspagefun/levelcompletionprogresspagefun.dart';
+import 'package:chusearchsong_flutter/function/writeandreadfun.dart';
 import 'package:chusearchsong_flutter/pages/toolspages/tools/levelcompletionprogresspage/sharelevelcompletionprogresspage.dart';
 import 'package:flutter/material.dart';
-import 'package:path_provider/path_provider.dart';
 
 class LevelCompletionProgressPage extends StatefulWidget {
   const LevelCompletionProgressPage({super.key});
@@ -19,25 +16,20 @@ class _LevelCompletionProgressPageState
   Widget result = CircularProgressIndicator();
   final ScrollController _scrollController = ScrollController();
   late Map<String, dynamic> songsData;
-  late Map<String, dynamic> allScoreData;
+  late List allScoreData;
 
   //初始化数据，避免每次筛选都要重新读取，会慢似的
   Future<void> init() async {
     try {
-      final path = await getApplicationSupportDirectory();
-      songsData = await jsonDecode(
-        await File('${path.path}/res/songs.json').readAsString(),
-      );
-      allScoreData = await jsonDecode(
-        await File('${path.path}/res/allscore.json').readAsString(),
-      );
+      songsData = await (await ReadData.create()).readSongsData();
+      allScoreData = await (await ReadData.create()).readPlayerAllScoreData();
       update();
       // print(songsData);
       // print(allScoreData);
     } catch (e, strack) {
       log('$e\n$strack');
       songsData = {};
-      allScoreData = {};
+      allScoreData = [];
       if (!mounted) return;
       ScaffoldMessenger.of(
         context,

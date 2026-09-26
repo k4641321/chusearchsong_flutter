@@ -1,4 +1,4 @@
-import 'package:chusearchsong_flutter/function/fun.dart';
+import 'package:chusearchsong_flutter/function/commonfun.dart';
 import 'package:chusearchsong_flutter/pages/songinfopages/chartviewpage.dart';
 import 'package:chusearchsong_flutter/pages/toolspages/tools/faulttoterantcomputationpage.dart';
 import 'package:chusearchsong_flutter/pages/toolspages/tools/ratingcalculatorpage.dart';

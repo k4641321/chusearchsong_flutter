@@ -1,9 +1,7 @@
+import 'package:chusearchsong_flutter/function/writeandreadfun.dart';
 import 'package:flutter/material.dart';
-import 'dart:convert';
 import 'package:url_launcher/url_launcher.dart';
-import 'dart:io';
-import 'package:chusearchsong_flutter/function/fun.dart';
-import 'package:path_provider/path_provider.dart';
+import 'package:chusearchsong_flutter/function/commonfun.dart';
 import 'dart:developer';
 
 Future<void> openmap({
@@ -109,9 +107,7 @@ Future<void> openmap({
   }
 
   try {
-    final path = await getApplicationSupportDirectory();
-    final configstr = await File('${path.path}/config.json').readAsString();
-    final config = json.decode(configstr) as Map<String, dynamic>;
+    final config = await (await ReadData.create()).readConfig();
     if (config['map'] == 'amap') {
       openamap();
     } else if (config['map'] == 'baidu') {
@@ -134,11 +130,7 @@ Future<List<Widget>> search({
   required String initialSelection,
   required BuildContext context,
 }) async {
-  final dataPath = await getApplicationSupportDirectory();
-  String lobbyDataStr = await File(
-    '${dataPath.path}/res/location.json',
-  ).readAsString();
-  final lobbyDataJson = json.decode(lobbyDataStr) as List;
+  final lobbyDataJson = await (await ReadData.create()).readWahlapLobbyData();
   List searchResults2 = [];
   List<Widget> searchResults3 = [];
   searchResults.clear();

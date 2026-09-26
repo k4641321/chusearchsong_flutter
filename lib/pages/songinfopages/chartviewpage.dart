@@ -4,10 +4,13 @@ import 'dart:ui' as ui;
 
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:chusearchsong_flutter/function/request.dart';
+import 'package:chusearchsong_flutter/function/writeandreadfun.dart';
 import 'package:file_picker/file_picker.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'dart:io';
+
 import 'package:path_provider/path_provider.dart';
 
 class ChartViewPage extends StatefulWidget {
@@ -67,17 +70,12 @@ class _ChartViewPageState extends State<ChartViewPage> {
 
   Future<void> init() async {
     try {
-      final path = await getApplicationSupportDirectory();
       if (!mounted) return;
       String? charturl;
-      Map<String, dynamic> config = jsonDecode(
-        File('${path.path}/config.json').readAsStringSync(),
-      );
-      String zxzrsongsdatastr = await File(
-        '${path.path}/res/zxzrsongs.json',
-      ).readAsString();
+      Map<String, dynamic> config = await (await ReadData.create())
+          .readConfig();
       if (!mounted) return;
-      List zxzrsongsdata = jsonDecode(zxzrsongsdatastr);
+      List zxzrsongsdata = await (await ReadData.create()).readzxzrSongsData();
       List songchart = [];
       for (var i in zxzrsongsdata) {
         if (i['id'] == widget.songid) {
@@ -254,6 +252,12 @@ class _ChartViewPageState extends State<ChartViewPage> {
             icon: Icon(Icons.share),
             onPressed: () async {
               try {
+                if (kIsWeb) {
+                  ScaffoldMessenger.of(
+                    context,
+                  ).showSnackBar(SnackBar(content: Text('网页不支持分享')));
+                  return;
+                }
                 ScaffoldMessenger.of(
                   context,
                 ).showSnackBar(SnackBar(content: Text('正在生成，请不要重复点击')));

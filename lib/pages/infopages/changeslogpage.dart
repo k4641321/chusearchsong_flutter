@@ -1,6 +1,6 @@
 import 'dart:convert';
 
-import 'package:chusearchsong_flutter/function/fun.dart';
+import 'package:chusearchsong_flutter/function/commonfun.dart';
 import 'package:chusearchsong_flutter/function/request.dart';
 import 'package:flutter/material.dart';
 

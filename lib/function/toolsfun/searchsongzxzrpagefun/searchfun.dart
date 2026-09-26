@@ -1,9 +1,6 @@
-import 'dart:convert';
 import 'dart:developer';
-import 'dart:io';
 import 'package:chusearchsong_flutter/pages/toolspages/tools/searchsongzxzrpage/songinfopage.dart';
 import 'package:flutter/material.dart';
-import 'package:path_provider/path_provider.dart';
 import 'dart:math' as math;
 import 'package:cached_network_image/cached_network_image.dart';
 //我操了，自己都快看力竭了，太石了，自己都要看不懂了
@@ -69,6 +66,7 @@ Future<List<Widget>> search({
 }
 
 Future<List<dynamic>> filter(
+  List songData,
   String title,
   String genre,
   String version,
@@ -81,11 +79,6 @@ Future<List<dynamic>> filter(
   int? count,
 ) async {
   // 加载曲目数据
-  final dataPath = await getApplicationSupportDirectory();
-  String jsonString = await File(
-    '${dataPath.path}/res/zxzrsongs.json',
-  ).readAsString();
-  List songData = json.decode(jsonString);
 
   log(
     '$title $genre $version $difficultydown $difficultyup $ifplay $bpmup $bpmdown',

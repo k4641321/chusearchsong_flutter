@@ -1,3 +1,4 @@
+import 'package:chusearchsong_flutter/function/writeandreadfun.dart';
 import 'package:flutter/material.dart';
 import '../../function/list.dart';
 import '../../function/searchfun/search.dart';
@@ -175,9 +176,9 @@ class _SearchPageState extends State<SearchPage> {
 
   Future<void> init() async {
     try {
-      songsData = await loadSongs();
-      aliasData = await loadAlias();
-      playhistory = await loadPlayHistory();
+      songsData = await (await ReadData.create()).readSongsData();
+      aliasData = await (await ReadData.create()).readAliasData();
+      playhistory = await (await ReadData.create()).readPlayerAllScoreData();
       buildGenreWidget();
       buildVersionWidget();
     } catch (e, strack) {

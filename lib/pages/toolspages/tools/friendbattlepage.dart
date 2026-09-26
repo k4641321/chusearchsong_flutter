@@ -1,13 +1,10 @@
 import 'dart:convert';
 import 'dart:developer';
-import 'dart:io';
-
-import 'package:chusearchsong_flutter/function/fun.dart';
 import 'package:chusearchsong_flutter/function/request.dart';
 import 'package:chusearchsong_flutter/function/toolsfun/friendbattlepagefun.dart';
+import 'package:chusearchsong_flutter/function/writeandreadfun.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:path_provider/path_provider.dart';
 
 class FriendBattlePage extends StatefulWidget {
   const FriendBattlePage({super.key});
@@ -53,15 +50,13 @@ class _FriendBattlePageState extends State<FriendBattlePage> {
       setState(() {
         _loadingText = '加载曲目...';
       });
-      songsdata = jsonDecode(await loadSongsData());
+      songsdata = await (await ReadData.create()).readSongsData();
       if (!mounted) return;
       setState(() {
         _loadingText = '上传玩家成绩...';
       });
       final uploadresult = jsonDecode(await uploadplayerscore());
-      myscore = jsonDecode(
-        await requestScore(token: await returnlxnstoken()),
-      )['data'];
+      myscore = await (await ReadData.create()).readPlayerAllScoreData();
       if (uploadresult['Sucess'] == true) {
         if (!mounted) return;
         setState(() {
@@ -101,7 +96,7 @@ class _FriendBattlePageState extends State<FriendBattlePage> {
   }
 
   Future<void> readAgreement() async {
-    Map<String, dynamic> config = await loadConfig();
+    Map<String, dynamic> config = await (await ReadData.create()).readConfig();
     if (!config.containsKey('readfriendbattleagreement') ||
         config['readfriendbattleagreement'] == false) {
       if (!mounted) return;
@@ -121,12 +116,11 @@ class _FriendBattlePageState extends State<FriendBattlePage> {
               child: Text('取消'),
             ),
             TextButton(
-              onPressed: () {
+              onPressed: () async {
                 Navigator.pop(b);
-                setState(() {
-                  config['readfriendbattleagreement'] = true;
-                  saveConfig(config);
-                });
+                config['readfriendbattleagreement'] = true;
+                (await WriteData.create()).writeConfig(config);
+                setState(() {});
               },
               child: Text('确定'),
             ),
@@ -145,7 +139,6 @@ class _FriendBattlePageState extends State<FriendBattlePage> {
       }
       newfriendcode = int.parse(friendcodeController.text);
       if (friendcode != newfriendcode) {
-        final path = await getApplicationSupportDirectory();
         if (!mounted) return;
         setState(() {
           _isLoading = true;
@@ -158,9 +151,7 @@ class _FriendBattlePageState extends State<FriendBattlePage> {
         setState(() {
           _loadingText = '请求我的数据...';
         });
-        myscore = jsonDecode(
-          File('${path.path}/res/allscore.json').readAsStringSync(),
-        )['data'];
+        myscore = await (await ReadData.create()).readPlayerAllScoreData();
         if (!mounted) return;
         setState(() {
           _loadingText = '请求好友信息...';
@@ -174,9 +165,8 @@ class _FriendBattlePageState extends State<FriendBattlePage> {
         setState(() {
           _loadingText = '请求我的信息...';
         });
-        myRating = jsonDecode(
-          File('${path.path}/res/playerinfo.json').readAsStringSync(),
-        )['data']['rating'];
+        myRating = (await (await ReadData.create())
+            .readPlayerInfoData())['data']['rating'];
         friendcode = newfriendcode;
       }
       if (!mounted) return;

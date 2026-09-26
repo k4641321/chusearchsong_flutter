@@ -1,11 +1,9 @@
-import 'package:chusearchsong_flutter/function/fun.dart';
+import 'package:chusearchsong_flutter/function/writeandreadfun.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart';
 import 'dart:convert';
-import 'dart:developer';
-import 'dart:io';
-import 'package:path_provider/path_provider.dart';
 
+//鸟率排行榜
 Future<String> requestChunirecSongInfoPage(String chunirecid) async {
   final uri = Uri.parse('https://db.chunirec.net/music/$chunirecid');
   final response = await get(uri);
@@ -16,6 +14,7 @@ Future<String> requestChunirecSongInfoPage(String chunirecid) async {
   return response.body;
 }
 
+//百合番
 Future<String> requestLilyFan() async {
   final uri = Uri.parse('https://chusearchsong.devintom.top/api/lilyfan');
   final response = await get(uri);
@@ -26,16 +25,7 @@ Future<String> requestLilyFan() async {
   return response.body;
 }
 
-Future<void> saveLinkedVerseData() async {
-  final directory = await getApplicationSupportDirectory();
-  final path = Directory('${directory.path}/res');
-  await File('${path.path}/linkedversedata.json').create();
-  await File(
-    '${path.path}/linkedversedata.json',
-  ).writeAsString(await requestLinkedVerseData());
-  log('保存到 ${path.path}/linkedversedata.json');
-}
-
+//Linked Verse
 Future<String> requestLinkedVerseData() async {
   final uri = Uri.parse(
     'https://chusearchsong.devintom.top/api/linkedversedata',
@@ -48,6 +38,7 @@ Future<String> requestLinkedVerseData() async {
   return response.body;
 }
 
+//赞助排行榜
 Future<String> requestSponsorshipRanking() async {
   final uri = Uri.parse('https://chusearchsong.devintom.top/api/zxphb');
   final response = await get(uri);
@@ -58,209 +49,11 @@ Future<String> requestSponsorshipRanking() async {
   return response.body;
 }
 
-Future<void> saveTrophiesData() async {
-  final directory = await getApplicationSupportDirectory();
-  final path = Directory('${directory.path}/res');
-  await File('${path.path}/trophies.json').create();
-  await File(
-    '${path.path}/trophies.json',
-  ).writeAsString(await requestTrophiesData());
-  log('保存到 ${path.path}/trophies.json');
-}
-
-Future<void> savePlatesData() async {
-  final directory = await getApplicationSupportDirectory();
-  final path = Directory('${directory.path}/res');
-  await File('${path.path}/plates.json').create();
-  await File(
-    '${path.path}/plates.json',
-  ).writeAsString(await requestPlatesData());
-  log('保存到 ${path.path}/plates.json');
-}
-
-Future<void> saveIconsData() async {
-  final directory = await getApplicationSupportDirectory();
-  final path = Directory('${directory.path}/res');
-  await File('${path.path}/icons.json').create();
-  await File('${path.path}/icons.json').writeAsString(await requestIconsData());
-  log('保存到 ${path.path}/icons.json');
-}
-
-Future<void> saveCharactersData() async {
-  final directory = await getApplicationSupportDirectory();
-  final path = Directory('${directory.path}/res');
-  await File('${path.path}/characters.json').create();
-  await File(
-    '${path.path}/characters.json',
-  ).writeAsString(await requestCharactersData());
-  log('保存到 ${path.path}/characters.json');
-}
-
-Future<void> saveLobbyData() async {
-  final directory = await getApplicationSupportDirectory();
-  final path = Directory('${directory.path}/res');
-  await File('${path.path}/location.json').create();
-  await File(
-    '${path.path}/location.json',
-  ).writeAsString(await requestLobbyData());
-  log('保存到 ${path.path}/location.json');
-}
-
-Future<void> saveAliasData() async {
-  final directory = await getApplicationSupportDirectory();
-  final path = Directory('${directory.path}/res');
-  await File('${path.path}/alias.json').create();
-  await File('${path.path}/alias.json').writeAsString(await requestAliasData());
-  log('保存到 ${path.path}/alias.json');
-}
-
-Future<void> saveSongdata() async {
-  final directory = await getApplicationSupportDirectory();
-  final path = Directory('${directory.path}/res');
-  await File('${path.path}/songs.json').create();
-  await File('${path.path}/songs.json').writeAsString(await requestSongData());
-  log('保存到 ${path.path}/songs.json');
-}
-
-Future<void> savezxzrsongs() async {
-  log('请求reiwaf5sisongs');
-  List zxzrsongslist = await requestreiwaf5sisongs();
-  List chunirecall = jsonDecode(zxzrsongslist[1]);
-  List chunithmrecord = jsonDecode(zxzrsongslist[0]);
-  log('请求beerpsisongs');
-  List beerpsisongs = jsonDecode(await requestbeerpsisongs());
-
-  // Map<String, dynamic> zxzrsongs = {};
-  log('添加未拥有的曲目');
-  List intlidList = [];
-  // List intlidchunirecIdList = [];
-  int idx = -1;
-  for (var i in beerpsisongs) {
-    intlidList.add(i['id']);
-    // intlidchunirecIdList.add(i['chunirec_id']);
-  }
-  // print(intlidchunirecIdList);
-  for (var i in chunirecall) {
-    // if (i['meta']['idx'] == null) {
-    //   throw Exception(i);
-    // }
-    if (!(i['meta'] as Map).containsKey('idx')) {
-      List chartsList = [];
-      List chartdiffList = (i['data'] as Map).keys.toList();
-      for (var j in chartdiffList) {
-        chartsList.add({
-          "difficulty": j,
-          "level": "${i['data'][j]['level']}",
-          "const": i['data'][j]['const'],
-          "charter": null,
-          "version": null,
-          "sdvxin_url": null,
-          "available": true,
-          "notecounts": {
-            "total": i['data'][j]['maxcombo'],
-            "tap": null,
-            "hold": null,
-            "slide": null,
-            "air": null,
-            "flick": null,
-          },
-        });
-      }
-      beerpsisongs.add({
-        "id": idx,
-        "chunirec_id": i['meta']['id'],
-        "title": i['meta']['title'],
-        "aliases": [],
-        "artist": i['meta']['artist'],
-        "genre": i['meta']['genre'],
-        "release": i['meta']['release'],
-        "version": null,
-        "jacket_url":
-            "https://chunithm-net-eng.com/mobile/img/${i['meta']['img']}.jpg",
-        "duration": null,
-        "bpm": {
-          "min": i['meta']['bpm'],
-          "max": i['meta']['bpm'],
-          "mode": i['meta']['bpm'],
-        },
-        "availability": {"intl": false, "jp": true},
-        "charts": chartsList,
-      });
-      idx--;
-      continue;
-    }
-    // if (i['meta']['idx'] == null) throw Exception(i);
-    // if (int.tryParse(i['meta']['idx']) == null) {
-    //   continue;
-    // }
-    if (!intlidList.contains(int.parse(i['meta']['idx']))) {
-      List chartsList = [];
-      List chartdiffList = (i['data'] as Map).keys.toList();
-      for (var j in chartdiffList) {
-        chartsList.add({
-          "difficulty": j,
-          "level": "${i['data'][j]['level']}",
-          "const": i['data'][j]['const'],
-          "charter": null,
-          "version": null,
-          "sdvxin_url": null,
-          "available": true,
-          "notecounts": {
-            "total": i['data'][j]['maxcombo'],
-            "tap": null,
-            "hold": null,
-            "slide": null,
-            "air": null,
-            "flick": null,
-          },
-        });
-      }
-      beerpsisongs.add({
-        "id": int.parse(i['meta']['idx']),
-        "chunirec_id": i['meta']['id'],
-        "title": i['meta']['title'],
-        "aliases": [],
-        "artist": i['meta']['artist'],
-        "genre": i['meta']['genre'],
-        "release_date": i['meta']['release'],
-        "version": null,
-        "jacket_url":
-            "https://new.chunithm-net.com/chuni-mobile/html/mobile/img/${i['meta']['img']}.jpg",
-        "duration": null,
-        "bpm": {
-          "min": i['meta']['bpm'],
-          "max": i['meta']['bpm'],
-          "mode": i['meta']['bpm'],
-        },
-        "availability": {"intl": false, "jp": true},
-        "charts": chartsList,
-      });
-    }
-  }
-  for (var i in chunithmrecord) {
-    if (!intlidList.contains(int.parse(i['idx']))) {
-      for (var j in beerpsisongs) {
-        if (j['id'] == int.parse(i['idx'])) {
-          j['version'] = i['version'];
-        }
-      }
-    }
-  }
-  final path = await getApplicationSupportDirectory();
-  try {
-    await File(
-      '${path.path}/res/zxzrsongs.json',
-    ).writeAsString(json.encode(beerpsisongs), encoding: utf8);
-  } catch (e) {
-    log('$e', name: 'request.dart', level: 1000);
-  }
-  log('保存到 ${path.path}/zxzrsongs.json');
-}
-
+//请求reiwa.f5.si歌曲数据
 Future<List> requestreiwaf5sisongs() async {
   late final Uri chunithmrecorduri;
   late final Uri chunirecalluri;
-  Map<String, dynamic> config = await loadConfig();
+  Map<String, dynamic> config = await (await ReadData.create()).readConfig();
   if (config['chartproxy']) {
     chunithmrecorduri = Uri.parse(
       'https://chusearchsong.devintom.top/api/chunithmrecord',
@@ -283,46 +76,7 @@ Future<List> requestreiwaf5sisongs() async {
   return [chunithmrecord.body, chunirecall.body];
 }
 
-Future<void> saveNearcadeAllShop() async {
-  try {
-    int page = 1;
-    List shopsList = [];
-    final path = await getApplicationSupportDirectory();
-    bool hasNext = true;
-    if (!File('${path.path}/res/nearcadeshops.json').existsSync()) {
-      File('${path.path}/res/nearcadeshops.json').createSync();
-    }
-    while (hasNext) {
-      final rawJson = await requestNearcadeAllShop(page: page); // 请求当前页
-      final result = await jsonDecode(rawJson) as Map<String, dynamic>;
-
-      if (result.containsKey('shops')) {
-        shopsList.addAll(result['shops']);
-      }
-      hasNext = result['hasNextPage'];
-      log('有下一页');
-      page++;
-    }
-    Map<String, dynamic> gameList = {};
-    for (var i in shopsList) {
-      for (var j in i['games']) {
-        gameList['${j['titleId']}'] = '${j['name']}';
-      }
-    }
-    if (!File('${path.path}/res/nearcadegames.json').existsSync()) {
-      File('${path.path}/res/nearcadegames.json').createSync();
-    }
-    File(
-      '${path.path}/res/nearcadegames.json',
-    ).writeAsStringSync(jsonEncode(gameList));
-    await File(
-      '${path.path}/res/nearcadeshops.json',
-    ).writeAsString(jsonEncode(shopsList), encoding: utf8);
-  } catch (e) {
-    log('$e', name: 'request.dart', level: 1000);
-  }
-}
-
+//请求Nearcade所有店铺数据
 Future<String> requestNearcadeAllShop({required int page}) async {
   final uri = Uri.parse(
     'https://nearcade.phizone.cn/api/shops/?regionId=CN&limit=100&page=$page',
@@ -334,6 +88,7 @@ Future<String> requestNearcadeAllShop({required int page}) async {
   return response.body;
 }
 
+//请求返回落雪Token
 Future<String> requestOAuthCallbackToken(String code) async {
   final uri = Uri.parse(
     'https://chusearchsong.devintom.top/api/oauth/callback?code=$code',
@@ -345,6 +100,7 @@ Future<String> requestOAuthCallbackToken(String code) async {
   return response.body;
 }
 
+//请求其他玩家信息
 Future<String> requestotherPlayerInfo(int friendcode) async {
   final uri = Uri.parse(
     'https://chusearchsong.devintom.top/api/playerinfo?friendcode=$friendcode',
@@ -356,30 +112,12 @@ Future<String> requestotherPlayerInfo(int friendcode) async {
   return response.body;
 }
 
-Future<String> loadSongsData() async {
-  final path = await getApplicationSupportDirectory();
-  return File('${path.path}/res/songs.json').readAsString();
-}
-
-Future<String> finduploadallscore(int friendcode) async {
-  final uri = Uri.parse(
-    'https://chusearchsong.devintom.top/api/finduploadallscore/$friendcode',
-  );
-  final response = await get(uri);
-  if (response.statusCode != 200) {
-    throw Exception('请求失败，状态码：${response.statusCode}');
-  }
-  // print(response.body);
-  return response.body;
-}
-
+//上传玩家数据
 Future<String> uploadplayerscore() async {
   final uri = Uri.parse(
     'https://chusearchsong.devintom.top/api/uploadallscore',
   );
-  List score = jsonDecode(
-    await requestScore(token: await returnlxnstoken()),
-  )['data'];
+  List score = jsonDecode(await requestPlayerAllScore())['data'];
   Map<String, dynamic> playerdata = jsonDecode(
     await requestPlayerInfo(),
   )['data'];
@@ -395,20 +133,7 @@ Future<String> uploadplayerscore() async {
   return response.body;
 }
 
-Future<void> saveSegaCharaData() async {
-  final path = await getApplicationSupportDirectory();
-  try {
-    final rawJson = await requestSegaCharaData();
-    final decoded = json.decode(rawJson);
-    await File(
-      '${path.path}/res/segachara.json',
-    ).writeAsString(json.encode(decoded), encoding: utf8);
-    log('保存到 ${path.path}/segachara.json');
-  } catch (e) {
-    log('$e', name: 'request.dart', level: 1000);
-  }
-}
-
+//请求Sega角色数据
 Future<String> requestSegaCharaData() async {
   final response = await get(
     Uri.parse('https://chunithm.sega.jp/storage/json/chara.json'),
@@ -429,6 +154,7 @@ Future<String> requestuscount() async {
   return response.body;
 }
 
+//请求公告
 Future<String> requestAnnouncement() async {
   final response = await get(
     Uri.parse('https://chusearchsong.devintom.top/api/announcement'),
@@ -439,17 +165,7 @@ Future<String> requestAnnouncement() async {
   return response.body;
 }
 
-Future<Map<String, dynamic>> readconfig() async {
-  final path = await getApplicationSupportDirectory();
-  String configstr = await File('${path.path}/config.json').readAsString();
-  return json.decode(configstr);
-}
-
-Future<void> saveconfig(Map<String, dynamic> config) async {
-  final path = await getApplicationSupportDirectory();
-  await File('${path.path}/config.json').writeAsString(json.encode(config));
-}
-
+//请求更新日志
 Future<String> requestChangeslog() async {
   final response = await get(
     Uri.parse('https://chusearchsong.devintom.top/api/changelog'),
@@ -460,6 +176,7 @@ Future<String> requestChangeslog() async {
   return response.body;
 }
 
+//通过Vercel获取谱面
 Future<String> requestproxychartdata({
   required String charturl,
   required int levelindex,
@@ -479,6 +196,7 @@ Future<String> requestproxychartdata({
   return response.body;
 }
 
+//获取版本号
 Future<String> requestVersion() async {
   final response = await get(
     Uri.parse('https://chusearchsong.devintom.top/api/version'),
@@ -489,19 +207,7 @@ Future<String> requestVersion() async {
   return response.body;
 }
 
-// Future<void> savezxzrsongs() async {
-//   final path = await getApplicationSupportDirectory();
-//   try {
-//     final rawJson = await requestzxzrsongs();
-//     final decoded = json.decode(rawJson);
-//     await File(
-//       '${path.path}/res/zxzrsongs.json',
-//     ).writeAsString(json.encode(decoded), encoding: utf8);
-//   } catch (e) {
-//     log('$e', name: 'request.dart', level: 1000);
-//   }
-// }
-
+//请求beerpsi歌曲数据
 Future<String> requestbeerpsisongs() async {
   final response = await get(Uri.parse('https://chunithm.beerpsi.cc/songs'));
   if (response.statusCode != 200) {
@@ -510,16 +216,7 @@ Future<String> requestbeerpsisongs() async {
   return response.body;
 }
 
-Future<void> saveLatestVersion() async {
-  final path = await getApplicationSupportDirectory();
-  String configstr = await File('${path.path}/config.json').readAsString();
-  Map<String, dynamic> config = json.decode(configstr);
-  String latestversionstr = await requestLatestVersion();
-  Map<String, dynamic> latestversion = json.decode(latestversionstr);
-  config['latest_version'] = latestversion['version'];
-  await File('${path.path}/config.json').writeAsString(json.encode(config));
-}
-
+//获取最新版本号
 Future<String> requestLatestVersion() async {
   final response = await get(
     Uri.parse('https://chusearchsong.devintom.top/api/latest_version'),
@@ -539,6 +236,7 @@ Future<String> requestLatestVersion() async {
   }
 }
 
+//获取落雪排行榜
 Future<String> requestRankingList({required int id, required int diff}) async {
   final headers = {'X-User-Token': await returnlxnstoken()};
   final response = await get(
@@ -553,6 +251,7 @@ Future<String> requestRankingList({required int id, required int diff}) async {
   return response.body;
 }
 
+//请求关联收藏品
 Future<String> requestRelatedCollectibles({required int id}) async {
   final response = await get(
     Uri.parse('https://maimai.lxns.net/api/v0/chunithm/song-collections/$id'),
@@ -563,6 +262,7 @@ Future<String> requestRelatedCollectibles({required int id}) async {
   return response.body;
 }
 
+//请求单曲成绩
 Future<String> requestSongHistory({required int id, required int diff}) async {
   final headers = {'X-User-Token': await returnlxnstoken()};
   final response = await get(
@@ -577,6 +277,7 @@ Future<String> requestSongHistory({required int id, required int diff}) async {
   return response.body;
 }
 
+//获取收藏品进度
 Future<String> requestTrendProgress({required int id}) async {
   final headers = {'X-User-Token': await returnlxnstoken()};
   final response = await get(
@@ -589,17 +290,7 @@ Future<String> requestTrendProgress({required int id}) async {
   return response.body;
 }
 
-Future<String> returnlxnstoken() async {
-  final directory = await getApplicationSupportDirectory();
-
-  final String configstr = await File(
-    '${directory.path}/config.json',
-  ).readAsString();
-  Map<String, dynamic> config = json.decode(configstr);
-  String token = config['lxns']['token'];
-  return token;
-}
-
+//获取单曲最佳成绩
 Future<String> requestSongBests({
   required String token,
   required int songid,
@@ -617,6 +308,7 @@ Future<String> requestSongBests({
   return response.body;
 }
 
+//获取B50
 Future<String> requestB50() async {
   final headers = {'X-User-Token': await returnlxnstoken()};
   final response = await get(
@@ -629,19 +321,7 @@ Future<String> requestB50() async {
   return response.body;
 }
 
-Future<void> saveB50() async {
-  final directory = await getApplicationSupportDirectory();
-  final file = File('${directory.path}/res/b50.json');
-  try {
-    String b50str = await requestB50();
-    await file.writeAsString(b50str);
-    log('B50完成');
-  } catch (e) {
-    log('$e', name: 'settingspagefun.dart - request.dart', level: 1000);
-    throw Exception('$e');
-  }
-}
-
+//获取玩家信息
 Future<String> requestPlayerInfo() async {
   final headers = {'X-User-Token': await returnlxnstoken()};
   final response = await get(
@@ -654,46 +334,9 @@ Future<String> requestPlayerInfo() async {
   return response.body;
 }
 
-Future<void> savePlayerInfo() async {
-  final directory = await getApplicationSupportDirectory();
-  final file = File('${directory.path}/res/playerinfo.json');
-  try {
-    String playerinfostr = await requestPlayerInfo();
-    await file.writeAsString(playerinfostr);
-    log('玩家数据完成');
-  } catch (e) {
-    log('$e', name: 'settingspagefun.dart - request.dart', level: 1000);
-    throw Exception('$e');
-  }
-}
-
-Future<void> saveTrend() async {
-  final directory = await getApplicationSupportDirectory();
-  final file = File('${directory.path}/res/trend.json');
-  try {
-    String allscorestr = await requestTrend(token: await returnlxnstoken());
-    await file.writeAsString(allscorestr);
-    log('Rating趋势完成');
-  } catch (e) {
-    log('$e', name: 'settingspagefun.dart - request.dart', level: 1000);
-  }
-}
-
-Future<void> saveAllScore() async {
-  final directory = await getApplicationSupportDirectory();
-  final file = File('${directory.path}/res/allscore.json');
-  try {
-    String allscorestr = await requestScore(token: await returnlxnstoken());
-    await file.writeAsString(allscorestr);
-    log('所有成绩完成');
-  } catch (e) {
-    log('$e', name: 'settingspagefun.dart - request.dart', level: 1000);
-    throw Exception('$e');
-  }
-}
-
-Future<String> requestTrend({required String token}) async {
-  final headers = {'X-User-Token': token};
+//获取玩家Rating趋势
+Future<String> requestTrend() async {
+  final headers = {'X-User-Token': await returnlxnstoken()};
   final response = await get(
     Uri.parse('https://maimai.lxns.net/api/v0/user/chunithm/player/trend'),
     headers: headers,
@@ -704,8 +347,9 @@ Future<String> requestTrend({required String token}) async {
   return response.body;
 }
 
-Future<String> requestScore({required String token}) async {
-  final headers = {'X-User-Token': token};
+//获取全部成绩
+Future<String> requestPlayerAllScore() async {
+  final headers = {'X-User-Token': await returnlxnstoken()};
   final response = await get(
     Uri.parse('https://maimai.lxns.net/api/v0/user/chunithm/player/scores'),
     headers: headers,
@@ -716,6 +360,7 @@ Future<String> requestScore({required String token}) async {
   return response.body;
 }
 
+//获取名牌版
 Future<String> requestPlatesData() async {
   final response = await get(
     Uri.parse('https://maimai.lxns.net/api/v0/chunithm/plate/list'),
@@ -726,6 +371,7 @@ Future<String> requestPlatesData() async {
   return response.body;
 }
 
+//获取角色
 Future<String> requestCharactersData() async {
   final response = await get(
     Uri.parse('https://maimai.lxns.net/api/v0/chunithm/character/list'),
@@ -736,6 +382,7 @@ Future<String> requestCharactersData() async {
   return response.body;
 }
 
+//获取头像
 Future<String> requestIconsData() async {
   final response = await get(
     Uri.parse('https://maimai.lxns.net/api/v0/chunithm/icon/list'),
@@ -746,6 +393,7 @@ Future<String> requestIconsData() async {
   return response.body;
 }
 
+//获取称号
 Future<String> requestTrophiesData() async {
   final response = await get(
     Uri.parse('https://maimai.lxns.net/api/v0/chunithm/trophy/list'),
@@ -756,7 +404,8 @@ Future<String> requestTrophiesData() async {
   return response.body;
 }
 
-Future<String> requestLobbyData() async {
+//获取华立机厅数据
+Future<String> requestWahlapLobbyData() async {
   final response = await get(
     Uri.parse('http://sega-register.wahlap.net/api/sega/midtr/rest/location'),
   );
@@ -766,6 +415,7 @@ Future<String> requestLobbyData() async {
   return response.body;
 }
 
+//获取别名数据
 Future<String> requestAliasData() async {
   final response = await get(
     Uri.parse('https://maimai.lxns.net/api/v0/chunithm/alias/list'),
@@ -776,6 +426,7 @@ Future<String> requestAliasData() async {
   return response.body;
 }
 
+//获取歌曲数据
 Future<String> requestSongData() async {
   final response = await get(
     Uri.parse('https://maimai.lxns.net/api/v0/chunithm/song/list'),
@@ -786,6 +437,7 @@ Future<String> requestSongData() async {
   return response.body;
 }
 
+//获取单曲歌曲详细信息
 Future<Map<String, dynamic>> getSongInfo(int id) async {
   final response = await get(
     Uri.parse('https://maimai.lxns.net/api/v0/chunithm/song/$id'),
@@ -798,111 +450,26 @@ Future<Map<String, dynamic>> getSongInfo(int id) async {
   return songInfo;
 }
 
-Future<List<DataRow>> returnSongInfo(int id) async {
-  List<DataCell> diff0 = [];
-  List<DataCell> diff1 = [];
-  List<DataCell> diff2 = [];
-  List<DataCell> diff3 = [];
-  List<DataCell> diff4 = [];
-  List<DataCell> diff5 = [];
-  List<DataRow> rowsData = [];
-  try {
-    Map<String, dynamic> songInfo = await getSongInfo(id);
-    // print(songInfo);
-    for (var i in songInfo['difficulties']) {
-      switch (i['difficulty']) {
-        case 0:
-          diff0.add(DataCell(Text('${i['level_value']}')));
-          diff0.add(DataCell(Text('${i['notes']['tap']}')));
-          diff0.add(DataCell(Text('${i['notes']['hold']}')));
-          diff0.add(DataCell(Text('${i['notes']['slide']}')));
-          diff0.add(DataCell(Text('${i['notes']['air']}')));
-          diff0.add(DataCell(Text('${i['notes']['flick']}')));
-          diff0.add(DataCell(Text('${i['notes']['total']}')));
-          diff0.add(DataCell(Text('${i['note_designer']}')));
-          rowsData.add(DataRow(cells: diff0));
-        case 1:
-          diff1.add(DataCell(Text('${i['level_value']}')));
-          diff1.add(DataCell(Text('${i['notes']['tap']}')));
-          diff1.add(DataCell(Text('${i['notes']['hold']}')));
-          diff1.add(DataCell(Text('${i['notes']['slide']}')));
-          diff1.add(DataCell(Text('${i['notes']['air']}')));
-          diff1.add(DataCell(Text('${i['notes']['flick']}')));
-          diff1.add(DataCell(Text('${i['notes']['total']}')));
-          diff1.add(DataCell(Text('${i['note_designer']}')));
-          rowsData.add(DataRow(cells: diff1));
-        case 2:
-          diff2.add(DataCell(Text('${i['level_value']}')));
-          diff2.add(DataCell(Text('${i['notes']['tap']}')));
-          diff2.add(DataCell(Text('${i['notes']['hold']}')));
-          diff2.add(DataCell(Text('${i['notes']['slide']}')));
-          diff2.add(DataCell(Text('${i['notes']['air']}')));
-          diff2.add(DataCell(Text('${i['notes']['flick']}')));
-          diff2.add(DataCell(Text('${i['notes']['total']}')));
-          diff2.add(DataCell(Text('${i['note_designer']}')));
-          rowsData.add(DataRow(cells: diff2));
-        case 3:
-          diff3.add(DataCell(Text('${i['level_value']}')));
-          diff3.add(DataCell(Text('${i['notes']['tap']}')));
-          diff3.add(DataCell(Text('${i['notes']['hold']}')));
-          diff3.add(DataCell(Text('${i['notes']['slide']}')));
-          diff3.add(DataCell(Text('${i['notes']['air']}')));
-          diff3.add(DataCell(Text('${i['notes']['flick']}')));
-          diff3.add(DataCell(Text('${i['notes']['total']}')));
-          diff3.add(DataCell(Text('${i['note_designer']}')));
-          rowsData.add(DataRow(cells: diff3));
-        case 4:
-          diff4.add(DataCell(Text('${i['level_value']}')));
-          diff4.add(DataCell(Text('${i['notes']['tap']}')));
-          diff4.add(DataCell(Text('${i['notes']['hold']}')));
-          diff4.add(DataCell(Text('${i['notes']['slide']}')));
-          diff4.add(DataCell(Text('${i['notes']['air']}')));
-          diff4.add(DataCell(Text('${i['notes']['flick']}')));
-          diff4.add(DataCell(Text('${i['notes']['total']}')));
-          diff4.add(DataCell(Text('${i['note_designer']}')));
-          rowsData.add(DataRow(cells: diff4));
-        case 5:
-          diff5.add(DataCell(Text('${i['level_value']}')));
-          diff5.add(DataCell(Text('${i['notes']['tap']}')));
-          diff5.add(DataCell(Text('${i['notes']['hold']}')));
-          diff5.add(DataCell(Text('${i['notes']['slide']}')));
-          diff5.add(DataCell(Text('${i['notes']['air']}')));
-          diff5.add(DataCell(Text('${i['notes']['flick']}')));
-          diff5.add(DataCell(Text('${i['notes']['total']}')));
-          diff5.add(DataCell(Text('${i['note_designer']}')));
-          rowsData.add(DataRow(cells: diff5));
-        default:
-          List<DataCell> nodata = [
-            DataCell(Text('无数据')),
-            DataCell(Text('或者')),
-            DataCell(Text('网络')),
-            DataCell(Text('错误')),
-            DataCell(Text('又或者')),
-            DataCell(Text('请求')),
-            DataCell(Text('过于')),
-            DataCell(Text('频繁')),
-          ];
-          rowsData.add(DataRow(cells: nodata));
-      }
-    }
-  } catch (e) {
-    List<DataCell> nodata = [
-      DataCell(Text('无数据')),
-      DataCell(Text('或者')),
-      DataCell(Text('网络')),
-      DataCell(Text('错误')),
-      DataCell(Text('又或者')),
-      DataCell(Text('请求')),
-      DataCell(Text('过于')),
-      DataCell(Text('频繁')),
-    ];
-    rowsData.add(DataRow(cells: nodata));
-    log('error $e', name: 'songinfopage.dart', level: 1000);
-    return rowsData;
-  }
-  return rowsData;
+//获取落雪Token
+Future<String> returnlxnstoken() async {
+  Map<String, dynamic> config = await (await ReadData.create()).readConfig();
+  String token = config['lxns']['token'];
+  return token;
 }
 
 double getNavBarHeight(BuildContext context) {
   return MediaQuery.of(context).viewInsets.bottom;
+}
+
+//请求玩家信息
+Future<String> finduploadallscore(int friendcode) async {
+  final uri = Uri.parse(
+    'https://chusearchsong.devintom.top/api/finduploadallscore/$friendcode',
+  );
+  final response = await get(uri);
+  if (response.statusCode != 200) {
+    throw Exception('请求失败，状态码：${response.statusCode}');
+  }
+  // print(response.body);
+  return response.body;
 }

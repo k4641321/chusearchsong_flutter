@@ -1,3 +1,4 @@
+import 'package:chusearchsong_flutter/function/writeandreadfun.dart';
 import 'package:flutter/material.dart';
 import '../../../function/list.dart';
 import 'dart:developer';
@@ -174,9 +175,9 @@ class _RandomMusicPageState extends State<RandomMusicPage> {
   }
 
   Future<void> init() async {
-    songsData = await loadSongs();
-    aliasData = await loadAlias();
-    playhistory = await loadPlayHistory();
+    songsData = await (await ReadData.create()).readSongsData();
+    aliasData = await (await ReadData.create()).readAliasData();
+    playhistory = await (await ReadData.create()).readPlayerAllScoreData();
     buildGenreWidget();
     buildVersionWidget();
   }

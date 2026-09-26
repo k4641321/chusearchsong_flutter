@@ -1,5 +1,5 @@
 import 'dart:convert';
-import 'package:chusearchsong_flutter/function/fun.dart';
+import 'package:chusearchsong_flutter/function/writeandreadfun.dart';
 import 'package:crypto/crypto.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
@@ -13,7 +13,8 @@ Future<String> translateText({
     return 'Null';
   }
   //读取SecretId和SecretKey
-  final Map<String, dynamic> config = await loadConfig();
+  final Map<String, dynamic> config = await (await ReadData.create())
+      .readConfig();
   final String tencentSecretId;
   final String tencentSecretKey;
   try {

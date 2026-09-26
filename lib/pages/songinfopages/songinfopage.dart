@@ -1,10 +1,11 @@
 import 'dart:developer';
 import 'package:chusearchsong_flutter/function/aliyunapi/texttranslate.dart';
+import 'package:chusearchsong_flutter/function/writeandreadfun.dart';
 import 'package:flutter/material.dart';
+import '../../function/commonfun.dart';
 import 'musicpage.dart';
 import 'package:url_launcher/url_launcher.dart';
 import '../../function/songinfofun/songinfopagefun.dart';
-import '../../function/fun.dart';
 import './songshareviewpage.dart';
 
 class SongInfoPage extends StatefulWidget {
@@ -39,7 +40,8 @@ class _SongInfoPageState extends State<SongInfoPage> {
   //添加收藏
   Future<void> _add() async {
     try {
-      Map<String, dynamic> favoriteSongs = await loadFavoriteSong();
+      Map<String, dynamic> favoriteSongs = await (await ReadData.create())
+          .readFavoriteSongs();
 
       if (!mounted) return;
       List<Widget> children = [];
@@ -47,7 +49,7 @@ class _SongInfoPageState extends State<SongInfoPage> {
         children.add(
           ListTile(
             title: Text(i),
-            onTap: () {
+            onTap: () async {
               try {
                 if (!(favoriteSongs[i] as List).contains(
                   widget.songbasedata['id'],
@@ -56,12 +58,15 @@ class _SongInfoPageState extends State<SongInfoPage> {
                 } else {
                   Navigator.pop(context);
                   ScaffoldMessenger.of(
-                  context,
-                ).showSnackBar(SnackBar(content: Text('已添加过该曲目')));
+                    context,
+                  ).showSnackBar(SnackBar(content: Text('已添加过该曲目')));
                   return;
                 }
-                saveFavoriteSong(favoriteSongs);
+                await (await WriteData.create()).writeFavoriteSongs(
+                  favoriteSongs,
+                );
                 _buttonIcon();
+                if (!mounted) return;
                 ScaffoldMessenger.of(
                   context,
                 ).showSnackBar(SnackBar(content: Text('成功')));
@@ -95,7 +100,7 @@ class _SongInfoPageState extends State<SongInfoPage> {
                     TextButton(
                       onPressed: () async {
                         Map<String, dynamic> favoriteListSongs =
-                            await loadFavoriteSong();
+                            await (await ReadData.create()).readFavoriteSongs();
                         List favoriteListSongKeys = favoriteListSongs.keys
                             .toList();
                         if (favoriteListSongKeys.contains(controller.text)) {
@@ -111,7 +116,9 @@ class _SongInfoPageState extends State<SongInfoPage> {
                         favoriteListSongs[controller.text].add(
                           widget.songbasedata['id'],
                         );
-                        await saveFavoriteSong(favoriteListSongs);
+                        await (await WriteData.create()).writeFavoriteSongs(
+                          favoriteListSongs,
+                        );
                         if (!context.mounted) return;
                         _buttonIcon();
                         Navigator.pop(context);
@@ -148,7 +155,8 @@ class _SongInfoPageState extends State<SongInfoPage> {
   //移除收藏
   Future<void> _remove() async {
     try {
-      Map<String, dynamic> favoriteSongs = await loadFavoriteSong();
+      Map<String, dynamic> favoriteSongs = await (await ReadData.create())
+          .readFavoriteSongs();
       List<Widget> children = [];
 
       for (var i in favoriteSongs.keys.toList()) {
@@ -156,9 +164,11 @@ class _SongInfoPageState extends State<SongInfoPage> {
           children.add(
             ListTile(
               title: Text(i),
-              onTap: () {
+              onTap: () async {
                 favoriteSongs[i].remove(widget.songbasedata['id']);
-                saveFavoriteSong(favoriteSongs);
+                await (await WriteData.create()).writeFavoriteSongs(
+                  favoriteSongs,
+                );
                 if (!mounted) return;
                 setState(() {
                   icon = Icons.favorite_border;
@@ -191,7 +201,8 @@ class _SongInfoPageState extends State<SongInfoPage> {
   //收藏按钮状态
   Future<void> _buttonIcon() async {
     try {
-      Map<String, dynamic> favoriteSongs = await loadFavoriteSong();
+      Map<String, dynamic> favoriteSongs = await (await ReadData.create())
+          .readFavoriteSongs();
       bool isFavorite = false;
 
       for (var i in favoriteSongs.keys.toList()) {
@@ -548,13 +559,8 @@ class _SongInfoPageState extends State<SongInfoPage> {
                           );
                         },
                       );
-                      final Uri url = Uri(
-                        scheme: 'bilibili',
-                        host: 'search',
-                        queryParameters: {
-                          'keyword':
-                              '${widget.songbasedata['title']} $selectdiff 谱面确认',
-                        },
+                      final Uri url = Uri.parse(
+                        'bilibili://search?keyword=${Uri.encodeQueryComponent('${widget.songbasedata['title']} $selectdiff 谱面确认')}',
                       );
                       if (await canLaunchUrl(url)) {
                         await launchUrl(url);

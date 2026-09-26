@@ -1,0 +1,38 @@
+name: Build Web
+
+on:
+  workflow_dispatch:
+
+jobs:
+  build-web:
+    runs-on: ubuntu-latest
+    steps:
+      - name: 检出代码
+        uses: actions/checkout@v4
+
+      - name: 安装 Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          channel: 'stable'
+          flutter-version: '3.47.0'
+          cache: true
+
+      - name: 获取依赖
+        run: flutter pub get
+
+      - name: 构建 Web
+        run: flutter build web --release
+
+      - name: 修复 base href（适配部署子路径）
+        run: sed -i 's|<base href="/">|<base href="./">|g' build/web/index.html
+
+      - name: 打包为 zip
+        run: |
+          cd build/web
+          zip -r ../../chusearchsong-web.zip .
+
+      - name: 上传产物
+        uses: actions/upload-artifact@v4
+        with:
+          name: chusearchsong-web
+          path: chusearchsong-web.zip

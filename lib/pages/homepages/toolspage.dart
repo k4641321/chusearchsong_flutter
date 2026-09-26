@@ -1,13 +1,13 @@
+import 'package:chusearchsong_flutter/function/writeandreadfun.dart';
 import 'package:chusearchsong_flutter/pages/toolspages/information/brandprogresspage/brandprogresspage.dart';
 import 'package:chusearchsong_flutter/pages/toolspages/information/linkedversepage/linkedversepage.dart';
 import 'package:chusearchsong_flutter/pages/toolspages/tools/chuqinturntablepage.dart';
 import 'package:chusearchsong_flutter/pages/toolspages/tools/friendbattlepage.dart';
 import 'package:chusearchsong_flutter/pages/toolspages/tools/overpowercalculationpage.dart';
 import 'package:chusearchsong_flutter/pages/toolspages/information/ratingcalculationmethodpage.dart';
-import 'package:chusearchsong_flutter/pages/toolspages/information/searchlobbynewpage.dart';
+import 'package:chusearchsong_flutter/pages/toolspages/information/nearcademap.dart';
 import 'package:chusearchsong_flutter/pages/toolspages/tools/searchsongzxzrpage/searchsongzxzrpage.dart';
 import 'package:chusearchsong_flutter/pages/toolspages/tools/songrecommendationpage.dart';
-import 'package:chusearchsong_flutter/function/fun.dart';
 import 'package:chusearchsong_flutter/pages/toolspages/tools/variousrankingspage.dart';
 import 'package:chusearchsong_flutter/pages/toolspages/tools/viewallgradespage.dart';
 import '../../function/toolsfun/ratingtrendpagefun.dart';
@@ -80,7 +80,7 @@ class _ToolPageState extends State<ToolPage> {
         _ToolItem(
           title: '机厅搜索(新)',
           icon: Icons.store,
-          pageBuilder: (_) => Searchlobbynewpage(),
+          pageBuilder: (_) => Nearcademap(),
         ),
         _ToolItem(
           title: 'Rating趋势',
@@ -88,7 +88,8 @@ class _ToolPageState extends State<ToolPage> {
           pageBuilder: (_) => const SizedBox(),
           onTap: (ctx) async {
             try {
-              final data1 = await returnscoretrendlist();
+              final data1 = await (await ReadData.create())
+                  .readPlayerRatingTrendData();
               final data2 = await returnSpot(data: data1);
               if (!ctx.mounted) return;
               Navigator.push(
@@ -111,7 +112,8 @@ class _ToolPageState extends State<ToolPage> {
           pageBuilder: (_) => const SizedBox(),
           onTap: (ctx) async {
             try {
-              final playerdata = await returnplayerinfodata();
+              final playerdata = await (await ReadData.create())
+                  .readPlayerInfoData();
               if (!ctx.mounted) return;
               Navigator.push(
                 ctx,

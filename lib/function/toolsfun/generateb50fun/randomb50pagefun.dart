@@ -1,4 +1,4 @@
-import 'package:chusearchsong_flutter/function/fun.dart';
+import 'package:chusearchsong_flutter/function/commonfun.dart';
 import 'package:chusearchsong_flutter/function/toolsfun/generateb50fun/generateb50.dart';
 import 'package:flutter/material.dart';
 import 'dart:math';
@@ -84,7 +84,9 @@ Future<Widget> randomb50Body({
 
                         style: TextStyle(
                           fontSize: 25,
-                          color: ratingColor(rating: playerdata['rating'].toDouble()),
+                          color: ratingColor(
+                            rating: playerdata['rating'].toDouble(),
+                          ),
                           shadows: [Shadow(color: Colors.black, blurRadius: 3)],
                         ),
                       ),

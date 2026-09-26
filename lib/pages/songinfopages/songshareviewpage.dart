@@ -4,6 +4,7 @@ import 'dart:ui' as ui;
 
 import 'package:chusearchsong_flutter/function/songinfofun/songshareviewpagefun.dart';
 import 'package:file_picker/file_picker.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:path_provider/path_provider.dart';
@@ -66,6 +67,12 @@ class _SongshareviewpageState extends State<Songshareviewpage> {
                   child: TextButton(
                     onPressed: () async {
                       try {
+                        if (kIsWeb) {
+                          ScaffoldMessenger.of(
+                            context,
+                          ).showSnackBar(SnackBar(content: Text('网页不支持分享')));
+                          return;
+                        }
                         showDialog(
                           context: context,
                           builder: (context) => SizedBox(
