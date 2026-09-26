@@ -5,7 +5,7 @@ next:
 ---
 
 # chusearchosng(中二查歌)
-![GitHub Downloads (all assets, all releases)](https://img.shields.io/github/downloads/k4641321/chusearchsong_flutter/total?style=for-the-badge)![GitHub Actions Workflow Status](https://img.shields.io/github/actions/workflow/status/k4641321/chusearchsong_flutter/build.yml?style=for-the-badge) ![GitHub Release](https://img.shields.io/github/v/release/k4641321/chusearchsong_flutter?include_prereleases&style=for-the-badge) ![GitHub Repo stars](https://img.shields.io/github/stars/k4641321/chusearchsong_flutter?style=for-the-badge)
+![GitHub Downloads (all assets, all releases)](https://img.shields.io/github/downloads/k4641321/chusearchsong_flutter/total?style=for-the-badge)![GitHub Actions Workflow Status](https://img.shields.io/github/actions/workflow/status/k4641321/chusearchsong_flutter/build.yml?style=for-the-badge) ![GitHub Release](https://img.shields.io/github/v/release/k4641321/chusearchsong_flutter?include_prereleases&style=for-the-badge) ![GitHub Repo stars](https://img.shields.io/github/stars/k4641321/chusearchsong_flutter?style=for-the-badge) [![Netlify Status](https://api.netlify.com/api/v1/badges/cdc7bd05-39f9-4b07-976f-b90d44f1a12e/deploy-status)](https://app.netlify.com/projects/chusearchsongweb/deploys)
 ## 这是什么？
 这是作者在使用了Python toga，Python Kivy后，迫不得以转为Flutter写的一个关于**中二节奏**的工具
 > [!WARNING]
@@ -64,7 +64,7 @@ next:
 | macOS | 无签名 | 太贵了，还没设备 |
 | Linux | 支持 | 软件0.7.0前完全兼容，后面不知道|
 | Android | 支持 | Android 7.0+ |
-| Web | 半支持 | 只有基础工具能用了|
+| Web | 大部分支持 | 强势推进 |
 | iOS | 无签名 | 太贵了，还没设备 |
 
 ## 考虑帮助作者开发？

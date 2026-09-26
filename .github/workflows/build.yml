@@ -224,6 +224,60 @@ jobs:
       - name: 修复 base href（适配部署子路径）
         run: sed -i 's|<base href="/">|<base href="./">|g' build/web/index.html
 
+      - name: 创建 Netlify 配置文件
+        run: |
+          cat > build/web/_redirects << 'EOF'
+          # SPA 路由重定向：所有路径都返回 index.html
+          /*    /index.html   200
+          EOF
+
+          cat > build/web/_headers << 'EOF'
+          # 静态资源缓存
+          /assets/*
+            Cache-Control: public, max-age=31536000, immutable
+
+          /icons/*
+            Cache-Control: public, max-age=31536000, immutable
+
+          /canvaskit/*
+            Cache-Control: public, max-age=31536000, immutable
+
+          /*
+            Cache-Control: no-cache
+          EOF
+
+          cat > build/web/netlify.toml << 'EOF'
+          # Netlify 配置文件
+          [[redirects]]
+            from = "/*"
+            to = "/index.html"
+            status = 200
+
+          [[headers]]
+            for = "/assets/*"
+            [headers.values]
+              Cache-Control = "public, max-age=31536000, immutable"
+
+          [[headers]]
+            for = "/icons/*"
+            [headers.values]
+              Cache-Control = "public, max-age=31536000, immutable"
+
+          [[headers]]
+            for = "/canvaskit/*"
+            [headers.values]
+              Cache-Control = "public, max-age=31536000, immutable"
+
+          [[headers]]
+            for = "/*"
+            [headers.values]
+              Cache-Control = "no-cache"
+              X-Frame-Options = "DENY"
+              X-Content-Type-Options = "nosniff"
+          EOF
+
+          echo "已创建 _redirects、_headers、netlify.toml"
+
       - name: 打包为 zip
         run: |
           cd build/web
