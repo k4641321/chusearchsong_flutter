@@ -252,15 +252,20 @@ class _ColorssettingspageState extends State<Colorssettingspage> {
                                 return StatefulBuilder(
                                   builder: (context, setDialogState) {
                                     return AlertDialog(
+                                      scrollable: true,
                                       title: Text('预览'),
                                       content: Column(
                                         children: [
-                                          Image.memory(
-                                            color: Colors.white.withAlpha(
-                                              aplha.toInt(),
+                                          SizedBox(
+                                            height: 300,
+                                            child: Image.memory(
+                                              fit: BoxFit.contain,
+                                              color: Colors.white.withAlpha(
+                                                aplha.toInt(),
+                                              ),
+                                              colorBlendMode: BlendMode.dstATop,
+                                              chooseImage.files.first.bytes!,
                                             ),
-                                            colorBlendMode: BlendMode.dstATop,
-                                            chooseImage.files.first.bytes!,
                                           ),
                                           Slider(
                                             value: aplha,

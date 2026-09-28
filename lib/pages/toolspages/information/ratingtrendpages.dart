@@ -42,77 +42,90 @@ class _RatingTrendPagesState extends State<RatingTrendPages> {
   Future<void> loadplayerinfo() async {
     try {
       Map playerdata = (await (await ReadData.create()).readPlayerInfoData());
-      Widget title = SizedBox(
-        height: 170,
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.start,
-          children: [
-            Padding(
-              padding: EdgeInsetsGeometry.only(left: 55),
-              child: SizedBox(
-                width: 540,
-                height: 225,
-                child: Card(
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    children: [
-                      Expanded(
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.spaceAround,
-                          children: [
-                            Card(
-                              color: trophyColor(
-                                trophy: playerdata['trophy']['color'],
-                              ),
-                              child: Padding(
-                                padding: EdgeInsetsGeometry.only(
-                                  left: 60,
-                                  right: 60,
-                                  top: 5,
-                                  bottom: 5,
-                                ),
-                                child: Text(
-                                  '${playerdata['trophy']['name']}',
-                                  style: TextStyle(color: Colors.black),
-                                ),
-                              ),
-                            ),
-                            Padding(
-                              padding: EdgeInsetsGeometry.only(left: 15),
-                              child: Text(
-                                'Lv.${playerdata['level']}  ${playerdata['name']}',
-                                style: TextStyle(fontSize: 30),
-                              ),
-                            ),
-                            Text(
-                              'Rating:   ${playerdata['rating']}',
+      if (playerdata.isEmpty) {
+        if (!mounted) return;
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(SnackBar(content: Text('玩家数据为空，请检查是否配置好落雪Token')));
+      }
 
-                              style: TextStyle(
-                                fontSize: 25,
-                                color: ratingColor(
-                                  rating: playerdata['rating'],
-                                ),
-                                shadows: [
-                                  Shadow(color: Colors.black, blurRadius: 3),
+      Widget title = playerdata.isNotEmpty
+          ? SizedBox(
+              height: 170,
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: [
+                  Padding(
+                    padding: EdgeInsetsGeometry.only(left: 55),
+                    child: SizedBox(
+                      width: 540,
+                      height: 225,
+                      child: Card(
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                          children: [
+                            Expanded(
+                              child: Column(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceAround,
+                                children: [
+                                  Card(
+                                    color: trophyColor(
+                                      trophy: playerdata['trophy']['color'],
+                                    ),
+                                    child: Padding(
+                                      padding: EdgeInsetsGeometry.only(
+                                        left: 60,
+                                        right: 60,
+                                        top: 5,
+                                        bottom: 5,
+                                      ),
+                                      child: Text(
+                                        '${playerdata['trophy']['name']}',
+                                        style: TextStyle(color: Colors.black),
+                                      ),
+                                    ),
+                                  ),
+                                  Padding(
+                                    padding: EdgeInsetsGeometry.only(left: 15),
+                                    child: Text(
+                                      'Lv.${playerdata['level']}  ${playerdata['name']}',
+                                      style: TextStyle(fontSize: 30),
+                                    ),
+                                  ),
+                                  Text(
+                                    'Rating:   ${playerdata['rating']}',
+
+                                    style: TextStyle(
+                                      fontSize: 25,
+                                      color: ratingColor(
+                                        rating: playerdata['rating'],
+                                      ),
+                                      shadows: [
+                                        Shadow(
+                                          color: Colors.black,
+                                          blurRadius: 3,
+                                        ),
+                                      ],
+                                    ),
+                                  ),
                                 ],
                               ),
+                            ),
+                            Image.network(
+                              'https://assets2.lxns.net/chunithm/character/${playerdata['character']['id']}.png',
+                              width: 170,
+                              height: 170,
                             ),
                           ],
                         ),
                       ),
-                      Image.network(
-                        'https://assets2.lxns.net/chunithm/character/${playerdata['character']['id']}.png',
-                        width: 170,
-                        height: 170,
-                      ),
-                    ],
+                    ),
                   ),
-                ),
+                ],
               ),
-            ),
-          ],
-        ),
-      );
+            )
+          : SizedBox.shrink();
       setState(() {
         playerinfo = title;
       });

@@ -4,6 +4,7 @@ import 'package:chusearchsong_flutter/function/infopagefun/infopagefun.dart';
 import 'package:chusearchsong_flutter/function/request.dart';
 import 'package:chusearchsong_flutter/function/writeandreadfun.dart';
 import 'package:flutter/foundation.dart';
+import 'package:flutter/rendering.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:path_provider/path_provider.dart';
 import 'function/commonfun.dart';
@@ -17,6 +18,7 @@ import 'dart:convert';
 import 'package:dynamic_color/dynamic_color.dart';
 
 void main() {
+  WidgetsFlutterBinding.ensureInitialized();
   runApp(const MyApp());
   SystemChrome.setSystemUIOverlayStyle(
     const SystemUiOverlayStyle(statusBarColor: Colors.transparent),
@@ -47,6 +49,7 @@ class _MyAppState extends State<MyApp> {
   bool _useDynamicColor = true;
   int aplha = 255;
   String? _backgroundPath;
+  int _imageVersion = 0;
 
   Future<void> _loadTheme() async {
     try {
@@ -60,6 +63,8 @@ class _MyAppState extends State<MyApp> {
         _backgroundPath = null;
         if (File('${path.path}/background/background.png').existsSync()) {
           _backgroundPath = '${path.path}/background/background.png';
+          _imageVersion++;
+          FileImage(File(_backgroundPath!)).evict();
         }
       }
       setState(() {
@@ -68,11 +73,11 @@ class _MyAppState extends State<MyApp> {
             : ThemeMode.light;
         _useDynamicColor = config['enableDynamicColor'] ?? true;
         lightTheme = ColorScheme.fromSeed(
-          seedColor: Color(config['themeColor'] ?? Colors.amber),
+          seedColor: Color(config['themeColor'] ?? Colors.amber.toARGB32()),
           brightness: Brightness.light,
         );
         darkTheme = ColorScheme.fromSeed(
-          seedColor: Color(config['themeColor'] ?? Colors.amber),
+          seedColor: Color(config['themeColor'] ?? Colors.amber.toARGB32()),
           brightness: Brightness.dark,
         );
         if (config.containsKey('BackgroundSettings')) {
@@ -112,8 +117,9 @@ class _MyAppState extends State<MyApp> {
                     Positioned.fill(
                       child: Opacity(
                         opacity: aplha / 255,
-                        child: Image.memory(
-                          File(_backgroundPath!).readAsBytesSync(),
+                        child: Image.file(
+                          key: ValueKey(_imageVersion),
+                          File(_backgroundPath!),
                           fit: BoxFit.cover,
                           errorBuilder: (context, error, stackTrace) {
                             _backgroundPath = null;

@@ -46,7 +46,6 @@ class Dataupdate {
         Map<String, dynamic> config = {
           "theme": "light",
           "init": false,
-          "favoriteFileUpdated": true,
           "autocheckupdate": true,
           "announcement": {"date": '0000-01-01', "read": false, "value": 0},
           "chartproxy": false,
@@ -752,7 +751,9 @@ Future<void> updateconfig() async {
     config['announcement']['value'] = 0;
   }
   //收藏列表
-  if (!config.containsKey('favoriteFileUpdated')) {
+  if (!config.containsKey('favoriteFileUpdated') ||
+      config['favoriteFileUpdated'] == false) {
+    log('更新收藏文件');
     if (!kIsWeb) {
       final path = await getApplicationSupportDirectory();
       Map<String, dynamic> favorite = await jsonDecode(
