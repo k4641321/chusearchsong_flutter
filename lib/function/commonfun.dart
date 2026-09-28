@@ -207,6 +207,17 @@ class Dataupdate {
       );
       log('$e', name: 'main', level: 2000);
     }
+    if (!context.mounted) return;
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: Text(
+          '注意！您可能是网页版受害者',
+          style: TextStyle(fontWeight: FontWeight.bold),
+        ),
+        content: Text('作者注意到您正在使用网页版，如果您不是苹果用户，请务必下载应用版本，网页版部分功能是无法使用的'),
+      ),
+    );
     // finally {
     //   if (context.mounted) {
     //     Navigator.of(context).pop();
