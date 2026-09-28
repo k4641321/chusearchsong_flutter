@@ -16,9 +16,8 @@ import 'pages/homepages/favoritepage.dart';
 import 'pages/homepages/toolspage.dart';
 import 'dart:convert';
 import 'package:dynamic_color/dynamic_color.dart';
-import 'widgets/background_provider.dart';
 
-void main() async {
+void main() {
   WidgetsFlutterBinding.ensureInitialized();
   runApp(const MyApp());
   SystemChrome.setSystemUIOverlayStyle(
@@ -49,39 +48,29 @@ class _MyAppState extends State<MyApp> {
   ThemeMode _themeMode = ThemeMode.light;
   bool _useDynamicColor = true;
   int aplha = 255;
-  ImageProvider? _backgroundImage;
+  String? _backgroundPath;
+  int _imageVersion = 0;
 
   Future<void> _loadTheme() async {
     try {
       Map<String, dynamic> config = await (await ReadData.create())
           .readConfig();
-      ImageProvider? bgImage;
-
       if (!kIsWeb) {
-        // 移动端：从本地文件加载
         final path = await getApplicationSupportDirectory();
         if (!Directory('${path.path}/background').existsSync()) {
           Directory('${path.path}/background').create();
         }
-        final bgFile = File('${path.path}/background/background.png');
-        if (bgFile.existsSync()) {
-          bgImage = FileImage(bgFile);
+        _backgroundPath = null;
+        if (File('${path.path}/background/background.png').existsSync()) {
+          _backgroundPath = '${path.path}/background/background.png';
+          _imageVersion++;
+          final fileImage = FileImage(File(_backgroundPath!));
+          fileImage.evict();
+          // 预加载图片到缓存，避免进入页面时延迟加载
+          fileImage.resolve(ImageConfiguration.empty);
         }
       }
-      // Web 端：如需背景，可从 AssetImage 或 NetworkImage 加载
-      // else if (config['backgroundUrl'] != null) {
-      //   bgImage = NetworkImage(config['backgroundUrl']);
-      // }
-
-      if (bgImage != null) {
-        // 等 build 完成后预缓存，此时 context 才可用
-        WidgetsBinding.instance.addPostFrameCallback((_) {
-          if (mounted) precacheImage(bgImage!, context);
-        });
-      }
-
       setState(() {
-        _backgroundImage = bgImage;
         _themeMode = config['theme'] == 'dark'
             ? ThemeMode.dark
             : ThemeMode.light;
@@ -125,35 +114,32 @@ class _MyAppState extends State<MyApp> {
             return SafeArea(
               top: false,
               bottom: true,
-              child: BackgroundProvider(
-                backgroundImage: _backgroundImage,
-                opacity: aplha,
-                child: Stack(
-                  children: [
-                    if (_backgroundImage != null)
-                      Positioned.fill(
-                        child: Opacity(
-                          opacity: aplha / 255,
-                          child: Image(
-                            image: _backgroundImage!,
-                            gaplessPlayback: true,
-                            fit: BoxFit.cover,
-                            errorBuilder: (context, error, stackTrace) {
-                              setState(() => _backgroundImage = null);
-                              return const SizedBox.shrink();
-                            },
-                          ),
+              child: Stack(
+                children: [
+                  if (_backgroundPath != null)
+                    Positioned.fill(
+                      child: Opacity(
+                        opacity: aplha / 255,
+                        child: Image.file(
+                          key: ValueKey(_imageVersion),
+                          gaplessPlayback: true,
+                          File(_backgroundPath!),
+                          fit: BoxFit.cover,
+                          errorBuilder: (context, error, stackTrace) {
+                            _backgroundPath = null;
+                            return SizedBox.shrink();
+                          },
                         ),
                       ),
-                    child!,
-                  ],
-                ),
+                    ),
+                  child!,
+                ],
               ),
             );
           },
           title: '中二查歌',
           theme: ThemeData(
-            scaffoldBackgroundColor: _backgroundImage != null
+            scaffoldBackgroundColor: _backgroundPath != null
                 ? Colors.transparent
                 : null,
             colorScheme: _useDynamicColor
@@ -163,7 +149,7 @@ class _MyAppState extends State<MyApp> {
             fontFamily: 'AlibabaPuHuiTi',
           ),
           darkTheme: ThemeData(
-            scaffoldBackgroundColor: _backgroundImage != null
+            scaffoldBackgroundColor: _backgroundPath != null
                 ? Colors.transparent
                 : null,
             colorScheme: _useDynamicColor
