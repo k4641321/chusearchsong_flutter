@@ -122,6 +122,7 @@ class _MyAppState extends State<MyApp> {
                         opacity: aplha / 255,
                         child: Image.file(
                           key: ValueKey(_imageVersion),
+                          gaplessPlayback: true,
                           File(_backgroundPath!),
                           fit: BoxFit.cover,
                           errorBuilder: (context, error, stackTrace) {
