@@ -206,18 +206,10 @@ List<Widget> sortSongs({
   }
   int index = 0;
   for (var i in songs['songs']) {
-    late String versionname;
-    for (var j in songs['versions']) {
-      if (i['version'] == j['version']) {
-        versionname = j['title'];
-        break;
-      }
-    }
-
     widgets.add(
       returnSortSongCard(
         songbasedata: i,
-        versionname: versionname,
+        songsData: songs,
         context: context,
         type: type,
         notecountlist: notecountlist,
@@ -231,13 +223,21 @@ List<Widget> sortSongs({
 
 Widget returnSortSongCard({
   required Map<String, dynamic> songbasedata,
-  required String versionname,
+  required Map<String, dynamic> songsData,
   required BuildContext context,
   required String type,
   required List notecountlist,
   required int index,
 }) {
   int originid = songbasedata['id'];
+  String versionname = '';
+  for (var i in songsData['versions']) {
+    if (i['version'] == songbasedata['version']) {
+      versionname = i['title'];
+      break;
+    }
+  }
+
   List<Widget> songInfoDiffs = [];
   Widget other = SizedBox.shrink();
   if (type == 'BPM') {
@@ -289,7 +289,7 @@ Widget returnSortSongCard({
       interSongInfo(
         songbasedata: songbasedata,
         context: context,
-        versionname: versionname,
+        songsData: songsData,
       );
     },
     child: Card(

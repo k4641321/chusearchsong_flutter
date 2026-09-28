@@ -1,4 +1,5 @@
 import 'dart:developer';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:chusearchsong_flutter/function/aliyunapi/texttranslate.dart';
 import 'package:chusearchsong_flutter/function/writeandreadfun.dart';
 import 'package:flutter/material.dart';
@@ -401,12 +402,13 @@ class _SongInfoPageState extends State<SongInfoPage> {
         controller: controller,
         slivers: [
           SliverAppBar(
+            backgroundColor: Colors.transparent,
             expandedHeight: 350,
             pinned: true,
             title: autoMarqueeText(widget.songbasedata['title']),
             flexibleSpace: FlexibleSpaceBar(
               background: InkWell(
-                child: Image.network(
+                child: CachedNetworkImage(
                   height: 350,
                   width: 350,
                   color: isDark
@@ -414,8 +416,9 @@ class _SongInfoPageState extends State<SongInfoPage> {
                       : Colors.white.withValues(alpha: 0.3),
                   colorBlendMode: isDark ? BlendMode.darken : BlendMode.lighten,
                   fit: BoxFit.contain,
-                  'https://assets2.lxns.net/chunithm/jacket/${widget.originid}.png',
-                  errorBuilder: (context, error, stackTrace) {
+                  imageUrl:
+                      'https://assets2.lxns.net/chunithm/jacket/${widget.originid}.png',
+                  errorWidget: (context, error, stackTrace) {
                     return const Text('图片加载失败');
                   },
                 ),

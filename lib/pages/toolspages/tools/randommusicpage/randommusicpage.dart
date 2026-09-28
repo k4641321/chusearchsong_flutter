@@ -1,8 +1,9 @@
 import 'package:chusearchsong_flutter/function/writeandreadfun.dart';
+import 'package:chusearchsong_flutter/pages/toolspages/tools/randommusicpage/randommusichistorypage.dart';
 import 'package:flutter/material.dart';
-import '../../../function/list.dart';
+import '../../../../function/list.dart';
 import 'dart:developer';
-import '../../../function/searchfun/search.dart';
+import '../../../../function/searchfun/search.dart';
 
 class RandomMusicPage extends StatefulWidget {
   const RandomMusicPage({super.key});
@@ -214,6 +215,15 @@ class _RandomMusicPageState extends State<RandomMusicPage> {
         title: Text('随机歌曲'),
         // backgroundColor: const Color.fromARGB(255, 255, 229, 84),
         actions: [
+          IconButton(
+            onPressed: () => Navigator.of(context).push(
+              MaterialPageRoute(
+                builder: (context) =>
+                    Randommusichistorypage(songsData: songsData),
+              ),
+            ),
+            icon: Icon(Icons.history),
+          ),
           IconButton(
             onPressed: () async {
               setState(() {

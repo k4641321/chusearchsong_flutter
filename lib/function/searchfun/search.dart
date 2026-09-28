@@ -59,7 +59,7 @@ Future<List<Widget>> search({
       returnSongCard(
         songbasedata: i,
         context: context,
-        versionname: versionname,
+        songsData: songsData,
         searchinfo: searchinfo,
       ),
       // InkWell(
@@ -141,6 +141,7 @@ Future<List<Widget>> search({
   }
   // print(songresult);
   log('完成');
+  songresultWidget.add(SizedBox(height: 80 + 25));
   return songresultWidget;
 }
 
@@ -509,6 +510,13 @@ Future<Map<String, dynamic>> filter(
         final randomId = random.nextInt(idlist.length);
         resultIds.add(idlist[randomId]);
       }
+      List randomhistory = await (await ReadData.create())
+          .readRandomMusicHistory();
+      randomhistory.insert(0, {
+        "time": DateTime.now().toString(),
+        "ids": resultIds,
+      });
+      (await WriteData.create()).writeRandomMusicHistory(randomhistory);
       List randomresult = [];
       for (var i in songsData['songs']) {
         for (var j in resultIds) {

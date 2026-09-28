@@ -1,6 +1,7 @@
 import 'package:chusearchsong_flutter/function/writeandreadfun.dart';
 import 'package:chusearchsong_flutter/pages/toolspages/information/brandprogresspage/brandprogresspage.dart';
 import 'package:chusearchsong_flutter/pages/toolspages/information/linkedversepage/linkedversepage.dart';
+import 'package:chusearchsong_flutter/pages/toolspages/other/generateimage.dart';
 import 'package:chusearchsong_flutter/pages/toolspages/tools/chuqinturntablepage.dart';
 import 'package:chusearchsong_flutter/pages/toolspages/tools/friendbattlepage.dart';
 import 'package:chusearchsong_flutter/pages/toolspages/tools/overpowercalculationpage.dart';
@@ -17,7 +18,7 @@ import '../toolspages/information/rankcolorpage.dart';
 import '../toolspages/information/rankinfopage.dart';
 import '../toolspages/tools/scorecalculationpage.dart';
 import '../toolspages/information/searchlobbypage.dart';
-import '../toolspages/tools/randommusicpage.dart';
+import '../toolspages/tools/randommusicpage/randommusicpage.dart';
 import '../toolspages/information/searchcollectibles/searchcollectiblespage.dart';
 import '../toolspages/tools/faulttoterantcomputationpage.dart';
 import '../toolspages/information/ratingtrendpages.dart';
@@ -112,8 +113,8 @@ class _ToolPageState extends State<ToolPage> {
           pageBuilder: (_) => const SizedBox(),
           onTap: (ctx) async {
             try {
-              final playerdata = await (await ReadData.create())
-                  .readPlayerInfoData();
+              final playerdata = (await (await ReadData.create())
+                  .readPlayerInfoData());
               if (!ctx.mounted) return;
               Navigator.push(
                 ctx,
@@ -226,6 +227,16 @@ class _ToolPageState extends State<ToolPage> {
         ),
       ],
     ),
+    _ToolSection(
+      title: '其他',
+      items: [
+        _ToolItem(
+          title: '图片生成',
+          icon: Icons.photo_outlined,
+          pageBuilder: (_) => Generateimage(),
+        ),
+      ],
+    ),
   ];
 
   @override
@@ -255,6 +266,7 @@ class _ToolPageState extends State<ToolPage> {
       );
       widgets.addAll(_buildRows(section.items, context));
     }
+    widgets.add(SizedBox(height: 80 + 25 + 5));
     return widgets.skip(1).toList(); // 跳过第一个 Divider
   }
 
@@ -276,6 +288,7 @@ class _ToolPageState extends State<ToolPage> {
 
   Widget _buildTile(_ToolItem item, BuildContext context) {
     return Card(
+      color: Theme.of(context).colorScheme.secondaryContainer.withAlpha(200),
       child: TextButton.icon(
         onPressed: item.onTap != null
             ? () => item.onTap!(context)

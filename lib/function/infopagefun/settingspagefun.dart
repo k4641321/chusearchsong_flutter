@@ -33,6 +33,7 @@ Future<Map<String, dynamic>> loadtexttranslateconfig(
   try {
     Map<String, dynamic> config = await (await ReadData.create()).readConfig();
     // print(config);
+    if (!config.containsKey('texttranslate')) return {};
     Map<String, dynamic> texttranslate = config['texttranslate'];
     return texttranslate;
   } catch (e) {
@@ -67,7 +68,9 @@ Future<Map<String, dynamic>> loadlxnsconfig(BuildContext context) async {
   try {
     Map<String, dynamic> config = await (await ReadData.create()).readConfig();
     // print(config);
+    if (!config.containsKey('lxns')) return {};
     Map<String, dynamic> lxns = config['lxns'];
+
     return lxns;
   } catch (e) {
     if (!context.mounted) return {};

@@ -133,7 +133,7 @@ class _SongshareviewpageState extends State<Songshareviewpage> {
                   key: _globalKey,
                   child: Container(
                     height: 1080,
-                    width: 1920,
+                    width: 2000,
                     decoration: BoxDecoration(
                       image: DecorationImage(
                         image: AssetImage('res/background.png'),

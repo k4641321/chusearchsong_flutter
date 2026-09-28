@@ -393,7 +393,7 @@ class _InfoState extends State<Info> {
                 ),
               ),
 
-              const SizedBox(height: 30),
+              const SizedBox(height: 30 + 80 + 25 + 5),
             ],
           ),
         ),

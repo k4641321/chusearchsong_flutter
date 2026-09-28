@@ -61,7 +61,6 @@ Future<List<Widget>> buildBrandProgressWidgets({
       key = i.toString().replaceAll('.0', '');
     }
     for (var j in requiredSongsFilter[key]) {
-      String versionname = '';
       Widget rank = SizedBox.shrink();
       int score = 0;
       int complete = 0;
@@ -107,20 +106,13 @@ Future<List<Widget>> buildBrandProgressWidgets({
         }
       }
       if (iscontinue) continue;
-
-      for (var k in songsData['versions']) {
-        if (k['version'] == j['version']) {
-          versionname = k['title'];
-          break;
-        }
-      }
       children.add(
         InkWell(
           onTap: () {
             interSongInfo(
               songbasedata: j,
               context: context,
-              versionname: versionname,
+              songsData: songsData,
             );
           },
           child: Padding(

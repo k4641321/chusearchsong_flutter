@@ -50,11 +50,10 @@ List<Widget> returnvsresultwidget({
   List<Widget> result = [];
   for (var i in commonchart) {
     Map<String, dynamic> songdata = {};
-    late int songid;
-    late double diffvalue;
+    int songid = 0;
+    double diffvalue = 0;
     // late int diffindex;
     late Icon icon;
-    late String versionname;
     if (levelindex != null) {
       if (i[0]['level_index'] != levelindex) {
         continue;
@@ -64,12 +63,6 @@ List<Widget> returnvsresultwidget({
       if (j['id'] == i[0]['id']) {
         songdata = j;
         songid = j['id'];
-        for (var k in songsdata['versions']) {
-          if (j['version'] == k['version']) {
-            versionname = k['title'];
-            break;
-          }
-        }
 
         if (((j['difficulties'] as List).last as Map).containsKey(
           'origin_id',
@@ -82,101 +75,104 @@ List<Widget> returnvsresultwidget({
             break;
           }
         }
+        if (i[0]['score'] > i[1]['score']) {
+          icon = Icon(Icons.arrow_forward);
+        } else if (i[0]['score'] < i[1]['score']) {
+          icon = Icon(Icons.arrow_back);
+        } else if (i[0]['score'] == i[1]['score']) {
+          icon = Icon(Icons.drag_handle);
+        }
+        if (winningandlosingstatus == 'win' &&
+            i[0]['score']! <= i[1]['score']) {
+          continue;
+        } else if (winningandlosingstatus == 'lose' &&
+            i[0]['score']! >= i[1]['score']) {
+          continue;
+        } else if (winningandlosingstatus == 'draw' &&
+            i[0]['score']! != i[1]['score']) {
+          continue;
+        }
+        result.add(
+          InkWell(
+            onTap: () => interSongInfo(
+              songbasedata: songdata,
+              context: context,
+              songsData: songsdata,
+            ),
+            child: Card(
+              child: Padding(
+                padding: EdgeInsetsGeometry.all(8),
+                child: Row(
+                  // mainAxisAlignment: MainAxisAlignment.end,
+                  children: [
+                    CachedNetworkImage(
+                      height: 75,
+                      width: 75,
+                      imageUrl:
+                          'https://assets2.lxns.net/chunithm/jacket/$songid.png',
+                      errorWidget: (context, url, error) => Icon(Icons.error),
+                    ),
+                    Expanded(
+                      child: Text.rich(
+                        TextSpan(
+                          text: '${songdata['title']}\n',
+                          children: [
+                            TextSpan(
+                              text:
+                                  '${returnDiffName(i[0]['level_index'])} $diffvalue',
+                              style: TextStyle(
+                                color: diffcolor(
+                                  diffindex: i[0]['level_index'],
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                        textAlign: TextAlign.center,
+                      ),
+                    ),
+                    Expanded(
+                      child: Text.rich(
+                        TextSpan(
+                          text: '${i[0]['score']}\n',
+                          children: [
+                            TextSpan(
+                              text: (i[0]['rank'] as String)
+                                  .replaceAll('p', '+')
+                                  .toUpperCase(),
+                            ),
+                          ],
+                        ),
+                        textAlign: TextAlign.center,
+                        style: TextStyle(color: returnColor(i[0]['score'])),
+                      ),
+                    ),
+                    Expanded(child: icon),
+                    Expanded(
+                      child: Text.rich(
+                        TextSpan(
+                          text: '${i[1]['score']}\n',
+                          children: [
+                            TextSpan(
+                              text: (i[1]['rank'] as String)
+                                  .replaceAll('p', '+')
+                                  .toUpperCase(),
+                            ),
+                          ],
+                        ),
+                        textAlign: TextAlign.center,
+                        style: TextStyle(color: returnColor(i[0]['score'])),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ),
+        );
         break;
       }
     }
-    if (i[0]['score'] > i[1]['score']) {
-      icon = Icon(Icons.arrow_forward);
-    } else if (i[0]['score'] < i[1]['score']) {
-      icon = Icon(Icons.arrow_back);
-    } else if (i[0]['score'] == i[1]['score']) {
-      icon = Icon(Icons.drag_handle);
-    }
-    if (winningandlosingstatus == 'win' && i[0]['score']! <= i[1]['score']) {
-      continue;
-    } else if (winningandlosingstatus == 'lose' &&
-        i[0]['score']! >= i[1]['score']) {
-      continue;
-    } else if (winningandlosingstatus == 'draw' &&
-        i[0]['score']! != i[1]['score']) {
-      continue;
-    }
-    result.add(
-      InkWell(
-        onTap: () => interSongInfo(
-          songbasedata: songdata,
-          context: context,
-          versionname: versionname,
-        ),
-        child: Card(
-          child: Padding(
-            padding: EdgeInsetsGeometry.all(8),
-            child: Row(
-              // mainAxisAlignment: MainAxisAlignment.end,
-              children: [
-                CachedNetworkImage(
-                  height: 75,
-                  width: 75,
-                  imageUrl:
-                      'https://assets2.lxns.net/chunithm/jacket/$songid.png',
-                  errorWidget: (context, url, error) => Icon(Icons.error),
-                ),
-                Expanded(
-                  child: Text.rich(
-                    TextSpan(
-                      text: '${songdata['title']}\n',
-                      children: [
-                        TextSpan(
-                          text:
-                              '${returnDiffName(i[0]['level_index'])} $diffvalue',
-                          style: TextStyle(
-                            color: diffcolor(diffindex: i[0]['level_index']),
-                          ),
-                        ),
-                      ],
-                    ),
-                    textAlign: TextAlign.center,
-                  ),
-                ),
-                Expanded(
-                  child: Text.rich(
-                    TextSpan(
-                      text: '${i[0]['score']}\n',
-                      children: [
-                        TextSpan(
-                          text: (i[0]['rank'] as String)
-                              .replaceAll('p', '+')
-                              .toUpperCase(),
-                        ),
-                      ],
-                    ),
-                    textAlign: TextAlign.center,
-                    style: TextStyle(color: returnColor(i[0]['score'])),
-                  ),
-                ),
-                Expanded(child: icon),
-                Expanded(
-                  child: Text.rich(
-                    TextSpan(
-                      text: '${i[1]['score']}\n',
-                      children: [
-                        TextSpan(
-                          text: (i[1]['rank'] as String)
-                              .replaceAll('p', '+')
-                              .toUpperCase(),
-                        ),
-                      ],
-                    ),
-                    textAlign: TextAlign.center,
-                    style: TextStyle(color: returnColor(i[0]['score'])),
-                  ),
-                ),
-              ],
-            ),
-          ),
-        ),
-      ),
-    );
   }
   return result;
 }

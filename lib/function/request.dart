@@ -117,10 +117,9 @@ Future<String> uploadplayerscore() async {
   final uri = Uri.parse(
     'https://chusearchsong.devintom.top/api/uploadallscore',
   );
-  List score = jsonDecode(await requestPlayerAllScore())['data'];
-  Map<String, dynamic> playerdata = jsonDecode(
-    await requestPlayerInfo(),
-  )['data'];
+  List score = await (await ReadData.create()).readPlayerAllScoreData();
+  Map<String, dynamic> playerdata = (await (await ReadData.create())
+      .readPlayerInfoData());
 
   final response = await post(
     uri,
@@ -453,6 +452,9 @@ Future<Map<String, dynamic>> getSongInfo(int id) async {
 //获取落雪Token
 Future<String> returnlxnstoken() async {
   Map<String, dynamic> config = await (await ReadData.create()).readConfig();
+  if (config['lxns'] == null) {
+    return 'null';
+  }
   String token = config['lxns']['token'];
   return token;
 }

@@ -245,10 +245,12 @@ class WriteData {
     log('所有成绩完成');
   }
 
-  Future<void> writeLxnsSettings() async {}
-
   Future<void> writeFavoriteSongs(Map<String, dynamic> favorite) async {
     prefs.setString('FavoriteSongs', jsonEncode(favorite));
+  }
+
+  Future<void> writeRandomMusicHistory(List history) async {
+    prefs.setString('RandomMusicHistory', jsonEncode(history));
   }
 }
 
@@ -339,7 +341,7 @@ class ReadData {
 
   Future<Map<String, dynamic>> readPlayerInfoData() async {
     final str = prefs.getString('PlayerInfoData');
-    return str != null ? jsonDecode(str) as Map<String, dynamic> : {};
+    return str != null ? (jsonDecode(str) as Map<String, dynamic>)['data'] : {};
   }
 
   Future<List> readPlayerRatingTrendData() async {
@@ -355,5 +357,10 @@ class ReadData {
   Future<Map<String, dynamic>> readFavoriteSongs() async {
     final str = prefs.getString('FavoriteSongs');
     return str != null ? jsonDecode(str) as Map<String, dynamic> : {};
+  }
+
+  Future<List> readRandomMusicHistory() async {
+    final str = prefs.getString('RandomMusicHistory');
+    return str != null ? jsonDecode(str) as List : [];
   }
 }

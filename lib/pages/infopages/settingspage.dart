@@ -1,6 +1,7 @@
 import 'dart:developer';
 import 'package:chusearchsong_flutter/function/infopagefun/settingspagefun.dart';
 import 'package:chusearchsong_flutter/function/writeandreadfun.dart';
+import 'package:chusearchsong_flutter/pages/infopages/settingspage/colorssettingspage.dart';
 import 'package:flutter/material.dart';
 import 'settingspage/lxnssettingspage.dart';
 import 'settingspage/texttranslatesettingspage.dart';
@@ -240,11 +241,25 @@ class _SettingsPageState extends State<SettingsPage> {
                 title: '落雪设置',
                 subtitle: '配置落雪 Token',
                 isFirst: false,
-                isLast: true,
+                isLast: false,
                 onTap: () => Navigator.push(
                   context,
                   MaterialPageRoute(
                     builder: (context) => const LxnsSettingsPage(),
+                  ),
+                ),
+              ),
+              _buildDivider(),
+              _buildNavItem(
+                icon: Icons.map,
+                title: '地图设置',
+                subtitle: '设置首选地图',
+                isFirst: false,
+                isLast: true,
+                onTap: () => Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => const MapSettingsPage(),
                   ),
                 ),
               ),
@@ -310,17 +325,19 @@ class _SettingsPageState extends State<SettingsPage> {
               ),
               _buildDivider(),
               _buildNavItem(
-                icon: Icons.map,
-                title: '地图设置',
-                subtitle: '设置首选地图',
-                isFirst: false,
-                isLast: true,
+                icon: Icons.color_lens,
+                title: '颜色设置',
+                subtitle: '主题颜色设置',
                 onTap: () => Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder: (context) => const MapSettingsPage(),
+                    builder: (context) => Colorssettingspage(
+                      onBackPressed: widget.onThemeChanged,
+                    ),
                   ),
                 ),
+                isFirst: false,
+                isLast: true,
               ),
 
               const SizedBox(height: 30),

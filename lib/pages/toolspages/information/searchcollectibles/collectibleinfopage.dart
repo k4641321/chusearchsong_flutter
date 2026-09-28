@@ -460,7 +460,7 @@ class _CollectibleInfoPageState extends State<CollectibleInfoPage> {
             songList.add(
               returnSongCard(
                 songbasedata: song,
-                versionname: versionname,
+                songsData: songData,
                 context: context,
               ),
             );
@@ -469,7 +469,7 @@ class _CollectibleInfoPageState extends State<CollectibleInfoPage> {
             songList.add(
               returnSongCard(
                 songbasedata: song,
-                versionname: versionname,
+                songsData: songData,
                 context: context,
               ),
             );
@@ -552,7 +552,7 @@ class _CollectibleInfoPageState extends State<CollectibleInfoPage> {
                       interSongInfo(
                         songbasedata: song,
                         context: context,
-                        versionname: versionname,
+                        songsData: songData,
                       );
                     },
                     child: Card(
@@ -658,7 +658,7 @@ class _CollectibleInfoPageState extends State<CollectibleInfoPage> {
                       interSongInfo(
                         songbasedata: song,
                         context: context,
-                        versionname: versionname,
+                        songsData: songData,
                       );
                     },
                     child: Card(

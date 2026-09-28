@@ -42,6 +42,7 @@ class _SongRecommendationPageState extends State<SongRecommendationPage>
   Map<String, dynamic> aliasData = {};
   Map<String, dynamic> config = {};
   List playhistory = [];
+  List newversions = [];
 
   final TextEditingController _searchController = TextEditingController();
   final TextEditingController _bpmup = TextEditingController();
@@ -185,7 +186,7 @@ class _SongRecommendationPageState extends State<SongRecommendationPage>
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
               content: Text('未输入最低Rating'),
-              duration: Duration(microseconds: 1000),
+              duration: Duration(microseconds: 1500),
             ),
           );
           return;
@@ -200,6 +201,7 @@ class _SongRecommendationPageState extends State<SongRecommendationPage>
             expectedScore: _preScoreController.text,
             songsdata: songsData,
             config: config,
+            newversions: newversions,
             // recommendedFixedValueDifference: recommendedFixedValueDifference,
           );
         } else {
@@ -213,6 +215,7 @@ class _SongRecommendationPageState extends State<SongRecommendationPage>
             expectedScore: _preScoreController.text,
             songsdata: songsData,
             config: config,
+            newversions: newversions,
             // recommendedFixedValueDifference: recommendedFixedValueDifference,
           );
         }
@@ -241,6 +244,8 @@ class _SongRecommendationPageState extends State<SongRecommendationPage>
       aliasData = await (await ReadData.create()).readAliasData();
       playhistory = await (await ReadData.create()).readPlayerAllScoreData();
       config = await (await ReadData.create()).readConfig();
+      newversions = (await (await ReadData.create())
+          .readLatestVersion())['version'];
       buildGenreWidget();
       buildVersionWidget();
       double? result = await initminRating(isNew: isNew);
@@ -256,8 +261,8 @@ class _SongRecommendationPageState extends State<SongRecommendationPage>
           _minRatingController.text = result.toString();
         });
       }
-    } catch (e) {
-      log('获取b50失败');
+    } catch (e, strack) {
+      log('$e\n$strack', name: 'songrecommendationpage.dart', level: 1000);
       return;
     }
   }
@@ -381,7 +386,12 @@ class _SongRecommendationPageState extends State<SongRecommendationPage>
                           onChanged: (value) {
                             try {
                               calculate();
-                            } catch (e) {
+                            } catch (e, strack) {
+                              log(
+                                '$e\n$strack',
+                                name: 'songrecommendationpage.dart',
+                                level: 1000,
+                              );
                               ScaffoldMessenger.of(context).showSnackBar(
                                 SnackBar(content: Text('搜索失败，可能是数据丢失')),
                               );
@@ -726,13 +736,12 @@ class _SongRecommendationPageState extends State<SongRecommendationPage>
                                                   hintText: 'BPM下限',
                                                 ),
                                                 onChanged: (value) {
-                                                  try {
-                                                    bpmdown = int.parse(
-                                                      _bpmdown.text,
-                                                    );
+                                                  bpmdown = int.tryParse(
+                                                    _bpmdown.text,
+                                                  );
+                                                  if (bpmdown != null) {
                                                     calculate();
-                                                  } catch (e) {
-                                                    bpmdown = null;
+                                                  } else {
                                                     log('bpmdown不是数字');
                                                   }
                                                 },
@@ -752,13 +761,12 @@ class _SongRecommendationPageState extends State<SongRecommendationPage>
                                                   hintText: 'BPM上限',
                                                 ),
                                                 onChanged: (value) {
-                                                  try {
-                                                    bpmup = int.parse(
-                                                      _bpmup.text,
-                                                    );
+                                                  bpmup = int.tryParse(
+                                                    _bpmup.text,
+                                                  );
+                                                  if (bpmup != null) {
                                                     calculate();
-                                                  } catch (e) {
-                                                    bpmup = null;
+                                                  } else {
                                                     log('bpmup不是数字');
                                                   }
                                                 },
@@ -983,7 +991,7 @@ class _SongRecommendationPageState extends State<SongRecommendationPage>
                           }
                         }
                       } catch (e, strack) {
-                        log('$e\n$strack');
+                        log('$e \n$strack');
                         if (!context.mounted) return;
                         // ScaffoldMessenger.of(
                         //   context,
@@ -998,8 +1006,10 @@ class _SongRecommendationPageState extends State<SongRecommendationPage>
               delegate: SliverChildBuilderDelegate(
                 (context, index) {
                   if (_tabController.index == 0) {
+                    if (index >= oldSongWidgetList[oldpage].length) return null;
                     return oldSongWidgetList[oldpage][index];
                   } else {
+                    if (index >= newSongWidgetList[newpage].length) return null;
                     return newSongWidgetList[newpage][index];
                   }
                 },

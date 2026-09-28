@@ -1,14 +1,14 @@
-import 'dart:convert';
 import 'dart:developer';
 import 'dart:math' as math;
 import 'dart:ui' as ui;
 
+import 'package:chusearchsong_flutter/function/writeandreadfun.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/rendering.dart';
-import 'dart:io';
 import 'package:path_provider/path_provider.dart';
+import 'dart:io';
 import '../../../function/toolsfun/generateb50fun/generateb50.dart';
 import 'package:file_picker/file_picker.dart';
 
@@ -41,15 +41,7 @@ class _RatingTrendPagesState extends State<RatingTrendPages> {
 
   Future<void> loadplayerinfo() async {
     try {
-      if (kIsWeb) {
-        ScaffoldMessenger.of(
-          context,
-        ).showSnackBar(SnackBar(content: Text('网页不支持分享')));
-        return;
-      }
-      final path = await getApplicationSupportDirectory();
-      final file = File('${path.path}/res/playerinfo.json');
-      Map playerdata = await jsonDecode(await file.readAsString())['data'];
+      Map playerdata = (await (await ReadData.create()).readPlayerInfoData());
       Widget title = SizedBox(
         height: 170,
         child: Row(
@@ -124,8 +116,12 @@ class _RatingTrendPagesState extends State<RatingTrendPages> {
       setState(() {
         playerinfo = title;
       });
-    } catch (e) {
-      log('$e');
+    } catch (e, strack) {
+      if (!mounted) return;
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text('错误：$e\n$strack')));
+      log('$e\n$strack');
       return;
     }
   }
@@ -160,6 +156,12 @@ class _RatingTrendPagesState extends State<RatingTrendPages> {
           IconButton(
             onPressed: () async {
               try {
+                if (kIsWeb) {
+                  ScaffoldMessenger.of(
+                    context,
+                  ).showSnackBar(SnackBar(content: Text('网页不支持分享')));
+                  return;
+                }
                 setState(() {
                   color = const ui.Color.fromARGB(250, 255, 255, 255);
                 });

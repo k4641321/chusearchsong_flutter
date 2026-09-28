@@ -104,6 +104,7 @@ Future<List<List<Widget>>> songRecommendation({
   required String expectedScore,
   required Map<String, dynamic> songsdata,
   required Map<String, dynamic> config,
+  required List newversions,
   // required bool recommendedFixedValueDifference,
 }) async {
   List<Widget> songresultWidget = [];
@@ -115,7 +116,7 @@ Future<List<List<Widget>>> songRecommendation({
 
     //获取旧版本号
     // Map<String, dynamic> config = await loadConfig();
-    List newversions = config['latest_version'];
+
     List<int> version = [];
     if (isNew == true) {
       for (var i in songsdata['versions']) {
@@ -241,7 +242,7 @@ Future<List<List<Widget>>> songRecommendation({
             interSongInfo(
               songbasedata: i,
               context: context,
-              versionname: versionname,
+              songsData: songsdata,
             );
           },
 
@@ -339,6 +340,7 @@ Future<List<List<Widget>>> songRecommendation({
       songresultWidgetList.add([Text('没有结果')]);
     }
   } catch (e, strack) {
+    log('$e \n $strack');
     return [
       [Text("$e\n$strack")],
     ];

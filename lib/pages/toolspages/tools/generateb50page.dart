@@ -28,16 +28,25 @@ class _GenerateB50PageState extends State<GenerateB50Page> {
   Map<String, dynamic> workingb50data = {};
 
   Future<void> init() async {
-    //加载曲目信息
-    songsData = await (await ReadData.create()).readSongsData();
-    //加载玩家信息
-    playerdata = await (await ReadData.create()).readPlayerInfoData();
-    playerdata = playerdata['data'];
-    //加载所有成绩
-    allscoredata = await (await ReadData.create()).readPlayerAllScoreData();
-    //加载b50数据
-    b50data = await (await ReadData.create()).readPlayerB50Data();
-    workingplayerdata = Map.from(b50data);
+    try {
+      //加载曲目信息
+      songsData = await (await ReadData.create()).readSongsData();
+      //加载玩家信息
+      playerdata = await (await ReadData.create()).readPlayerInfoData();
+      if (playerdata.isEmpty) {
+        setState(() {
+          b50Body = Text('玩家信息为空，请检查是否配置好落雪Token');
+        });
+        return;
+      }
+      //加载所有成绩
+      allscoredata = await (await ReadData.create()).readPlayerAllScoreData();
+      //加载b50数据
+      b50data = await (await ReadData.create()).readPlayerB50Data();
+      workingplayerdata = Map.from(b50data);
+    } catch (e, strack) {
+      log('$e\n$strack');
+    }
   }
 
   @override
@@ -223,7 +232,7 @@ class _GenerateB50PageState extends State<GenerateB50Page> {
                         level: 1000,
                       );
                       setState(() {
-                        b50Body = Text('生成失败 $e\n$strack');
+                        b50Body = Text('生成失败，请检查是否配置好落雪Token\n $e\n$strack');
                       });
                       if (!context.mounted) return;
                       ScaffoldMessenger.of(
@@ -304,7 +313,18 @@ class _GenerateB50PageState extends State<GenerateB50Page> {
               maxScale: 5,
               constrained: false,
               boundaryMargin: EdgeInsets.all(double.infinity),
-              child: RepaintBoundary(key: _globalKey, child: b50Body),
+              child: RepaintBoundary(
+                key: _globalKey,
+                child: Theme(
+                  data: Theme.of(context).copyWith(
+                    textTheme: Theme.of(context).textTheme.apply(
+                      fontFamily: 'AlibabaPuHuiTi',
+                    ), // 或自定义 fontFamily
+                  ),
+                  child: b50Body,
+                ),
+              ),
+              // b50Body,
             ),
           ),
         ],

@@ -207,12 +207,17 @@ class _SearchPageState extends State<SearchPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      floatingActionButton: FloatingActionButton(
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(50)),
-        child: Icon(Icons.arrow_upward),
-        onPressed: () {
-          _scrollController.jumpTo(0);
-        },
+      floatingActionButton: Padding(
+        padding: EdgeInsetsGeometry.only(bottom: 80 + 25 + 5),
+        child: FloatingActionButton(
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(50),
+          ),
+          child: Icon(Icons.arrow_upward),
+          onPressed: () {
+            _scrollController.jumpTo(0);
+          },
+        ),
       ),
       body: Center(
         child: Scrollbar(

@@ -1,4 +1,5 @@
 import 'package:chusearchsong_flutter/pages/toolspages/tools/proxyupdatescorepage.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
 class Updatescorepage extends StatefulWidget {
@@ -22,19 +23,25 @@ class _UpdatescorepageState extends State<Updatescorepage> {
               Expanded(
                 child: TextButton(
                   onPressed: () {
-                    final platform = Theme.of(context).platform;
-                    if (platform != TargetPlatform.android) {
-                      ScaffoldMessenger.of(
+                    if (!kIsWeb) {
+                      final platform = Theme.of(context).platform;
+                      if (platform != TargetPlatform.android) {
+                        ScaffoldMessenger.of(
+                          context,
+                        ).showSnackBar(SnackBar(content: Text('不是目标平台，不给予打开')));
+                        return;
+                      }
+                      Navigator.push(
                         context,
-                      ).showSnackBar(SnackBar(content: Text('不是目标平台，不给予打开')));
-                      return;
+                        MaterialPageRoute(
+                          builder: ((context) => Proxyupdatescorepage()),
+                        ),
+                      );
+                    } else {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(content: Text('网页不支持打开安卓代理更新入口')),
+                      );
                     }
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: ((context) => Proxyupdatescorepage()),
-                      ),
-                    );
                   },
                   child: Text('安卓代理更新入口'),
                 ),

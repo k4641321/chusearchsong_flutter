@@ -163,7 +163,7 @@ Widget buildsongList({
           interSongInfo(
             songbasedata: i,
             context: context,
-            versionname: versionname,
+            songsData: songsData,
           );
         },
         child: Card(

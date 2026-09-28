@@ -168,15 +168,9 @@ Future<Widget> returnShareLevelCompletionProgressPageFun({
 
   void buildLevelWidget(List buildMap) {
     for (var i in buildMap) {
-      String versionname = '';
       String rank = '';
       Widget rankwidget = SizedBox.shrink();
       late double diff;
-      for (var j in songsdata['versions']) {
-        if (j['version'] == i['version']) {
-          versionname = j['title'];
-        }
-      }
       for (var l in i['difficulties']) {
         if (l['level_value'] >= level[0] && l['level_value'] <= level[1]) {
           diff = l['level_value'].toDouble();
@@ -269,7 +263,7 @@ Future<Widget> returnShareLevelCompletionProgressPageFun({
             interSongInfo(
               songbasedata: i,
               context: context,
-              versionname: versionname,
+              songsData: songsdata,
             );
           },
 
@@ -391,75 +385,81 @@ Future<Widget> returnShareLevelCompletionProgressPageFun({
     Row(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        SizedBox(
-          height: 170,
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.start,
-            children: [
-              Padding(
-                padding: EdgeInsetsGeometry.only(right: 55),
-                child: SizedBox(
-                  width: 525,
-                  height: 225,
-                  child: Card(
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                      children: [
-                        Column(
-                          mainAxisAlignment: MainAxisAlignment.spaceAround,
-                          children: [
-                            Card(
-                              color: trophyColor(
-                                trophy: playerdata['trophy']['color'],
-                              ),
-                              child: Padding(
-                                padding: EdgeInsetsGeometry.only(
-                                  left: 60,
-                                  right: 60,
-                                  top: 5,
-                                  bottom: 5,
-                                ),
-                                child: Text(
-                                  '${playerdata['trophy']['name']}',
-                                  style: TextStyle(color: Colors.black),
-                                ),
-                              ),
-                            ),
-                            Padding(
-                              padding: EdgeInsetsGeometry.only(left: 15),
-                              child: Text(
-                                'Lv.${playerdata['level']}  ${playerdata['name']}',
-                                style: TextStyle(fontSize: 30),
-                              ),
-                            ),
-                            Text(
-                              'Rating:   ${playerdata['rating']}',
+        playerdata.isNotEmpty
+            ? SizedBox(
+                height: 170,
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: [
+                    Padding(
+                      padding: EdgeInsetsGeometry.only(right: 55),
+                      child: SizedBox(
+                        width: 530,
+                        height: 225,
+                        child: Card(
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                            children: [
+                              Column(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceAround,
+                                children: [
+                                  Card(
+                                    color: trophyColor(
+                                      trophy: playerdata['trophy']['color'],
+                                    ),
+                                    child: Padding(
+                                      padding: EdgeInsetsGeometry.only(
+                                        left: 60,
+                                        right: 60,
+                                        top: 5,
+                                        bottom: 5,
+                                      ),
+                                      child: Text(
+                                        '${playerdata['trophy']['name']}',
+                                        style: TextStyle(color: Colors.black),
+                                      ),
+                                    ),
+                                  ),
+                                  Padding(
+                                    padding: EdgeInsetsGeometry.only(left: 15),
+                                    child: Text(
+                                      'Lv.${playerdata['level']}  ${playerdata['name']}',
+                                      style: TextStyle(fontSize: 30),
+                                    ),
+                                  ),
+                                  Text(
+                                    'Rating:   ${playerdata['rating']}',
 
-                              style: TextStyle(
-                                fontSize: 25,
-                                color: ratingColor(
-                                  rating: playerdata['rating'],
-                                ),
-                                shadows: [
-                                  Shadow(color: Colors.black, blurRadius: 3),
+                                    style: TextStyle(
+                                      fontSize: 25,
+                                      color: ratingColor(
+                                        rating: playerdata['rating'],
+                                      ),
+                                      shadows: [
+                                        Shadow(
+                                          color: Colors.black,
+                                          blurRadius: 3,
+                                        ),
+                                      ],
+                                    ),
+                                  ),
                                 ],
                               ),
-                            ),
-                          ],
+                              Image.network(
+                                'https://assets2.lxns.net/chunithm/character/${playerdata['character']['id']}.png',
+                                width: 175,
+                                height: 175,
+                              ),
+                            ],
+                          ),
                         ),
-                        Image.network(
-                          'https://assets2.lxns.net/chunithm/character/${playerdata['character']['id']}.png',
-                          width: 175,
-                          height: 175,
-                        ),
-                      ],
+                      ),
                     ),
-                  ),
+                  ],
                 ),
-              ),
-            ],
-          ),
-        ),
+              )
+            : SizedBox.shrink(),
         Card(
           color: const Color.fromARGB(194, 255, 255, 255),
           child: Padding(

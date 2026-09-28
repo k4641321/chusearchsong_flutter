@@ -138,6 +138,12 @@ class _SearchsongzxzrpageState extends State<Searchsongzxzrpage> {
 
   Future<void> init() async {
     songsData = await (await ReadData.create()).readzxzrSongsData();
+    if (!mounted) return;
+    if (songsData.isEmpty) {
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text('数据丢失，请到关于界面更新数据')));
+    }
     await _buildAllDropdownMenus();
   }
 

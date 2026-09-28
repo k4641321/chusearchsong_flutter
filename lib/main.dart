@@ -1,10 +1,12 @@
 import 'dart:developer';
+import 'dart:io';
 import 'package:chusearchsong_flutter/function/infopagefun/infopagefun.dart';
 import 'package:chusearchsong_flutter/function/request.dart';
 import 'package:chusearchsong_flutter/function/writeandreadfun.dart';
+import 'package:flutter/foundation.dart';
 import 'package:package_info_plus/package_info_plus.dart';
+import 'package:path_provider/path_provider.dart';
 import 'function/commonfun.dart';
-import 'theme.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'pages/homepages/infopage.dart';
@@ -29,13 +31,60 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
+  /// 浅色主题 - 以黄色为主色调
+  ColorScheme lightTheme = ColorScheme.fromSeed(
+    seedColor: Colors.amber,
+    brightness: Brightness.light,
+  );
+
+  /// 深色主题 - 以黄色为主色调
+  ColorScheme darkTheme = ColorScheme.fromSeed(
+    seedColor: Colors.amber,
+    brightness: Brightness.dark,
+  );
+
   ThemeMode _themeMode = ThemeMode.light;
+  bool _useDynamicColor = true;
+  int aplha = 255;
+  String? _backgroundPath;
 
   Future<void> _loadTheme() async {
-    Map<String, dynamic> config = await (await ReadData.create()).readConfig();
-    setState(() {
-      _themeMode = config['theme'] == 'dark' ? ThemeMode.dark : ThemeMode.light;
-    });
+    try {
+      Map<String, dynamic> config = await (await ReadData.create())
+          .readConfig();
+      if (!kIsWeb) {
+        final path = await getApplicationSupportDirectory();
+        if (!Directory('${path.path}/background').existsSync()) {
+          Directory('${path.path}/background').create();
+        }
+        _backgroundPath = null;
+        if (File('${path.path}/background/background.png').existsSync()) {
+          _backgroundPath = '${path.path}/background/background.png';
+        }
+      }
+      setState(() {
+        _themeMode = config['theme'] == 'dark'
+            ? ThemeMode.dark
+            : ThemeMode.light;
+        _useDynamicColor = config['enableDynamicColor'] ?? true;
+        lightTheme = ColorScheme.fromSeed(
+          seedColor: Color(config['themeColor'] ?? Colors.amber),
+          brightness: Brightness.light,
+        );
+        darkTheme = ColorScheme.fromSeed(
+          seedColor: Color(config['themeColor'] ?? Colors.amber),
+          brightness: Brightness.dark,
+        );
+        if (config.containsKey('BackgroundSettings')) {
+          if ((config['BackgroundSettings'] as Map).containsKey('Aplha')) {
+            aplha = (config['BackgroundSettings'] as Map)['Aplha'];
+          }
+        }
+      });
+    } catch (e, strack) {
+      log('_loadTheme 出错: $e\n$strack');
+    }
+    // print('更新');
   }
 
   void _handleThemeChanged() {
@@ -54,16 +103,50 @@ class _MyAppState extends State<MyApp> {
       builder: (ColorScheme? lightDynamic, ColorScheme? darkDynamic) {
         return MaterialApp(
           builder: (context, child) {
-            return SafeArea(top: false, bottom: true, child: child!);
+            return SafeArea(
+              top: false,
+              bottom: true,
+              child: Stack(
+                children: [
+                  if (_backgroundPath != null)
+                    Positioned.fill(
+                      child: Opacity(
+                        opacity: aplha / 255,
+                        child: Image.memory(
+                          File(_backgroundPath!).readAsBytesSync(),
+                          fit: BoxFit.cover,
+                          errorBuilder: (context, error, stackTrace) {
+                            _backgroundPath = null;
+                            return SizedBox.shrink();
+                          },
+                        ),
+                      ),
+                    ),
+                  child!,
+                ],
+              ),
+            );
           },
-          title: 'chusearchsong',
+          title: '中二查歌',
           theme: ThemeData(
-            colorScheme: lightDynamic ?? lightTheme,
+            scaffoldBackgroundColor: _backgroundPath != null
+                ? Colors.transparent
+                : null,
+            colorScheme: _useDynamicColor
+                ? (lightDynamic ?? lightTheme)
+                : lightTheme,
             useMaterial3: true,
+            fontFamily: 'AlibabaPuHuiTi',
           ),
           darkTheme: ThemeData(
-            colorScheme: darkDynamic ?? darkTheme,
+            scaffoldBackgroundColor: _backgroundPath != null
+                ? Colors.transparent
+                : null,
+            colorScheme: _useDynamicColor
+                ? (darkDynamic ?? darkTheme)
+                : darkTheme,
             useMaterial3: true,
+            fontFamily: 'AlibabaPuHuiTi',
           ),
           themeMode: _themeMode,
           home: MyHomePage(handleThemeChanged: _handleThemeChanged),
@@ -84,6 +167,7 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> {
   bool _isLoading = true;
+  final _navBarKey = GlobalKey();
 
   Future<void> postusecount() async {
     try {
@@ -275,36 +359,59 @@ class _MyHomePageState extends State<MyHomePage> {
       );
     }
 
+    // final RenderBox? box =
+    //     _navBarKey.currentContext?.findRenderObject() as RenderBox?;
+    // final height = box?.size.height;
+
     return Scaffold(
-      appBar: AppBar(
-        title: Text(title),
-        backgroundColor: Theme.of(context).colorScheme.primaryContainer,
+      appBar: AppBar(title: Text(title), backgroundColor: Colors.transparent),
+      extendBody: true,
+      // backgroundColor: Colors.transparent,
+      body: Container(
+        decoration: BoxDecoration(color: Colors.transparent),
+        child: _pages[_currentIndex],
       ),
-      body: _pages[_currentIndex],
-      bottomNavigationBar: BottomNavigationBar(
-        currentIndex: _currentIndex,
-        onTap: (index) {
-          setState(() {
-            _currentIndex = index;
-            if (index == 0) {
-              title = '搜索';
-            } else if (index == 1) {
-              title = '收藏';
-            } else if (index == 2) {
-              title = '工具';
-            } else if (index == 3) {
-              title = '关于';
-            }
-          });
-        },
-        unselectedItemColor: Theme.of(context).colorScheme.secondary,
-        selectedItemColor: Theme.of(context).colorScheme.primary,
-        items: [
-          BottomNavigationBarItem(icon: Icon(Icons.search), label: '搜索'),
-          BottomNavigationBarItem(icon: Icon(Icons.favorite), label: '收藏'),
-          BottomNavigationBarItem(icon: Icon(Icons.build), label: '工具'),
-          BottomNavigationBarItem(icon: Icon(Icons.info), label: '关于'),
-        ],
+      bottomNavigationBar: Padding(
+        padding: const EdgeInsets.only(bottom: 25, left: 25, right: 25),
+        child: ClipRRect(
+          borderRadius: BorderRadius.circular(25),
+          child: NavigationBar(
+            key: _navBarKey,
+            // height: 70,
+            shadowColor: Theme.of(context).colorScheme.primary.withAlpha(200),
+            // shadowColor: Theme.of(
+            //   context,
+            // ).colorScheme.primaryContainer.withAlpha(150),
+            elevation: 25,
+            backgroundColor: Theme.of(
+              context,
+            ).colorScheme.primaryContainer.withAlpha(150),
+            indicatorColor: Theme.of(
+              context,
+            ).colorScheme.primary.withAlpha(150),
+            selectedIndex: _currentIndex,
+            onDestinationSelected: (index) {
+              setState(() {
+                _currentIndex = index;
+                if (index == 0) {
+                  title = '搜索';
+                } else if (index == 1) {
+                  title = '收藏';
+                } else if (index == 2) {
+                  title = '工具';
+                } else if (index == 3) {
+                  title = '关于';
+                }
+              });
+            },
+            destinations: const [
+              NavigationDestination(icon: Icon(Icons.search), label: '搜索'),
+              NavigationDestination(icon: Icon(Icons.favorite), label: '收藏'),
+              NavigationDestination(icon: Icon(Icons.build), label: '工具'),
+              NavigationDestination(icon: Icon(Icons.info), label: '关于'),
+            ],
+          ),
+        ),
       ),
     );
   }

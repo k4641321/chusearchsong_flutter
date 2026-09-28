@@ -487,12 +487,18 @@ class Dataupdate {
 //歌曲卡片
 Widget returnSongCard({
   required Map<String, dynamic> songbasedata,
-  required String versionname,
+  required Map<String, dynamic> songsData,
   required BuildContext context,
   VoidCallback? onReturn,
   Map<int, dynamic>? searchinfo,
 }) {
   int originid = songbasedata['id'];
+  String versionname = '';
+  for (var i in songsData['versions']) {
+    if (i['version'] == songbasedata['version']) {
+      versionname = i['title'];
+    }
+  }
   //难度组件
   List<Widget> songInfoDiffs = [];
   if (((songbasedata['difficulties'] as List).last as Map).containsKey(
@@ -561,7 +567,7 @@ Widget returnSongCard({
       await interSongInfo(
         songbasedata: songbasedata,
         context: context,
-        versionname: versionname,
+        songsData: songsData,
       );
       onReturn?.call();
     },
@@ -644,11 +650,18 @@ Widget returnSongCard({
 //进入歌曲详情页
 Future<void> interSongInfo({
   required Map<String, dynamic> songbasedata,
+  required Map<String, dynamic> songsData,
   required BuildContext context,
-  required String versionname,
 }) async {
   // List<DataRow> songData = [];
   // List<Widget> songData = [];
+  String versionname = '';
+  for (var i in songsData['versions']) {
+    if (i['version'] == songbasedata['version']) {
+      versionname = i['title'];
+    }
+  }
+
   List<Widget> information = [];
   final difficulties = (songbasedata['difficulties'] as List?) ?? [];
   final lastWithOrigin = difficulties.lastWhere(

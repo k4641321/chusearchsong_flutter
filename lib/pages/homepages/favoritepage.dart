@@ -50,7 +50,6 @@ class _FavoritePageState extends State<FavoritePage> {
     Map<String, dynamic> favoriteListSong = await (await ReadData.create())
         .readFavoriteSongs();
     for (var i in favoriteListSong[selectedName]) {
-      String versionname = '';
       late Map<String, dynamic> songbasedata;
 
       // int songid = i['id'];
@@ -60,23 +59,19 @@ class _FavoritePageState extends State<FavoritePage> {
           break;
         }
       }
-      for (var j in songsData['versions']) {
-        if (j['version'] == songbasedata['version']) {
-          versionname = j['title'];
-        }
-      }
 
       // songresultWidget.add(const Divider());
       if (!mounted) return;
       favoriteResults.add(
         returnSongCard(
           songbasedata: songbasedata,
-          versionname: versionname,
+          songsData: songsData,
           context: context,
           onReturn: () => _returnfavoriteResults(),
         ),
       );
     }
+    favoriteResults.add(SizedBox(height: 80 + 25));
     if (!mounted) return;
     setState(() {
       favorite = favoriteResults;
@@ -131,12 +126,17 @@ class _FavoritePageState extends State<FavoritePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      floatingActionButton: FloatingActionButton(
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(50)),
-        child: Icon(Icons.arrow_upward),
-        onPressed: () {
-          _scrollController.jumpTo(0);
-        },
+      floatingActionButton: Padding(
+        padding: EdgeInsetsGeometry.only(bottom: 80 + 25 + 5),
+        child: FloatingActionButton(
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(50),
+          ),
+          child: Icon(Icons.arrow_upward),
+          onPressed: () {
+            _scrollController.jumpTo(0);
+          },
+        ),
       ),
       body: Center(
         child: Scrollbar(

@@ -166,7 +166,7 @@ class _FriendBattlePageState extends State<FriendBattlePage> {
           _loadingText = '请求我的信息...';
         });
         myRating = (await (await ReadData.create())
-            .readPlayerInfoData())['data']['rating'];
+            .readPlayerInfoData())['rating'];
         friendcode = newfriendcode;
       }
       if (!mounted) return;

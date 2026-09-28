@@ -22,6 +22,12 @@ class _VariousrankingspageState extends State<Variousrankingspage> {
     try {
       songsData = await (await ReadData.create()).readSongsData();
       zxzrSongsData = await (await ReadData.create()).readzxzrSongsData();
+      if (zxzrSongsData.isEmpty) {
+        if (!mounted) return;
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('最新最热数据缺失，部分排行榜不可用，如有需求请前往关于界面更新数据')),
+        );
+      }
     } catch (e, strack) {
       log('$e\n$strack');
       setState(() {
@@ -52,6 +58,7 @@ class _VariousrankingspageState extends State<Variousrankingspage> {
         items = result;
       });
     } catch (e, strack) {
+      log('$e,\n$strack');
       setState(() {
         items = [Text('错误，可能文件缺失\n$e,\n$strack')];
       });

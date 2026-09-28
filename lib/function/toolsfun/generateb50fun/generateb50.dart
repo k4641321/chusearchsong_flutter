@@ -356,8 +356,8 @@ Future<Widget> generateb50Body({
       (a, b) => b['level_value']!.compareTo(a['level_value']!),
     );
   } else if (type == '理论50') {
-    Map<String, dynamic> config = await (await ReadData.create()).readConfig();
-    List lasteversionname = config['latest_version'];
+    List lasteversionname = (await (await ReadData.create())
+        .readLatestVersion())['version'];
     List lasteversion = [];
     for (var i in songsData['versions']) {
       if (lasteversionname.contains(i['title'])) {
@@ -446,7 +446,7 @@ Future<Widget> generateb50Body({
     children: b30rowbody,
   );
   int row = 0;
-  int songcount = 0;
+  int songcount = 1;
   for (var i in b50data['bests']) {
     String songname;
     if ((i['song_name'] as String).length > 14) {
@@ -897,7 +897,7 @@ Widget buildB50SongCard({
       await interSongInfo(
         songbasedata: songdata,
         context: context,
-        versionname: versionname,
+        songsData: songsData,
       );
     },
     child: SizedBox(

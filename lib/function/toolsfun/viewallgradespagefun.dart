@@ -247,7 +247,7 @@ List<List<Widget>> returnScoreList({
             onTap: () => interSongInfo(
               songbasedata: j,
               context: context,
-              versionname: versionname,
+              songsData: songsdata,
             ),
             child: Card(
               child: Padding(

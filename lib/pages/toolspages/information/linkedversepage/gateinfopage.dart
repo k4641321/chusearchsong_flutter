@@ -28,17 +28,10 @@ class _GateinfopageState extends State<Gateinfopage> {
       for (var i in widget.gatedata['required_songs']) {
         for (var j in widget.songsData['songs']) {
           if (i == j['id']) {
-            String versionname = '';
-            for (var k in widget.songsData['versions']) {
-              if (j['version'] == k['version']) {
-                versionname = k['title'];
-                break;
-              }
-            }
             requiredSongs.add(
               returnSongCard(
                 songbasedata: j,
-                versionname: versionname,
+                songsData: widget.songsData,
                 context: context,
               ),
             );
@@ -53,17 +46,10 @@ class _GateinfopageState extends State<Gateinfopage> {
 
     for (var i in widget.songsData['songs']) {
       if (widget.gatedata['gate_song'] == i['id']) {
-        String versionname = '';
-        for (var j in widget.songsData['versions']) {
-          if (i['version'] == j['version']) {
-            versionname = j['title'];
-            break;
-          }
-        }
         setState(() {
           gatesongwidget = returnSongCard(
             songbasedata: i,
-            versionname: versionname,
+            songsData: widget.songsData,
             context: context,
           );
         });
