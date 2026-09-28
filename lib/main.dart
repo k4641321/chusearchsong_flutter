@@ -64,7 +64,10 @@ class _MyAppState extends State<MyApp> {
         if (File('${path.path}/background/background.png').existsSync()) {
           _backgroundPath = '${path.path}/background/background.png';
           _imageVersion++;
-          FileImage(File(_backgroundPath!)).evict();
+          final fileImage = FileImage(File(_backgroundPath!));
+          fileImage.evict();
+          // 预加载图片到缓存，避免进入页面时延迟加载
+          fileImage.resolve(ImageConfiguration.empty);
         }
       }
       setState(() {
