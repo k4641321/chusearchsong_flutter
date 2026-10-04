@@ -43,6 +43,7 @@ class _SongRecommendationPageState extends State<SongRecommendationPage>
   Map<String, dynamic> config = {};
   List playhistory = [];
   List newversions = [];
+  List zxzrSongsData = [];
 
   final TextEditingController _searchController = TextEditingController();
   final TextEditingController _bpmup = TextEditingController();
@@ -144,6 +145,7 @@ class _SongRecommendationPageState extends State<SongRecommendationPage>
         songsData,
         aliasData,
         playhistory,
+        zxzrSongsData,
         searchTitle,
         selectedGenre,
         selectedVersion,
@@ -246,6 +248,7 @@ class _SongRecommendationPageState extends State<SongRecommendationPage>
       config = await (await ReadData.create()).readConfig();
       newversions = (await (await ReadData.create())
           .readLatestVersion())['version'];
+      zxzrSongsData = await (await ReadData.create()).readzxzrSongsData();
       buildGenreWidget();
       buildVersionWidget();
       double? result = await initminRating(isNew: isNew);

@@ -128,3 +128,66 @@ Future<void> lanuchifdian({required BuildContext context}) async {
     ).showSnackBar(SnackBar(content: Text('无法打开链接')));
   }
 }
+
+Widget buildAdCard({
+  required ThemeData theme,
+  required String url,
+  required String text,
+}) {
+  return Card(
+    elevation: 0,
+    surfaceTintColor: Colors.transparent,
+    color: theme.colorScheme.primaryContainer.withAlpha(120),
+    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
+    child: InkWell(
+      borderRadius: BorderRadius.circular(15),
+      onTap: () async {
+        final uri = Uri.parse(url);
+        if (await canLaunchUrl(uri)) {
+          await launchUrl(uri, mode: LaunchMode.externalApplication);
+        }
+      },
+      child: Padding(
+        padding: const EdgeInsets.all(14),
+        child: Row(
+          children: [
+            Icon(
+              Icons.open_in_new,
+              size: 20,
+              color: theme.colorScheme.onPrimaryContainer,
+            ),
+            const SizedBox(width: 10),
+            Expanded(
+              child: Text(
+                text,
+                style: TextStyle(color: theme.colorScheme.onPrimaryContainer),
+              ),
+            ),
+          ],
+        ),
+      ),
+    ),
+  );
+}
+
+List<Widget> buildAdCards({required ThemeData theme}) {
+  return [
+    buildAdCard(
+      theme: theme,
+      url:
+          'myqqapi://card/show_pslcard?src_type=internal&version=1&card_type=group&uin=309546141',
+      text: 'MC皮肤定制，10r一张，进群私聊群主',
+    ),
+    buildAdCard(
+      theme: theme,
+      url: 'https://github.com/ChiffonOwO/ChiffonMai',
+      text: '功能最全的舞萌工具，尽在 ChiffonMai !',
+    ),
+    buildAdCard(
+      theme: theme,
+      url:
+          'myqqapi://card/show_pslcard?src_type=internal&version=1&card_type=group&uin=309546141',
+      text: 'MaiScan，离线以图搜歌',
+    ),
+  ];
+}

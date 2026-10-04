@@ -61,7 +61,7 @@ class _GenerateB50PageState extends State<GenerateB50Page> {
     final boundary =
         key.currentContext?.findRenderObject() as RenderRepaintBoundary?;
     if (boundary == null) return null;
-    return await boundary.toImage(pixelRatio: 1.0); // pixelRatio 控制清晰度
+    return await boundary.toImage(pixelRatio: 1.0);
   }
 
   Widget b50Body = Text('未生成');
@@ -298,8 +298,12 @@ class _GenerateB50PageState extends State<GenerateB50Page> {
                       //     ),
                       //   );
                       // }
-                    } catch (e) {
+                    } catch (e, s) {
                       log('$e', name: 'generateb50page.dart', level: 1000);
+                      ScaffoldMessenger.of(
+                        context,
+                      ).showSnackBar(SnackBar(content: Text('错误：$e\n$s')));
+                      Navigator.pop(context);
                     }
                   },
                   child: Text('保存B50'),

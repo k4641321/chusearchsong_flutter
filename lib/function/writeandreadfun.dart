@@ -364,3 +364,22 @@ class ReadData {
     return str != null ? jsonDecode(str) as List : [];
   }
 }
+
+class SongDataStore {
+  SongDataStore._();
+  static final SongDataStore instance = SongDataStore._();
+
+  Map<String, dynamic> songs = {};
+  Map<String, dynamic> alias = {};
+  List zxzrSongs = [];
+  bool loaded = false;
+
+  /// 启动时调用一次，全部读进内存
+  Future<void> loadAll() async {
+    final read = await ReadData.create();
+    songs = await read.readSongsData();
+    alias = await read.readAliasData();
+    zxzrSongs = await read.readzxzrSongsData();
+    loaded = true;
+  }
+}

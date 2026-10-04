@@ -35,6 +35,14 @@ class _LxnsSettingsPageState extends State<LxnsSettingsPage> {
   }
 
   @override
+  void dispose() {
+    tokenController.dispose();
+    _textEditingController.dispose();
+    _scrollController.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(title: const Text('落雪设置')),

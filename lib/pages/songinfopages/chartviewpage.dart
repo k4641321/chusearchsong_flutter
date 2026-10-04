@@ -98,7 +98,7 @@ class _ChartViewPageState extends State<ChartViewPage> {
       if (charturl == null) {
         if (!mounted) return;
         setState(() {
-          result = [Text('没有找到谱面')];
+          result = [Text('没有找到谱面，或者最新最热资源文件缺失，请前往 关于界面 更新数据 更新最新最热资源')];
           return;
         });
       } else {

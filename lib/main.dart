@@ -111,30 +111,26 @@ class _MyAppState extends State<MyApp> {
       builder: (ColorScheme? lightDynamic, ColorScheme? darkDynamic) {
         return MaterialApp(
           builder: (context, child) {
-            return SafeArea(
-              top: false,
-              bottom: true,
-              child: Stack(
-                children: [
-                  if (_backgroundPath != null)
-                    Positioned.fill(
-                      child: Opacity(
-                        opacity: aplha / 255,
-                        child: Image.file(
-                          key: ValueKey(_imageVersion),
-                          gaplessPlayback: true,
-                          File(_backgroundPath!),
-                          fit: BoxFit.cover,
-                          errorBuilder: (context, error, stackTrace) {
-                            _backgroundPath = null;
-                            return SizedBox.shrink();
-                          },
-                        ),
+            return Stack(
+              children: [
+                if (_backgroundPath != null)
+                  Positioned.fill(
+                    child: Opacity(
+                      opacity: aplha / 255,
+                      child: Image.file(
+                        key: ValueKey(_imageVersion),
+                        gaplessPlayback: true,
+                        File(_backgroundPath!),
+                        fit: BoxFit.cover,
+                        errorBuilder: (context, error, stackTrace) {
+                          _backgroundPath = null;
+                          return SizedBox.shrink();
+                        },
                       ),
                     ),
-                  child!,
-                ],
-              ),
+                  ),
+                SafeArea(top: false, bottom: true, child: child!),
+              ],
             );
           },
           title: '中二查歌',
@@ -330,7 +326,7 @@ class _MyHomePageState extends State<MyHomePage> {
       setState(() {
         _isLoading = false;
       });
-      postusecount();
+      // postusecount();
     });
   }
 
@@ -377,9 +373,14 @@ class _MyHomePageState extends State<MyHomePage> {
       appBar: AppBar(title: Text(title), backgroundColor: Colors.transparent),
       extendBody: true,
       // backgroundColor: Colors.transparent,
-      body: Container(
-        decoration: BoxDecoration(color: Colors.transparent),
-        child: _pages[_currentIndex],
+      body: AnimatedSwitcher(
+        duration: const Duration(milliseconds: 300),
+        transitionBuilder: (child, animation) =>
+            FadeTransition(opacity: animation, child: child),
+        child: KeyedSubtree(
+          key: ValueKey(_currentIndex), // 关键：key 变了才会触发动画
+          child: _pages[_currentIndex],
+        ),
       ),
       bottomNavigationBar: Padding(
         padding: const EdgeInsets.only(bottom: 25, left: 25, right: 25),

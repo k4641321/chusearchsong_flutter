@@ -73,6 +73,7 @@ class _RandomMusicPageState extends State<RandomMusicPage> {
       Map<String, dynamic> resultsMap = await filter(
         songsData,
         aliasData,
+        [],
         playhistory,
         searchTitle,
         selectedGenre,

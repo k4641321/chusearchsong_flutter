@@ -3,6 +3,7 @@ import 'package:chusearchsong_flutter/function/toolsfun/generateb50fun/aj50fun.d
 import 'package:chusearchsong_flutter/function/toolsfun/generateb50fun/fc50fun.dart';
 import 'package:chusearchsong_flutter/function/toolsfun/generateb50fun/otherb50.dart';
 import 'package:chusearchsong_flutter/function/toolsfun/generateb50fun/randomb50pagefun.dart';
+import 'package:chusearchsong_flutter/function/toolsfun/generateb50fun/thunderboltb50.dart';
 import 'package:chusearchsong_flutter/function/writeandreadfun.dart';
 import 'package:flutter/material.dart';
 
@@ -48,6 +49,14 @@ Future<Widget?> selectb50({
       songsData: songsData,
       playerdata: playerdata,
       allscoredata: allscoredata,
+    );
+  } else if (b50type == '竖着的50' || b50type == '横着的50') {
+    return thunderboltb50Body(
+      context: context,
+      songsData: songsData,
+      playerdata: playerdata,
+      b50data: b50data,
+      type: b50type,
     );
   } else {
     return await generateother50Body(
@@ -793,6 +802,8 @@ Widget buildTypeDropdownMenu({required ValueChanged onSelected}) {
     DropdownMenuEntry(value: '理论50', label: '理论50'),
     DropdownMenuEntry(value: 'BN', label: 'BN'),
     DropdownMenuEntry(value: '世界末日50', label: '世界末日50'),
+    DropdownMenuEntry(value: '竖着的50', label: '竖着的50'),
+    DropdownMenuEntry(value: '横着的50', label: '横着的50'),
   ];
   return DropdownMenu(
     selectOnly: true,
@@ -880,20 +891,13 @@ Widget buildB50SongCard({
   return InkWell(
     onTap: () async {
       Map<String, dynamic>? songdata;
-      String? versionname;
       for (var j in songsData['songs']) {
         if (i['id'] == j['id']) {
           songdata = j;
-          for (var k in songsData['versions']) {
-            if (j['version'] == k['version']) {
-              versionname = k['title'];
-              break;
-            }
-          }
           break;
         }
       }
-      if (songdata == null || versionname == null) return;
+      if (songdata == null) return;
       await interSongInfo(
         songbasedata: songdata,
         context: context,

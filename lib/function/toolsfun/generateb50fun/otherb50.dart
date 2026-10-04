@@ -145,7 +145,9 @@ Future<Widget> generateother50Body({
                         'Rating:   ${playerdata['rating'].toDouble().toStringAsFixed(2)}',
                         style: TextStyle(
                           fontSize: 25,
-                          color: ratingColor(rating: playerdata['rating'].toDouble()),
+                          color: ratingColor(
+                            rating: playerdata['rating'].toDouble(),
+                          ),
                           shadows: [Shadow(color: Colors.black, blurRadius: 3)],
                         ),
                       ),
@@ -161,38 +163,7 @@ Future<Widget> generateother50Body({
     ),
   );
   // final ScrollController _scrollController = ScrollController();
-  //b50文字
-  Widget b50text = Row(
-    mainAxisAlignment: MainAxisAlignment.center,
-    children: [
-      Card(
-        color: Color.fromARGB(255, 0, 64, 99),
-        child: Padding(
-          padding: EdgeInsetsGeometry.only(
-            top: 5,
-            bottom: 5,
-            left: 20,
-            right: 20,
-          ),
-          child: Text(
-            'B${type != 'BN' ? 50 : n50}',
-            style: TextStyle(fontSize: 30, color: Colors.white),
-          ),
-        ),
-      ),
-    ],
-  );
 
-  //底部信息
-  Widget fontter = Row(
-    mainAxisAlignment: MainAxisAlignment.center,
-    children: [
-      Text(
-        '此 $type B${type != 'BN' ? 50 : n50}由chusearchsong（中二查歌）生成，生成时间：${DateTime.now()}',
-        style: TextStyle(fontWeight: FontWeight.bold, color: Colors.black),
-      ),
-    ],
-  );
   //b50绘制
   List<Widget> b50rowbody = [];
   Widget b50row = Row(
@@ -270,6 +241,39 @@ Future<Widget> generateother50Body({
   if (b50body.length > 5) {
     extraHeight = 219 * (b50body.length - 5);
   }
+
+  //b50文字
+  Widget b50text = Row(
+    mainAxisAlignment: MainAxisAlignment.center,
+    children: [
+      Card(
+        color: Color.fromARGB(255, 0, 64, 99),
+        child: Padding(
+          padding: EdgeInsetsGeometry.only(
+            top: 5,
+            bottom: 5,
+            left: 20,
+            right: 20,
+          ),
+          child: Text(
+            'B${type != 'BN' ? 50 : songcount - 1}',
+            style: TextStyle(fontSize: 30, color: Colors.white),
+          ),
+        ),
+      ),
+    ],
+  );
+
+  //底部信息
+  Widget fontter = Row(
+    mainAxisAlignment: MainAxisAlignment.center,
+    children: [
+      Text(
+        '此 $type B${type != 'BN' ? 50 : songcount - 1}由chusearchsong（中二查歌）生成，生成时间：${DateTime.now()}',
+        style: TextStyle(fontWeight: FontWeight.bold, color: Colors.black),
+      ),
+    ],
+  );
 
   //背景绘制
   Widget result = Container(

@@ -767,10 +767,12 @@ Future<void> updateconfig() async {
     log('更新收藏文件');
     if (!kIsWeb) {
       final path = await getApplicationSupportDirectory();
-      Map<String, dynamic> favorite = await jsonDecode(
-        await File('${path.path}/files/favorite.json').readAsString(),
-      );
-      await (await WriteData.create()).writeFavoriteSongs(favorite);
+      if (File('${path.path}/files/favorite.json').existsSync()) {
+        Map<String, dynamic> favorite = await jsonDecode(
+          await File('${path.path}/files/favorite.json').readAsString(),
+        );
+        await (await WriteData.create()).writeFavoriteSongs(favorite);
+      }
     }
     config['favoriteFileUpdated'] = true;
   }

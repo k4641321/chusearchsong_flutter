@@ -50,7 +50,7 @@ class _FavoritePageState extends State<FavoritePage> {
     Map<String, dynamic> favoriteListSong = await (await ReadData.create())
         .readFavoriteSongs();
     for (var i in favoriteListSong[selectedName]) {
-      late Map<String, dynamic> songbasedata;
+      Map<String, dynamic> songbasedata = {};
 
       // int songid = i['id'];
       for (var j in songsData['songs']) {
@@ -61,6 +61,7 @@ class _FavoritePageState extends State<FavoritePage> {
       }
 
       // songresultWidget.add(const Divider());
+      if (songbasedata.isEmpty) continue;
       if (!mounted) return;
       favoriteResults.add(
         returnSongCard(

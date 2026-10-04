@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:chusearchsong_flutter/function/infopagefun/infopagefun.dart';
 import 'package:chusearchsong_flutter/pages/infopages/changeslogpage.dart';
 import 'package:chusearchsong_flutter/pages/infopages/lilyfanpage.dart';
@@ -23,13 +25,20 @@ class Info extends StatefulWidget {
 }
 
 class _InfoState extends State<Info> {
-  Future<void> loadversion() async {
+  List<Widget> adCards = [];
+  final ScrollController _controller = ScrollController();
+  String version = '加载中';
+  Timer? _timer;
+
+  Future<void> init() async {
     try {
+      //加载版本号
       final packageinfo = await PackageInfo.fromPlatform();
       if (!mounted) return;
       setState(() {
         version = packageinfo.version;
       });
+      _timer = Timer.periodic(Duration(seconds: 4), (_) {});
     } catch (e) {
       if (!mounted) return;
       ScaffoldMessenger.of(
@@ -44,12 +53,8 @@ class _InfoState extends State<Info> {
   @override
   void initState() {
     super.initState();
-
-    loadversion();
+    init();
   }
-
-  final ScrollController _controller = ScrollController();
-  String version = '加载中';
 
   /// 构建单个菜单项
   Widget _buildMenuItem({
@@ -179,51 +184,7 @@ class _InfoState extends State<Info> {
 
               const SizedBox(height: 16),
 
-              // ── ChiffonMai 推广卡片 ──
-              Card(
-                elevation: 0,
-                surfaceTintColor: Colors.transparent,
-                color: theme.colorScheme.primaryContainer.withAlpha(120),
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(15),
-                ),
-                child: InkWell(
-                  borderRadius: BorderRadius.circular(15),
-                  onTap: () async {
-                    final uri = Uri.parse(
-                      'https://github.com/ChiffonOwO/ChiffonMai',
-                    );
-                    if (await canLaunchUrl(uri)) {
-                      await launchUrl(
-                        uri,
-                        mode: LaunchMode.externalApplication,
-                      );
-                    }
-                  },
-                  child: Padding(
-                    padding: const EdgeInsets.all(14),
-                    child: Row(
-                      children: [
-                        Icon(
-                          Icons.open_in_new,
-                          size: 20,
-                          color: theme.colorScheme.onPrimaryContainer,
-                        ),
-                        const SizedBox(width: 10),
-                        Expanded(
-                          child: Text(
-                            '功能最全的舞萌工具，尽在 ChiffonMai !',
-                            style: TextStyle(
-                              color: theme.colorScheme.onPrimaryContainer,
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-              ),
-
+              // 广告位
               const SizedBox(height: 20),
 
               // ── 菜单分组 ──

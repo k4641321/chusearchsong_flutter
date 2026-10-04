@@ -28,6 +28,7 @@ class _SearchPageState extends State<SearchPage> {
   Map<String, dynamic> songsData = {};
   Map<String, dynamic> aliasData = {};
   List playhistory = [];
+  List zxzrSongsData = [];
 
   // Future result;
   final TextEditingController _searchController = TextEditingController();
@@ -69,6 +70,7 @@ class _SearchPageState extends State<SearchPage> {
       Map<String, dynamic> resultsMap = await filter(
         songsData,
         aliasData,
+        zxzrSongsData,
         playhistory,
         searchTitle,
         selectedGenre,
@@ -179,6 +181,7 @@ class _SearchPageState extends State<SearchPage> {
       songsData = await (await ReadData.create()).readSongsData();
       aliasData = await (await ReadData.create()).readAliasData();
       playhistory = await (await ReadData.create()).readPlayerAllScoreData();
+      zxzrSongsData = await (await ReadData.create()).readzxzrSongsData();
       buildGenreWidget();
       buildVersionWidget();
     } catch (e, strack) {

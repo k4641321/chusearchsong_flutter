@@ -62,8 +62,7 @@ Future<void> importFavoriteSong({required BuildContext context}) async {
     if (filePath == null) {
       return;
     }
-    final file = File(filePath);
-    final String content = await file.readAsString();
+    final String content = await result.files.single.xFile.readAsString();
     try {
       Map<String, dynamic> importFavoriteSongs = jsonDecode(content);
       if (!context.mounted) return;

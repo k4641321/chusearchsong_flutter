@@ -32,6 +32,15 @@ class _TextTranslateSettingsPageState extends State<TextTranslateSettingsPage> {
   }
 
   @override
+  void dispose() {
+    _scrollController.dispose();
+    secretIdController.dispose();
+    secretKeyController.dispose();
+    projectIdController.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(title: const Text('翻译设置')),
