@@ -53,8 +53,7 @@ class _CollectibleInfoPageState extends State<CollectibleInfoPage> {
       }
     } else if (type == 'character') {
       try {
-        List segacharadata = await (await ReadData.create())
-            .readSegaCharaData();
+        List segacharadata = SongDataStore.instance.segaCharacters;
         for (var i in segacharadata) {
           if (i['name'] == widget.data['name']) {
             List<Widget> cardresult = [
@@ -425,8 +424,7 @@ class _CollectibleInfoPageState extends State<CollectibleInfoPage> {
       if (requiredList.keys.contains('songs')) {
         List<dynamic> songs = requiredList['songs'];
         //加载曲目
-        Map<String, dynamic> songData = await (await ReadData.create())
-            .readSongsData();
+        Map<String, dynamic> songData = SongDataStore.instance.songsData;
         result.add(
           Text(
             '关联曲目: ',

@@ -178,10 +178,10 @@ class _SearchPageState extends State<SearchPage> {
 
   Future<void> init() async {
     try {
-      songsData = await (await ReadData.create()).readSongsData();
-      aliasData = await (await ReadData.create()).readAliasData();
-      playhistory = await (await ReadData.create()).readPlayerAllScoreData();
-      zxzrSongsData = await (await ReadData.create()).readzxzrSongsData();
+      songsData = SongDataStore.instance.songsData;
+      aliasData = SongDataStore.instance.aliasData;
+      playhistory = SongDataStore.instance.playerAllScore;
+      zxzrSongsData = SongDataStore.instance.zxzrSongsData;
       buildGenreWidget();
       buildVersionWidget();
     } catch (e, strack) {
@@ -222,6 +222,7 @@ class _SearchPageState extends State<SearchPage> {
           },
         ),
       ),
+      appBar: AppBar(title: Text('搜索'), backgroundColor: Colors.transparent),
       body: Center(
         child: Scrollbar(
           controller: _scrollController,

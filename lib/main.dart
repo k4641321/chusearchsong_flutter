@@ -3,8 +3,10 @@ import 'dart:io';
 import 'package:chusearchsong_flutter/function/infopagefun/infopagefun.dart';
 import 'package:chusearchsong_flutter/function/request.dart';
 import 'package:chusearchsong_flutter/function/writeandreadfun.dart';
+import 'package:chusearchsong_flutter/pages/homepages/indexpage.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/rendering.dart';
+import 'package:flutter_local_db/flutter_local_db.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:path_provider/path_provider.dart';
 import 'function/commonfun.dart';
@@ -312,6 +314,8 @@ class _MyHomePageState extends State<MyHomePage> {
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) async {
+      await LocalDB.init();
+      if (!mounted) return;
       await Dataupdate.ifres(
         context: context,
         onProgress: (text) {
@@ -320,6 +324,7 @@ class _MyHomePageState extends State<MyHomePage> {
           });
         },
       );
+      await SongDataStore.instance.loadAll();
       showChangesLog();
       chechupdate();
       showannouncement();
@@ -334,10 +339,12 @@ class _MyHomePageState extends State<MyHomePage> {
   String title = '搜索';
   int _currentIndex = 0;
   // Widget infopagebox =
+  Widget indexpagebox = Indexpage();
   Widget searchpagebox = SearchPage();
   Widget favoritepagebox = FavoritePage();
   Widget toolspagebox = ToolPage();
   List<Widget> get _pages => [
+    indexpagebox,
     searchpagebox,
     favoritepagebox,
     toolspagebox,
@@ -370,7 +377,7 @@ class _MyHomePageState extends State<MyHomePage> {
     // final height = box?.size.height;
 
     return Scaffold(
-      appBar: AppBar(title: Text(title), backgroundColor: Colors.transparent),
+      // appBar: AppBar(title: Text(title), backgroundColor: Colors.transparent),
       extendBody: true,
       // backgroundColor: Colors.transparent,
       body: AnimatedSwitcher(
@@ -416,6 +423,7 @@ class _MyHomePageState extends State<MyHomePage> {
               });
             },
             destinations: const [
+              NavigationDestination(icon: Icon(Icons.home), label: '主页'),
               NavigationDestination(icon: Icon(Icons.search), label: '搜索'),
               NavigationDestination(icon: Icon(Icons.favorite), label: '收藏'),
               NavigationDestination(icon: Icon(Icons.build), label: '工具'),

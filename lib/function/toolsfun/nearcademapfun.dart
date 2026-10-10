@@ -35,7 +35,7 @@ class _ShopInfoState extends State<ShopInfo> {
     //地址拼接
     List<String> regionList = [];
     for (var j in shopinformation['address']['region']) {
-      regionList.add(j['name']['zh']);
+      regionList.add(j['name']);
     }
 
     //开店时间

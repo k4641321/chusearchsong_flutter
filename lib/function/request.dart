@@ -3,6 +3,19 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart';
 import 'dart:convert';
 
+//热门歌曲
+Future<String> requestHotSong(String type) async {
+  final uri = Uri.parse(
+    'https://maimai.lxns.net/api/v0/chunithm/song/popular?range=$type',
+  );
+  final response = await get(uri);
+  if (response.statusCode != 200) {
+    throw Exception('请求失败，状态码：${response.statusCode}');
+  }
+
+  return response.body;
+}
+
 //鸟率排行榜
 Future<String> requestChunirecSongInfoPage(String chunirecid) async {
   final uri = Uri.parse('https://db.chunirec.net/music/$chunirecid');
@@ -78,14 +91,25 @@ Future<List> requestreiwaf5sisongs() async {
 
 //请求Nearcade所有店铺数据
 Future<String> requestNearcadeAllShop({required int page}) async {
-  final uri = Uri.parse(
-    'https://nearcade.phizone.cn/api/shops/?regionId=CN&limit=100&page=$page',
-  );
-  final response = await get(uri);
-  if (response.statusCode != 200) {
-    throw Exception('请求失败，状态码：${response.statusCode}');
+  const hosts = ['nearcade.cn', 'nearca.de', 'nearcade.phizone.cn'];
+  String? lastError;
+
+  for (final host in hosts) {
+    final uri = Uri.parse(
+      'https://$host/api/shops/?regionId=CN&limit=100&page=$page',
+    );
+    try {
+      final response = await get(uri).timeout(const Duration(seconds: 10));
+      if (response.statusCode == 200) {
+        return response.body;
+      }
+      lastError = '状态码 ${response.statusCode}';
+    } catch (e) {
+      lastError = e.toString();
+    }
   }
-  return response.body;
+
+  throw Exception('所有镜像请求失败，最后错误：$lastError');
 }
 
 //请求返回落雪Token
@@ -217,21 +241,32 @@ Future<String> requestbeerpsisongs() async {
 
 //获取最新版本号
 Future<String> requestLatestVersion() async {
-  final response = await get(
-    Uri.parse('https://chusearchsong.devintom.top/api/latest_version'),
-  );
-  if (response.statusCode != 200) {
+  try {
+    final response = await get(
+      Uri.parse('https://chusearchsong.devintom.top/api/latest_version'),
+    );
+    if (response.statusCode != 200) {
+      final response1 = await get(
+        Uri.parse(
+          'https://www.diving-fish.com/api/chunithmprober/latest_version',
+        ),
+      );
+      if (response1.statusCode != 200) {
+        throw Exception('请求失败，状态码：${response1.statusCode}');
+      }
+      return response1.body;
+    }
+    return response.body;
+  } catch (e) {
     final response1 = await get(
       Uri.parse(
         'https://www.diving-fish.com/api/chunithmprober/latest_version',
       ),
     );
     if (response1.statusCode != 200) {
-      throw Exception('请求失败，状态码：${response.statusCode}');
+      throw Exception('请求失败，状态码：${response1.statusCode}');
     }
     return response1.body;
-  } else {
-    return response.body;
   }
 }
 

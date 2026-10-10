@@ -75,7 +75,7 @@ class _ChartViewPageState extends State<ChartViewPage> {
       Map<String, dynamic> config = await (await ReadData.create())
           .readConfig();
       if (!mounted) return;
-      List zxzrsongsdata = await (await ReadData.create()).readzxzrSongsData();
+      List zxzrsongsdata = SongDataStore.instance.zxzrSongsData;
       List songchart = [];
       for (var i in zxzrsongsdata) {
         if (i['id'] == widget.songid) {

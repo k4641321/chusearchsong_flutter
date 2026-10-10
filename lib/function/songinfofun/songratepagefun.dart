@@ -12,7 +12,7 @@ Future<Widget> buildChildren({required int songid, int? index}) async {
   try {
     index ??= 0;
     final formatter = NumberFormat.percentPattern();
-    List zxzrsongs = await (await ReadData.create()).readzxzrSongsData();
+    List zxzrsongs = SongDataStore.instance.zxzrSongsData;
     String? chunirecId;
     for (var i in zxzrsongs) {
       if (i['id'] == songid) {

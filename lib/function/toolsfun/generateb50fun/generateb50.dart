@@ -365,8 +365,7 @@ Future<Widget> generateb50Body({
       (a, b) => b['level_value']!.compareTo(a['level_value']!),
     );
   } else if (type == '理论50') {
-    List lasteversionname = (await (await ReadData.create())
-        .readLatestVersion())['version'];
+    List lasteversionname = SongDataStore.instance.latestVersion['version'];
     List lasteversion = [];
     for (var i in songsData['versions']) {
       if (lasteversionname.contains(i['title'])) {

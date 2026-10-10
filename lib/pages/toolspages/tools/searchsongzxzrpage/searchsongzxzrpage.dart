@@ -137,7 +137,7 @@ class _SearchsongzxzrpageState extends State<Searchsongzxzrpage> {
   }
 
   Future<void> init() async {
-    songsData = await (await ReadData.create()).readzxzrSongsData();
+    songsData = SongDataStore.instance.zxzrSongsData;
     if (!mounted) return;
     if (songsData.isEmpty) {
       ScaffoldMessenger.of(

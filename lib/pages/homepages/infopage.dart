@@ -107,6 +107,7 @@ class _InfoState extends State<Info> {
     final theme = Theme.of(context);
 
     return Scaffold(
+      appBar: AppBar(title: Text('关于'), backgroundColor: Colors.transparent),
       body: Scrollbar(
         controller: _controller,
         child: SingleChildScrollView(

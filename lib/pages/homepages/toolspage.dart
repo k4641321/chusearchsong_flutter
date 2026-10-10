@@ -89,8 +89,7 @@ class _ToolPageState extends State<ToolPage> {
           pageBuilder: (_) => const SizedBox(),
           onTap: (ctx) async {
             try {
-              final data1 = await (await ReadData.create())
-                  .readPlayerRatingTrendData();
+              final data1 = SongDataStore.instance.playerRatingTrendData;
               final data2 = await returnSpot(data: data1);
               if (!ctx.mounted) return;
               Navigator.push(
@@ -113,8 +112,7 @@ class _ToolPageState extends State<ToolPage> {
           pageBuilder: (_) => const SizedBox(),
           onTap: (ctx) async {
             try {
-              final playerdata = (await (await ReadData.create())
-                  .readPlayerInfoData());
+              final playerdata = SongDataStore.instance.playerInfoData;
               if (!ctx.mounted) return;
               Navigator.push(
                 ctx,
@@ -242,6 +240,7 @@ class _ToolPageState extends State<ToolPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(title: Text('工具'), backgroundColor: Colors.transparent),
       body: SingleChildScrollView(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,

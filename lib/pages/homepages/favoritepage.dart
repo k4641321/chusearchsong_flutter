@@ -25,7 +25,7 @@ class _FavoritePageState extends State<FavoritePage> {
   String selectedName = 'favorite';
 
   Future<void> init() async {
-    songsData = await (await ReadData.create()).readSongsData();
+    songsData = SongDataStore.instance.songsData;
     await loadFavoriteList();
     await _returnfavoriteResults();
   }
@@ -139,6 +139,7 @@ class _FavoritePageState extends State<FavoritePage> {
           },
         ),
       ),
+      appBar: AppBar(title: Text('收藏'), backgroundColor: Colors.transparent),
       body: Center(
         child: Scrollbar(
           controller: _scrollController,

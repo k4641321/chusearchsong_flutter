@@ -54,7 +54,7 @@ Future<Widget> returnscore({
   //加载成绩
   Widget result = const Text('无成绩');
   try {
-    List allscore = await (await ReadData.create()).readPlayerAllScoreData();
+    List allscore = SongDataStore.instance.playerAllScore;
 
     // print(i);
     if (!context.mounted) return result;
@@ -711,8 +711,7 @@ Future<List<Widget>> returnAlias({
 }) async {
   List<Widget> result = [];
   try {
-    Map<String, dynamic> aliasjson = await (await ReadData.create())
-        .readAliasData();
+    Map<String, dynamic> aliasjson = SongDataStore.instance.aliasData;
     List alias = aliasjson['aliases'];
     for (var i in alias) {
       if (i['song_id'] == id) {

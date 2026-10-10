@@ -79,8 +79,8 @@ class _ViewallgradespageState extends State<Viewallgradespage> {
 
   Future<void> loadallscore() async {
     try {
-      allscore = await (await ReadData.create()).readPlayerAllScoreData();
-      songsdata = await (await ReadData.create()).readSongsData();
+      allscore = SongDataStore.instance.playerAllScore;
+      songsdata = SongDataStore.instance.songsData;
       init();
     } catch (e, strack) {
       log('$e\n$strack');

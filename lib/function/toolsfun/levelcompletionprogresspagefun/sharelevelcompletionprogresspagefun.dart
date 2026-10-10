@@ -116,8 +116,7 @@ Future<Widget> returnShareLevelCompletionProgressPageFun({
 }) async {
   double defaultheight = 1422;
   //请求玩家信息
-  Map<String, dynamic> playerdata = await (await ReadData.create())
-      .readPlayerInfoData();
+  Map<String, dynamic> playerdata = SongDataStore.instance.playerInfoData;
 
   List<Widget> resultchildren = [];
 

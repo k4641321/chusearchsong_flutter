@@ -177,9 +177,9 @@ class _RandomMusicPageState extends State<RandomMusicPage> {
   }
 
   Future<void> init() async {
-    songsData = await (await ReadData.create()).readSongsData();
-    aliasData = await (await ReadData.create()).readAliasData();
-    playhistory = await (await ReadData.create()).readPlayerAllScoreData();
+    songsData = SongDataStore.instance.songsData;
+    // aliasData = await (await ReadData.create()).readAliasData();
+    playhistory = SongDataStore.instance.playerAllScore;
     buildGenreWidget();
     buildVersionWidget();
   }

@@ -50,13 +50,13 @@ class _FriendBattlePageState extends State<FriendBattlePage> {
       setState(() {
         _loadingText = '加载曲目...';
       });
-      songsdata = await (await ReadData.create()).readSongsData();
+      songsdata = SongDataStore.instance.songsData;
       if (!mounted) return;
       setState(() {
         _loadingText = '上传玩家成绩...';
       });
       final uploadresult = jsonDecode(await uploadplayerscore());
-      myscore = await (await ReadData.create()).readPlayerAllScoreData();
+      myscore = SongDataStore.instance.playerAllScore;
       if (uploadresult['Sucess'] == true) {
         if (!mounted) return;
         setState(() {
@@ -151,7 +151,7 @@ class _FriendBattlePageState extends State<FriendBattlePage> {
         setState(() {
           _loadingText = '请求我的数据...';
         });
-        myscore = await (await ReadData.create()).readPlayerAllScoreData();
+        myscore = SongDataStore.instance.playerAllScore;
         if (!mounted) return;
         setState(() {
           _loadingText = '请求好友信息...';
@@ -165,8 +165,7 @@ class _FriendBattlePageState extends State<FriendBattlePage> {
         setState(() {
           _loadingText = '请求我的信息...';
         });
-        myRating = (await (await ReadData.create())
-            .readPlayerInfoData())['rating'];
+        myRating = SongDataStore.instance.playerInfoData['rating'];
         friendcode = newfriendcode;
       }
       if (!mounted) return;

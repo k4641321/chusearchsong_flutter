@@ -5,7 +5,6 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:path_provider/path_provider.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'dart:convert';
 import 'dart:developer';
@@ -41,7 +40,7 @@ class Dataupdate {
     onProgress('初始化...');
 
     //配置文件
-    if (!(await SharedPreferences.getInstance()).containsKey('Config')) {
+    if ((await (await ReadData.create()).readConfig()).isEmpty) {
       try {
         Map<String, dynamic> config = {
           "theme": "light",
@@ -96,7 +95,9 @@ class Dataupdate {
     // }
 
     //收藏文件
-    if (!(await SharedPreferences.getInstance()).containsKey('FavoriteSongs')) {
+    if (!(await (await ReadData.create()).readFavoriteSongs()).containsKey(
+      'FavoriteSongs',
+    )) {
       try {
         await (await WriteData.create()).writeFavoriteSongs({"favorite": []});
         onProgress('完成');
@@ -126,33 +127,24 @@ class Dataupdate {
         // Navigator.of(context).pop();
         return;
       }
-      final prefs = await SharedPreferences.getInstance();
-      if (!prefs.containsKey('SongsData') |
-          !prefs.containsKey('PlatesData') |
-          !prefs.containsKey('IconsData') |
-          !prefs.containsKey('TrophiesData') |
-          !prefs.containsKey('CharactersData') |
-          !prefs.containsKey('AliasData') |
-          !prefs.containsKey('WahlapLobbyData') |
-          !prefs.containsKey('LatestVersion')) {
-        onProgress('下载必要资源');
-        // showtext.value = '下载必要资源';
 
-        // 下载歌曲数据
-        // showtext.value = '下载必要数据';
-        await Future.wait([
-          (await WriteData.create()).writeSongsData(),
-          (await WriteData.create()).writePlateData(),
-          (await WriteData.create()).writeIconsData(),
-          (await WriteData.create()).writeTrophiesData(),
-          (await WriteData.create()).writeCharactersData(),
-          (await WriteData.create()).writeAliasData(),
-          (await WriteData.create()).writeWahlapLobbyData(),
-          (await WriteData.create()).writeLatestVersion(),
-        ]);
-        // showtext.value = '完成';
-        onProgress('完成');
-      }
+      onProgress('下载必要资源');
+      // showtext.value = '下载必要资源';
+
+      // 下载歌曲数据
+      // showtext.value = '下载必要数据';
+      await Future.wait([
+        (await WriteData.create()).writeSongsData(),
+        (await WriteData.create()).writePlateData(),
+        (await WriteData.create()).writeIconsData(),
+        (await WriteData.create()).writeTrophiesData(),
+        (await WriteData.create()).writeCharactersData(),
+        (await WriteData.create()).writeAliasData(),
+        (await WriteData.create()).writeWahlapLobbyData(),
+        (await WriteData.create()).writeLatestVersion(),
+      ]);
+      // showtext.value = '完成';
+      onProgress('完成');
 
       config['init'] = true;
       await (await WriteData.create()).writeConfig(config);

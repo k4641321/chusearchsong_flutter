@@ -49,8 +49,7 @@ Future<Widget> returnSongShareView({required int songid}) async {
 
   Future<String> returnVersionName({required int versionvalue}) async {
     String versiontitle = '获取失败';
-    Map<String, dynamic> songdata = await (await ReadData.create())
-        .readSongsData();
+    Map<String, dynamic> songdata = SongDataStore.instance.songsData;
     for (var i in songdata['versions']) {
       if (i['version'] == versionvalue) {
         versiontitle = i['title'];

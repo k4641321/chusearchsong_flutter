@@ -21,8 +21,8 @@ class _LevelCompletionProgressPageState
   //初始化数据，避免每次筛选都要重新读取，会慢似的
   Future<void> init() async {
     try {
-      songsData = await (await ReadData.create()).readSongsData();
-      allScoreData = await (await ReadData.create()).readPlayerAllScoreData();
+      songsData = SongDataStore.instance.songsData;
+      allScoreData = SongDataStore.instance.playerAllScore;
       update();
       // print(songsData);
       // print(allScoreData);

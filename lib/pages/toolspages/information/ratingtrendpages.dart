@@ -41,7 +41,7 @@ class _RatingTrendPagesState extends State<RatingTrendPages> {
 
   Future<void> loadplayerinfo() async {
     try {
-      Map playerdata = (await (await ReadData.create()).readPlayerInfoData());
+      Map playerdata = SongDataStore.instance.playerInfoData;
       if (playerdata.isEmpty) {
         if (!mounted) return;
         ScaffoldMessenger.of(

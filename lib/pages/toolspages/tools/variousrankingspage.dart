@@ -20,8 +20,8 @@ class _VariousrankingspageState extends State<Variousrankingspage> {
   int selecteddiffindex = 0;
   Future<void> init() async {
     try {
-      songsData = await (await ReadData.create()).readSongsData();
-      zxzrSongsData = await (await ReadData.create()).readzxzrSongsData();
+      songsData = SongDataStore.instance.songsData;
+      zxzrSongsData = SongDataStore.instance.zxzrSongsData;
       if (zxzrSongsData.isEmpty) {
         if (!mounted) return;
         ScaffoldMessenger.of(context).showSnackBar(

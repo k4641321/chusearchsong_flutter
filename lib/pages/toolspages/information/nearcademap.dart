@@ -8,7 +8,6 @@ import 'package:flutter_map/flutter_map.dart';
 import 'package:flutter_map_marker_cluster_plus/flutter_map_marker_cluster_plus.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:geolocator/geolocator.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 List decodeShopList(String raw) => jsonDecode(raw) as List;
 
@@ -52,16 +51,15 @@ class _NearcademapState extends State<Nearcademap> {
           ),
         ),
       );
-      final prefs = await SharedPreferences.getInstance();
-      if (!prefs.containsKey('NearcadeAllShopData') ||
-          !prefs.containsKey('NearcadeGamesData')) {
+      if ((await (await ReadData.create()).readNearcadeAllShop()).isEmpty ||
+          (await (await ReadData.create()).readNearcadeAllShop()).isEmpty) {
         loadsText = '本地缓存不存在，正在下载...';
         await (await WriteData.create()).writeNearcadeAllShopAndNearcadeGames();
-        shopList = decodeShopList(prefs.getString('NearcadeAllShopData')!);
-        gameList = decodeGameListJson(prefs.getString('NearcadeGamesData')!);
+        shopList = await (await ReadData.create()).readNearcadeAllShop();
+        gameList = await (await ReadData.create()).readNearcadeGamesMapData();
       } else {
-        shopList = decodeShopList(prefs.getString('NearcadeAllShopData')!);
-        gameList = decodeGameListJson(prefs.getString('NearcadeGamesData')!);
+        shopList = await (await ReadData.create()).readNearcadeAllShop();
+        gameList = await (await ReadData.create()).readNearcadeGamesMapData();
       }
 
       if (!mounted) return;

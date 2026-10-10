@@ -9,8 +9,7 @@ import 'generateb50fun/generateb50.dart';
 Future<double?> initminRating({required bool isNew}) async {
   try {
     //获取b50
-    Map<String, dynamic> b50 = await (await ReadData.create())
-        .readPlayerB50Data();
+    Map<String, dynamic> b50 = SongDataStore.instance.playerB50Data;
     //获取b30
     if (isNew == false) {
       List b30 = b50['bests'];

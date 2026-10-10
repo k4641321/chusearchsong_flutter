@@ -30,9 +30,9 @@ class _GenerateB50PageState extends State<GenerateB50Page> {
   Future<void> init() async {
     try {
       //加载曲目信息
-      songsData = await (await ReadData.create()).readSongsData();
+      songsData = SongDataStore.instance.songsData;
       //加载玩家信息
-      playerdata = await (await ReadData.create()).readPlayerInfoData();
+      playerdata = SongDataStore.instance.playerInfoData;
       if (playerdata.isEmpty) {
         setState(() {
           b50Body = Text('玩家信息为空，请检查是否配置好落雪Token');
@@ -40,9 +40,9 @@ class _GenerateB50PageState extends State<GenerateB50Page> {
         return;
       }
       //加载所有成绩
-      allscoredata = await (await ReadData.create()).readPlayerAllScoreData();
+      allscoredata = SongDataStore.instance.playerAllScore;
       //加载b50数据
-      b50data = await (await ReadData.create()).readPlayerB50Data();
+      b50data = SongDataStore.instance.playerB50Data;
       workingplayerdata = Map.from(b50data);
     } catch (e, strack) {
       log('$e\n$strack');

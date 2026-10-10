@@ -14,14 +14,11 @@ Future<List<Widget>> searchCollectibles({
   bool? onlysearchtrophty,
 }) async {
   List<Widget> collectibles = [];
-  Map<String, dynamic> iconJson = await (await ReadData.create())
-      .readIconsData();
-  Map<String, dynamic> plateJson = await (await ReadData.create())
-      .readPlateData();
-  Map<String, dynamic> trophyJson = await (await ReadData.create())
-      .readTrophiesData();
-  Map<String, dynamic> characterJson = await (await ReadData.create())
-      .readCharactersData();
+  Map<String, dynamic> iconJson = SongDataStore.instance.collectionIcons;
+  Map<String, dynamic> plateJson = SongDataStore.instance.collectionPlate;
+  Map<String, dynamic> trophyJson = SongDataStore.instance.collectionTrophies;
+  Map<String, dynamic> characterJson =
+      SongDataStore.instance.collectionCharacters;
 
   Widget returnWidget({
     required Map<String, dynamic> data,

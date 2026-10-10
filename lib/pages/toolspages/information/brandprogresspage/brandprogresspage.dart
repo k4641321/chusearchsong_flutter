@@ -54,10 +54,9 @@ class _BrandprogresspageState extends State<Brandprogresspage> {
 
   Future<void> init() async {
     try {
-      songsData = await (await ReadData.create()).readSongsData();
-      trophies = (await (await ReadData.create())
-          .readTrophiesData())['trophies'];
-      playhistory = await (await ReadData.create()).readPlayerAllScoreData();
+      songsData = SongDataStore.instance.songsData;
+      trophies = SongDataStore.instance.collectionTrophies['trophies'];
+      playhistory = SongDataStore.instance.playerAllScore;
       final newSpirit = <Widget>[];
       final newTribute = <Widget>[];
       final newLegend = <Widget>[];

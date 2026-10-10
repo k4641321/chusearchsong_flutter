@@ -20,7 +20,7 @@ class _LinkedversepageState extends State<Linkedversepage> {
   Future<void> init() async {
     try {
       linkedverseData = await (await ReadData.create()).readLinkedVerseData();
-      songsData = await (await ReadData.create()).readSongsData();
+      songsData = SongDataStore.instance.songsData;
       List<Widget> children = [];
       for (var i in linkedverseData['gate']) {
         if (!i['go_online']) continue;
