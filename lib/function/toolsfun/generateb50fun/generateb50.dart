@@ -14,20 +14,20 @@ Future<Widget?> selectb50({
   required Map<String, dynamic> playerdata,
   required List allscoredata,
   required Map<String, dynamic> b50data,
+  required bool generateS10,
+  required String thunderboltb50,
   String? genre,
   int? n50,
 }) async {
-  if (b50type == 'b50' ||
-      b50type == '个人理论50' ||
-      b50type == '理论50' ||
-      b50type == '带S10的50' ||
-      b50type == '带S10的理论50') {
+  if (b50type == 'b50' || b50type == '个人理论50' || b50type == '理论50') {
     return await generateb50Body(
       context: context,
       songsData: songsData,
       playerdata: playerdata,
       b50data: b50data,
       type: b50type,
+      generateS10: generateS10,
+      thunderboltb50: thunderboltb50,
     );
   } else if (b50type == 'random50') {
     return await randomb50Body(
@@ -337,6 +337,8 @@ Future<Widget> generateb50Body({
   required Map<String, dynamic> playerdata,
   required Map<String, dynamic> b50data,
   required String type,
+  required bool generateS10,
+  required String thunderboltb50,
 }) async {
   if (type == '个人理论50') {
     for (var i in b50data['bests']) {
@@ -473,7 +475,7 @@ Future<Widget> generateb50Body({
         break;
       }
     }
-    if (type != 'b50' && type != '带S10的50') {
+    if (type != 'b50') {
       i['score'] = 1010000;
       i['rank'] = 'sssp';
       i['clear'] = 'clear';
@@ -501,7 +503,7 @@ Future<Widget> generateb50Body({
         context: context,
       ),
     );
-    if (row == 9) {
+    if (row == 9 && thunderboltb50 != '横着的') {
       b30body.add(b30row);
       row = 0;
       b30rowbody = [];
@@ -512,6 +514,16 @@ Future<Widget> generateb50Body({
     } else {
       row++;
     }
+    if (thunderboltb50 == '竖着的') {
+      b30body.add(b30row);
+      row = 0;
+      b30rowbody = [];
+      b30row = Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: b30rowbody,
+      );
+    }
+
     songcount++;
   }
   if (b30rowbody.isNotEmpty) {
@@ -547,7 +559,7 @@ Future<Widget> generateb50Body({
         break;
       }
     }
-    if (type != 'b50' && type != '带S10的50') {
+    if (type != 'b50') {
       i['score'] = 1010000;
       i['rank'] = 'sssp';
       i['clear'] = 'clear';
@@ -575,7 +587,7 @@ Future<Widget> generateb50Body({
         context: context,
       ),
     );
-    if (row == 9) {
+    if (row == 9 && thunderboltb50 != '横着的') {
       b20body.add(b20row);
       row = 0;
       b20rowbody = [];
@@ -586,6 +598,15 @@ Future<Widget> generateb50Body({
     } else {
       row++;
     }
+    if (thunderboltb50 == '竖着的') {
+      b20body.add(b20row);
+      row = 0;
+      b20rowbody = [];
+      b20row = Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: b20rowbody,
+      );
+    }
     songcount++;
   }
   if (b20rowbody.isNotEmpty) {
@@ -594,7 +615,7 @@ Future<Widget> generateb50Body({
 
   //s10文字
   Widget s10text = SizedBox.shrink();
-  if (type == '带S10的50' || type == '带S10的理论50') {
+  if (generateS10) {
     s10text = buildB50Text("S10");
     //s10绘制
     List<Widget> s10body = [];
@@ -623,7 +644,7 @@ Future<Widget> generateb50Body({
           break;
         }
       }
-      if (type != 'b50' && type != '带S10的50') {
+      if (type != 'b50') {
         i['score'] = 1010000;
         i['rank'] = 'sssp';
         i['clear'] = 'clear';
@@ -651,7 +672,7 @@ Future<Widget> generateb50Body({
           context: context,
         ),
       );
-      if (row == 9) {
+      if (row == 9 && thunderboltb50 != '横着的') {
         s10body.add(s10row);
         row = 0;
         s10rowbody = [];
@@ -662,8 +683,18 @@ Future<Widget> generateb50Body({
       } else {
         row++;
       }
+      if (thunderboltb50 == '竖着的') {
+        s10body.add(s10row);
+        row = 0;
+        s10rowbody = [];
+        s10row = Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: s10rowbody,
+        );
+      }
       songcount++;
     }
+
     if (s10rowbody.isNotEmpty) {
       s10body.add(s10row);
     }
@@ -675,16 +706,9 @@ Future<Widget> generateb50Body({
   if (type != 'b50') {
     theory50 = type;
   }
-  Widget fontter = Row(
-    mainAxisAlignment: MainAxisAlignment.center,
-    children: [
-      Text(
-        '此 $theory50 B50由chusearchsong（中二查歌）生成，生成时间：${DateTime.now()}',
-        style: TextStyle(fontWeight: FontWeight.bold, color: Colors.black),
-      ),
-    ],
-  );
-  if (type != 'b50' && type != '带S10的50') {
+  Widget fontter = buildB50Fontter(theory50);
+
+  if (type != 'b50') {
     totalRating = totalRating / songcount;
     playerdata['rating'] = double.parse(
       totalRating.toString().length > 5
@@ -760,13 +784,35 @@ Future<Widget> generateb50Body({
   //背景绘制
 
   double extraHeight = 0;
-  if (type == "带S10的50" || type == '带S10的理论50') {
+  double width = 5896 / 2;
+  double height = 2844 / 2;
+  if (generateS10) {
     extraHeight = 300;
   }
 
+  if (thunderboltb50 == '横着的') {
+    width =
+        5896 / 2 +
+        260 * (b50data['new_bests'] as List).length +
+        260 * (b50data['bests'] as List).length +
+        260 * (b50data['selections'] as List).length;
+    height = 100;
+  }
+  if (thunderboltb50 == "竖着的") {
+    height = 2844 / 2;
+    extraHeight =
+        extraHeight +
+        200 * (b50data['new_bests'] as List).length +
+        200 * (b50data['bests'] as List).length;
+    if (generateS10) {
+      extraHeight = extraHeight + 200 * (b50data['selections'] as List).length;
+    }
+    width = 5896 / 8 + 75;
+  }
+
   Widget result = Container(
-    width: 5896 / 2,
-    height: 2844 / 2 + extraHeight,
+    width: width, //5896 / 2,
+    height: height + extraHeight, //2844 / 2 + extraHeight,
     decoration: BoxDecoration(
       image: DecorationImage(
         image: AssetImage('res/background.png'),
@@ -774,9 +820,27 @@ Future<Widget> generateb50Body({
       ),
     ),
     child: Center(
-      child: Column(
-        children: [title, b30text, b30, b20text, b20, s10text, s10, fontter],
-      ),
+      child: thunderboltb50 == '横着的'
+          ? Column(
+              children: [
+                Row(
+                  children: [title, b30text, b30, b20text, b20, s10text, s10],
+                ),
+                fontter,
+              ],
+            )
+          : Column(
+              children: [
+                title,
+                b30text,
+                b30,
+                b20text,
+                b20,
+                s10text,
+                s10,
+                fontter,
+              ],
+            ),
     ),
   );
 
@@ -786,7 +850,6 @@ Future<Widget> generateb50Body({
 Widget buildTypeDropdownMenu({required ValueChanged onSelected}) {
   List<DropdownMenuEntry> dropdownMenuEntries = [
     DropdownMenuEntry(value: 'b50', label: 'B50'),
-    DropdownMenuEntry(value: '带S10的50', label: '带S10的50'),
     DropdownMenuEntry(value: 'random50', label: '随机B50'),
     DropdownMenuEntry(value: 'fc30', label: 'FC50'),
     DropdownMenuEntry(value: 'aj30', label: 'AJ50'),
@@ -796,7 +859,6 @@ Widget buildTypeDropdownMenu({required ValueChanged onSelected}) {
     DropdownMenuEntry(value: '版本50', label: '版本50'),
     DropdownMenuEntry(value: '谱师50', label: '谱师50'),
     DropdownMenuEntry(value: '曲师50', label: '曲师50'),
-    DropdownMenuEntry(value: '带S10的理论50', label: '带S10的理论50'),
     DropdownMenuEntry(value: '个人理论50', label: '个人理论50'),
     DropdownMenuEntry(value: '理论50', label: '理论50'),
     DropdownMenuEntry(value: 'BN', label: 'BN'),
@@ -1125,6 +1187,18 @@ Widget buildB50Text(String text) {
             style: TextStyle(fontSize: 30, color: Colors.white),
           ),
         ),
+      ),
+    ],
+  );
+}
+
+Widget buildB50Fontter(String type) {
+  return Row(
+    mainAxisAlignment: MainAxisAlignment.center,
+    children: [
+      Text(
+        '此 $type B50由chusearchsong（中二查歌）生成，生成时间：${DateTime.now()} ,交流群：309546141',
+        style: TextStyle(fontWeight: FontWeight.bold, color: Colors.black),
       ),
     ],
   );

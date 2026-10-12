@@ -26,6 +26,8 @@ class _GenerateB50PageState extends State<GenerateB50Page> {
   String? genreorversion;
   Map<String, dynamic> b50data = {};
   Map<String, dynamic> workingb50data = {};
+  bool _generates10 = false;
+  String _thunderboltb50 = '关';
 
   Future<void> init() async {
     try {
@@ -194,6 +196,56 @@ class _GenerateB50PageState extends State<GenerateB50Page> {
             children: [
               Expanded(
                 child: TextButton(
+                  onPressed: () {
+                    setState(() {
+                      _generates10 = !_generates10;
+                    });
+                  },
+                  child: Text('带S10生成：$_generates10'),
+                ),
+              ),
+              Expanded(
+                child: TextButton(
+                  onPressed: () async {
+                    await showDialog(
+                      context: context,
+                      builder: (context) => SimpleDialog(
+                        children: [
+                          ListTile(
+                            title: Text('关'),
+                            onTap: () {
+                              _thunderboltb50 = '关';
+                              Navigator.of(context).pop();
+                            },
+                          ),
+                          ListTile(
+                            title: Text('横着的'),
+                            onTap: () {
+                              _thunderboltb50 = '横着的';
+                              Navigator.of(context).pop();
+                            },
+                          ),
+                          ListTile(
+                            title: Text('竖着的'),
+                            onTap: () {
+                              _thunderboltb50 = '竖着的';
+                              Navigator.of(context).pop();
+                            },
+                          ),
+                        ],
+                      ),
+                    );
+                    setState(() {});
+                  },
+                  child: Text('雷霆50：$_thunderboltb50'),
+                ),
+              ),
+            ],
+          ),
+          Row(
+            children: [
+              Expanded(
+                child: TextButton(
                   onPressed: () async {
                     if ((selectedType == '流派50' || selectedType == '版本50') &&
                         genreorversion == null) {
@@ -212,8 +264,10 @@ class _GenerateB50PageState extends State<GenerateB50Page> {
                         playerdata: workingplayerdata,
                         allscoredata: allscoredata,
                         genre: genreorversion,
+                        generateS10: _generates10,
                         b50data: workingb50data,
                         n50: n50,
+                        thunderboltb50: _thunderboltb50,
                       );
                       setState(() {
                         if (result != null) {

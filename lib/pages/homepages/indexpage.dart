@@ -2,7 +2,9 @@ import 'dart:convert';
 import 'dart:developer';
 
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:chusearchsong_flutter/function/commonfun.dart';
 import 'package:chusearchsong_flutter/function/request.dart';
+import 'package:chusearchsong_flutter/function/toolsfun/levelcompletionprogresspagefun/sharelevelcompletionprogresspagefun.dart';
 import 'package:chusearchsong_flutter/function/toolsfun/playerinfopagefun.dart';
 import 'package:chusearchsong_flutter/function/writeandreadfun.dart';
 import 'package:flutter/material.dart';
@@ -20,32 +22,101 @@ class _IndexpageState extends State<Indexpage> {
   Map<String, dynamic> weekData = {};
   Map<String, dynamic> monthData = {};
   Map<String, dynamic> songsData = {};
-  List<Widget> weekWidgets = [];
-  List<Widget> monthWidgets = [];
+  List<Widget> weekWidgets = [Text('加载中...')];
+  List<Widget> monthWidgets = [Text('加载中...')];
+  List<Widget> listChildren = [];
+  bool isLoading = true;
 
   Widget _buildWeekSongCard(Map<String, dynamic> songData) {
     int songid = songData['id'];
+    Map<String, dynamic> songbasedata = {};
     for (var j in songsData['songs']) {
       if (songData['id'] == j['id']) {
-        if (((songData['difficulties'] as List).last as Map).containsKey(
+        songbasedata = j;
+        if (((j['difficulties'] as List).last as Map).containsKey(
           'origin_id',
         )) {
-          songid =
-              ((songData['difficulties'] as List).last as Map)['origin_id'];
+          songid = ((j['difficulties'] as List).last as Map)['origin_id'];
         }
+        break;
       }
-      break;
     }
 
-    return Card(
-      child: Row(
-        children: [
-          CachedNetworkImage(
-            imageUrl: 'https://assets2.lxns.net/chunithm/jacket/$songid.png',
-            errorWidget: (context, url, error) => Text('图片加载失败'),
+    return InkWell(
+      onTap: () => interSongInfo(
+        songbasedata: songbasedata,
+        songsData: songsData,
+        context: context,
+      ),
+      child: Card(
+        child: Padding(
+          padding: EdgeInsetsGeometry.all(8),
+          child: Row(
+            children: [
+              Padding(
+                padding: EdgeInsetsGeometry.only(right: 5),
+                child: CachedNetworkImage(
+                  imageUrl:
+                      'https://assets2.lxns.net/chunithm/jacket/$songid.png',
+                  height: 75,
+                  width: 75,
+                  errorWidget: (context, url, error) => Text('图片加载失败'),
+                ),
+              ),
+              Expanded(
+                child: Column(
+                  children: [
+                    Text(
+                      songData['title'],
+                      overflow: TextOverflow.ellipsis,
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        fontSize: 18,
+                      ),
+                    ),
+                    Text(
+                      songData['artist'],
+                      overflow: TextOverflow.ellipsis,
+                      maxLines: 1,
+                    ),
+                    Card(
+                      color: diffcolor(diffindex: songData['level_index']),
+                      child: Padding(
+                        padding: EdgeInsetsGeometry.all(5),
+                        child: Text(
+                          '${songData['level']}',
+                          style: TextStyle(color: Colors.white),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              Padding(
+                padding: EdgeInsetsGeometry.only(left: 5),
+                child: Column(
+                  children: [
+                    Text('${songData['rank']}'),
+                    songData['previous_rank'] == null
+                        ? const Text('NEW')
+                        : songData['rank'] == songData['previous_rank']
+                        ? const Text('-')
+                        : Text(
+                            "${songData['previous_rank'] - songData['rank']}",
+                            style: TextStyle(
+                              color:
+                                  songData['previous_rank'] - songData['rank'] >
+                                      0
+                                  ? Colors.green
+                                  : Colors.red,
+                            ),
+                          ),
+                  ],
+                ),
+              ),
+            ],
           ),
-          Column(children: [Text(songData['title']), Text(songData['artist'])]),
-        ],
+        ),
       ),
     );
   }
@@ -56,21 +127,33 @@ class _IndexpageState extends State<Indexpage> {
       songsData = SongDataStore.instance.songsData;
       weekData = jsonDecode(await requestHotSong('week'))['data'];
       monthData = jsonDecode(await requestHotSong('month'))['data'];
-
       setState(() {});
+      _update();
     } catch (e, s) {
       log('$e\n$s');
     }
   }
 
   Future<void> _update() async {
-    for (var i in weekData['songs']) {
-      weekWidgets.add(_buildWeekSongCard(i));
+    if (isLoading == true) {
+      List<Widget> weekWidgetsResult = [];
+      for (var i in weekData['songs']) {
+        weekWidgetsResult.add(_buildWeekSongCard(i));
+      }
+      List<Widget> weekWonthResult = [];
+      for (var i in monthData['songs']) {
+        weekWonthResult.add(_buildWeekSongCard(i));
+      }
+      weekWidgets = weekWidgetsResult;
+      monthWidgets = weekWonthResult;
     }
-    for (var i in monthData['songs']) {
-      monthWidgets.add(_buildWeekSongCard(i));
-    }
-    setState(() {});
+    setState(() {
+      if (_filter == 'week') {
+        listChildren = weekWidgets;
+      } else {
+        listChildren = monthWidgets;
+      }
+    });
   }
 
   @override
@@ -216,7 +299,7 @@ class _IndexpageState extends State<Indexpage> {
               ),
             ],
           ),
-          Expanded(child: ListView(children: weekWidgets)),
+          Expanded(child: ListView(children: listChildren)),
         ],
       ),
     );
