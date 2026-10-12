@@ -122,8 +122,7 @@ class _NearcademapState extends State<Nearcademap> {
     }
   }
 
-  void _searchlobby() {
-    isSearch = true;
+  void _searchlobby(bool isSearch) {
     if (_searchController.text == '' && selectGameIdlist.isEmpty) {
       List<Marker> loadsList = List.from(
         createMarkers(
@@ -257,7 +256,14 @@ class _NearcademapState extends State<Nearcademap> {
                         });
                       },
                       onChanged: (value) {
-                        _searchlobby();
+                        setState(() {
+                          _searchlobby(true);
+                        });
+                      },
+                      onSubmitted: (value) {
+                        setState(() {
+                          _searchlobby(true);
+                        });
                       },
                     ),
                   ),
@@ -291,6 +297,8 @@ class _NearcademapState extends State<Nearcademap> {
                                     onChanged: (selectedKeys) {
                                       log('$selectedKeys');
                                       selectGameIdlist = selectedKeys.toList();
+                                      // isSearch = false;
+                                      _searchlobby(false);
                                     },
                                   ),
                                 ),
@@ -302,7 +310,9 @@ class _NearcademapState extends State<Nearcademap> {
                   ),
                   IconButton(
                     onPressed: () {
-                      _searchlobby();
+                      setState(() {
+                        _searchlobby(true);
+                      });
                     },
                     icon: Icon(Icons.search),
                   ),

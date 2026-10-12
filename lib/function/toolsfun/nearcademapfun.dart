@@ -320,7 +320,7 @@ List<Widget> searchlobby({
     //地区搜索
     List address = [];
     for (var j in i['address']['region']) {
-      address.add(j['name']['zh']);
+      address.add(j['name']);
     }
     if (address.join('').contains(text)) {
       shopId.add(i['id']);
@@ -338,7 +338,7 @@ List<Widget> searchlobby({
       //地址拼接
       List<String> regionList = [];
       for (var j in shop['address']['region']) {
-        regionList.add(j['name']['zh']);
+        regionList.add(j['name']);
       }
       list.add(
         Card(

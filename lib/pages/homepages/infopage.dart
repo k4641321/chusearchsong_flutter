@@ -1,12 +1,12 @@
 import 'dart:async';
 
 import 'package:chusearchsong_flutter/function/infopagefun/infopagefun.dart';
+import 'package:chusearchsong_flutter/function/writeandreadfun.dart';
 import 'package:chusearchsong_flutter/pages/infopages/changeslogpage.dart';
 import 'package:chusearchsong_flutter/pages/infopages/lilyfanpage.dart';
 import 'package:chusearchsong_flutter/pages/infopages/sponsoredauthorpage.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:url_launcher/url_launcher.dart';
 import 'dart:developer';
 import '../../function/commonfun.dart';
 import '../infopages/settingspage.dart';
@@ -300,37 +300,51 @@ class _InfoState extends State<Info> {
                       children: [
                         ListTile(
                           title: const Text('所有数据'),
-                          onTap: () {
+                          onTap: () async {
                             Navigator.of(dialogContext).pop();
-                            Dataupdate.updateAllData(context: context);
+                            await Dataupdate.updateAllData(context: context);
+                            if (!context.mounted) return;
+                            await SongDataStore.instance.loadAll(context);
                           },
                         ),
                         ListTile(
                           title: const Text('仅成绩'),
-                          onTap: () {
+                          onTap: () async {
                             Navigator.of(dialogContext).pop();
-                            Dataupdate.updateScore(context: context);
+                            await Dataupdate.updateScore(context: context);
+                            if (!context.mounted) return;
+                            await SongDataStore.instance.loadAll(context);
                           },
                         ),
                         ListTile(
                           title: const Text('仅机厅数据(新)'),
-                          onTap: () {
+                          onTap: () async {
                             Navigator.of(dialogContext).pop();
-                            Dataupdate.updateNearcadeShopData(context: context);
+                            await Dataupdate.updateNearcadeShopData(
+                              context: context,
+                            );
+                            if (!context.mounted) return;
+                            await SongDataStore.instance.loadAll(context);
                           },
                         ),
                         ListTile(
                           title: const Text('仅基础数据'),
-                          onTap: () {
+                          onTap: () async {
                             Navigator.of(dialogContext).pop();
-                            Dataupdate.updateBaseData(context: context);
+                            await Dataupdate.updateBaseData(context: context);
+                            if (!context.mounted) return;
+                            await SongDataStore.instance.loadAll(context);
                           },
                         ),
                         ListTile(
                           title: const Text('仅最新最热数据'),
-                          onTap: () {
+                          onTap: () async {
                             Navigator.of(dialogContext).pop();
-                            Dataupdate.updatezxzrsongsData(context: context);
+                            await Dataupdate.updatezxzrsongsData(
+                              context: context,
+                            );
+                            if (!context.mounted) return;
+                            await SongDataStore.instance.loadAll(context);
                           },
                         ),
                       ],

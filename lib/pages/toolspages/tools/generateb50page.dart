@@ -43,6 +43,7 @@ class _GenerateB50PageState extends State<GenerateB50Page> {
       allscoredata = SongDataStore.instance.playerAllScore;
       //加载b50数据
       b50data = SongDataStore.instance.playerB50Data;
+      // print(b50data);
       workingplayerdata = Map.from(b50data);
     } catch (e, strack) {
       log('$e\n$strack');

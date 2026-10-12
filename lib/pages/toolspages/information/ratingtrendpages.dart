@@ -15,9 +15,13 @@ import 'package:file_picker/file_picker.dart';
 //懒得翻文档了，我又不会设计ui，让ai美化了
 
 class RatingTrendPages extends StatefulWidget {
-  final List data1;
-  final List data2;
-  const RatingTrendPages({super.key, required this.data1, required this.data2});
+  final List tableWidget;
+  final List playerRatingTrendData;
+  const RatingTrendPages({
+    super.key,
+    required this.tableWidget,
+    required this.playerRatingTrendData,
+  });
 
   @override
   State<RatingTrendPages> createState() => _RatingTrendPagesState();
@@ -32,7 +36,7 @@ class _RatingTrendPagesState extends State<RatingTrendPages> {
   Map<double, String> _buildDateMap() {
     final map = <double, String>{};
     double index = 0;
-    for (final item in widget.data2) {
+    for (final item in widget.playerRatingTrendData) {
       ++index;
       map[index] = item['date'] as String;
     }
@@ -157,7 +161,7 @@ class _RatingTrendPagesState extends State<RatingTrendPages> {
     final theme = Theme.of(context);
     final primaryColor = theme.colorScheme.primary;
     final dateMap = _buildDateMap();
-    final spots = widget.data1[0] as List<FlSpot>;
+    final spots = widget.tableWidget[0] as List<FlSpot>;
 
     // 根据数据量动态计算图表宽度，每个数据点至少 60px
     final double chartWidth = math.max(spots.length * 60.0, 160.0);
@@ -245,14 +249,14 @@ class _RatingTrendPagesState extends State<RatingTrendPages> {
                           LineChartData(
                             minX: 0,
                             minY: 0,
-                            maxX: widget.data1[2] as double,
+                            maxX: widget.tableWidget[2] as double,
                             maxY: 18,
                             // maxY: (widget.data1[1] as double) * 1.01,
                             gridData: FlGridData(
                               show: true,
                               drawVerticalLine: false,
                               horizontalInterval: _calcInterval(
-                                widget.data1[1] as double,
+                                widget.tableWidget[1] as double,
                               ),
                               getDrawingHorizontalLine: (value) => FlLine(
                                 color: theme.colorScheme.outlineVariant
@@ -360,7 +364,7 @@ class _RatingTrendPagesState extends State<RatingTrendPages> {
                                   showTitles: true,
                                   reservedSize: 52,
                                   interval: _calcInterval(
-                                    widget.data1[1] as double,
+                                    widget.tableWidget[1] as double,
                                   ),
                                   getTitlesWidget: (value, meta) => Text(
                                     value.toStringAsFixed(0),

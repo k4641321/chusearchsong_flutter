@@ -1,3 +1,8 @@
+import 'dart:convert';
+import 'dart:developer';
+
+import 'package:cached_network_image/cached_network_image.dart';
+import 'package:chusearchsong_flutter/function/request.dart';
 import 'package:chusearchsong_flutter/function/toolsfun/playerinfopagefun.dart';
 import 'package:chusearchsong_flutter/function/writeandreadfun.dart';
 import 'package:flutter/material.dart';
@@ -11,9 +16,60 @@ class Indexpage extends StatefulWidget {
 
 class _IndexpageState extends State<Indexpage> {
   Map<String, dynamic> playerInfoData = {};
+  String _filter = 'week';
+  Map<String, dynamic> weekData = {};
+  Map<String, dynamic> monthData = {};
+  Map<String, dynamic> songsData = {};
+  List<Widget> weekWidgets = [];
+  List<Widget> monthWidgets = [];
+
+  Widget _buildWeekSongCard(Map<String, dynamic> songData) {
+    int songid = songData['id'];
+    for (var j in songsData['songs']) {
+      if (songData['id'] == j['id']) {
+        if (((songData['difficulties'] as List).last as Map).containsKey(
+          'origin_id',
+        )) {
+          songid =
+              ((songData['difficulties'] as List).last as Map)['origin_id'];
+        }
+      }
+      break;
+    }
+
+    return Card(
+      child: Row(
+        children: [
+          CachedNetworkImage(
+            imageUrl: 'https://assets2.lxns.net/chunithm/jacket/$songid.png',
+            errorWidget: (context, url, error) => Text('图片加载失败'),
+          ),
+          Column(children: [Text(songData['title']), Text(songData['artist'])]),
+        ],
+      ),
+    );
+  }
 
   Future<void> init() async {
-    playerInfoData = await (await ReadData.create()).readPlayerInfoData();
+    try {
+      playerInfoData = await (await ReadData.create()).readPlayerInfoData();
+      songsData = SongDataStore.instance.songsData;
+      weekData = jsonDecode(await requestHotSong('week'))['data'];
+      monthData = jsonDecode(await requestHotSong('month'))['data'];
+
+      setState(() {});
+    } catch (e, s) {
+      log('$e\n$s');
+    }
+  }
+
+  Future<void> _update() async {
+    for (var i in weekData['songs']) {
+      weekWidgets.add(_buildWeekSongCard(i));
+    }
+    for (var i in monthData['songs']) {
+      monthWidgets.add(_buildWeekSongCard(i));
+    }
     setState(() {});
   }
 
@@ -42,13 +98,13 @@ class _IndexpageState extends State<Indexpage> {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         if (playerInfoData['character'] != null)
-                          Image.network(
+                          CachedNetworkImage(
                             width: 100,
                             height: 100,
-
-                            'https://assets2.lxns.net/chunithm/character/${playerInfoData['character']['id']}.png',
-                            errorBuilder: (context, error, stackTrace) =>
-                                Text('错误 $error'),
+                            imageUrl:
+                                'https://assets2.lxns.net/chunithm/character/${playerInfoData['character']['id']}.png',
+                            errorWidget: (context, error, stackTrace) =>
+                                Text('图片加载失败'),
                           ),
                         Column(
                           children: [
@@ -143,9 +199,24 @@ class _IndexpageState extends State<Indexpage> {
           ),
           Row(
             children: [
-              // Expanded(child: ,)s
+              Expanded(
+                child: SegmentedButton(
+                  segments: [
+                    ButtonSegment(value: 'week', label: Text('周')),
+                    ButtonSegment(value: 'month', label: Text('月')),
+                  ],
+                  selected: {_filter},
+                  onSelectionChanged: (Set<String> newSelection) {
+                    setState(() {
+                      _filter = newSelection.first; // 单选时取第一个
+                    });
+                    _update();
+                  },
+                ),
+              ),
             ],
           ),
+          Expanded(child: ListView(children: weekWidgets)),
         ],
       ),
     );

@@ -265,6 +265,7 @@ Future<List<Widget>> searchCollectibles({
     }
   }
 
-  // print(collectibles);
+  // print(collectibles.length);
+  // print(plateJson);
   return collectibles;
 }

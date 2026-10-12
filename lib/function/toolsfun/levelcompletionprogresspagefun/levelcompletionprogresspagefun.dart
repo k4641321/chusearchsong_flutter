@@ -125,28 +125,30 @@ Widget buildsongList({
             ),
           ),
         );
-        for (var l in allScoreData) {
-          if (k['difficulty'] == l['level_index'] && i['id'] == l['id']) {
-            score = l['score'];
-            rating = l['rating'].toDouble();
-            rank = l['rank'];
-            completecount++;
-            if (rank == 'sssp') {
-              ssspcount++;
-            } else if (rank == 'sss') {
-              ssscount++;
-            } else if (rank == 'ssp') {
-              sspcount++;
-            } else if (rank == 'ss') {
-              sscount++;
-            } else if (rank == 'sp') {
-              spcount++;
-            } else if (rank == 's') {
-              scount++;
-            } else if (rank == 'aaa') {
-              aaacount++;
-            } else {
-              othercount++;
+        if (allScoreData.isNotEmpty) {
+          for (var l in allScoreData) {
+            if (k['difficulty'] == l['level_index'] && i['id'] == l['id']) {
+              score = l['score'];
+              rating = l['rating'].toDouble();
+              rank = l['rank'];
+              completecount++;
+              if (rank == 'sssp') {
+                ssspcount++;
+              } else if (rank == 'sss') {
+                ssscount++;
+              } else if (rank == 'ssp') {
+                sspcount++;
+              } else if (rank == 'ss') {
+                sscount++;
+              } else if (rank == 'sp') {
+                spcount++;
+              } else if (rank == 's') {
+                scount++;
+              } else if (rank == 'aaa') {
+                aaacount++;
+              } else {
+                othercount++;
+              }
             }
           }
         }

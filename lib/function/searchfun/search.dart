@@ -242,7 +242,9 @@ Future<Map<String, dynamic>> filter(
 
   //别名筛选
   // Set<Map<String, dynamic>> aliasresult = {};
-  if (onlysearch == 0 || onlysearch == 4 || onlysearch == null) {
+  if (aliasData.isNotEmpty && onlysearch == 0 ||
+      onlysearch == 4 ||
+      onlysearch == null) {
     for (var i in aliasData['aliases']) {
       for (var j in i['aliases']) {
         if (j.toLowerCase().contains(title.toLowerCase())) {

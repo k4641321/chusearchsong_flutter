@@ -324,7 +324,8 @@ class _MyHomePageState extends State<MyHomePage> {
           });
         },
       );
-      await SongDataStore.instance.loadAll();
+      if (!mounted) return;
+      await SongDataStore.instance.loadAll(context);
       showChangesLog();
       chechupdate();
       showannouncement();

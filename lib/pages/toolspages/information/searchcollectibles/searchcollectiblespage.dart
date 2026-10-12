@@ -98,12 +98,11 @@ class _SearchCollectiblesState extends State<SearchCollectiblesPage> {
                     ],
                     onSelected: (value) async {
                       List<Widget> result2 = [];
-                      setState(() {
-                        initialSelection = value ?? 'all';
-                        if (value != 'all') {
-                          onlysearchtrophty = true;
-                        }
-                      });
+                      initialSelection = value ?? 'all';
+                      if (value != 'all') {
+                        onlysearchtrophty = true;
+                      }
+
                       result2 = await searchCollectibles(
                         context: context,
                         searchtext: _controller.text,
@@ -135,12 +134,12 @@ class _SearchCollectiblesState extends State<SearchCollectiblesPage> {
                     ],
                     onSelected: (value) async {
                       List<Widget> result2 = [];
-                      setState(() {
-                        color = value ?? 'all';
-                        if (value != 'all') {
-                          onlysearchtrophty = true;
-                        }
-                      });
+                      color = value ?? 'all';
+                      if (value != 'all') {
+                        onlysearchtrophty = true;
+                      } else {
+                        onlysearchtrophty = false;
+                      }
                       result2 = await searchCollectibles(
                         context: context,
                         searchtext: _controller.text,

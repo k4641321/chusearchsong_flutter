@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'dart:developer';
+import 'package:flutter/material.dart';
 import 'package:flutter_local_db/flutter_local_db.dart';
 import 'request.dart';
 
@@ -312,7 +313,7 @@ class ReadData {
   Future<List> readzxzrSongsData() async {
     final result = await LocalDB.GetById('zxzrSongsData');
     final model = result.getOrDefault(null);
-    return (model?.data['zxzrSongsData'] as List?) ?? [];
+    return (model?.data['zxzrsongs'] as List?) ?? [];
   }
 
   Future<List> readNearcadeAllShop() async {
@@ -322,7 +323,7 @@ class ReadData {
   }
 
   Future<Map<String, dynamic>> readNearcadeGamesMapData() async {
-    final result = await LocalDB.GetById('NearcadeGamesMap');
+    final result = await LocalDB.GetById('NearcadeGamesData');
     final model = result.getOrDefault(null);
     return model?.data ?? {};
   }
@@ -348,7 +349,7 @@ class ReadData {
   Future<Map<String, dynamic>> readPlayerB50Data() async {
     final result = await LocalDB.GetById('PlayerB50Data');
     final model = result.getOrDefault(null);
-    return model?.data ?? {};
+    return model?.data['data'] ?? {};
   }
 
   Future<Map<String, dynamic>> readPlayerInfoData() async {
@@ -360,13 +361,14 @@ class ReadData {
   Future<List> readPlayerRatingTrendData() async {
     final result = await LocalDB.GetById('PlayerRatingTrendData');
     final model = result.getOrDefault(null);
-    return (model?.data['PlayerRatingTrendData'] as List?) ?? [];
+    // print(model?.data['data']);
+    return (model?.data['data'] as List?) ?? [];
   }
 
   Future<List> readPlayerAllScoreData() async {
     final result = await LocalDB.GetById('PlayerAllScoreData');
     final model = result.getOrDefault(null);
-    return (model?.data['PlayerAllScoreData'] as List?) ?? [];
+    return (model?.data['data'] as List?) ?? [];
   }
 
   Future<Map<String, dynamic>> readFavoriteSongs() async {
@@ -402,21 +404,68 @@ class SongDataStore {
   List segaCharacters = [];
   bool loaded = false;
 
-  Future<void> loadAll() async {
+  Future<void> loadAll(BuildContext context) async {
     final read = await ReadData.create();
-    songsData = await read.readSongsData();
-    aliasData = await read.readAliasData();
-    zxzrSongsData = await read.readzxzrSongsData();
-    playerAllScore = await read.readPlayerAllScoreData();
-    collectionTrophies = await read.readTrophiesData();
-    collectionCharacters = await read.readCharactersData();
-    collectionPlate = await read.readPlateData();
-    collectionIcons = await read.readIconsData();
-    segaCharacters = await read.readSegaCharaData();
-    playerInfoData = await read.readPlayerInfoData();
-    playerB50Data = await read.readPlayerB50Data();
-    latestVersion = await read.readLatestVersion();
-    playerRatingTrendData = await read.readPlayerRatingTrendData();
+
+    Future<void> safeLoad(String name, Future<void> Function() loader) async {
+      try {
+        await loader();
+      } catch (e, stack) {
+        log('加载 $name 失败: $e\n$stack');
+        if (!context.mounted) return;
+        showDialog(
+          context: context,
+          builder: (context) => AlertDialog(
+            scrollable: true,
+            title: Text('加载部分数据出错'),
+            content: Text('加载 $name 失败: $e\n$stack'),
+          ),
+        );
+      }
+    }
+
+    await Future.wait([
+      safeLoad('songsData', () async {
+        songsData = await read.readSongsData();
+      }),
+      safeLoad('aliasData', () async {
+        aliasData = await read.readAliasData();
+      }),
+      safeLoad('zxzrSongsData', () async {
+        zxzrSongsData = await read.readzxzrSongsData();
+      }),
+      safeLoad('playerAllScore', () async {
+        playerAllScore = await read.readPlayerAllScoreData();
+      }),
+      safeLoad('collectionTrophies', () async {
+        collectionTrophies = await read.readTrophiesData();
+      }),
+      safeLoad('collectionCharacters', () async {
+        collectionCharacters = await read.readCharactersData();
+      }),
+      safeLoad('collectionPlate', () async {
+        collectionPlate = await read.readPlateData();
+      }),
+      safeLoad('collectionIcons', () async {
+        collectionIcons = await read.readIconsData();
+      }),
+      safeLoad('segaCharacters', () async {
+        segaCharacters = await read.readSegaCharaData();
+      }),
+      safeLoad('playerInfoData', () async {
+        playerInfoData = await read.readPlayerInfoData();
+      }),
+      safeLoad('playerB50Data', () async {
+        playerB50Data = await read.readPlayerB50Data();
+      }),
+      safeLoad('latestVersion', () async {
+        latestVersion = await read.readLatestVersion();
+      }),
+      safeLoad('playerRatingTrendData', () async {
+        playerRatingTrendData = await read.readPlayerRatingTrendData();
+      }),
+    ]);
+
     loaded = true;
   }
 }

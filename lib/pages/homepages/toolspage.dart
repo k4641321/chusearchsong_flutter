@@ -89,13 +89,17 @@ class _ToolPageState extends State<ToolPage> {
           pageBuilder: (_) => const SizedBox(),
           onTap: (ctx) async {
             try {
-              final data1 = SongDataStore.instance.playerRatingTrendData;
-              final data2 = await returnSpot(data: data1);
+              final playerRatingTrendData =
+                  SongDataStore.instance.playerRatingTrendData;
+              final table = await returnSpot(data: playerRatingTrendData);
               if (!ctx.mounted) return;
               Navigator.push(
                 ctx,
                 MaterialPageRoute(
-                  builder: (_) => RatingTrendPages(data2: data1, data1: data2),
+                  builder: (_) => RatingTrendPages(
+                    playerRatingTrendData: playerRatingTrendData,
+                    tableWidget: table,
+                  ),
                 ),
               );
             } catch (_) {

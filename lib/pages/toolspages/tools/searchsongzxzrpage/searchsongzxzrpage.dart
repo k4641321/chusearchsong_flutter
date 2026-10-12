@@ -138,7 +138,6 @@ class _SearchsongzxzrpageState extends State<Searchsongzxzrpage> {
 
   Future<void> init() async {
     songsData = SongDataStore.instance.zxzrSongsData;
-    if (!mounted) return;
     if (songsData.isEmpty) {
       ScaffoldMessenger.of(
         context,
@@ -153,8 +152,9 @@ class _SearchsongzxzrpageState extends State<Searchsongzxzrpage> {
 
     _difficultyup.addListener(_onDifficultyUpInput);
     _difficultydown.addListener(_onDifficultyDownInput);
-    init();
+
     WidgetsBinding.instance.addPostFrameCallback((_) {
+      init();
       _ready = true;
     });
   }

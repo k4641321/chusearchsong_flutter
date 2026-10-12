@@ -94,10 +94,10 @@ class _LevelCompletionProgressPageState
           buildLevelDropdownMenu(
             onSelected: (value) async {
               level = value;
-              if (songsData.isEmpty | allScoreData.isEmpty) {
+              if (songsData.isEmpty) {
                 if (!mounted) return;
                 setState(() {
-                  result = Text('错误：数据为空');
+                  result = Text('错误：成绩数据为空');
                 });
               } else {
                 update();

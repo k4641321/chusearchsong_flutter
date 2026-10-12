@@ -99,7 +99,7 @@ Future<String> requestNearcadeAllShop({required int page}) async {
       'https://$host/api/shops/?regionId=CN&limit=100&page=$page',
     );
     try {
-      final response = await get(uri).timeout(const Duration(seconds: 10));
+      final response = await get(uri, headers: {"Accept-Language": "zh-CN"});
       if (response.statusCode == 200) {
         return response.body;
       }

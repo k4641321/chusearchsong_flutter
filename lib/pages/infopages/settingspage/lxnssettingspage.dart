@@ -94,6 +94,8 @@ class _LxnsSettingsPageState extends State<LxnsSettingsPage> {
                               wirteDataclass.writePlayerInfoData(),
                             ]);
                             if (!context.mounted) return;
+                            await SongDataStore.instance.loadAll(context);
+                            if (!context.mounted) return;
 
                             Navigator.of(context).pop();
                           } catch (e) {
