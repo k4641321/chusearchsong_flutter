@@ -3,7 +3,6 @@ import 'package:chusearchsong_flutter/function/toolsfun/generateb50fun/aj50fun.d
 import 'package:chusearchsong_flutter/function/toolsfun/generateb50fun/fc50fun.dart';
 import 'package:chusearchsong_flutter/function/toolsfun/generateb50fun/otherb50.dart';
 import 'package:chusearchsong_flutter/function/toolsfun/generateb50fun/randomb50pagefun.dart';
-import 'package:chusearchsong_flutter/function/toolsfun/generateb50fun/thunderboltb50.dart';
 import 'package:chusearchsong_flutter/function/writeandreadfun.dart';
 import 'package:flutter/material.dart';
 
@@ -16,6 +15,7 @@ Future<Widget?> selectb50({
   required Map<String, dynamic> b50data,
   required bool generateS10,
   required String thunderboltb50,
+  required List versionList,
   String? genre,
   int? n50,
 }) async {
@@ -35,6 +35,7 @@ Future<Widget?> selectb50({
       songsData: songsData,
       playerdata: playerdata,
       allscoredata: allscoredata,
+      thunderboltb50: thunderboltb50,
     );
   } else if (b50type == 'aj30') {
     return await aj50Body(
@@ -42,6 +43,7 @@ Future<Widget?> selectb50({
       songsData: songsData,
       playerdata: playerdata,
       allscoredata: allscoredata,
+      thunderboltb50: thunderboltb50,
     );
   } else if (b50type == 'fc30') {
     return await fc50Body(
@@ -49,14 +51,7 @@ Future<Widget?> selectb50({
       songsData: songsData,
       playerdata: playerdata,
       allscoredata: allscoredata,
-    );
-  } else if (b50type == '竖着的50' || b50type == '横着的50') {
-    return thunderboltb50Body(
-      context: context,
-      songsData: songsData,
-      playerdata: playerdata,
-      b50data: b50data,
-      type: b50type,
+      thunderboltb50: thunderboltb50,
     );
   } else {
     return await generateother50Body(
@@ -66,6 +61,8 @@ Future<Widget?> selectb50({
       allscoredata: allscoredata,
       type: b50type,
       genreorversion: genre,
+      thunderboltb50: thunderboltb50,
+      versionlist: versionList,
       n50: n50,
     );
   }
@@ -428,22 +425,12 @@ Future<Widget> generateb50Body({
 
   //先定义所需的变量
   double totalRating = 0;
-  Widget characterimage = SizedBox.shrink();
-  if (playerdata['character'] != null) {
-    characterimage = Image.network(
-      'https://assets2.lxns.net/chunithm/character/${playerdata['character']['id']}.png',
-      errorBuilder: (context, error, stackTrace) => Text('错误 $error'),
-    );
-  }
+
   List<Widget> b30body = [];
   Widget b30 = Column(children: b30body);
   List<Widget> b20body = [];
   Widget b20 = Column(children: b20body);
   Widget s10 = SizedBox.shrink();
-  double trophywidth = 525;
-  if (playerdata['trophy']['name'].length > 17) {
-    trophywidth = trophywidth + (playerdata['trophy']['name'].length - 17) * 10;
-  }
 
   // final ScrollController _scrollController = ScrollController();
   //b30文字
@@ -503,7 +490,7 @@ Future<Widget> generateb50Body({
         context: context,
       ),
     );
-    if (row == 9 && thunderboltb50 != '横着的') {
+    if (row >= 9 && thunderboltb50 != '横着的') {
       b30body.add(b30row);
       row = 0;
       b30rowbody = [];
@@ -718,75 +705,13 @@ Future<Widget> generateb50Body({
   }
 
   //玩家信息
-  Widget title = SizedBox(
-    height: 170,
-    child: Row(
-      mainAxisAlignment: MainAxisAlignment.start,
-      children: [
-        Padding(
-          padding: EdgeInsetsGeometry.only(left: 55),
-          child: SizedBox(
-            width: trophywidth,
-            // 525,
-            height: 225,
-            child: Card(
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: [
-                  Column(
-                    mainAxisAlignment: MainAxisAlignment.spaceAround,
-                    children: [
-                      Card(
-                        color: trophyColor(
-                          trophy: playerdata['trophy']['color'],
-                        ),
-                        child: Padding(
-                          padding: EdgeInsetsGeometry.only(
-                            left: 60,
-                            right: 60,
-                            top: 5,
-                            bottom: 5,
-                          ),
-                          child: Text(
-                            playerdata['trophy']['name'],
-                            style: TextStyle(color: Colors.black),
-                          ),
-                        ),
-                      ),
-                      Padding(
-                        padding: EdgeInsetsGeometry.only(left: 15),
-                        child: Text(
-                          'Lv.${playerdata['level']}  ${playerdata['name']}',
-                          style: TextStyle(fontSize: 30),
-                        ),
-                      ),
-                      Text(
-                        'Rating:   ${playerdata['rating'].toDouble().toStringAsFixed(2)}',
-                        style: TextStyle(
-                          fontSize: 25,
-                          color: ratingColor(
-                            rating: playerdata['rating'].toDouble(),
-                          ),
-                          shadows: [Shadow(color: Colors.black, blurRadius: 3)],
-                        ),
-                      ),
-                    ],
-                  ),
-                  characterimage,
-                ],
-              ),
-            ),
-          ),
-        ),
-      ],
-    ),
-  );
+  Widget title = buildB50PlayerInfoWidget(playerdata);
   //背景绘制
 
   double extraHeight = 0;
   double width = 5896 / 2;
   double height = 2844 / 2;
-  if (generateS10) {
+  if (generateS10 && thunderboltb50 != '横着的') {
     extraHeight = 300;
   }
 
@@ -795,8 +720,8 @@ Future<Widget> generateb50Body({
         5896 / 2 +
         260 * (b50data['new_bests'] as List).length +
         260 * (b50data['bests'] as List).length +
-        260 * (b50data['selections'] as List).length;
-    height = 100;
+        (generateS10 ? 260 * (b50data['selections'] as List).length : 0);
+    height = 300;
   }
   if (thunderboltb50 == "竖着的") {
     height = 2844 / 2;
@@ -863,8 +788,7 @@ Widget buildTypeDropdownMenu({required ValueChanged onSelected}) {
     DropdownMenuEntry(value: '理论50', label: '理论50'),
     DropdownMenuEntry(value: 'BN', label: 'BN'),
     DropdownMenuEntry(value: '世界末日50', label: '世界末日50'),
-    DropdownMenuEntry(value: '竖着的50', label: '竖着的50'),
-    DropdownMenuEntry(value: '横着的50', label: '横着的50'),
+    DropdownMenuEntry(value: '版本区间50', label: '版本区间50'),
   ];
   return DropdownMenu(
     selectOnly: true,
@@ -1197,9 +1121,88 @@ Widget buildB50Fontter(String type) {
     mainAxisAlignment: MainAxisAlignment.center,
     children: [
       Text(
-        '此 $type B50由chusearchsong（中二查歌）生成，生成时间：${DateTime.now()} ,交流群：309546141',
+        '此 $type B50由chusearchsong（中二查歌）生成，生成时间：${DateTime.now()}  交流群：309546141',
         style: TextStyle(fontWeight: FontWeight.bold, color: Colors.black),
       ),
     ],
+  );
+}
+
+Widget buildB50PlayerInfoWidget(Map<String, dynamic> playerdata) {
+  Widget characterimage = SizedBox.shrink();
+  if (playerdata['character'] != null) {
+    characterimage = Image.network(
+      'https://assets2.lxns.net/chunithm/character/${playerdata['character']['id']}.png',
+      errorBuilder: (context, error, stackTrace) => Text('错误 $error'),
+    );
+  }
+
+  double trophywidth = 525;
+  if (playerdata['trophy']['name'].length > 17) {
+    trophywidth = trophywidth + (playerdata['trophy']['name'].length - 17) * 10;
+  }
+
+  return SizedBox(
+    height: 170,
+    child: Row(
+      mainAxisAlignment: MainAxisAlignment.start,
+      children: [
+        Padding(
+          padding: EdgeInsetsGeometry.only(left: 55),
+          child: SizedBox(
+            width: trophywidth,
+            // 525,
+            height: 225,
+            child: Card(
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  Column(
+                    mainAxisAlignment: MainAxisAlignment.spaceAround,
+                    children: [
+                      Card(
+                        color: trophyColor(
+                          trophy: playerdata['trophy']['color'],
+                        ),
+                        child: Padding(
+                          padding: EdgeInsetsGeometry.only(
+                            left: 60,
+                            right: 60,
+                            top: 5,
+                            bottom: 5,
+                          ),
+                          child: Text(
+                            playerdata['trophy']['name'],
+                            style: TextStyle(color: Colors.black),
+                          ),
+                        ),
+                      ),
+                      Padding(
+                        padding: EdgeInsetsGeometry.only(left: 15),
+                        child: Text(
+                          'Lv.${playerdata['level']}  ${playerdata['name']}',
+                          style: TextStyle(fontSize: 30),
+                        ),
+                      ),
+                      Text(
+                        'Rating:   ${playerdata['rating'].toDouble().toStringAsFixed(2)}',
+                        style: TextStyle(
+                          fontSize: 25,
+                          color: ratingColor(
+                            rating: playerdata['rating'].toDouble(),
+                          ),
+                          shadows: [Shadow(color: Colors.black, blurRadius: 3)],
+                        ),
+                      ),
+                    ],
+                  ),
+                  characterimage,
+                ],
+              ),
+            ),
+          ),
+        ),
+      ],
+    ),
   );
 }

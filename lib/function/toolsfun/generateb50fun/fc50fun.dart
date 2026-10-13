@@ -6,6 +6,7 @@ Future<Widget> fc50Body({
   required Map<String, dynamic> songsData,
   required Map<String, dynamic> playerdata,
   required List allscoredata,
+  required String thunderboltb50,
 }) async {
   //查找所有AJ成绩
   List fcb50 = [];
@@ -22,89 +23,14 @@ Future<Widget> fc50Body({
     trophywidth = trophywidth + (playerdata['trophy']['name'].length - 17) * 10;
   }
   //先定义所需的变量
-  Widget characterimage = SizedBox.shrink();
-  if (playerdata['character'] != null) {
-    characterimage = Image.network(
-      'https://assets2.lxns.net/chunithm/character/${playerdata['character']['id']}.png',
-      errorBuilder: (context, error, stackTrace) => Text('错误 $error'),
-    );
-  }
   List<Widget> b50body = [];
   Widget b50 = Column(children: b50body);
-  Widget title = SizedBox(
-    height: 170,
-    child: Row(
-      mainAxisAlignment: MainAxisAlignment.start,
-      children: [
-        Padding(
-          padding: EdgeInsetsGeometry.only(left: 55),
-          child: SizedBox(
-            width: trophywidth,
-            height: 225,
-            child: Card(
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: [
-                  Column(
-                    mainAxisAlignment: MainAxisAlignment.spaceAround,
-                    children: [
-                      Card(
-                        color: trophyColor(
-                          trophy: playerdata['trophy']['color'],
-                        ),
-                        child: Padding(
-                          padding: EdgeInsetsGeometry.only(
-                            left: 60,
-                            right: 60,
-                            top: 5,
-                            bottom: 5,
-                          ),
-                          child: Text(
-                            '${playerdata['trophy']['name']}',
-                            style: TextStyle(color: Colors.black),
-                          ),
-                        ),
-                      ),
-                      Padding(
-                        padding: EdgeInsetsGeometry.only(left: 15),
-                        child: Text(
-                          'Lv.${playerdata['level']}  ${playerdata['name']}',
-                          style: TextStyle(fontSize: 30),
-                        ),
-                      ),
-                      Text(
-                        'Rating:   ${playerdata['rating'].toDouble().toStringAsFixed(2)}',
-
-                        style: TextStyle(
-                          fontSize: 25,
-                          color: ratingColor(rating: playerdata['rating'].toDouble()),
-                          shadows: [Shadow(color: Colors.black, blurRadius: 3)],
-                        ),
-                      ),
-                    ],
-                  ),
-                  characterimage,
-                ],
-              ),
-            ),
-          ),
-        ),
-      ],
-    ),
-  );
+  Widget title = buildB50PlayerInfoWidget(playerdata);
   // final ScrollController _scrollController = ScrollController();
   //b50文字
   Widget b30text = buildB50Text('B50');
   //底部信息
-  Widget fontter = Row(
-    mainAxisAlignment: MainAxisAlignment.center,
-    children: [
-      Text(
-        '此 FC B50由chusearchsong（中二查歌）生成，生成时间：${DateTime.now()}',
-        style: TextStyle(fontWeight: FontWeight.bold, color: Colors.black),
-      ),
-    ],
-  );
+  Widget fontter = buildB50Fontter('FC50');
 
   //b50绘制
   int total = 0;
@@ -152,7 +78,7 @@ Future<Widget> fc50Body({
         context: context,
       ),
     );
-    if (row == 9) {
+    if (row == 9 && thunderboltb50 != '横着的') {
       b50body.add(b50row);
       row = 0;
       b50rowbody = [];
@@ -163,23 +89,56 @@ Future<Widget> fc50Body({
     } else {
       row++;
     }
+    if (thunderboltb50 == '竖着的') {
+      b50body.add(b50row);
+      row = 0;
+      b50rowbody = [];
+      b50row = Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: b50rowbody,
+      );
+    }
     songcount++;
     total++;
   }
   if (b50rowbody.isNotEmpty) {
     b50body.add(b50row);
   }
+
   //背景绘制
+  double extraHeight = 0;
+  double width = 5896 / 2;
+  double height = 2844 / 2;
+
+  if (thunderboltb50 == '横着的') {
+    width = 5896 / 2 + 260 * fcb50.length;
+    height = 300;
+  }
+  if (thunderboltb50 == "竖着的") {
+    height = 2844 / 2;
+    extraHeight = extraHeight + 200 * fcb50.length;
+    width = 5896 / 8 + 75;
+  }
+
   Widget result = Container(
-    width: 5896 / 2,
-    height: 2844 / 2,
+    width: width,
+    height: height + extraHeight,
     decoration: BoxDecoration(
       image: DecorationImage(
         image: AssetImage('res/background.png'),
         fit: BoxFit.cover,
       ),
     ),
-    child: Center(child: Column(children: [title, b30text, b50, fontter])),
+    child: Center(
+      child: thunderboltb50 == '横着的'
+          ? Column(
+              children: [
+                Row(children: [title, b30text, b50]),
+                fontter,
+              ],
+            )
+          : Column(children: [title, b30text, b50, fontter]),
+    ),
   );
 
   return result;

@@ -180,15 +180,16 @@ class _IndexpageState extends State<Indexpage> {
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        if (playerInfoData['character'] != null)
-                          CachedNetworkImage(
-                            width: 100,
-                            height: 100,
-                            imageUrl:
-                                'https://assets2.lxns.net/chunithm/character/${playerInfoData['character']['id']}.png',
-                            errorWidget: (context, error, stackTrace) =>
-                                Text('图片加载失败'),
-                          ),
+                        playerInfoData['character'] != null
+                            ? CachedNetworkImage(
+                                width: 100,
+                                height: 100,
+                                imageUrl:
+                                    'https://assets2.lxns.net/chunithm/character/${playerInfoData['character']['id']}.png',
+                                errorWidget: (context, error, stackTrace) =>
+                                    Text('图片加载失败'),
+                              )
+                            : SizedBox(height: 100, width: 100),
                         Column(
                           children: [
                             Row(

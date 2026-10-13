@@ -18,6 +18,7 @@ import 'pages/homepages/favoritepage.dart';
 import 'pages/homepages/toolspage.dart';
 import 'dart:convert';
 import 'package:dynamic_color/dynamic_color.dart';
+import 'package:logger_rs/logger_rs.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
@@ -314,7 +315,8 @@ class _MyHomePageState extends State<MyHomePage> {
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) async {
-      await LocalDB.init();
+      Log.init(level: Level.WARNING);
+      await LocalDB.init(options: DbOptions());
       if (!mounted) return;
       await Dataupdate.ifres(
         context: context,

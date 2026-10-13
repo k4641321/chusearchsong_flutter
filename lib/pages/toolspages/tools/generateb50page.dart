@@ -28,6 +28,8 @@ class _GenerateB50PageState extends State<GenerateB50Page> {
   Map<String, dynamic> workingb50data = {};
   bool _generates10 = false;
   String _thunderboltb50 = '关';
+  double _pixelRatio = 1.0;
+  List versionlist = [];
 
   Future<void> init() async {
     try {
@@ -64,7 +66,7 @@ class _GenerateB50PageState extends State<GenerateB50Page> {
     final boundary =
         key.currentContext?.findRenderObject() as RenderRepaintBoundary?;
     if (boundary == null) return null;
-    return await boundary.toImage(pixelRatio: 1.0);
+    return await boundary.toImage(pixelRatio: _pixelRatio);
   }
 
   Widget b50Body = Text('未生成');
@@ -186,6 +188,54 @@ class _GenerateB50PageState extends State<GenerateB50Page> {
                           ],
                         ),
                       );
+                    } else if (selectedType == '版本区间50') {
+                      showDialog(
+                        context: context,
+                        builder: (dialogContext) => StatefulBuilder(
+                          builder: (dialogContext, setDialogState) {
+                            return AlertDialog(
+                              title: Text('选择版本区间'),
+                              content: SizedBox(
+                                width: double.maxFinite,
+                                child: ListView(
+                                  shrinkWrap: true,
+                                  children: [
+                                    for (var i in songsData['versions'])
+                                      CheckboxListTile(
+                                        title: Text(
+                                          i['title'] == 'CHUNITHM'
+                                              ? i['title']
+                                              : (i['title'] as String)
+                                                    .replaceAll('CHUNITHM', ''),
+                                        ),
+                                        value: versionlist.contains(
+                                          i['version'].toString(),
+                                        ),
+                                        onChanged: (checked) {
+                                          setDialogState(() {
+                                            final v = i['version'].toString();
+                                            if (checked == true) {
+                                              versionlist.add(v);
+                                            } else {
+                                              versionlist.remove(v);
+                                            }
+                                          });
+                                        },
+                                      ),
+                                  ],
+                                ),
+                              ),
+                              actions: [
+                                TextButton(
+                                  onPressed: () =>
+                                      Navigator.of(dialogContext).pop(),
+                                  child: Text('确定'),
+                                ),
+                              ],
+                            );
+                          },
+                        ),
+                      );
                     }
                   },
                 ),
@@ -232,12 +282,121 @@ class _GenerateB50PageState extends State<GenerateB50Page> {
                               Navigator.of(context).pop();
                             },
                           ),
+                          // ListTile(
+                          //   title: Text('空着的'),
+                          //   onTap: () {
+                          //     _thunderboltb50 = '空着的';
+                          //     Navigator.of(context).pop();
+                          //   },
+                          // ),
                         ],
                       ),
                     );
                     setState(() {});
                   },
                   child: Text('雷霆50：$_thunderboltb50'),
+                ),
+              ),
+            ],
+          ),
+          Row(
+            children: [
+              Expanded(
+                child: TextButton(
+                  onPressed: () async {
+                    Map<String, dynamic> b50history =
+                        await (await ReadData.create()).readB50History();
+                    List<Widget> list = [];
+                    for (var i in b50history.keys.toList()) {
+                      list.add(
+                        ListTile(
+                          title: Text(i),
+                          onTap: () {
+                            b50data = b50history[i];
+                            Navigator.of(context).pop();
+                          },
+                          onLongPress: () async {
+                            b50history.remove(i);
+                            await (await WriteData.create()).writeB50History(
+                              b50history,
+                            );
+                            if (!context.mounted) return;
+                            Navigator.of(context).pop();
+                          },
+                        ),
+                      );
+                    }
+                    if (list.isEmpty) {
+                      list.add(ListTile(title: Text('无历史数据')));
+                    }
+                    if (!context.mounted) return;
+                    showDialog(
+                      context: context,
+                      builder: (context) => SimpleDialog(children: list),
+                    );
+                  },
+                  child: Text('加载历史50'),
+                ),
+              ),
+              Expanded(
+                child: TextButton(
+                  onPressed: () async {
+                    String name = DateTime.now().toString();
+                    await showDialog(
+                      context: context,
+                      builder: (context) => AlertDialog(
+                        title: Text('输入名字'),
+                        content: Row(
+                          children: [
+                            Expanded(
+                              child: TextFormField(
+                                initialValue: name,
+                                onChanged: (value) => name = value,
+                              ),
+                            ),
+                          ],
+                        ),
+                        actions: [
+                          TextButton(
+                            child: Text('取消'),
+                            onPressed: () {
+                              Navigator.of(context).pop();
+                            },
+                          ),
+                          TextButton(
+                            child: Text('确定'),
+                            onPressed: () async {
+                              Map<String, dynamic> b50history =
+                                  await (await ReadData.create())
+                                      .readB50History();
+                              // if (b50history.isEmpty) {
+                              //   ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('获取数据失败')));
+                              // }
+                              b50history[name] = b50data;
+                              await (await WriteData.create()).writeB50History(
+                                b50history,
+                              );
+                              if (!context.mounted) return;
+                              Navigator.of(context).pop();
+                            },
+                          ),
+                        ],
+                      ),
+                    );
+                  },
+                  child: Text('保存50'),
+                ),
+              ),
+            ],
+          ),
+          Row(
+            children: [
+              Text('清晰度：'),
+              Expanded(
+                child: TextFormField(
+                  initialValue: _pixelRatio.toString(),
+                  onChanged: (value) =>
+                      _pixelRatio = double.tryParse(value) ?? 1.0,
                 ),
               ),
             ],
@@ -268,6 +427,7 @@ class _GenerateB50PageState extends State<GenerateB50Page> {
                         b50data: workingb50data,
                         n50: n50,
                         thunderboltb50: _thunderboltb50,
+                        versionList: versionlist,
                       );
                       setState(() {
                         if (result != null) {

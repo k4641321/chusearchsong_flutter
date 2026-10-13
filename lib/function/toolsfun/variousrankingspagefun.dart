@@ -37,6 +37,7 @@ List<Widget> sortSongs({
   required String type,
   required bool reverse,
   required int diffindex,
+  required bool iszxzr,
 }) {
   List<Widget> widgets = [];
   List notecountlist = [];

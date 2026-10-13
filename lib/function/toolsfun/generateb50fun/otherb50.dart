@@ -9,6 +9,8 @@ Future<Widget> generateother50Body({
   required List allscoredata,
   required String type,
   required String? genreorversion,
+  required String thunderboltb50,
+  required List versionlist,
   int? n50,
 }) async {
   //筛选曲目
@@ -70,6 +72,16 @@ Future<Widget> generateother50Body({
       }
     }
     resultScoreList.sort((a, b) => b['score'].compareTo(a['score']));
+  } else if (type == '版本区间50') {
+    for (var i in allscoredata) {
+      for (var j in songsData['songs']) {
+        if (i['id'] == j['id'] &&
+            versionlist.contains(j['version'].toString())) {
+          resultScoreList.add(i);
+          break;
+        }
+      }
+    }
   } else {
     resultScoreList = allscoredata;
   }
@@ -86,82 +98,13 @@ Future<Widget> generateother50Body({
   }
 
   //先定义所需的变量
-  Widget characterimage = SizedBox.shrink();
-  if (playerdata['character'] != null) {
-    characterimage = Image.network(
-      'https://assets2.lxns.net/chunithm/character/${playerdata['character']['id']}.png',
-      errorBuilder: (context, error, stackTrace) => Text('错误 $error'),
-    );
-  }
   List<Widget> b50body = [];
   Widget b50 = Column(children: b50body);
   double trophywidth = 525;
   if (playerdata['trophy']['name'].length > 17) {
     trophywidth = trophywidth + (playerdata['trophy']['name'].length - 17) * 10;
   }
-  Widget title = SizedBox(
-    height: 170,
-    child: Row(
-      mainAxisAlignment: MainAxisAlignment.start,
-      children: [
-        Padding(
-          padding: EdgeInsetsGeometry.only(left: 55),
-          child: SizedBox(
-            width: trophywidth,
-            // 525,
-            height: 225,
-            child: Card(
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: [
-                  Column(
-                    mainAxisAlignment: MainAxisAlignment.spaceAround,
-                    children: [
-                      Card(
-                        color: trophyColor(
-                          trophy: playerdata['trophy']['color'],
-                        ),
-                        child: Padding(
-                          padding: EdgeInsetsGeometry.only(
-                            left: 60,
-                            right: 60,
-                            top: 5,
-                            bottom: 5,
-                          ),
-                          child: Text(
-                            playerdata['trophy']['name'],
-                            style: TextStyle(color: Colors.black),
-                          ),
-                        ),
-                      ),
-                      Padding(
-                        padding: EdgeInsetsGeometry.only(left: 15),
-                        child: Text(
-                          'Lv.${playerdata['level']}  ${playerdata['name']}',
-                          style: TextStyle(fontSize: 30),
-                        ),
-                      ),
-                      Text(
-                        'Rating:   ${playerdata['rating'].toDouble().toStringAsFixed(2)}',
-                        style: TextStyle(
-                          fontSize: 25,
-                          color: ratingColor(
-                            rating: playerdata['rating'].toDouble(),
-                          ),
-                          shadows: [Shadow(color: Colors.black, blurRadius: 3)],
-                        ),
-                      ),
-                    ],
-                  ),
-                  characterimage,
-                ],
-              ),
-            ),
-          ),
-        ),
-      ],
-    ),
-  );
+  Widget title = buildB50PlayerInfoWidget(playerdata);
   // final ScrollController _scrollController = ScrollController();
 
   //b50绘制
@@ -219,7 +162,7 @@ Future<Widget> generateother50Body({
         orignid: originid,
       ),
     );
-    if (row == 9) {
+    if (row == 9 && thunderboltb50 != "横着的") {
       b50body.add(b50row);
       row = 0;
       b50rowbody = [];
@@ -230,16 +173,19 @@ Future<Widget> generateother50Body({
     } else {
       row++;
     }
+    if (thunderboltb50 == '竖着的') {
+      b50body.add(b50row);
+      row = 0;
+      b50rowbody = [];
+      b50row = Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: b50rowbody,
+      );
+    }
     songcount++;
   }
   if (b50rowbody.isNotEmpty) {
     b50body.add(b50row);
-  }
-
-  double extraHeight = 0.0;
-
-  if (b50body.length > 5) {
-    extraHeight = 219 * (b50body.length - 5);
   }
 
   //b50文字
@@ -265,27 +211,47 @@ Future<Widget> generateother50Body({
   );
 
   //底部信息
-  Widget fontter = Row(
-    mainAxisAlignment: MainAxisAlignment.center,
-    children: [
-      Text(
-        '此 $type B${type != 'BN' ? 50 : songcount - 1}由chusearchsong（中二查歌）生成，生成时间：${DateTime.now()}',
-        style: TextStyle(fontWeight: FontWeight.bold, color: Colors.black),
-      ),
-    ],
+  Widget fontter = buildB50Fontter(
+    '$type B${type != 'BN' ? 50 : songcount - 1}',
   );
 
   //背景绘制
+  double extraHeight = 0;
+  double width = 5896 / 2;
+  double height = 2844 / 2;
+
+  if (b50body.length > 5 && thunderboltb50 != "竖着的") {
+    extraHeight = 219 * (b50body.length - 5);
+  }
+  if (thunderboltb50 == '横着的') {
+    width = 5896 / 2 + 285 * resultScoreList.length;
+    height = 300;
+  }
+  if (thunderboltb50 == "竖着的") {
+    height = 2844 / 2;
+    extraHeight = extraHeight + 219 * resultScoreList.length;
+    width = 5896 / 8 + 75;
+  }
+
   Widget result = Container(
-    width: 5896 / 2,
-    height: 2844 / 2 + extraHeight,
+    width: width,
+    height: height + extraHeight,
     decoration: BoxDecoration(
       image: DecorationImage(
         image: AssetImage('res/background.png'),
         fit: BoxFit.cover,
       ),
     ),
-    child: Center(child: Column(children: [title, b50text, b50, fontter])),
+    child: Center(
+      child: thunderboltb50 == '横着的'
+          ? Column(
+              children: [
+                Row(children: [title, b50text, b50]),
+                fontter,
+              ],
+            )
+          : Column(children: [title, b50text, b50, fontter]),
+    ),
   );
 
   return result;

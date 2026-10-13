@@ -18,6 +18,8 @@ class _VariousrankingspageState extends State<Variousrankingspage> {
   bool reverse = true;
   List zxzrSongsData = [];
   int selecteddiffindex = 0;
+  bool zxzrmode = false;
+
   Future<void> init() async {
     try {
       songsData = SongDataStore.instance.songsData;
@@ -53,6 +55,7 @@ class _VariousrankingspageState extends State<Variousrankingspage> {
         type: type,
         reverse: reverse,
         diffindex: selecteddiffindex,
+        iszxzr: zxzrmode,
       );
       setState(() {
         items = result;
@@ -74,8 +77,20 @@ class _VariousrankingspageState extends State<Variousrankingspage> {
           IconButton(
             onPressed: () {
               setState(() {
+                zxzrmode = !zxzrmode;
+              });
+              viewResult();
+            },
+            icon: Icon(Icons.local_fire_department),
+          ),
+          IconButton(
+            onPressed: () {
+              setState(() {
                 reverse = !reverse;
               });
+              ScaffoldMessenger.of(
+                context,
+              ).showSnackBar(SnackBar(content: Text('最新最热模式：$zxzrmode')));
               viewResult();
             },
             icon: Icon(Icons.swap_vert),

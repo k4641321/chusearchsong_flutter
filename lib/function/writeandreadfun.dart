@@ -253,6 +253,10 @@ class WriteData {
   Future<void> writeRandomMusicHistory(List history) async {
     await LocalDB.Post('RandomMusicHistory', {"randomMusicHistory": history});
   }
+
+  Future<void> writeB50History(Map<String, dynamic> history) async {
+    await LocalDB.Post('B50History', history);
+  }
 }
 
 class ReadData {
@@ -381,6 +385,12 @@ class ReadData {
     final result = await LocalDB.GetById('RandomMusicHistory');
     final model = result.getOrDefault(null);
     return (model?.data['RandomMusicHistory'] as List?) ?? [];
+  }
+
+  Future<Map<String, dynamic>> readB50History() async {
+    final result = await LocalDB.GetById('B50History');
+    final model = result.getOrDefault(null);
+    return model?.data ?? {};
   }
 }
 
