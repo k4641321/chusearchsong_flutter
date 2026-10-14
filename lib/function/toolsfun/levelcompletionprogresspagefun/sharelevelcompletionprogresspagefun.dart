@@ -169,10 +169,13 @@ Future<Widget> returnShareLevelCompletionProgressPageFun({
     for (var i in buildMap) {
       String rank = '';
       Widget rankwidget = SizedBox.shrink();
-      late double diff;
+      double diff = 0;
+      int diffinex = 0;
+
       for (var l in i['difficulties']) {
         if (l['level_value'] >= level[0] && l['level_value'] <= level[1]) {
           diff = l['level_value'].toDouble();
+          diffinex = l['difficulty'];
         }
       }
       for (var l in allScoreData) {
@@ -267,44 +270,54 @@ Future<Widget> returnShareLevelCompletionProgressPageFun({
           },
 
           child: Card(
-            // color: Colors.white,
             child: Column(
               children: [
-                Padding(
-                  padding: EdgeInsetsGeometry.all(4),
-                  child: Stack(
-                    fit: StackFit.passthrough,
-                    children: [
-                      CachedNetworkImage(
-                        imageUrl:
-                            'https://assets2.lxns.net/chunithm/jacket/${i['id']}.png',
-                        width: 100,
-                        height: 100,
-                        errorWidget: (context, url, error) => CachedNetworkImage(
-                          imageUrl:
-                              'https://assets2.lxns.net/chunithm/jacket/${((i['difficulties'] as List).last as Map)['origin_id']}.png',
-                          width: 100,
-                          height: 100,
-                          errorWidget: (context, url, error) =>
-                              Text('错误：${error.toString()}'),
+                Card(
+                  color: diffcolor(diffindex: diffinex),
+                  child: Padding(
+                    padding: EdgeInsetsGeometry.all(2),
+                    child: Card(
+                      color: Colors.white,
+                      child: Padding(
+                        padding: EdgeInsetsGeometry.all(6),
+                        child: Stack(
+                          fit: StackFit.passthrough,
+                          children: [
+                            CachedNetworkImage(
+                              imageUrl:
+                                  'https://assets2.lxns.net/chunithm/jacket/${i['id']}.png',
+                              width: 100,
+                              height: 100,
+                              errorWidget: (context, url, error) =>
+                                  CachedNetworkImage(
+                                    imageUrl:
+                                        'https://assets2.lxns.net/chunithm/jacket/${((i['difficulties'] as List).last as Map)['origin_id']}.png',
+                                    width: 100,
+                                    height: 100,
+                                    errorWidget: (context, url, error) =>
+                                        Text('错误：${error.toString()}'),
+                                  ),
+                            ),
+                            // Image.network(
+                            //   'https://assets2.lxns.net/chunithm/jacket/${i['id']}.png',
+                            //   width: 100,
+                            //   height: 100,
+                            //   errorBuilder: (context, error, stackTrace) => Image.network(
+                            //     width: 100,
+                            //     height: 100,
+                            //     'https://assets2.lxns.net/chunithm/jacket/${((i['difficulties'] as List).last as Map)['origin_id']}.png',
+                            //     errorBuilder: (context, error, stackTrace) =>
+                            //         Text('错误：${error.toString()}'),
+                            //   ),
+                            // ),
+                            rankwidget,
+                          ],
                         ),
                       ),
-                      // Image.network(
-                      //   'https://assets2.lxns.net/chunithm/jacket/${i['id']}.png',
-                      //   width: 100,
-                      //   height: 100,
-                      //   errorBuilder: (context, error, stackTrace) => Image.network(
-                      //     width: 100,
-                      //     height: 100,
-                      //     'https://assets2.lxns.net/chunithm/jacket/${((i['difficulties'] as List).last as Map)['origin_id']}.png',
-                      //     errorBuilder: (context, error, stackTrace) =>
-                      //         Text('错误：${error.toString()}'),
-                      //   ),
-                      // ),
-                      rankwidget,
-                    ],
+                    ),
                   ),
                 ),
+
                 Text(
                   cuttitle(title: i['title']),
                   style: TextStyle(fontSize: 10, fontWeight: FontWeight.bold),
@@ -445,11 +458,16 @@ Future<Widget> returnShareLevelCompletionProgressPageFun({
                                   ),
                                 ],
                               ),
-                              Image.network(
-                                'https://assets2.lxns.net/chunithm/character/${playerdata['character']['id']}.png',
-                                width: 175,
-                                height: 175,
-                              ),
+                              playerdata['character']['id'] != null
+                                  ? Image.network(
+                                      'https://assets2.lxns.net/chunithm/character/${playerdata['character']['id']}.png',
+                                      width: 175,
+                                      height: 175,
+                                      errorBuilder:
+                                          (context, error, stackTrace) =>
+                                              Text('图片加载失败'),
+                                    )
+                                  : SizedBox(height: 175, width: 175),
                             ],
                           ),
                         ),
@@ -607,7 +625,7 @@ Future<Widget> returnShareLevelCompletionProgressPageFun({
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
         Text(
-          '此等级表由chusearchsong（中二查歌）生成，生成时间：${DateTime.now()}',
+          '此等级表由chusearchsong（中二查歌）生成，生成时间：${DateTime.now()} 交流群：309546141',
           style: TextStyle(fontWeight: FontWeight.bold, color: Colors.black),
         ),
       ],
@@ -622,7 +640,7 @@ Future<Widget> returnShareLevelCompletionProgressPageFun({
     defaultheight = defaultheight + 200 * (columncount - 6);
   }
   Widget result = Container(
-    width: 2948,
+    width: 3600,
     height: defaultheight,
     decoration: BoxDecoration(
       image: DecorationImage(

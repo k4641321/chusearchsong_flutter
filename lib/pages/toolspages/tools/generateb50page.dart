@@ -316,12 +316,33 @@ class _GenerateB50PageState extends State<GenerateB50Page> {
                             Navigator.of(context).pop();
                           },
                           onLongPress: () async {
-                            b50history.remove(i);
-                            await (await WriteData.create()).writeB50History(
-                              b50history,
+                            bool isConfirmed = await showDialog(
+                              context: context,
+                              builder: (context) => AlertDialog(
+                                title: Text('是否删除'),
+                                actions: [
+                                  TextButton(
+                                    child: Text('取消'),
+                                    onPressed: () =>
+                                        Navigator.of(context).pop(false),
+                                  ),
+                                  TextButton(
+                                    child: Text('确定'),
+                                    onPressed: () =>
+                                        Navigator.of(context).pop(true),
+                                  ),
+                                ],
+                              ),
                             );
-                            if (!context.mounted) return;
-                            Navigator.of(context).pop();
+
+                            if (isConfirmed) {
+                              b50history.remove(i);
+                              await (await WriteData.create()).writeB50History(
+                                b50history,
+                              );
+                              if (!context.mounted) return;
+                              Navigator.of(context).pop();
+                            }
                           },
                         ),
                       );
@@ -332,7 +353,8 @@ class _GenerateB50PageState extends State<GenerateB50Page> {
                     if (!context.mounted) return;
                     showDialog(
                       context: context,
-                      builder: (context) => SimpleDialog(children: list),
+                      builder: (context) =>
+                          SimpleDialog(title: Text('选择历史50'), children: list),
                     );
                   },
                   child: Text('加载历史50'),

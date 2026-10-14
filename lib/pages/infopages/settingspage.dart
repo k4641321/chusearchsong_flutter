@@ -2,6 +2,7 @@ import 'dart:developer';
 import 'package:chusearchsong_flutter/function/infopagefun/settingspagefun.dart';
 import 'package:chusearchsong_flutter/function/writeandreadfun.dart';
 import 'package:chusearchsong_flutter/pages/infopages/settingspage/colorssettingspage.dart';
+import 'package:chusearchsong_flutter/pages/infopages/settingspage/generatesettingspage.dart';
 import 'package:flutter/material.dart';
 import 'settingspage/lxnssettingspage.dart';
 import 'settingspage/texttranslatesettingspage.dart';
@@ -248,6 +249,20 @@ class _SettingsPageState extends State<SettingsPage> {
                     builder: (context) => const LxnsSettingsPage(),
                   ),
                 ),
+              ),
+              _buildDivider(),
+              _buildNavItem(
+                icon: Icons.auto_fix_high,
+                title: '生成设置',
+                subtitle: '配置除B50外的生成设置',
+                onTap: () => Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => const Generatesettingspage(),
+                  ),
+                ),
+                isFirst: false,
+                isLast: false,
               ),
               _buildDivider(),
               _buildNavItem(

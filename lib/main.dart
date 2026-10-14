@@ -1,5 +1,6 @@
 import 'dart:developer';
 import 'dart:io';
+import 'dart:ui';
 import 'package:chusearchsong_flutter/function/infopagefun/infopagefun.dart';
 import 'package:chusearchsong_flutter/function/request.dart';
 import 'package:chusearchsong_flutter/function/writeandreadfun.dart';
@@ -396,42 +397,68 @@ class _MyHomePageState extends State<MyHomePage> {
         padding: const EdgeInsets.only(bottom: 25, left: 25, right: 25),
         child: ClipRRect(
           borderRadius: BorderRadius.circular(25),
-          child: NavigationBar(
-            key: _navBarKey,
-            // height: 70,
-            shadowColor: Theme.of(context).colorScheme.primary.withAlpha(200),
-            // shadowColor: Theme.of(
-            //   context,
-            // ).colorScheme.primaryContainer.withAlpha(150),
-            elevation: 25,
-            backgroundColor: Theme.of(
-              context,
-            ).colorScheme.primaryContainer.withAlpha(150),
-            indicatorColor: Theme.of(
-              context,
-            ).colorScheme.primary.withAlpha(150),
-            selectedIndex: _currentIndex,
-            onDestinationSelected: (index) {
-              setState(() {
-                _currentIndex = index;
-                if (index == 0) {
-                  title = '搜索';
-                } else if (index == 1) {
-                  title = '收藏';
-                } else if (index == 2) {
-                  title = '工具';
-                } else if (index == 3) {
-                  title = '关于';
-                }
-              });
-            },
-            destinations: const [
-              NavigationDestination(icon: Icon(Icons.home), label: '主页'),
-              NavigationDestination(icon: Icon(Icons.search), label: '搜索'),
-              NavigationDestination(icon: Icon(Icons.favorite), label: '收藏'),
-              NavigationDestination(icon: Icon(Icons.build), label: '工具'),
-              NavigationDestination(icon: Icon(Icons.info), label: '关于'),
-            ],
+          child: BackdropFilter(
+            filter: ImageFilter.blur(sigmaX: 2, sigmaY: 2),
+            child: Container(
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(25),
+                gradient: LinearGradient(
+                  begin: Alignment.topLeft,
+                  end: Alignment.bottomRight,
+                  colors: [
+                    Theme.of(
+                      context,
+                    ).colorScheme.primaryContainer.withAlpha(90),
+                    Theme.of(context).colorScheme.surface.withAlpha(50),
+                  ],
+                ),
+                border: Border.all(
+                  color: Colors.white.withAlpha(70),
+                  width: 1.2,
+                ),
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.black.withAlpha(40),
+                    blurRadius: 20,
+                    offset: const Offset(0, 8),
+                  ),
+                ],
+              ),
+              child: NavigationBar(
+                key: _navBarKey,
+                backgroundColor: Colors.transparent,
+                surfaceTintColor: Colors.transparent,
+                elevation: 0,
+                indicatorColor: Theme.of(
+                  context,
+                ).colorScheme.primary.withAlpha(120),
+                selectedIndex: _currentIndex,
+                onDestinationSelected: (index) {
+                  setState(() {
+                    _currentIndex = index;
+                    if (index == 0) {
+                      title = '搜索';
+                    } else if (index == 1) {
+                      title = '收藏';
+                    } else if (index == 2) {
+                      title = '工具';
+                    } else if (index == 3) {
+                      title = '关于';
+                    }
+                  });
+                },
+                destinations: const [
+                  NavigationDestination(icon: Icon(Icons.home), label: '主页'),
+                  NavigationDestination(icon: Icon(Icons.search), label: '搜索'),
+                  NavigationDestination(
+                    icon: Icon(Icons.favorite),
+                    label: '收藏',
+                  ),
+                  NavigationDestination(icon: Icon(Icons.build), label: '工具'),
+                  NavigationDestination(icon: Icon(Icons.info), label: '关于'),
+                ],
+              ),
+            ),
           ),
         ),
       ),

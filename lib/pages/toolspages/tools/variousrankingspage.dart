@@ -48,15 +48,25 @@ class _VariousrankingspageState extends State<Variousrankingspage> {
     try {
       final workingSongsData = jsonDecode(jsonEncode(songsData));
       final workingzxzrSongsData = jsonDecode(jsonEncode(zxzrSongsData));
-      final result = sortSongs(
-        context: context,
-        songs: workingSongsData,
-        zxzrSongs: workingzxzrSongsData,
-        type: type,
-        reverse: reverse,
-        diffindex: selecteddiffindex,
-        iszxzr: zxzrmode,
-      );
+      final result = zxzrmode
+          ? sortZXZRSongs(
+              context: context,
+              songs: workingSongsData,
+              zxzrSongs: workingzxzrSongsData,
+              type: type,
+              reverse: reverse,
+              diffindex: selecteddiffindex,
+              iszxzr: zxzrmode,
+            )
+          : sortSongs(
+              context: context,
+              songs: workingSongsData,
+              zxzrSongs: workingzxzrSongsData,
+              type: type,
+              reverse: reverse,
+              diffindex: selecteddiffindex,
+              iszxzr: zxzrmode,
+            );
       setState(() {
         items = result;
       });
@@ -79,6 +89,10 @@ class _VariousrankingspageState extends State<Variousrankingspage> {
               setState(() {
                 zxzrmode = !zxzrmode;
               });
+              ScaffoldMessenger.of(
+                context,
+              ).showSnackBar(SnackBar(content: Text('最新最热模式：$zxzrmode')));
+
               viewResult();
             },
             icon: Icon(Icons.local_fire_department),
@@ -88,9 +102,6 @@ class _VariousrankingspageState extends State<Variousrankingspage> {
               setState(() {
                 reverse = !reverse;
               });
-              ScaffoldMessenger.of(
-                context,
-              ).showSnackBar(SnackBar(content: Text('最新最热模式：$zxzrmode')));
               viewResult();
             },
             icon: Icon(Icons.swap_vert),

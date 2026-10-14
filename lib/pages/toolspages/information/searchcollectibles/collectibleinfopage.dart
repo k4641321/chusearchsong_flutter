@@ -31,6 +31,26 @@ class _CollectibleInfoPageState extends State<CollectibleInfoPage> {
   Map<String, dynamic> newdata = {};
   String charatext = '';
   Widget charatranwidget = SizedBox.shrink();
+
+  String _difficultyName(int diff) {
+    switch (diff) {
+      case 0:
+        return 'BASIC';
+      case 1:
+        return 'ADVANCED';
+      case 2:
+        return 'EXPERT';
+      case 3:
+        return 'MASTER';
+      case 4:
+        return 'ULTIMA';
+      case 5:
+        return "World's End";
+      default:
+        return '未知';
+    }
+  }
+
   //加载其余信息
   Future<void> otherinfo({required String type}) async {
     newdata = widget.data;
@@ -255,114 +275,23 @@ class _CollectibleInfoPageState extends State<CollectibleInfoPage> {
       } else {
         difficulties.add(Text('需求：', style: TextStyle(fontSize: 20)));
         for (var i in requiredList['difficulties']) {
-          // print('$i, $i.runtimeType');
-          switch (i) {
-            case 0:
-              difficulties.add(
-                Card(
-                  color: diffcolor(diffindex: i),
-                  child: Padding(
-                    padding: EdgeInsetsGeometry.only(
-                      left: 8,
-                      right: 8,
-                      top: 3,
-                      bottom: 3,
-                    ),
-                    child: Text('BASIC'),
-                  ),
+          difficulties.add(
+            Card(
+              color: diffcolor(diffindex: i),
+              child: Padding(
+                padding: EdgeInsetsGeometry.only(
+                  left: 8,
+                  right: 8,
+                  top: 3,
+                  bottom: 3,
                 ),
-              );
-            case 1:
-              difficulties.add(
-                Card(
-                  color: diffcolor(diffindex: i),
-                  child: Padding(
-                    padding: EdgeInsetsGeometry.only(
-                      left: 8,
-                      right: 8,
-                      top: 3,
-                      bottom: 3,
-                    ),
-                    child: Text('ADVANCED'),
-                  ),
+                child: Text(
+                  _difficultyName(i),
+                  style: TextStyle(color: Colors.white),
                 ),
-              );
-            case 2:
-              difficulties.add(
-                Card(
-                  color: diffcolor(diffindex: i),
-                  child: Padding(
-                    padding: EdgeInsetsGeometry.only(
-                      left: 8,
-                      right: 8,
-                      top: 3,
-                      bottom: 3,
-                    ),
-                    child: Text('EXPERT'),
-                  ),
-                ),
-              );
-            case 3:
-              difficulties.add(
-                Card(
-                  color: diffcolor(diffindex: i),
-                  child: Padding(
-                    padding: EdgeInsetsGeometry.only(
-                      left: 8,
-                      right: 8,
-                      top: 3,
-                      bottom: 3,
-                    ),
-                    child: Text('MASTER'),
-                  ),
-                ),
-              );
-            case 4:
-              difficulties.add(
-                Card(
-                  color: diffcolor(diffindex: i),
-                  child: Padding(
-                    padding: EdgeInsetsGeometry.only(
-                      left: 8,
-                      right: 8,
-                      top: 3,
-                      bottom: 3,
-                    ),
-                    child: Text('ULTRA'),
-                  ),
-                ),
-              );
-            case 5:
-              difficulties.add(
-                Card(
-                  color: diffcolor(diffindex: i),
-                  child: Padding(
-                    padding: EdgeInsetsGeometry.only(
-                      left: 8,
-                      right: 8,
-                      top: 3,
-                      bottom: 3,
-                    ),
-                    child: Text('Wolrd\'s End'),
-                  ),
-                ),
-              );
-            default:
-              difficulties.add(
-                Card(
-                  color: diffcolor(diffindex: i),
-                  child: Padding(
-                    padding: EdgeInsetsGeometry.only(
-                      left: 8,
-                      right: 8,
-                      top: 3,
-                      bottom: 3,
-                    ),
-                    child: Text('未知'),
-                  ),
-                ),
-              );
-          }
+              ),
+            ),
+          );
         }
       }
       result.add(Wrap(alignment: WrapAlignment.center, children: difficulties));
@@ -378,10 +307,35 @@ class _CollectibleInfoPageState extends State<CollectibleInfoPage> {
             fullchain = '无';
         }
         result.add(
-          Text(
-            'Full Chain要求: $fullchain',
-            style: const TextStyle(fontSize: 20),
-            textAlign: TextAlign.center,
+          Wrap(
+            alignment: WrapAlignment.center,
+            children: [
+              Text('Full Chain要求: ', style: const TextStyle(fontSize: 20)),
+              Card(
+                color: returnFullChainBackgroundColor(
+                  requiredList['full_chain'],
+                ),
+                child: Padding(
+                  padding: EdgeInsetsGeometry.only(
+                    left: 8,
+                    right: 8,
+                    top: 3,
+                    bottom: 3,
+                  ),
+                  child: Text(
+                    fullchain,
+                    style: TextStyle(
+                      fontSize: 20,
+                      backgroundColor: returnFullChainBackgroundColor(
+                        fullchain,
+                      ),
+                      color: Colors.white,
+                    ),
+                    textAlign: TextAlign.center,
+                  ),
+                ),
+              ),
+            ],
           ),
         );
       }
@@ -399,10 +353,29 @@ class _CollectibleInfoPageState extends State<CollectibleInfoPage> {
             fullcombo = '无';
         }
         result.add(
-          Text(
-            'Full Combo要求: $fullcombo',
-            style: const TextStyle(fontSize: 20),
-            textAlign: TextAlign.center,
+          Wrap(
+            alignment: WrapAlignment.center,
+            children: [
+              Text('Full Combo要求: ', style: const TextStyle(fontSize: 20)),
+              Card(
+                color: returnFullComboBackgroundColor(
+                  requiredList['full_combo'],
+                ),
+                child: Padding(
+                  padding: EdgeInsetsGeometry.only(
+                    left: 8,
+                    right: 8,
+                    top: 3,
+                    bottom: 3,
+                  ),
+                  child: Text(
+                    fullcombo,
+                    style: const TextStyle(fontSize: 20, color: Colors.white),
+                    textAlign: TextAlign.center,
+                  ),
+                ),
+              ),
+            ],
           ),
         );
       }

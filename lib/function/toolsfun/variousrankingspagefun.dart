@@ -1,6 +1,8 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:chusearchsong_flutter/function/commonfun.dart';
 import 'package:chusearchsong_flutter/function/toolsfun/generateb50fun/generateb50.dart';
+import 'package:chusearchsong_flutter/function/toolsfun/searchsongzxzrpagefun/songinfopagefun.dart';
+import 'package:chusearchsong_flutter/pages/toolspages/tools/searchsongzxzrpage/songinfopage.dart';
 import 'package:flutter/material.dart';
 
 Widget buildDropDownMenu(ValueChanged onSelected) {
@@ -41,13 +43,16 @@ List<Widget> sortSongs({
 }) {
   List<Widget> widgets = [];
   List notecountlist = [];
+  //BPM
   if (type == 'BPM') {
     if (reverse) {
       (songs['songs'] as List).sort((a, b) => b['bpm'].compareTo(a['bpm']));
     } else {
       (songs['songs'] as List).sort((a, b) => a['bpm'].compareTo(b['bpm']));
     }
-  } else if (type.contains('定数') || type.contains('星数')) {
+  }
+  //定数和星数
+  else if (type.contains('定数') || type.contains('星数')) {
     List result = [];
     int difflength = 3;
     int diffindex = 3;
@@ -175,6 +180,32 @@ List<Widget> sortSongs({
       }
     });
 
+    if (iszxzr) {
+      for (var i in zxzrSongs) {
+        if (diffindex == 5 && (i['charts'] as List).length == 1) {
+          result.add(i);
+          if ((i['charts'] as List).length == 1) {
+            notecountlist.add(i['charts'].last['notecounts'][noteKey]);
+          } else {
+            notecountlist.add(null);
+          }
+        } else if ([0, 1, 2, 3].contains(diffindex)) {
+          result.add(i);
+          if ((i['charts'] as List).length == 4) {
+            notecountlist.add(i['charts'][diffindex]['notecounts'][noteKey]);
+          } else {
+            notecountlist.add(null);
+          }
+        } else if (diffindex == 4 && (i['charts'] as List).length == 5) {
+          result.add(i);
+          if ((i['charts'] as List).length == 5) {
+            notecountlist.add(i['charts'][diffindex]['notecounts'][noteKey]);
+          } else {
+            notecountlist.add(null);
+          }
+        }
+      }
+    }
     for (var i in zxzrSongs) {
       for (var j in songs['songs']) {
         if (i['id'] == j['id']) {
@@ -210,6 +241,208 @@ List<Widget> sortSongs({
     widgets.add(
       returnSortSongCard(
         songbasedata: i,
+        songsData: songs,
+        context: context,
+        type: type,
+        notecountlist: notecountlist,
+        index: index,
+      ),
+    );
+    index++;
+  }
+  return widgets;
+}
+
+List<Widget> sortZXZRSongs({
+  required BuildContext context,
+  required Map<String, dynamic> songs,
+  required List zxzrSongs,
+  required String type,
+  required bool reverse,
+  required int diffindex,
+  required bool iszxzr,
+}) {
+  List<Widget> widgets = [];
+  List notecountlist = [];
+  //BPM
+  if (type == 'BPM') {
+    if (reverse) {
+      zxzrSongs.sort(
+        (a, b) => (b['bpm']['mode'] ?? 0).compareTo(a['bpm']['mode'] ?? 0),
+      );
+    } else {
+      zxzrSongs.sort(
+        (a, b) => (a['bpm']['mode'] ?? 0).compareTo(b['bpm']['mode'] ?? 0),
+      );
+    }
+  }
+  //定数和星数
+  else if (type.contains('定数') || type.contains('星数')) {
+    List result = [];
+    int difflength = 3;
+    int diffindex = 3;
+
+    switch (type) {
+      case 'World\'s End星数':
+        difflength = 1;
+        diffindex = 0;
+        break;
+      case 'ULT定数':
+        difflength = 5;
+        diffindex = 4;
+        break;
+      case 'MAS定数':
+        diffindex = 3;
+        break;
+      case 'EXP定数':
+        diffindex = 2;
+        break;
+      case 'ADV定数':
+        diffindex = 1;
+        break;
+      case 'BAS定数':
+        diffindex = 0;
+        break;
+    }
+    for (var i in zxzrSongs) {
+      if (i['charts'].length >= difflength && type != 'World\'s End星数') {
+        result.add(i);
+      }
+    }
+    if (reverse) {
+      if (type != 'World\'s End星数') {
+        result.sort(
+          ((a, b) => ((b['charts'] as List)[diffindex]['const'] ?? 0).compareTo(
+            ((a['charts'] as List)[diffindex]['const'] ?? 0),
+          )),
+        );
+      }
+    } else {
+      if (type != 'World\'s End星数') {
+        result.sort(
+          ((a, b) => ((a['charts'] as List)[diffindex]['const'] ?? 0).compareTo(
+            ((b['charts'] as List)[diffindex]['const'] ?? 0),
+          )),
+        );
+      }
+    }
+    zxzrSongs = result;
+  } else if (type.contains('数量') || type.contains('总数')) {
+    List result = [];
+    String noteKey;
+    if (type.contains('音符总数')) {
+      noteKey = 'total';
+    } else if (type.contains('Tap')) {
+      noteKey = 'tap';
+    } else if (type.contains('Hold')) {
+      noteKey = 'hold';
+    } else if (type.contains('Slide')) {
+      noteKey = 'slide';
+    } else if (type.contains('Air')) {
+      noteKey = 'air';
+    } else if (type.contains('Flick')) {
+      noteKey = 'flick';
+    } else {
+      noteKey = 'total';
+    }
+
+    zxzrSongs.sort((a, b) {
+      int chartlength = 4;
+      if (diffindex == 4) {
+        chartlength = 5;
+      } else if (diffindex == 5) {
+        chartlength = 1;
+      }
+      bool aHasChart = (a['charts'] as List).length >= chartlength;
+      bool bHasChart = (b['charts'] as List).length >= chartlength;
+
+      if (!aHasChart && !bHasChart) return 0;
+      if (!aHasChart) return 1;
+      if (!bHasChart) return -1;
+
+      int aValue = 0;
+      if ([0, 1, 2, 3].contains(diffindex)) {
+        aValue = (a['charts'] as List)[diffindex]['notecounts'][noteKey] ?? 0;
+      } else if (diffindex == 4 && (a['charts'] as List).length == 5) {
+        aValue = (a['charts'] as List)[diffindex]['notecounts'][noteKey] ?? 0;
+      } else if (diffindex == 5 && (a['charts'] as List).length == 1) {
+        aValue = (a['charts'] as List).last['notecounts'][noteKey] ?? 0;
+      }
+
+      int bValue = 0;
+      if ([0, 1, 2, 3].contains(diffindex)) {
+        bValue = (b['charts'] as List)[diffindex]['notecounts'][noteKey] ?? 0;
+      } else if (diffindex == 4 && (b['charts'] as List).length == 5) {
+        bValue = (b['charts'] as List)[diffindex]['notecounts'][noteKey] ?? 0;
+      } else if (diffindex == 5 && (b['charts'] as List).length == 1) {
+        bValue = (b['charts'] as List).last['notecounts'][noteKey] ?? 0;
+      }
+
+      if (reverse) {
+        return bValue.compareTo(aValue);
+      } else {
+        return aValue.compareTo(bValue);
+      }
+    });
+
+    if (iszxzr) {
+      for (var i in zxzrSongs) {
+        if (diffindex == 5 && (i['charts'] as List).length == 1) {
+          result.add(i);
+          if ((i['charts'] as List).length == 1) {
+            notecountlist.add(i['charts'].last['notecounts'][noteKey]);
+          } else {
+            notecountlist.add(null);
+          }
+        } else if ([0, 1, 2, 3].contains(diffindex)) {
+          result.add(i);
+          if ((i['charts'] as List).length == 4) {
+            notecountlist.add(i['charts'][diffindex]['notecounts'][noteKey]);
+          } else {
+            notecountlist.add(null);
+          }
+        } else if (diffindex == 4 && (i['charts'] as List).length == 5) {
+          result.add(i);
+          if ((i['charts'] as List).length == 5) {
+            notecountlist.add(i['charts'][diffindex]['notecounts'][noteKey]);
+          } else {
+            notecountlist.add(null);
+          }
+        }
+      }
+    }
+    for (var i in zxzrSongs) {
+      if (diffindex == 5 && (i['charts'] as List).length == 1) {
+        result.add(i);
+        if ((i['charts'] as List).length == 1) {
+          notecountlist.add(i['charts'].last['notecounts'][noteKey]);
+        } else {
+          notecountlist.add(null);
+        }
+      } else if ([0, 1, 2, 3].contains(diffindex)) {
+        result.add(i);
+        if ((i['charts'] as List).length == 4) {
+          notecountlist.add(i['charts'][diffindex]['notecounts'][noteKey]);
+        } else {
+          notecountlist.add(null);
+        }
+      } else if (diffindex == 4 && (i['charts'] as List).length == 5) {
+        result.add(i);
+        if ((i['charts'] as List).length == 5) {
+          notecountlist.add(i['charts'][diffindex]['notecounts'][noteKey]);
+        } else {
+          notecountlist.add(null);
+        }
+      }
+    }
+    zxzrSongs = result;
+  }
+  int index = 0;
+  for (var i in zxzrSongs) {
+    widgets.add(
+      returnSortZXZRSongCard(
+        songbasedata: i,
+        zxzrData: zxzrSongs,
         songsData: songs,
         context: context,
         type: type,
@@ -357,6 +590,141 @@ Widget returnSortSongCard({
                       Expanded(
                         child: Text(
                           '${songbasedata['genre']} - $versionname',
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                      ),
+                    ],
+                  ),
+                  Wrap(children: songInfoDiffs),
+                ],
+              ),
+            ),
+          ],
+        ),
+      ),
+    ),
+  );
+}
+
+Widget returnSortZXZRSongCard({
+  required Map<String, dynamic> songbasedata,
+  required List zxzrData,
+  required Map<String, dynamic> songsData,
+  required BuildContext context,
+  required String type,
+  required List notecountlist,
+  required int index,
+}) {
+  List<Widget> songInfoDiffs = [];
+  Widget other = SizedBox.shrink();
+  if (type == 'BPM') {
+    other = Text('BPM: ${songbasedata['bpm']['mode']}');
+  } else if (type == 'World\'s End星数') {
+    other = Text('星数: ${songbasedata['difficulties'][0]['star']}');
+  } else if (type.contains('数量') || type.contains('总数')) {
+    if (notecountlist.isEmpty) {
+      other = Text('数量: null');
+    } else {
+      if (index > notecountlist.length) {
+        index = notecountlist.length - 1;
+      }
+      other = Text('数量: ${notecountlist[index]}');
+    }
+  }
+  for (var k in songbasedata['charts']) {
+    songInfoDiffs.add(
+      Card(
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadiusGeometry.all(Radius.circular(5)),
+        ),
+        color: diffcolor(diffindex: returnDiffIndex(diff: k['difficulty'])),
+        child: Padding(
+          padding: EdgeInsetsGeometry.only(
+            left: 8,
+            right: 8,
+            top: 3,
+            bottom: 3,
+          ),
+
+          child: Text(
+            k['const'].toString(),
+            style: TextStyle(color: Colors.white),
+          ),
+        ),
+      ),
+    );
+  }
+  return InkWell(
+    // key: ValueKey(songItem['id']),
+    onTap: () => Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => SongInfoPage(songdata: songbasedata),
+      ),
+    ),
+    child: Card(
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(0.0)),
+      child: Padding(
+        padding: EdgeInsetsGeometry.all(10.0),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Column(
+              children: [
+                Padding(
+                  padding: EdgeInsetsGeometry.only(right: 10),
+                  child: CachedNetworkImage(
+                    imageUrl: songbasedata['jacket_url'],
+                    width: 105,
+                    height: 105,
+                    errorWidget: (context, url, error) => Text('加载失败'),
+                  ),
+                ),
+                other,
+              ],
+            ),
+            Expanded(
+              child: Column(
+                children: [
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.start,
+
+                    children: [
+                      Text(
+                        '#${songbasedata['id']}',
+                        style: TextStyle(fontSize: 10, color: Colors.grey),
+                      ),
+                    ],
+                  ),
+                  Row(
+                    children: [
+                      Expanded(
+                        child: Text(
+                          '${songbasedata['title']}',
+                          overflow: TextOverflow.ellipsis,
+                          style: TextStyle(
+                            fontSize: 20,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                  Row(
+                    children: [
+                      Expanded(
+                        child: Text(
+                          '${songbasedata['artist']}',
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                      ),
+                    ],
+                  ),
+                  Row(
+                    children: [
+                      Expanded(
+                        child: Text(
+                          '${songbasedata['genre']} - ${songbasedata['version']}',
                           overflow: TextOverflow.ellipsis,
                         ),
                       ),

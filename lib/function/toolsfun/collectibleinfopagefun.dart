@@ -8,228 +8,67 @@ List<Widget> returnEnglishDiff({
   required bool isComplete,
   List? requireddifficulties,
 }) {
-  List<Widget> result = [];
-  if (isComplete == true) {
-    for (var i in difficulties) {
-      switch (i) {
-        case 0:
-          result.add(
-            Card(
-              color: diffcolor(diffindex: i),
-              child: Padding(
-                padding: EdgeInsetsGeometry.only(
-                  left: 8,
-                  right: 8,
-                  top: 3,
-                  bottom: 3,
-                ),
-                child: Text('BASIC'),
-              ),
-            ),
-          );
-        case 1:
-          result.add(
-            Card(
-              color: diffcolor(diffindex: i),
-              child: Padding(
-                padding: EdgeInsetsGeometry.only(
-                  left: 8,
-                  right: 8,
-                  top: 3,
-                  bottom: 3,
-                ),
-                child: Text('ADVANCED'),
-              ),
-            ),
-          );
-        case 2:
-          result.add(
-            Card(
-              color: diffcolor(diffindex: i),
-              child: Padding(
-                padding: EdgeInsetsGeometry.only(
-                  left: 8,
-                  right: 8,
-                  top: 3,
-                  bottom: 3,
-                ),
-                child: Text('EXPERT'),
-              ),
-            ),
-          );
-        case 3:
-          result.add(
-            Card(
-              color: diffcolor(diffindex: i),
-              child: Padding(
-                padding: EdgeInsetsGeometry.only(
-                  left: 8,
-                  right: 8,
-                  top: 3,
-                  bottom: 3,
-                ),
-                child: Text('MASTER'),
-              ),
-            ),
-          );
-        case 4:
-          difficulties.add(
-            Card(
-              color: diffcolor(diffindex: i),
-              child: Padding(
-                padding: EdgeInsetsGeometry.only(
-                  left: 8,
-                  right: 8,
-                  top: 3,
-                  bottom: 3,
-                ),
-                child: Text('ULTIMATE'),
-              ),
-            ),
-          );
-        case 5:
-          difficulties.add(
-            Card(
-              color: diffcolor(diffindex: i),
-              child: Padding(
-                padding: EdgeInsetsGeometry.only(
-                  left: 8,
-                  right: 8,
-                  top: 3,
-                  bottom: 3,
-                ),
-                child: Text('Worlds\'End'),
-              ),
-            ),
-          );
-        default:
-          result.add(
-            Card(
-              color: diffcolor(diffindex: i),
-              child: Padding(
-                padding: EdgeInsetsGeometry.only(
-                  left: 8,
-                  right: 8,
-                  top: 3,
-                  bottom: 3,
-                ),
-                child: Text('未知'),
-              ),
-            ),
-          );
-      }
-    }
-  } else if (isComplete == false && requireddifficulties != null) {
-    requireddifficulties.removeWhere(difficulties.contains);
-    for (var i in requireddifficulties) {
-      switch (i) {
-        case 0:
-          result.add(
-            Card(
-              color: diffcolor(diffindex: i),
-              child: Padding(
-                padding: EdgeInsetsGeometry.only(
-                  left: 8,
-                  right: 8,
-                  top: 3,
-                  bottom: 3,
-                ),
-                child: Text('BASIC'),
-              ),
-            ),
-          );
-        case 1:
-          result.add(
-            Card(
-              color: diffcolor(diffindex: i),
-              child: Padding(
-                padding: EdgeInsetsGeometry.only(
-                  left: 8,
-                  right: 8,
-                  top: 3,
-                  bottom: 3,
-                ),
-                child: Text('ADVANCED'),
-              ),
-            ),
-          );
-        case 2:
-          result.add(
-            Card(
-              color: diffcolor(diffindex: i),
-              child: Padding(
-                padding: EdgeInsetsGeometry.only(
-                  left: 8,
-                  right: 8,
-                  top: 3,
-                  bottom: 3,
-                ),
-                child: Text('EXPERT'),
-              ),
-            ),
-          );
-        case 3:
-          result.add(
-            Card(
-              color: diffcolor(diffindex: i),
-              child: Padding(
-                padding: EdgeInsetsGeometry.only(
-                  left: 8,
-                  right: 8,
-                  top: 3,
-                  bottom: 3,
-                ),
-                child: Text('MASTER'),
-              ),
-            ),
-          );
-        case 4:
-          difficulties.add(
-            Card(
-              color: diffcolor(diffindex: i),
-              child: Padding(
-                padding: EdgeInsetsGeometry.only(
-                  left: 8,
-                  right: 8,
-                  top: 3,
-                  bottom: 3,
-                ),
-                child: Text('ULTIMATE'),
-              ),
-            ),
-          );
-        case 5:
-          difficulties.add(
-            Card(
-              color: diffcolor(diffindex: i),
-              child: Padding(
-                padding: EdgeInsetsGeometry.only(
-                  left: 8,
-                  right: 8,
-                  top: 3,
-                  bottom: 3,
-                ),
-                child: Text('Worlds\'End'),
-              ),
-            ),
-          );
-        default:
-          result.add(
-            Card(
-              color: diffcolor(diffindex: i),
-              child: Padding(
-                padding: EdgeInsetsGeometry.only(
-                  left: 8,
-                  right: 8,
-                  top: 3,
-                  bottom: 3,
-                ),
-                child: Text('未知'),
-              ),
-            ),
-          );
-      }
+  String diffName(int diff) {
+    switch (diff) {
+      case 0:
+        return 'BASIC';
+      case 1:
+        return 'ADVANCED';
+      case 2:
+        return 'EXPERT';
+      case 3:
+        return 'MASTER';
+      case 4:
+        return 'ULTIMA';
+      case 5:
+        return "World's End";
+      default:
+        return '未知';
     }
   }
-  return result;
+
+  Widget diffCard(int diff) {
+    return Card(
+      color: diffcolor(diffindex: diff),
+      child: Padding(
+        padding: EdgeInsetsGeometry.only(left: 8, right: 8, top: 3, bottom: 3),
+        child: Text(diffName(diff), style: TextStyle(color: Colors.white)),
+      ),
+    );
+  }
+
+  final List<int> listToShow;
+  if (isComplete) {
+    listToShow = List<int>.from(difficulties);
+  } else {
+    // 用副本计算，避免修改调用方传入的 requireddifficulties
+    listToShow = List<int>.from(requireddifficulties ?? const <int>[])
+      ..removeWhere((e) => difficulties.contains(e));
+  }
+
+  return [for (var i in listToShow) diffCard(i)];
+}
+
+Color returnFullChainBackgroundColor(String fullchain) {
+  switch (fullchain) {
+    case 'fullchain':
+      return Colors.blueGrey;
+    case 'fullchain2':
+      return Colors.yellow;
+    default:
+      return Colors.transparent;
+  }
+}
+
+Color returnFullComboBackgroundColor(String fullcombo) {
+  switch (fullcombo) {
+    case 'alljusticecritical':
+      return Colors.deepPurple;
+    case 'alljustice':
+      return Colors.purple;
+    case 'fullcombo':
+      return Colors.orange;
+    default:
+      return Colors.transparent;
+  }
 }
