@@ -341,6 +341,7 @@ class ReadData {
   Future<Map<String, dynamic>> readConfig() async {
     final result = await LocalDB.GetById('Config');
     final model = result.getOrDefault(null);
+    // print(model?.data);
     return model?.data ?? {};
   }
 

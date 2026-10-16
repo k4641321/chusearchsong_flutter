@@ -9,9 +9,7 @@ import 'package:file_picker/file_picker.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
-import 'dart:io';
-
-import 'package:path_provider/path_provider.dart';
+import 'package:image/image.dart' as img;
 
 class ChartViewPage extends StatefulWidget {
   final int songid;
@@ -262,29 +260,54 @@ class _ChartViewPageState extends State<ChartViewPage> {
                   context,
                 ).showSnackBar(SnackBar(content: Text('正在生成，请不要重复点击')));
                 final image = await captureWidget(_globalKey);
-                final byteData = await image?.toByteData(format: .png);
-                final pngBytes = byteData?.buffer.asUint8List();
-                final path = await getApplicationSupportDirectory();
-                if (!Directory('${path.path}/tmp').existsSync()) {
-                  Directory('${path.path}/tmp').create(recursive: true);
-                }
-                File('${path.path}/tmp/chart.png').writeAsBytesSync(pngBytes!);
-                if (!context.mounted) return;
-                // final platform = Theme.of(context).platform;
-                // if (platform == TargetPlatform.windows ||
-                //     platform == TargetPlatform.linux) {
-                await FilePicker.saveFile(
-                  dialogTitle: '保存谱面',
-                  fileName: 'chart.png',
-                  bytes: pngBytes,
-                  type: FileType.custom,
-                  allowedExtensions: ['png'],
+                if (image == null) return;
+                final byteData = await image.toByteData(
+                  format: ui.ImageByteFormat.rawStraightRgba,
                 );
-                // } else {
-                //   await SharePlus.instance.share(
-                //     ShareParams(files: [XFile('${path.path}/tmp/chart.png')]),
-                //   );
+                if (byteData == null) return;
+
+                final decoded = img.Image.fromBytes(
+                  width: image.width,
+                  height: image.height,
+                  bytes: byteData.buffer,
+                  numChannels: 4,
+                );
+
+                Map<String, dynamic> config = await (await ReadData.create())
+                    .readConfig();
+                late Uint8List? imageBytes;
+                switch (config['generatesettings']?['preferredformat']) {
+                  case '.jpg':
+                    imageBytes = img.encodeJpg(decoded, quality: 100);
+                  case ".png":
+                    imageBytes = img.encodePng(decoded);
+                  case ".webp":
+                    imageBytes = img.encodeWebP(decoded, quality: 100);
+                  default:
+                    imageBytes = img.encodePng(decoded);
+                }
+
+                // final path = await getApplicationSupportDirectory();
+                // if (!Directory('${path.path}/tmp').existsSync()) {
+                //   Directory('${path.path}/tmp').create(recursive: true);
                 // }
+                // File(
+                //   '${path.path}/tmp/songinfoandscore.png',
+                // ).writeAsBytesSync(pngBytes!);
+                if (!context.mounted) return;
+
+                await FilePicker.saveFile(
+                  dialogTitle: '保存谱面预览图片',
+                  fileName:
+                      'songinfoandscore${config['generatesettings']?['preferredformat'] ?? '.png'}',
+                  bytes: imageBytes,
+                  type: FileType.custom,
+                  allowedExtensions: [
+                    '${config['generatesettings']?['preferredformat'] ?? '.png'}',
+                  ],
+                );
+                if (!context.mounted) return;
+                Navigator.pop(context);
               } catch (e) {
                 log('$e', name: 'generateb50page.dart', level: 1000);
               }

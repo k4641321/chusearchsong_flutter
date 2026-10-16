@@ -2,12 +2,14 @@ import 'dart:convert';
 import 'dart:developer';
 import 'dart:io';
 
+import 'package:chusearchsong_flutter/function/writeandreadfun.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'dart:ui' as ui;
 import 'package:flutter_colorpicker/flutter_colorpicker.dart';
+import 'package:image/image.dart' as img;
 
 import 'package:path_provider/path_provider.dart';
 
@@ -391,7 +393,7 @@ class _GenerateimageState extends State<Generateimage> {
           child: Column(
             children: [
               SizedBox(
-                height: 500,
+                height: 350,
                 child: InteractiveViewer(
                   maxScale: 3.0,
                   minScale: 0.1,
@@ -486,27 +488,54 @@ class _GenerateimageState extends State<Generateimage> {
                             ),
                           );
                           final image = await captureWidget(_globalKey);
-                          final byteData = await image?.toByteData(
-                            format: .png,
+                          if (image == null) return;
+                          final byteData = await image.toByteData(
+                            format: ui.ImageByteFormat.rawStraightRgba,
                           );
-                          final pngBytes = byteData?.buffer.asUint8List();
-                          if (pngBytes == null) return;
-                          final path = await getApplicationSupportDirectory();
-                          if (!Directory('${path.path}/tmp').existsSync()) {
-                            Directory(
-                              '${path.path}/tmp',
-                            ).createSync(recursive: true);
+                          if (byteData == null) return;
+
+                          final decoded = img.Image.fromBytes(
+                            width: image.width,
+                            height: image.height,
+                            bytes: byteData.buffer,
+                            numChannels: 4,
+                          );
+
+                          Map<String, dynamic> config =
+                              await (await ReadData.create()).readConfig();
+                          late Uint8List? imageBytes;
+                          switch (config['generatesettings']?['preferredformat']) {
+                            case '.jpg':
+                              imageBytes = img.encodeJpg(decoded, quality: 100);
+                            case ".png":
+                              imageBytes = img.encodePng(decoded);
+                            case ".webp":
+                              imageBytes = img.encodeWebP(
+                                decoded,
+                                quality: 100,
+                              );
+                            default:
+                              imageBytes = img.encodePng(decoded);
                           }
-                          File(
-                            '${path.path}/tmp/bingo.png',
-                          ).writeAsBytesSync(pngBytes);
+
+                          // final path = await getApplicationSupportDirectory();
+                          // if (!Directory('${path.path}/tmp').existsSync()) {
+                          //   Directory('${path.path}/tmp').create(recursive: true);
+                          // }
+                          // File(
+                          //   '${path.path}/tmp/songinfoandscore.png',
+                          // ).writeAsBytesSync(pngBytes!);
                           if (!context.mounted) return;
+
                           await FilePicker.saveFile(
-                            dialogTitle: '保存Bingo',
-                            fileName: 'bingo.png',
-                            bytes: pngBytes,
+                            dialogTitle: '保存图片',
+                            fileName:
+                                'bingo${config['generatesettings']?['preferredformat'] ?? '.png'}',
+                            bytes: imageBytes,
                             type: FileType.custom,
-                            allowedExtensions: ['png'],
+                            allowedExtensions: [
+                              '${config['generatesettings']?['preferredformat'] ?? '.png'}',
+                            ],
                           );
                           if (!context.mounted) return;
                           Navigator.pop(context);

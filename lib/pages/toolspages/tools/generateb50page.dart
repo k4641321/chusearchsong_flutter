@@ -3,6 +3,7 @@ import 'dart:developer';
 import 'dart:io';
 import 'package:chusearchsong_flutter/function/writeandreadfun.dart';
 import 'package:flutter/foundation.dart';
+import 'package:image/image.dart' as img;
 import 'package:path_provider/path_provider.dart';
 import '../../../function/toolsfun/generateb50fun/generateb50.dart';
 import 'package:flutter/material.dart';
@@ -503,38 +504,54 @@ class _GenerateB50PageState extends State<GenerateB50Page> {
                         ),
                       );
                       final image = await captureWidget(_globalKey);
-                      final byteData = await image?.toByteData(format: .png);
-                      final pngBytes = byteData?.buffer.asUint8List();
-                      if (pngBytes == null) return;
-                      final path = await getApplicationSupportDirectory();
-                      if (!Directory('${path.path}/tmp').existsSync()) {
-                        Directory(
-                          '${path.path}/tmp',
-                        ).createSync(recursive: true);
+                      if (image == null) return;
+                      final byteData = await image.toByteData(
+                        format: ui.ImageByteFormat.rawStraightRgba,
+                      );
+                      if (byteData == null) return;
+
+                      final decoded = img.Image.fromBytes(
+                        width: image.width,
+                        height: image.height,
+                        bytes: byteData.buffer,
+                        numChannels: 4,
+                      );
+
+                      Map<String, dynamic> config =
+                          await (await ReadData.create()).readConfig();
+                      late Uint8List? imageBytes;
+                      switch (config['generatesettings']?['preferredformat']) {
+                        case '.jpg':
+                          imageBytes = img.encodeJpg(decoded, quality: 100);
+                        case ".png":
+                          imageBytes = img.encodePng(decoded);
+                        case ".webp":
+                          imageBytes = img.encodeWebP(decoded, quality: 100);
+                        default:
+                          imageBytes = img.encodePng(decoded);
                       }
-                      File(
-                        '${path.path}/tmp/b50.png',
-                      ).writeAsBytesSync(pngBytes);
+
+                      // final path = await getApplicationSupportDirectory();
+                      // if (!Directory('${path.path}/tmp').existsSync()) {
+                      //   Directory('${path.path}/tmp').create(recursive: true);
+                      // }
+                      // File(
+                      //   '${path.path}/tmp/songinfoandscore.png',
+                      // ).writeAsBytesSync(pngBytes!);
                       if (!context.mounted) return;
-                      // final platform = Theme.of(context).platform;
-                      // if (platform == TargetPlatform.windows ||
-                      //     platform == TargetPlatform.linux) {
+
                       await FilePicker.saveFile(
-                        dialogTitle: '保存B50',
-                        fileName: 'b50.png',
-                        bytes: pngBytes,
+                        dialogTitle: '保存50',
+                        fileName:
+                            'songinfoandscore${config['generatesettings']?['preferredformat'] ?? '.png'}',
+                        bytes: imageBytes,
                         type: FileType.custom,
-                        allowedExtensions: ['png'],
+                        allowedExtensions: [
+                          '${config['generatesettings']?['preferredformat'] ?? '.png'}',
+                        ],
                       );
                       if (!context.mounted) return;
                       Navigator.pop(context);
-                      // } else {
-                      //   await SharePlus.instance.share(
-                      //     ShareParams(
-                      //       files: [XFile('${path.path}/tmp/b50.png')],
-                      //     ),
-                      //   );
-                      // }
                     } catch (e, s) {
                       log('$e', name: 'generateb50page.dart', level: 1000);
                       ScaffoldMessenger.of(

@@ -7,6 +7,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/rendering.dart';
+import 'package:image/image.dart' as img;
 import 'package:path_provider/path_provider.dart';
 import 'dart:io';
 import '../../../function/toolsfun/generateb50fun/generateb50.dart';
@@ -183,43 +184,66 @@ class _RatingTrendPagesState extends State<RatingTrendPages> {
                   color = const ui.Color.fromARGB(250, 255, 255, 255);
                 });
                 final image = await captureWidget(_globalKey);
-                final byteData = await image?.toByteData(format: .png);
-                final pngBytes = byteData?.buffer.asUint8List();
-                final path = await getApplicationSupportDirectory();
-                if (!Directory('${path.path}/tmp').existsSync()) {
-                  Directory('${path.path}/tmp').create(recursive: true);
-                }
-                File(
-                  '${path.path}/tmp/ratingtrend.png',
-                ).writeAsBytesSync(pngBytes!);
-                if (!context.mounted) return;
-                // final platform = Theme.of(context).platform;
-                // if (platform == TargetPlatform.windows ||
-                //     platform == TargetPlatform.linux) {
-                setState(() {
-                  color = const ui.Color.fromARGB(250, 255, 255, 255);
-                });
-                await FilePicker.saveFile(
-                  dialogTitle: '保存Rating趋势',
-                  fileName: 'ratingtrend.png',
-                  bytes: pngBytes,
-                  type: FileType.custom,
-                  allowedExtensions: ['png'],
+                if (image == null) return;
+                final byteData = await image.toByteData(
+                  format: ui.ImageByteFormat.rawStraightRgba,
+                );
+                if (byteData == null) return;
+
+                final decoded = img.Image.fromBytes(
+                  width: image.width,
+                  height: image.height,
+                  bytes: byteData.buffer,
+                  numChannels: 4,
                 );
 
-                // } else {
-                //   await SharePlus.instance.share(
-                //     ShareParams(
-                //       files: [XFile('${path.path}/tmp/ratingtrend.png')],
-                //     ),
-                //   );
+                Map<String, dynamic> config = await (await ReadData.create())
+                    .readConfig();
+                late Uint8List? imageBytes;
+                switch (config['generatesettings']?['preferredformat']) {
+                  case '.jpg':
+                    imageBytes = img.encodeJpg(decoded, quality: 100);
+                  case ".png":
+                    imageBytes = img.encodePng(decoded);
+                  case ".webp":
+                    imageBytes = img.encodeWebP(decoded, quality: 100);
+                  default:
+                    imageBytes = img.encodePng(decoded);
+                }
+
+                // final path = await getApplicationSupportDirectory();
+                // if (!Directory('${path.path}/tmp').existsSync()) {
+                //   Directory('${path.path}/tmp').create(recursive: true);
                 // }
+                // File(
+                //   '${path.path}/tmp/songinfoandscore.png',
+                // ).writeAsBytesSync(pngBytes!);
+                if (!context.mounted) return;
+
+                await FilePicker.saveFile(
+                  dialogTitle: '保存Rating趋势图',
+                  fileName:
+                      'songinfoandscore${config['generatesettings']?['preferredformat'] ?? '.png'}',
+                  bytes: imageBytes,
+                  type: FileType.custom,
+                  allowedExtensions: [
+                    '${config['generatesettings']?['preferredformat'] ?? '.png'}',
+                  ],
+                );
+                if (!context.mounted) return;
+                Navigator.pop(context);
+                setState(() {
+                  color = Colors.transparent;
+                });
               } catch (e, strack) {
                 log('$e \n $strack');
                 if (!context.mounted) return;
                 ScaffoldMessenger.of(
                   context,
                 ).showSnackBar(SnackBar(content: Text('错误 $e\n$strack')));
+                setState(() {
+                  color = Colors.transparent;
+                });
               }
             },
             icon: Icon(Icons.share),

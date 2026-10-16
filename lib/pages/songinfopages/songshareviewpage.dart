@@ -3,11 +3,13 @@ import 'dart:io';
 import 'dart:ui' as ui;
 
 import 'package:chusearchsong_flutter/function/songinfofun/songshareviewpagefun.dart';
+import 'package:chusearchsong_flutter/function/writeandreadfun.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:path_provider/path_provider.dart';
+import 'package:image/image.dart' as img;
 
 class Songshareviewpage extends StatefulWidget {
   final int songid;
@@ -82,37 +84,54 @@ class _SongshareviewpageState extends State<Songshareviewpage> {
                           ),
                         );
                         final image = await captureWidget(_globalKey);
-                        final byteData = await image?.toByteData(format: .png);
-                        final pngBytes = byteData?.buffer.asUint8List();
-                        final path = await getApplicationSupportDirectory();
-                        if (!Directory('${path.path}/tmp').existsSync()) {
-                          Directory('${path.path}/tmp').create(recursive: true);
+                        if (image == null) return;
+                        final byteData = await image.toByteData(
+                          format: ui.ImageByteFormat.rawStraightRgba,
+                        );
+                        if (byteData == null) return;
+
+                        final decoded = img.Image.fromBytes(
+                          width: image.width,
+                          height: image.height,
+                          bytes: byteData.buffer,
+                          numChannels: 4,
+                        );
+
+                        Map<String, dynamic> config =
+                            await (await ReadData.create()).readConfig();
+                        late Uint8List? imageBytes;
+                        switch (config['generatesettings']?['preferredformat']) {
+                          case '.jpg':
+                            imageBytes = img.encodeJpg(decoded, quality: 100);
+                          case ".png":
+                            imageBytes = img.encodePng(decoded);
+                          case ".webp":
+                            imageBytes = img.encodeWebP(decoded, quality: 100);
+                          default:
+                            imageBytes = img.encodePng(decoded);
                         }
-                        File(
-                          '${path.path}/tmp/songinfoandscore.png',
-                        ).writeAsBytesSync(pngBytes!);
+
+                        // final path = await getApplicationSupportDirectory();
+                        // if (!Directory('${path.path}/tmp').existsSync()) {
+                        //   Directory('${path.path}/tmp').create(recursive: true);
+                        // }
+                        // File(
+                        //   '${path.path}/tmp/songinfoandscore.png',
+                        // ).writeAsBytesSync(pngBytes!);
                         if (!context.mounted) return;
-                        // final platform = Theme.of(context).platform;
-                        // if (platform == TargetPlatform.windows ||
-                        //     platform == TargetPlatform.linux) {
+
                         await FilePicker.saveFile(
                           dialogTitle: '保存单曲信息与成绩',
-                          fileName: 'songinfoandscore.png',
-                          bytes: pngBytes,
+                          fileName:
+                              'songinfoandscore${config['generatesettings']?['preferredformat'] ?? '.png'}',
+                          bytes: imageBytes,
                           type: FileType.custom,
-                          allowedExtensions: ['png'],
+                          allowedExtensions: [
+                            '${config['generatesettings']?['preferredformat'] ?? '.png'}',
+                          ],
                         );
                         if (!context.mounted) return;
                         Navigator.pop(context);
-                        // } else {
-                        //   await SharePlus.instance.share(
-                        //     ShareParams(
-                        //       files: [
-                        //         XFile('${path.path}/tmp/songinfoandscore.png'),
-                        //       ],
-                        //     ),
-                        //   );
-                        // }
                       } catch (e) {
                         log('$e', name: 'songshareviewpage.dart', level: 1000);
                       }

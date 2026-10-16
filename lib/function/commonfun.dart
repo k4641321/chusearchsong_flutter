@@ -754,21 +754,21 @@ Future<void> updateconfig() async {
     config['announcement']['read'] = false;
     config['announcement']['value'] = 0;
   }
-  //收藏列表
-  if (!config.containsKey('favoriteFileUpdated') ||
-      config['favoriteFileUpdated'] == false) {
-    log('更新收藏文件');
-    if (!kIsWeb) {
-      final path = await getApplicationSupportDirectory();
-      if (File('${path.path}/files/favorite.json').existsSync()) {
-        Map<String, dynamic> favorite = await jsonDecode(
-          await File('${path.path}/files/favorite.json').readAsString(),
-        );
-        await (await WriteData.create()).writeFavoriteSongs(favorite);
-      }
-    }
-    config['favoriteFileUpdated'] = true;
-  }
+  // //收藏列表
+  // if (!config.containsKey('favoriteFileUpdated') ||
+  //     config['favoriteFileUpdated'] == false) {
+  //   log('更新收藏文件');
+  //   if (!kIsWeb) {
+  //     final path = await getApplicationSupportDirectory();
+  //     if (File('${path.path}/files/favorite.json').existsSync()) {
+  //       Map<String, dynamic> favorite = await jsonDecode(
+  //         await File('${path.path}/files/favorite.json').readAsString(),
+  //       );
+  //       await (await WriteData.create()).writeFavoriteSongs(favorite);
+  //     }
+  //   }
+  //   config['favoriteFileUpdated'] = true;
+  // }
 
   await (await WriteData.create()).writeConfig(config);
 }

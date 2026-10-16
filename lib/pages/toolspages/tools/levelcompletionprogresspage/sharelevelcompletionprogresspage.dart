@@ -3,10 +3,12 @@ import 'dart:io';
 import 'dart:ui' as ui;
 
 import 'package:chusearchsong_flutter/function/toolsfun/levelcompletionprogresspagefun/sharelevelcompletionprogresspagefun.dart';
+import 'package:chusearchsong_flutter/function/writeandreadfun.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
+import 'package:image/image.dart' as img;
 import 'package:path_provider/path_provider.dart';
 
 class Sharelevelcompletionprogresspage extends StatefulWidget {
@@ -132,35 +134,54 @@ class _SharelevelcompletionprogresspageState
                         ),
                       );
                       final image = await captureWidget(_globalKey);
-                      final byteData = await image?.toByteData(format: .png);
-                      final pngBytes = byteData?.buffer.asUint8List();
-                      final path = await getApplicationSupportDirectory();
-                      if (!Directory('${path.path}/tmp').existsSync()) {
-                        Directory('${path.path}/tmp').create(recursive: true);
+                      if (image == null) return;
+                      final byteData = await image.toByteData(
+                        format: ui.ImageByteFormat.rawStraightRgba,
+                      );
+                      if (byteData == null) return;
+
+                      final decoded = img.Image.fromBytes(
+                        width: image.width,
+                        height: image.height,
+                        bytes: byteData.buffer,
+                        numChannels: 4,
+                      );
+
+                      Map<String, dynamic> config =
+                          await (await ReadData.create()).readConfig();
+                      late Uint8List? imageBytes;
+                      switch (config['generatesettings']?['preferredformat']) {
+                        case '.jpg':
+                          imageBytes = img.encodeJpg(decoded, quality: 100);
+                        case ".png":
+                          imageBytes = img.encodePng(decoded);
+                        case ".webp":
+                          imageBytes = img.encodeWebP(decoded, quality: 100);
+                        default:
+                          imageBytes = img.encodePng(decoded);
                       }
-                      File(
-                        '${path.path}/tmp/level.png',
-                      ).writeAsBytesSync(pngBytes!);
+
+                      // final path = await getApplicationSupportDirectory();
+                      // if (!Directory('${path.path}/tmp').existsSync()) {
+                      //   Directory('${path.path}/tmp').create(recursive: true);
+                      // }
+                      // File(
+                      //   '${path.path}/tmp/songinfoandscore.png',
+                      // ).writeAsBytesSync(pngBytes!);
                       if (!context.mounted) return;
-                      // final platform = Theme.of(context).platform;
-                      // if (platform == TargetPlatform.windows ||
-                      //     platform == TargetPlatform.linux) {
+
                       await FilePicker.saveFile(
-                        dialogTitle: '保存等级表',
-                        fileName: 'level.png',
-                        bytes: pngBytes,
+                        dialogTitle: '保存等级完成进度',
+                        fileName:
+                            'level${config['generatesettings']?['preferredformat'] ?? '.png'}',
+                        bytes: imageBytes,
                         type: FileType.custom,
-                        allowedExtensions: ['png'],
+                        allowedExtensions: [
+                          '${config['generatesettings']?['preferredformat'] ?? '.png'}',
+                        ],
                       );
                       if (!context.mounted) return;
                       Navigator.pop(context);
-                      // } else {
-                      //   await SharePlus.instance.share(
-                      //     ShareParams(
-                      //       files: [XFile('${path.path}/tmp/level.png')],
-                      //     ),
-                      //   );
-                      // }
                     } catch (e) {
                       log('$e', name: 'generateb50page.dart', level: 1000);
                     }

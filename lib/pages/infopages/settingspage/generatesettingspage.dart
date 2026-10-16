@@ -13,6 +13,7 @@ class _GeneratesettingspageState extends State<Generatesettingspage> {
 
   Future<void> _loadConfig() async {
     config = await (await ReadData.create()).readConfig();
+    setState(() {});
   }
 
   Widget _buildNavItem({
@@ -90,18 +91,105 @@ class _GeneratesettingspageState extends State<Generatesettingspage> {
               title: '清晰度',
               subtitle: '数值越高，越清晰，反之越小越糊',
               onTap: () async {
-                double value = 1.0;
+                double value = config['generatesettings']?['value'] ?? 1.0;
                 await showDialog(
                   context: context,
                   builder: (context) => AlertDialog(
                     title: Text('输入数值'),
-                    content: Row(children: [Expanded(child: TextFormField())]),
+                    content: Row(
+                      children: [
+                        Expanded(
+                          child: TextFormField(
+                            initialValue: value.toString(),
+                            onChanged: (v) {
+                              if (double.tryParse(v) != null) {
+                                value = double.parse(v);
+                              }
+                            },
+                          ),
+                        ),
+                      ],
+                    ),
+                    actions: [
+                      TextButton(
+                        onPressed: () => Navigator.pop(context),
+                        child: Text('取消'),
+                      ),
+                      TextButton(
+                        onPressed: () async {
+                          if (!config.containsKey('generatesettings')) {
+                            config['generatesettings'] = {};
+                          }
+                          config['generatesettings']['value'] = value;
+                          await (await WriteData.create()).writeConfig(config);
+                          _loadConfig();
+                          if (!context.mounted) return;
+                          Navigator.pop(context);
+                        },
+                        child: Text('确定'),
+                      ),
+                    ],
                   ),
                 );
               },
               isFirst: true,
               isLast: false,
-              value: config[''],
+              value: '${config['generatesettings']?['value'] ?? 1.0}',
+            ),
+            _buildNavItem(
+              icon: Icons.perm_media,
+              title: '首选格式',
+              subtitle: '选择图片输出的格式',
+              onTap: () async {
+                if (!config.containsKey('generatesettings')) {
+                  config['generatesettings'] = {};
+                }
+                await showDialog(
+                  context: context,
+                  builder: (context) => SimpleDialog(
+                    title: Text('选择类型'),
+                    children: [
+                      ListTile(
+                        title: Text('PNG'),
+                        onTap: () async {
+                          config['generatesettings']['preferredformat'] =
+                              '.png';
+                          await (await WriteData.create()).writeConfig(config);
+                          _loadConfig();
+                          if (!context.mounted) return;
+                          Navigator.of(context).pop();
+                        },
+                      ),
+                      ListTile(
+                        title: Text('JPG'),
+                        onTap: () async {
+                          config['generatesettings']['preferredformat'] =
+                              '.jpg';
+                          await (await WriteData.create()).writeConfig(config);
+                          _loadConfig();
+                          if (!context.mounted) return;
+                          Navigator.of(context).pop();
+                        },
+                      ),
+                      ListTile(
+                        title: Text('Webp'),
+                        onTap: () async {
+                          config['generatesettings']['preferredformat'] =
+                              '.webp';
+                          await (await WriteData.create()).writeConfig(config);
+                          _loadConfig();
+                          if (!context.mounted) return;
+                          Navigator.of(context).pop();
+                        },
+                      ),
+                    ],
+                  ),
+                );
+              },
+              isFirst: false,
+              isLast: true,
+              value:
+                  '${config['generatesettings']?['preferredformat'] ?? '.png'}',
             ),
           ],
         ),

@@ -190,74 +190,82 @@ class _IndexpageState extends State<Indexpage> {
                                     Text('图片加载失败'),
                               )
                             : SizedBox(height: 100, width: 100),
-                        Column(
-                          children: [
-                            Row(
-                              children: [
-                                Text(
-                                  '${playerInfoData.isNotEmpty ? playerInfoData['name'] : null}',
-                                  style: TextStyle(fontSize: 20),
-                                ),
-                                // SizedBox(width: 10),
-                                // Text('PLAYER NAME'),
-                              ],
-                            ),
-                            Container(
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.all(
-                                  Radius.circular(6),
-                                ),
-                                color: playerInfoData.isNotEmpty
-                                    ? returnTrophyBackgroundColor(
-                                        playerInfoData['trophy']?['color'],
-                                      )
-                                    : null,
-                              ),
-                              padding: EdgeInsets.all(6),
-                              child: Text(
-                                playerInfoData.isNotEmpty
-                                    ? (playerInfoData['trophy']?['name'] ??
-                                          'null')
-                                    : 'null',
-
-                                style: TextStyle(
-                                  color: returnTrophyColor(
-                                    playerInfoData.isNotEmpty
-                                        ? (playerInfoData['trophy']?['color'])
-                                        : null,
-                                  ),
-                                  shadows: [
-                                    Shadow(
-                                      color: returnTrophyColor(
-                                        playerInfoData.isNotEmpty
-                                            ? (playerInfoData['trophy']?['color'])
-                                            : null,
-                                      ),
-                                      blurRadius: 3.0,
+                        Expanded(
+                          child: Column(
+                            children: [
+                              Row(
+                                children: [
+                                  Expanded(
+                                    child: Text(
+                                      '${playerInfoData.isNotEmpty ? playerInfoData['name'] : null}',
+                                      style: TextStyle(fontSize: 20),
                                     ),
-                                  ],
+                                  ),
+                                  // SizedBox(width: 10),
+                                  // Text('PLAYER NAME'),
+                                ],
+                              ),
+                              Container(
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.all(
+                                    Radius.circular(6),
+                                  ),
+                                  color: playerInfoData.isNotEmpty
+                                      ? returnTrophyBackgroundColor(
+                                          playerInfoData['trophy']?['color'],
+                                        )
+                                      : null,
+                                ),
+                                padding: EdgeInsets.all(6),
+                                child: Text(
+                                  playerInfoData.isNotEmpty
+                                      ? (playerInfoData['trophy']?['name'] ??
+                                            'null')
+                                      : 'null',
+
+                                  style: TextStyle(
+                                    color: returnTrophyColor(
+                                      playerInfoData.isNotEmpty
+                                          ? (playerInfoData['trophy']?['color'])
+                                          : null,
+                                    ),
+                                    shadows: [
+                                      Shadow(
+                                        color: returnTrophyColor(
+                                          playerInfoData.isNotEmpty
+                                              ? (playerInfoData['trophy']?['color'])
+                                              : null,
+                                        ),
+                                        blurRadius: 3.0,
+                                      ),
+                                    ],
+                                  ),
                                 ),
                               ),
-                            ),
-                            Row(
-                              children: [
-                                Text(
-                                  '${playerInfoData.isNotEmpty ? playerInfoData['rating'] : null}',
-                                  style: TextStyle(fontSize: 30),
-                                ),
-                                SizedBox(width: 10),
-                                Text('TOTAL RATING'),
-                              ],
-                            ),
-                            Row(
-                              children: [
-                                Text(
-                                  'LV. ${playerInfoData.isNotEmpty ? playerInfoData['level'] : null}',
-                                  style: TextStyle(fontSize: 20),
-                                ),
-                              ],
-                            ),
-                          ],
+                              Row(
+                                children: [
+                                  Expanded(
+                                    child: Text(
+                                      '${playerInfoData.isNotEmpty ? playerInfoData['rating'] : null}',
+                                      style: TextStyle(fontSize: 30),
+                                    ),
+                                  ),
+                                  SizedBox(width: 10),
+                                  Expanded(child: Text('TOTAL RATING')),
+                                ],
+                              ),
+                              Row(
+                                children: [
+                                  Expanded(
+                                    child: Text(
+                                      'LV. ${playerInfoData.isNotEmpty ? playerInfoData['level'] : null}',
+                                      style: TextStyle(fontSize: 20),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ],
+                          ),
                         ),
                       ],
                     ),

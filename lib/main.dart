@@ -21,8 +21,10 @@ import 'dart:convert';
 import 'package:dynamic_color/dynamic_color.dart';
 import 'package:logger_rs/logger_rs.dart';
 
-void main() {
+void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  Log.init(level: Level.WARNING);
+  await LocalDB.init();
   runApp(const MyApp());
   SystemChrome.setSystemUIOverlayStyle(
     const SystemUiOverlayStyle(statusBarColor: Colors.transparent),
@@ -316,8 +318,6 @@ class _MyHomePageState extends State<MyHomePage> {
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) async {
-      Log.init(level: Level.WARNING);
-      await LocalDB.init(options: DbOptions());
       if (!mounted) return;
       await Dataupdate.ifres(
         context: context,
