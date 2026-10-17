@@ -11,6 +11,10 @@ next:
 > [!WARNING]
 > 我并不是专业的，只是业余兴趣，边学边写，目前是使用AI进行辅助开发，**有答辩代码是非常正常的**
 
+在线体验:  
+[https://netlifychusearchsong.devintom.top/](hhttps://netlifychusearchsong.devintom.top/)
+[https://chusearchsongweb.netlify.app/](https://chusearchsongweb.netlify.app/)
+
 # 功能
 - [x] 基本查歌
 - [x] 分类查歌
@@ -54,6 +58,7 @@ next:
 - [x] Chunirec鸟率查看（作者开智了，写出来了
 - [x] 夹带私货
 - [x] 牌子进度
+- [x] Bingo生成
   
 *...more...*
 
