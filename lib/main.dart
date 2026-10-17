@@ -231,7 +231,7 @@ class _MyHomePageState extends State<MyHomePage> {
       if (!mounted) return;
       ScaffoldMessenger.of(
         context,
-      ).showSnackBar(SnackBar(content: Text('错误$e\n$strack')));
+      ).showSnackBar(SnackBar(content: Text('错误$e')));
     }
   }
 
@@ -276,7 +276,7 @@ class _MyHomePageState extends State<MyHomePage> {
       if (!mounted) return;
       ScaffoldMessenger.of(
         context,
-      ).showSnackBar(SnackBar(content: Text('错误$e\n$strack')));
+      ).showSnackBar(SnackBar(content: Text('错误$e')));
     }
   }
 
@@ -310,7 +310,7 @@ class _MyHomePageState extends State<MyHomePage> {
       if (!mounted) return;
       ScaffoldMessenger.of(
         context,
-      ).showSnackBar(SnackBar(content: Text('错误：$e\n$strack')));
+      ).showSnackBar(SnackBar(content: Text('错误：$e')));
     }
   }
 
@@ -335,7 +335,7 @@ class _MyHomePageState extends State<MyHomePage> {
       setState(() {
         _isLoading = false;
       });
-      // postusecount();
+      postusecount();
     });
   }
 

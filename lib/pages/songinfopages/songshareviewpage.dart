@@ -1,5 +1,4 @@
 import 'dart:developer';
-import 'dart:io';
 import 'dart:ui' as ui;
 
 import 'package:chusearchsong_flutter/function/songinfofun/songshareviewpagefun.dart';
@@ -8,7 +7,6 @@ import 'package:file_picker/file_picker.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
-import 'package:path_provider/path_provider.dart';
 import 'package:image/image.dart' as img;
 
 class Songshareviewpage extends StatefulWidget {

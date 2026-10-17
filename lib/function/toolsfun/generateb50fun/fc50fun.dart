@@ -27,11 +27,10 @@ Future<Widget> fc50Body({
   Widget b50 = Column(children: b50body);
   Widget title = buildB50PlayerInfoWidget(playerdata);
   // final ScrollController _scrollController = ScrollController();
-  //b50文字
-  Widget b30text = buildB50Text('B50');
+
   //底部信息
   Widget fontter = buildB50Fontter('FC50');
-
+  double b30Rating = 0;
   //b50绘制
   int total = 0;
   List<Widget> b50rowbody = [];
@@ -42,6 +41,7 @@ Future<Widget> fc50Body({
   int row = 0;
   int songcount = 1;
   for (var i in fcb50) {
+    b30Rating += i['rating'];
     if (total > 50) break;
     String songname;
     if ((i['song_name'] as String).length > 14) {
@@ -105,19 +105,25 @@ Future<Widget> fc50Body({
     b50body.add(b50row);
   }
 
+  //b50文字
+  Widget b30text = buildB50Text(
+    'B50',
+    (b30Rating / fcb50.length).toStringAsFixed(2),
+  );
+
   //背景绘制
   double extraHeight = 0;
-  double width = 5896 / 2;
-  double height = 2844 / 2;
+  double width = 5910 / 2;
+  double height = 2900 / 2;
 
   if (thunderboltb50 == '横着的') {
-    width = 5896 / 2 + 260 * fcb50.length;
-    height = 300;
+    width = 5910 / 2 + 260 * fcb50.length;
+    height = 325;
   }
   if (thunderboltb50 == "竖着的") {
-    height = 2844 / 2;
+    height = 2900 / 2;
     extraHeight = extraHeight + 200 * fcb50.length;
-    width = 5896 / 8 + 75;
+    width = 5910 / 8 + 75;
   }
 
   Widget result = Container(

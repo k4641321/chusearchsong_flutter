@@ -254,7 +254,7 @@ class _SettingsPageState extends State<SettingsPage> {
               _buildNavItem(
                 icon: Icons.auto_fix_high,
                 title: '生成设置',
-                subtitle: '配置除B50外的生成设置',
+                subtitle: '配置生成设置',
                 onTap: () => Navigator.push(
                   context,
                   MaterialPageRoute(

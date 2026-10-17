@@ -14,9 +14,13 @@ class _LilyfanpageState extends State<Lilyfanpage> {
   List<String> _lilyfan = [];
 
   Future<void> _loadData() async {
-    final result = jsonDecode(await requestLilyFan()) as List;
-    final names = result.map((e) => e['character'].toString()).toList();
-    setState(() => _lilyfan = names);
+    try {
+      final result = jsonDecode(await requestLilyFan()) as List;
+      final names = result.map((e) => e['character'].toString()).toList();
+      setState(() => _lilyfan = names);
+    } catch (e) {
+      setState(() => _lilyfan = ['加载失败,$e']);
+    }
   }
 
   @override

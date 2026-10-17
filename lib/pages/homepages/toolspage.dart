@@ -74,12 +74,12 @@ class _ToolPageState extends State<ToolPage> {
           pageBuilder: (_) => RatingColor(),
         ),
         _ToolItem(
-          title: '机厅搜索',
+          title: '华立机厅搜索',
           icon: Icons.storefront,
           pageBuilder: (_) => SearchLobbyPage(),
         ),
         _ToolItem(
-          title: '机厅搜索(新)',
+          title: 'Nearcade搜索',
           icon: Icons.store,
           pageBuilder: (_) => Nearcademap(),
         ),

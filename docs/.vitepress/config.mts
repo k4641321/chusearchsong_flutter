@@ -48,6 +48,7 @@ export default defineConfig({
                   { text: '各种排行榜', link: '/helper/function/tools/variousrankings/' },
                   { text: '连扉', link: '/helper/function/tools/linkedverse/' },
                   { text: '牌子进度', link: '/helper/function/tools/brandprogress/' },
+                   { text: '图片生成', link: '/helper/function/tools/generateimage/' },
                 ]
               },
               { text: '关于界面', link: '/helper/infopage/' },

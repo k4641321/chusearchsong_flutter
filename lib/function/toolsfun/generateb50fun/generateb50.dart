@@ -371,41 +371,75 @@ Future<Widget> generateb50Body({
         lasteversion.add(i['version']);
       }
     }
+    //B30
     b50data['bests'] = [];
     for (var i in songsData['songs']) {
       if (!lasteversion.contains(i['version'])) {
-        b50data['bests'].add({
-          "id": i['id'],
-          "song_name": "${i['title']}",
-          "level": "${(i['difficulties'] as List).last['level']}",
-          "level_index": (i['difficulties'] as List).last['difficulty'],
-          "score": 1010000,
-          "rating": (i['difficulties'] as List).last['level_value'] + 2.15,
-          "over_power": 0,
-          "clear": "clear",
-          "full_combo": 'alljusticecritical',
-          "full_chain": null,
-          "rank": "s",
-          "play_time": "2026-08-02T08:48:00Z",
-          "upload_time": "2026-08-02T12:20:57Z",
-          "last_played_time": "2026-08-02T08:48:00Z",
-        });
+        for (var j in i['difficulties']) {
+          b50data['bests'].add({
+            "id": i['id'],
+            "song_name": "${i['title']}",
+            "level": "${j['level']}",
+            "level_index": j['difficulty'],
+            "score": 1010000,
+            "rating": j['level_value'] + 2.15,
+            "over_power": 0,
+            "clear": "clear",
+            "full_combo": 'alljusticecritical',
+            "full_chain": null,
+            "rank": "s",
+            "play_time": "2026-08-02T08:48:00Z",
+            "upload_time": "2026-08-02T12:20:57Z",
+            "last_played_time": "2026-08-02T08:48:00Z",
+          });
+        }
       }
     }
     (b50data['bests'] as List).sort(
       (a, b) => b['rating'].compareTo(a['rating']),
     );
     b50data['bests'] = (b50data['bests'] as List).sublist(0, 30);
+    //B20
     b50data['new_bests'] = [];
     for (var i in songsData['songs']) {
       if (lasteversion.contains(i['version'])) {
-        b50data['new_bests'].add({
+        for (var j in i['difficulties']) {
+          b50data['new_bests'].add({
+            "id": i['id'],
+            "song_name": "${i['title']}",
+            "level": "${j['level']}",
+            "level_index": j['difficulty'],
+            "score": 1010000,
+            "rating": j['level_value'] + 2.15,
+            "over_power": 0,
+            "clear": "clear",
+            "full_combo": 'alljusticecritical',
+            "full_chain": null,
+            "rank": "s",
+            "play_time": "2026-08-02T08:48:00Z",
+            "upload_time": "2026-08-02T12:20:57Z",
+            "last_played_time": "2026-08-02T08:48:00Z",
+          });
+        }
+      }
+    }
+    (b50data['new_bests'] as List).sort(
+      (a, b) => b['rating'].compareTo(a['rating']),
+    );
+    if (b50data['new_bests'].length > 20) {
+      b50data['new_bests'] = (b50data['new_bests'] as List).sublist(0, 20);
+    }
+    //S10
+    b50data['selections'] = [];
+    for (var i in songsData['songs']) {
+      for (var j in i['difficulties']) {
+        b50data['selections'].add({
           "id": i['id'],
           "song_name": "${i['title']}",
-          "level": "${(i['difficulties'] as List).last['level']}",
-          "level_index": (i['difficulties'] as List).last['difficulty'],
+          "level": "${j['level']}",
+          "level_index": j['difficulty'],
           "score": 1010000,
-          "rating": (i['difficulties'] as List).last['level_value'] + 2.15,
+          "rating": j['level_value'] + 2.15,
           "over_power": 0,
           "clear": "clear",
           "full_combo": 'alljusticecritical',
@@ -417,10 +451,13 @@ Future<Widget> generateb50Body({
         });
       }
     }
-    (b50data['new_bests'] as List).sort(
+    (b50data['selections'] as List).sort(
       (a, b) => b['rating'].compareTo(a['rating']),
     );
-    b50data['new_bests'] = (b50data['new_bests'] as List).sublist(0, 20);
+    b50data['selections'] = (b50data['selections'] as List).sublist(
+      (30 + (b50data['new_bests'] as List).length),
+      (30 + (b50data['new_bests'] as List).length + 10),
+    );
   }
 
   //先定义所需的变量
@@ -431,10 +468,8 @@ Future<Widget> generateb50Body({
   List<Widget> b20body = [];
   Widget b20 = Column(children: b20body);
   Widget s10 = SizedBox.shrink();
-
+  double b30Rating = 0;
   // final ScrollController _scrollController = ScrollController();
-  //b30文字
-  Widget b30text = buildB50Text("B30");
 
   //b30绘制
   List<Widget> b30rowbody = [];
@@ -445,6 +480,7 @@ Future<Widget> generateb50Body({
   int row = 0;
   int songcount = 1;
   for (var i in b50data['bests']) {
+    b30Rating = b30Rating + i['rating'];
     String songname;
     if ((i['song_name'] as String).length > 14) {
       songname = i['song_name'].substring(0, 14) + '...';
@@ -516,9 +552,11 @@ Future<Widget> generateb50Body({
   if (b30rowbody.isNotEmpty) {
     b30body.add(b30row);
   }
-
-  //b20文字
-  Widget b20text = buildB50Text("B20");
+  //b30文字
+  Widget b30text = buildB50Text(
+    "B30",
+    (b30Rating / b50data['bests'].length).toStringAsFixed(2),
+  );
 
   //b20绘制
   List<Widget> b20rowbody = [];
@@ -527,7 +565,9 @@ Future<Widget> generateb50Body({
     children: b20rowbody,
   );
   row = 0;
+  b30Rating = 0;
   for (var i in b50data['new_bests']) {
+    b30Rating = b30Rating + i['rating'];
     double diffvalue = 0;
     String songname;
     if ((i['song_name'] as String).length > 14) {
@@ -600,10 +640,14 @@ Future<Widget> generateb50Body({
     b20body.add(b20row);
   }
 
-  //s10文字
+  //b20文字
+  Widget b20text = buildB50Text(
+    "B20",
+    (b30Rating / b50data['new_bests'].length).toStringAsFixed(2),
+  );
+
   Widget s10text = SizedBox.shrink();
   if (generateS10) {
-    s10text = buildB50Text("S10");
     //s10绘制
     List<Widget> s10body = [];
     List<Widget> s10rowbody = [];
@@ -612,7 +656,9 @@ Future<Widget> generateb50Body({
       children: s10rowbody,
     );
     row = 0;
+    b30Rating = 0;
     for (var i in b50data['selections']) {
+      b30Rating = b30Rating + i['rating'];
       double diffvalue = 0;
       String songname;
       if ((i['song_name'] as String).length > 14) {
@@ -637,7 +683,6 @@ Future<Widget> generateb50Body({
         i['clear'] = 'clear';
         i['full_combo'] = 'alljusticecritical';
         i['rating'] = diffvalue + 2.15;
-        totalRating = totalRating + i['rating'];
       }
 
       double fontSize = 14;
@@ -686,6 +731,12 @@ Future<Widget> generateb50Body({
       s10body.add(s10row);
     }
     s10 = Column(children: s10body);
+
+    //s10文字
+    s10text = buildB50Text(
+      "S10",
+      (b30Rating / b50data['selections'].length).toStringAsFixed(2),
+    );
   }
 
   //底部信息
@@ -696,7 +747,9 @@ Future<Widget> generateb50Body({
   Widget fontter = buildB50Fontter(theory50);
 
   if (type != 'b50') {
-    totalRating = totalRating / songcount;
+    totalRating =
+        totalRating / (b50data['new_bests'].length + b50data['bests'].length);
+
     playerdata['rating'] = double.parse(
       totalRating.toString().length > 5
           ? totalRating.toString().substring(0, 5)
@@ -709,22 +762,22 @@ Future<Widget> generateb50Body({
   //背景绘制
 
   double extraHeight = 0;
-  double width = 5896 / 2;
-  double height = 2844 / 2;
+  double width = 5910 / 2;
+  double height = 2900 / 2;
   if (generateS10 && thunderboltb50 != '横着的') {
-    extraHeight = 300;
+    extraHeight = 325;
   }
 
   if (thunderboltb50 == '横着的') {
     width =
-        5896 / 2 +
+        5910 / 2 +
         260 * (b50data['new_bests'] as List).length +
         260 * (b50data['bests'] as List).length +
         (generateS10 ? 260 * (b50data['selections'] as List).length : 0);
-    height = 300;
+    height = 325;
   }
   if (thunderboltb50 == "竖着的") {
-    height = 2844 / 2;
+    height = 2900 / 2;
     extraHeight =
         extraHeight +
         200 * (b50data['new_bests'] as List).length +
@@ -732,7 +785,7 @@ Future<Widget> generateb50Body({
     if (generateS10) {
       extraHeight = extraHeight + 200 * (b50data['selections'] as List).length;
     }
-    width = 5896 / 8 + 75;
+    width = 5910 / 8 + 75;
   }
 
   Widget result = Container(
@@ -890,7 +943,7 @@ Widget buildB50SongCard({
       );
     },
     child: SizedBox(
-      width: 292,
+      width: 293,
       height: 219,
       child: Padding(
         padding: EdgeInsetsGeometry.all(8),
@@ -956,70 +1009,40 @@ Widget buildB50SongCard({
                               ),
                             ),
 
-                            Padding(
-                              padding: EdgeInsetsGeometry.only(bottom: 5),
-                              child: Container(
-                                decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.all(
-                                    Radius.circular(25),
-                                  ),
-                                  gradient: rankColor(rank: i['rank']),
-                                ),
-                                child: SizedBox(
-                                  width: 70,
-                                  child: Padding(
-                                    padding: EdgeInsetsGeometry.only(left: 5),
-                                    child: Padding(
-                                      padding: EdgeInsetsGeometry.only(
-                                        left: 0,
-                                        right: 3,
-                                        top: 0,
-                                        bottom: 3,
-                                      ),
-                                      child: Text(
-                                        '${i['rank'].toUpperCase().replaceAll('P', '+')}',
-                                        style: TextStyle(
-                                          fontSize: 20,
-                                          color: Colors.black,
-                                          fontWeight: FontWeight.bold,
-                                        ),
-                                        textAlign: TextAlign.center,
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                              ),
-                            ),
-                            // Image.asset(
-                            //   clearImg(clear: i['clear']),
-                            //   height: 18,
-                            // ),
                             Row(
                               children: [
-                                Container(
-                                  decoration: BoxDecoration(
-                                    color: clearColor(clear: i['clear']),
-                                    border: Border.all(
-                                      color: clearBroder(clear: i['clear']),
-                                      width: 3,
+                                Padding(
+                                  padding: EdgeInsetsGeometry.only(bottom: 5),
+                                  child: Container(
+                                    decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.all(
+                                        Radius.circular(25),
+                                      ),
+                                      gradient: rankColor(rank: i['rank']),
                                     ),
-                                    borderRadius: BorderRadius.all(
-                                      Radius.circular(8),
-                                    ),
-                                  ),
-                                  child: Padding(
-                                    padding: EdgeInsetsGeometry.only(
-                                      bottom: 2,
-                                      top: 2,
-                                      left: 7,
-                                      right: 7,
-                                    ),
-                                    child: Text(
-                                      '${i['clear'].toUpperCase()}',
-                                      style: TextStyle(
-                                        fontWeight: FontWeight.bold,
-                                        color: Colors.black,
-                                        fontSize: fontSize,
+                                    child: SizedBox(
+                                      width: 70,
+                                      child: Padding(
+                                        padding: EdgeInsetsGeometry.only(
+                                          left: 5,
+                                        ),
+                                        child: Padding(
+                                          padding: EdgeInsetsGeometry.only(
+                                            left: 0,
+                                            right: 3,
+                                            top: 0,
+                                            bottom: 3,
+                                          ),
+                                          child: Text(
+                                            '${i['rank'].toUpperCase().replaceAll('P', '+')}',
+                                            style: TextStyle(
+                                              fontSize: 20,
+                                              color: Colors.black,
+                                              fontWeight: FontWeight.bold,
+                                            ),
+                                            textAlign: TextAlign.center,
+                                          ),
+                                        ),
                                       ),
                                     ),
                                   ),
@@ -1028,6 +1051,7 @@ Widget buildB50SongCard({
                                     ? Padding(
                                         padding: EdgeInsetsGeometry.only(
                                           left: 5,
+                                          bottom: 5,
                                         ),
                                         child: Container(
                                           decoration: BoxDecoration(
@@ -1064,6 +1088,42 @@ Widget buildB50SongCard({
                                     : SizedBox.shrink(),
                               ],
                             ),
+                            // Image.asset(
+                            //   clearImg(clear: i['clear']),
+                            //   height: 18,
+                            // ),
+                            Row(
+                              children: [
+                                Container(
+                                  decoration: BoxDecoration(
+                                    color: clearColor(clear: i['clear']),
+                                    border: Border.all(
+                                      color: clearBroder(clear: i['clear']),
+                                      width: 3,
+                                    ),
+                                    borderRadius: BorderRadius.all(
+                                      Radius.circular(8),
+                                    ),
+                                  ),
+                                  child: Padding(
+                                    padding: EdgeInsetsGeometry.only(
+                                      bottom: 2,
+                                      top: 2,
+                                      left: 7,
+                                      right: 7,
+                                    ),
+                                    child: Text(
+                                      '${i['clear'].toUpperCase()}',
+                                      style: TextStyle(
+                                        fontWeight: FontWeight.bold,
+                                        color: Colors.black,
+                                        fontSize: fontSize,
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
                           ],
                         ),
                       ),
@@ -1093,7 +1153,7 @@ Widget buildB50SongCard({
   );
 }
 
-Widget buildB50Text(String text) {
+Widget buildB50Text(String text, String avgRating) {
   return Row(
     mainAxisAlignment: MainAxisAlignment.center,
     children: [
@@ -1106,9 +1166,19 @@ Widget buildB50Text(String text) {
             left: 20,
             right: 20,
           ),
-          child: Text(
-            text,
-            style: TextStyle(fontSize: 30, color: Colors.white),
+          child: Text.rich(
+            textAlign: TextAlign.center,
+            TextSpan(
+              text: "$text\n",
+              style: TextStyle(fontSize: 30, color: Colors.white),
+
+              children: [
+                TextSpan(
+                  text: "AVG. $avgRating",
+                  style: TextStyle(fontSize: 15, color: Colors.white),
+                ),
+              ],
+            ),
           ),
         ),
       ),

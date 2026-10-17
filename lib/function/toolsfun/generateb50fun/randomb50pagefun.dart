@@ -25,36 +25,13 @@ Future<Widget> randomb50Body({
   }
   // print(randomb50);
 
-  double trophywidth = 525;
-  if (playerdata['trophy']['name'].length > 17) {
-    trophywidth = trophywidth + (playerdata['trophy']['name'].length - 17) * 10;
-  }
   //先定义所需的变量
   List<Widget> b50body = [];
   Widget b50 = Column(children: b50body);
   Widget title = buildB50PlayerInfoWidget(playerdata);
   // final ScrollController _scrollController = ScrollController();
-  //b50文字
-  Widget b30text = Row(
-    mainAxisAlignment: MainAxisAlignment.center,
-    children: [
-      Card(
-        color: Color.fromARGB(255, 0, 64, 99),
-        child: Padding(
-          padding: EdgeInsetsGeometry.only(
-            top: 5,
-            bottom: 5,
-            left: 20,
-            right: 20,
-          ),
-          child: Text(
-            'B50',
-            style: TextStyle(fontSize: 30, color: Colors.white),
-          ),
-        ),
-      ),
-    ],
-  );
+  double b50Rating = 0;
+
   //底部信息
   Widget fontter = buildB50Fontter('随机50');
   //b50绘制
@@ -66,6 +43,7 @@ Future<Widget> randomb50Body({
   int row = 0;
   int songcount = 1;
   for (var i in randomb50) {
+    b50Rating += i['rating'].toDouble();
     String songname;
     if ((i['song_name'] as String).length > 14) {
       songname = i['song_name'].substring(0, 14) + '...';
@@ -356,19 +334,26 @@ Future<Widget> randomb50Body({
   if (b50rowbody.isNotEmpty) {
     b50body.add(b50row);
   }
+
+  //b50文字
+  Widget b30text = buildB50Text(
+    'R50',
+    (b50Rating / randomb50.length).toStringAsFixed(2),
+  );
+
   //背景绘制
   double extraHeight = 0;
-  double width = 5896 / 2;
-  double height = 2844 / 2;
+  double width = 5910 / 2;
+  double height = 2900 / 2;
 
   if (thunderboltb50 == '横着的') {
-    width = 5896 / 2 + 260 * randomb50.length;
-    height = 300;
+    width = 5910 / 2 + 260 * randomb50.length;
+    height = 325;
   }
   if (thunderboltb50 == "竖着的") {
-    height = 2844 / 2;
+    height = 2900 / 2;
     extraHeight = extraHeight + 200 * randomb50.length;
-    width = 5896 / 8 + 75;
+    width = 5910 / 8 + 75;
   }
 
   Widget result = Container(

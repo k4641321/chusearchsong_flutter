@@ -25,9 +25,11 @@ class Info extends StatefulWidget {
 }
 
 class _InfoState extends State<Info> {
-  List<Widget> adCards = [];
+  List<Widget> adCards = [SizedBox.shrink()];
   final ScrollController _controller = ScrollController();
   String version = '加载中';
+  bool _adCardsReady = false;
+  int _adIndex = 0;
   Timer? _timer;
 
   Future<void> init() async {
@@ -38,7 +40,6 @@ class _InfoState extends State<Info> {
       setState(() {
         version = packageinfo.version;
       });
-      _timer = Timer.periodic(Duration(seconds: 4), (_) {});
     } catch (e) {
       if (!mounted) return;
       ScaffoldMessenger.of(
@@ -53,7 +54,32 @@ class _InfoState extends State<Info> {
   @override
   void initState() {
     super.initState();
+    _timer = Timer.periodic(const Duration(seconds: 3), (timer) {
+      if (!mounted) {
+        timer.cancel(); // 页面已销毁，直接停掉
+        return;
+      }
+      _adIndex++;
+      if (_adIndex >= adCards.length) _adIndex = 0;
+      setState(() {});
+    });
     init();
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    if (!_adCardsReady) {
+      _adCardsReady = true;
+      adCards = buildAdCards(theme: Theme.of(context));
+    }
+  }
+
+  @override
+  void dispose() {
+    _timer?.cancel();
+    _controller.dispose();
+    super.dispose();
   }
 
   /// 构建单个菜单项
@@ -186,6 +212,7 @@ class _InfoState extends State<Info> {
               const SizedBox(height: 16),
 
               // 广告位
+              adCards[_adIndex],
               const SizedBox(height: 20),
 
               // ── 菜单分组 ──

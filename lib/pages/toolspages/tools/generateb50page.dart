@@ -1,10 +1,8 @@
 ﻿import 'dart:convert';
 import 'dart:developer';
-import 'dart:io';
 import 'package:chusearchsong_flutter/function/writeandreadfun.dart';
 import 'package:flutter/foundation.dart';
 import 'package:image/image.dart' as img;
-import 'package:path_provider/path_provider.dart';
 import '../../../function/toolsfun/generateb50fun/generateb50.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
@@ -543,7 +541,7 @@ class _GenerateB50PageState extends State<GenerateB50Page> {
                       await FilePicker.saveFile(
                         dialogTitle: '保存50',
                         fileName:
-                            'songinfoandscore${config['generatesettings']?['preferredformat'] ?? '.png'}',
+                            'b50${config['generatesettings']?['preferredformat'] ?? '.png'}',
                         bytes: imageBytes,
                         type: FileType.custom,
                         allowedExtensions: [

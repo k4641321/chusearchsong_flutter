@@ -1,6 +1,5 @@
 import 'dart:convert';
 import 'dart:developer';
-import 'dart:io';
 
 import 'package:chusearchsong_flutter/function/writeandreadfun.dart';
 import 'package:file_picker/file_picker.dart';
@@ -10,8 +9,6 @@ import 'package:flutter/rendering.dart';
 import 'dart:ui' as ui;
 import 'package:flutter_colorpicker/flutter_colorpicker.dart';
 import 'package:image/image.dart' as img;
-
-import 'package:path_provider/path_provider.dart';
 
 class Generateimage extends StatefulWidget {
   const Generateimage({super.key});

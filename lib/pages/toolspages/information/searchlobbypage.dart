@@ -31,7 +31,7 @@ class _SearchLobbyPageState extends State<SearchLobbyPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('机厅搜索'),
+        title: Text('华立机厅搜索'),
         // backgroundColor: const Color.fromARGB(255, 255, 229, 84),
       ),
       body: Center(

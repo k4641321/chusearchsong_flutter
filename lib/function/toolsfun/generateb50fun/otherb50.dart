@@ -100,12 +100,9 @@ Future<Widget> generateother50Body({
   //先定义所需的变量
   List<Widget> b50body = [];
   Widget b50 = Column(children: b50body);
-  double trophywidth = 525;
-  if (playerdata['trophy']['name'].length > 17) {
-    trophywidth = trophywidth + (playerdata['trophy']['name'].length - 17) * 10;
-  }
   Widget title = buildB50PlayerInfoWidget(playerdata);
   // final ScrollController _scrollController = ScrollController();
+  double b30Rating = 0;
 
   //b50绘制
   List<Widget> b50rowbody = [];
@@ -116,6 +113,7 @@ Future<Widget> generateother50Body({
   int row = 0;
   int songcount = 1;
   for (var i in resultScoreList) {
+    b30Rating = b30Rating + i['rating'];
     if (type == '世界末日50') {
       if (i['level_index'] != 5) continue;
     } else {
@@ -189,25 +187,10 @@ Future<Widget> generateother50Body({
   }
 
   //b50文字
-  Widget b50text = Row(
-    mainAxisAlignment: MainAxisAlignment.center,
-    children: [
-      Card(
-        color: Color.fromARGB(255, 0, 64, 99),
-        child: Padding(
-          padding: EdgeInsetsGeometry.only(
-            top: 5,
-            bottom: 5,
-            left: 20,
-            right: 20,
-          ),
-          child: Text(
-            'B${type != 'BN' ? 50 : songcount - 1}',
-            style: TextStyle(fontSize: 30, color: Colors.white),
-          ),
-        ),
-      ),
-    ],
+  //b50文字
+  Widget b50text = buildB50Text(
+    'B50',
+    (b30Rating / resultScoreList.length).toStringAsFixed(2),
   );
 
   //底部信息
@@ -217,20 +200,20 @@ Future<Widget> generateother50Body({
 
   //背景绘制
   double extraHeight = 0;
-  double width = 5896 / 2;
-  double height = 2844 / 2;
+  double width = 5910 / 2;
+  double height = 2900 / 2;
 
   if (b50body.length > 5 && thunderboltb50 != "竖着的") {
     extraHeight = 219 * (b50body.length - 5);
   }
   if (thunderboltb50 == '横着的') {
-    width = 5896 / 2 + 285 * resultScoreList.length;
-    height = 300;
+    width = 5910 / 2 + 285 * resultScoreList.length;
+    height = 325;
   }
   if (thunderboltb50 == "竖着的") {
-    height = 2844 / 2;
+    height = 2900 / 2;
     extraHeight = extraHeight + 219 * resultScoreList.length;
-    width = 5896 / 8 + 75;
+    width = 5910 / 8 + 75;
   }
 
   Widget result = Container(

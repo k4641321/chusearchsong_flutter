@@ -58,13 +58,13 @@ class _ColorssettingspageState extends State<Colorssettingspage> {
     );
   }
 
-  Widget _buildDivider() {
-    return Divider(
-      height: 0,
-      indent: 58,
-      color: Theme.of(context).colorScheme.onSurface.withAlpha(30),
-    );
-  }
+  // Widget _buildDivider() {
+  //   return Divider(
+  //     height: 0,
+  //     indent: 58,
+  //     color: Theme.of(context).colorScheme.onSurface.withAlpha(30),
+  //   );
+  // }
 
   Widget _buildColorPicker(Color color) {
     return ClipRRect(

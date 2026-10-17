@@ -593,7 +593,7 @@ packages:
     source: hosted
     version: "6.1.0"
   logger_rs:
-    dependency: transitive
+    dependency: "direct main"
     description:
       name: logger_rs
       sha256: "3fb051339a00e1f2bf3b49870bea1960c69ebeb0a7d77e055dc3291880bc133b"

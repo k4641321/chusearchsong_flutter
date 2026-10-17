@@ -173,7 +173,7 @@ class _NearcademapState extends State<Nearcademap> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("机厅搜索(新)"),
+        title: Text("Nearcade搜索"),
         // actions: [IconButton(onPressed: init, icon: Icon(Icons.refresh))],
       ),
       body: Stack(

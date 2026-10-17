@@ -26,6 +26,7 @@ class _IndexpageState extends State<Indexpage> {
   List<Widget> monthWidgets = [Text('加载中...')];
   List<Widget> listChildren = [];
   bool isLoading = true;
+  final ScrollController _scrollController = ScrollController();
 
   Widget _buildWeekSongCard(Map<String, dynamic> songData) {
     int songid = songData['id'];
@@ -166,150 +167,160 @@ class _IndexpageState extends State<Indexpage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(title: Text('主页'), backgroundColor: Colors.transparent),
-      body: Column(
-        children: [
-          Padding(
-            padding: EdgeInsetsGeometry.all(8),
-            child: Card(
-              child: Padding(
-                padding: EdgeInsetsGeometry.all(15),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text('PLAYER OVERVIEW', textAlign: TextAlign.left),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      body: Scrollbar(
+        controller: _scrollController,
+        child: SingleChildScrollView(
+          controller: _scrollController,
+          child: Column(
+            children: [
+              Padding(
+                padding: EdgeInsetsGeometry.all(8),
+                child: Card(
+                  child: Padding(
+                    padding: EdgeInsetsGeometry.all(15),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        playerInfoData['character'] != null
-                            ? CachedNetworkImage(
-                                width: 100,
-                                height: 100,
-                                imageUrl:
-                                    'https://assets2.lxns.net/chunithm/character/${playerInfoData['character']['id']}.png',
-                                errorWidget: (context, error, stackTrace) =>
-                                    Text('图片加载失败'),
-                              )
-                            : SizedBox(height: 100, width: 100),
-                        Expanded(
-                          child: Column(
-                            children: [
-                              Row(
+                        Text('PLAYER OVERVIEW', textAlign: TextAlign.left),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            playerInfoData['character'] != null
+                                ? CachedNetworkImage(
+                                    width: 100,
+                                    height: 100,
+                                    imageUrl:
+                                        'https://assets2.lxns.net/chunithm/character/${playerInfoData['character']['id']}.png',
+                                    errorWidget: (context, error, stackTrace) =>
+                                        Text('图片加载失败'),
+                                  )
+                                : SizedBox(height: 100, width: 100),
+                            Expanded(
+                              child: Column(
                                 children: [
-                                  Expanded(
-                                    child: Text(
-                                      '${playerInfoData.isNotEmpty ? playerInfoData['name'] : null}',
-                                      style: TextStyle(fontSize: 20),
-                                    ),
+                                  Row(
+                                    children: [
+                                      Expanded(
+                                        child: Text(
+                                          '${playerInfoData.isNotEmpty ? playerInfoData['name'] : null}',
+                                          style: TextStyle(fontSize: 20),
+                                        ),
+                                      ),
+                                      // SizedBox(width: 10),
+                                      // Text('PLAYER NAME'),
+                                    ],
                                   ),
-                                  // SizedBox(width: 10),
-                                  // Text('PLAYER NAME'),
-                                ],
-                              ),
-                              Container(
-                                decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.all(
-                                    Radius.circular(6),
-                                  ),
-                                  color: playerInfoData.isNotEmpty
-                                      ? returnTrophyBackgroundColor(
-                                          playerInfoData['trophy']?['color'],
-                                        )
-                                      : null,
-                                ),
-                                padding: EdgeInsets.all(6),
-                                child: Text(
-                                  playerInfoData.isNotEmpty
-                                      ? (playerInfoData['trophy']?['name'] ??
-                                            'null')
-                                      : 'null',
-
-                                  style: TextStyle(
-                                    color: returnTrophyColor(
-                                      playerInfoData.isNotEmpty
-                                          ? (playerInfoData['trophy']?['color'])
+                                  Container(
+                                    decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.all(
+                                        Radius.circular(6),
+                                      ),
+                                      color: playerInfoData.isNotEmpty
+                                          ? returnTrophyBackgroundColor(
+                                              playerInfoData['trophy']?['color'],
+                                            )
                                           : null,
                                     ),
-                                    shadows: [
-                                      Shadow(
+                                    padding: EdgeInsets.all(6),
+                                    child: Text(
+                                      playerInfoData.isNotEmpty
+                                          ? (playerInfoData['trophy']?['name'] ??
+                                                'null')
+                                          : 'null',
+
+                                      style: TextStyle(
                                         color: returnTrophyColor(
                                           playerInfoData.isNotEmpty
                                               ? (playerInfoData['trophy']?['color'])
                                               : null,
                                         ),
-                                        blurRadius: 3.0,
+                                        shadows: [
+                                          Shadow(
+                                            color: returnTrophyColor(
+                                              playerInfoData.isNotEmpty
+                                                  ? (playerInfoData['trophy']?['color'])
+                                                  : null,
+                                            ),
+                                            blurRadius: 3.0,
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  ),
+                                  Row(
+                                    children: [
+                                      Expanded(
+                                        child: Text(
+                                          '${playerInfoData.isNotEmpty ? playerInfoData['rating'] : null}',
+                                          style: TextStyle(fontSize: 30),
+                                        ),
+                                      ),
+                                      SizedBox(width: 10),
+                                      Expanded(child: Text('TOTAL RATING')),
+                                    ],
+                                  ),
+                                  Row(
+                                    children: [
+                                      Expanded(
+                                        child: Text(
+                                          'LV. ${playerInfoData.isNotEmpty ? playerInfoData['level'] : null}',
+                                          style: TextStyle(fontSize: 20),
+                                        ),
                                       ),
                                     ],
                                   ),
-                                ),
-                              ),
-                              Row(
-                                children: [
-                                  Expanded(
-                                    child: Text(
-                                      '${playerInfoData.isNotEmpty ? playerInfoData['rating'] : null}',
-                                      style: TextStyle(fontSize: 30),
-                                    ),
-                                  ),
-                                  SizedBox(width: 10),
-                                  Expanded(child: Text('TOTAL RATING')),
                                 ],
                               ),
-                              Row(
-                                children: [
-                                  Expanded(
-                                    child: Text(
-                                      'LV. ${playerInfoData.isNotEmpty ? playerInfoData['level'] : null}',
-                                      style: TextStyle(fontSize: 20),
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ],
-                          ),
+                            ),
+                          ],
                         ),
+
+                        // Row(
+                        //   children: [
+                        //     Text.rich(
+                        //       TextSpan(
+                        //         text: 'Best35',
+                        //         children: [TextSpan(text: '154')],
+                        //       ),
+                        //     ),
+                        //   ],
+                        // ),
                       ],
                     ),
-
-                    // Row(
-                    //   children: [
-                    //     Text.rich(
-                    //       TextSpan(
-                    //         text: 'Best35',
-                    //         children: [TextSpan(text: '154')],
-                    //       ),
-                    //     ),
-                    //   ],
-                    // ),
-                  ],
+                  ),
                 ),
               ),
-            ),
-          ),
-          Text(
-            '热门歌曲',
-            style: TextStyle(fontSize: 28, fontWeight: FontWeight.bold),
-          ),
-          Row(
-            children: [
-              Expanded(
-                child: SegmentedButton(
-                  segments: [
-                    ButtonSegment(value: 'week', label: Text('周')),
-                    ButtonSegment(value: 'month', label: Text('月')),
-                  ],
-                  selected: {_filter},
-                  onSelectionChanged: (Set<String> newSelection) {
-                    setState(() {
-                      _filter = newSelection.first; // 单选时取第一个
-                    });
-                    _update();
-                  },
-                ),
+              Text(
+                '热门歌曲',
+                style: TextStyle(fontSize: 28, fontWeight: FontWeight.bold),
+              ),
+              Row(
+                children: [
+                  Expanded(
+                    child: SegmentedButton(
+                      segments: [
+                        ButtonSegment(value: 'week', label: Text('周')),
+                        ButtonSegment(value: 'month', label: Text('月')),
+                      ],
+                      selected: {_filter},
+                      onSelectionChanged: (Set<String> newSelection) {
+                        setState(() {
+                          _filter = newSelection.first; // 单选时取第一个
+                        });
+                        _update();
+                      },
+                    ),
+                  ),
+                ],
+              ),
+              ListView(
+                physics: NeverScrollableScrollPhysics(),
+                shrinkWrap: true,
+                children: listChildren,
               ),
             ],
           ),
-          Expanded(child: ListView(children: listChildren)),
-        ],
+        ),
       ),
     );
   }

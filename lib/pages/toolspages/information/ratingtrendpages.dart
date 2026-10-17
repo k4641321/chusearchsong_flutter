@@ -8,8 +8,6 @@ import 'package:flutter/material.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/rendering.dart';
 import 'package:image/image.dart' as img;
-import 'package:path_provider/path_provider.dart';
-import 'dart:io';
 import '../../../function/toolsfun/generateb50fun/generateb50.dart';
 import 'package:file_picker/file_picker.dart';
 

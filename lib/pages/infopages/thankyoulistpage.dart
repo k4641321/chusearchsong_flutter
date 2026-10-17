@@ -107,6 +107,11 @@ class ThankYouListPage extends StatelessWidget {
             name: '魂☆狂潮~♫终界之星♫',
             description: '发现了部分曲目跳转b站搜索回搜索空白的问题',
           ),
+          _buildThanksItem(
+            context,
+            name: 'YOUMY',
+            description: '雷霆50提出者（对，就是他干的\n各种排行榜提出支持最新最热，鸟率查看提出',
+          ),
 
           const Divider(),
           // 尾部
