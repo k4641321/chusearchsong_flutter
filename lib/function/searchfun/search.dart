@@ -174,85 +174,76 @@ Future<Map<String, dynamic>> filter(
   //初步筛选
   Set<int> songresult = {};
   final titleLower = title.toLowerCase();
-  if (onlysearch == 0 || onlysearch == 1 || onlysearch == null) {
-    if (title == '' &&
-        genre.contains('-1') &&
-        version.contains('-1') &&
-        difficultydown == '-1' &&
-        difficultyup == '-1' &&
-        ifplay == '-1' &&
-        bpmup == null &&
-        bpmdown == null &&
-        isSearch == true &&
-        difficultyIndex == -1) {
-      log('未选择条件');
-      return {};
-    }
-    final bool bpmSet = bpmup != null || bpmdown != null;
-    final int bpmDown = bpmdown ?? 0;
-    final int bpmUp = bpmup ?? 9999;
 
-    for (var i in (songsData['songs'] as List).where((i) {
-      bool keywordMatch = title.isEmpty;
-      if (!keywordMatch &&
-          (onlysearch == null || onlysearch == 0 || onlysearch == 1)) {
-        keywordMatch = i['title'].toLowerCase().contains(titleLower);
+  // BPM 条件
+  final bool bpmSet = bpmup != null || bpmdown != null;
+  final int bpmDown = bpmdown ?? 0;
+  final int bpmUp = bpmup ?? 9999;
+
+  // 是否设置了任何筛选条件（搜索框 + 各维度）
+  final bool hasKeyword = title.isNotEmpty;
+  final bool hasGenre = !genre.contains('-1');
+  final bool hasVersion = !version.contains('-1');
+  final bool hasDifficulty =
+      !(difficultydown == '-1' && difficultyup == '-1') ||
+      (difficultyIndex ?? -1) != -1;
+  final bool hasPlay = ifplay != '-1';
+
+  if (!hasKeyword &&
+      !hasGenre &&
+      !hasVersion &&
+      !hasDifficulty &&
+      !bpmSet &&
+      !hasPlay &&
+      isSearch == true) {
+    log('未选择条件');
+    return {};
+  }
+
+  // 关键词匹配：标题/曲师/Id/谱师，由 onlysearch 决定搜哪些字段
+  bool keywordMatch(Map song) {
+    if (title.isEmpty) return true;
+    if (onlysearch == null || onlysearch == 0 || onlysearch == 1) {
+      if (song['title'].toLowerCase().contains(titleLower)) return true;
+    }
+    if (onlysearch == null || onlysearch == 0 || onlysearch == 2) {
+      if (song['artist'].toLowerCase().contains(titleLower)) return true;
+    }
+    if (onlysearch == null || onlysearch == 0 || onlysearch == 3) {
+      if (int.tryParse(titleLower) != null &&
+          song['id'].toString().contains(titleLower)) {
+        return true;
       }
-      if (!keywordMatch &&
-          (onlysearch == null || onlysearch == 0 || onlysearch == 2)) {
-        keywordMatch = i['artist'].toLowerCase().contains(titleLower);
-      }
-      if (!keywordMatch &&
-          (onlysearch == null || onlysearch == 0 || onlysearch == 3)) {
-        if (int.tryParse(titleLower) != null) {
-          keywordMatch = i['id'].toString().contains(titleLower);
+    }
+    if (onlysearch == null || onlysearch == 0 || onlysearch == 5) {
+      for (var j in song['difficulties']) {
+        if (j['note_designer'].toLowerCase().contains(titleLower)) {
+          return true;
         }
       }
-      if (!keywordMatch &&
-          (onlysearch == null || onlysearch == 0 || onlysearch == 5)) {
-        for (var j in i['difficulties']) {
-          if (j['note_designer'].toLowerCase().contains(titleLower)) {
-            keywordMatch = true;
-            break;
-          }
-        }
-      }
-      if (!keywordMatch) return false;
-
-      if (bpmSet && !(i['bpm'] <= bpmUp && i['bpm'] >= bpmDown)) {
-        return false;
-      }
-
-      return true;
-    })) {
-      songresult.add(i['id']);
     }
+    return false;
+  }
 
-    // print(matched.toList());
-    // for (var i in songsData['songs']) {
-    //   if (onlysearch == 0 || onlysearch == 3 || onlysearch == null) {}
-
-    //   // if (bpmup == null && bpmdown == null) {
-    //   //   log('跳过bpm筛选');
-    //   // } else {
-
-    //   // }
-    // }
+  // 关键词筛选（仅别名模式跳过，别名单独处理）
+  if (onlysearch != 4) {
+    for (var i in songsData['songs'] as List) {
+      if (keywordMatch(i)) {
+        songresult.add(i['id']);
+      }
+    }
   }
 
   //别名筛选
-  // Set<Map<String, dynamic>> aliasresult = {};
-  if (aliasData.isNotEmpty && onlysearch == 0 ||
-      onlysearch == 4 ||
-      onlysearch == null) {
+  if ((onlysearch == null || onlysearch == 0 || onlysearch == 4) &&
+      aliasData.isNotEmpty &&
+      title.isNotEmpty) {
     for (var i in aliasData['aliases']) {
       for (var j in i['aliases']) {
-        if (j.toLowerCase().contains(title.toLowerCase())) {
+        if (j.toLowerCase().contains(titleLower)) {
           songresult.add(i['song_id']);
-          if (title != '') {
-            searchinfo[i['song_id']] ??= {};
-            (searchinfo[i['song_id']] as Map)['alias'] = j;
-          }
+          searchinfo[i['song_id']] ??= {};
+          (searchinfo[i['song_id']] as Map)['alias'] = j;
           break;
         }
       }
@@ -276,7 +267,7 @@ Future<Map<String, dynamic>> filter(
             '\$slide',
             '\$air',
             '\$flick',
-          ].contains(title.split(' ')[0])) {
+          ].contains(i.split(' ')[0])) {
             listtobefiltered.add(i);
           }
         }
@@ -368,119 +359,81 @@ Future<Map<String, dynamic>> filter(
     log('跳过特殊筛选');
   }
 
-  //筛选游玩记录
-  if (ifplay == '-1') {
-    log('跳过游玩记录筛选');
-  } else {
-    if (playhistory.isNotEmpty) {
-      if (ifplay == '1') {
-        //已游玩
-        log('已游玩');
-        List<int> songresult5 = [];
-        List playhistoryid = [];
-        for (var i in playhistory) {
-          if (!playhistoryid.contains(i['id'])) {
-            playhistoryid.add(i['id']);
-          }
-        }
+  // 构建 id -> 歌曲 索引，避免双重循环
+  final songsById = <int, dynamic>{};
+  for (final song in songsData['songs'] as List) {
+    songsById[song['id'] as int] = song;
+  }
 
-        for (var i in songresult) {
-          if (playhistoryid.contains(i)) {
-            songresult5.add(i);
-          }
-        }
-        songresult = songresult5.toSet();
-      } else if (ifplay == '0') {
-        //未游玩
-        log('未游玩');
-        List<int> songresult5 = [];
-        List playhistoryid = [];
-        for (var i in playhistory) {
-          if (!playhistoryid.contains(i['id'])) {
-            playhistoryid.add(i['id']);
-          }
-        }
-        for (var i in songresult) {
-          if (!playhistoryid.contains(i)) {
-            songresult5.add(i);
-          }
-        }
-        songresult = songresult5.toSet();
-      }
+  // 组装候选列表
+  List songresultMap = [];
+  for (final id in songresult) {
+    final song = songsById[id];
+    if (song != null) {
+      songresultMap.add(song);
     }
   }
 
-  List songresultMap = [];
-  for (var i in songresult) {
-    for (var j in songsData['songs']) {
-      if (i == j['id']) {
-        songresultMap.add(j);
-      }
+  //筛选 BPM（与其它条件可任意组合）
+  if (bpmSet) {
+    songresultMap = songresultMap.where((song) {
+      final bpm = song['bpm'];
+      if (bpm is! num) return false;
+      return bpm >= bpmDown && bpm <= bpmUp;
+    }).toList();
+  }
+
+  //筛选游玩记录
+  if (ifplay != '-1' && playhistory.isNotEmpty) {
+    final playedIds = <dynamic>{};
+    for (var i in playhistory) {
+      playedIds.add(i['id']);
     }
+    songresultMap = songresultMap.where((song) {
+      final played = playedIds.contains(song['id']);
+      return ifplay == '1' ? played : !played;
+    }).toList();
   }
 
   //筛选流派
-  if (genre.contains('-1')) {
-    log('跳过流派');
-  } else {
-    List songresult2 = [];
-    try {
-      List genreList = [];
-      for (var j in songsData['genres']) {
-        if (genre.contains(j['id'].toString())) {
-          genreList.add(j['genre']);
-        }
+  if (!genre.contains('-1')) {
+    final genreList = <dynamic>{};
+    for (var j in songsData['genres']) {
+      if (genre.contains(j['id'].toString())) {
+        genreList.add(j['genre']);
       }
-
-      for (var i in songresultMap) {
-        if (genreList.contains(i['genre'])) {
-          songresult2.add(i);
-        }
-      }
-    } catch (e) {
-      log('error $e', name: 'search.dart', level: 1000);
     }
-    songresultMap = songresult2;
+    songresultMap = songresultMap
+        .where((song) => genreList.contains(song['genre']))
+        .toList();
   }
 
   //筛选版本
-  if (version.contains('-1')) {
-    log('跳过版本');
-  } else {
-    List songresult3 = [];
-    for (var i in songresultMap) {
-      if (version.contains(i['version'].toString())) {
-        songresult3.add(i);
-      }
-    }
-    songresultMap = songresult3;
+  if (!version.contains('-1')) {
+    songresultMap = songresultMap
+        .where((song) => version.contains(song['version'].toString()))
+        .toList();
   }
 
-  //筛选难度
-  if (double.tryParse(difficultydown) != null &&
-      double.tryParse(difficultyup) != null) {
+  //筛选难度（可与难度类型 difficultyIndex 组合）
+  final double? difficultyDownValue = double.tryParse(difficultydown);
+  final double? difficultyUpValue = double.tryParse(difficultyup);
+  if (difficultyDownValue != null && difficultyUpValue != null) {
     if (difficultydown == '-1' &&
         difficultyup == '-1' &&
         difficultyIndex == -1) {
       log('跳过难度');
     } else {
-      if (difficultyup == '-1') {
-        difficultyup = '17';
-      }
-      List songresult4 = [];
-      for (var i in songresultMap) {
-        for (var j in i['difficulties']) {
+      final double down = difficultyDownValue;
+      final double up = difficultyup == '-1' ? 17.0 : difficultyUpValue;
+      songresultMap = songresultMap.where((song) {
+        return song['difficulties'].any((j) {
           if (difficultyIndex != -1 && j['difficulty'] != difficultyIndex) {
-            continue;
+            return false;
           }
-          if (double.parse(difficultydown) <= j['level_value'] &&
-              j['level_value'] <= double.parse(difficultyup)) {
-            songresult4.add(i);
-            break;
-          }
-        }
-      }
-      songresultMap = songresult4;
+          return down <= j['level_value'] && j['level_value'] <= up;
+        });
+      }).toList();
     }
   }
 

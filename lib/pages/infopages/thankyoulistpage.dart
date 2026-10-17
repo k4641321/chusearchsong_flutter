@@ -100,7 +100,7 @@ class ThankYouListPage extends StatelessWidget {
           _buildThanksItem(
             context,
             name: '空白AllBlank',
-            description: '发现了整数Rating无法生成B50的问题',
+            description: '发现了整数Rating无法生成B50的问题\n成功再1.3.0发布的第18分钟发现了搜索的Bug',
           ),
           _buildThanksItem(
             context,
