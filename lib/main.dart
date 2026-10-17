@@ -330,8 +330,8 @@ class _MyHomePageState extends State<MyHomePage> {
       if (!mounted) return;
       await SongDataStore.instance.loadAll(context);
       showChangesLog();
-      chechupdate();
       showannouncement();
+      chechupdate();
       setState(() {
         _isLoading = false;
       });
