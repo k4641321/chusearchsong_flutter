@@ -1,6 +1,7 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:chusearchsong_flutter/function/commonfun.dart';
 import 'package:chusearchsong_flutter/function/toolsfun/generateb50fun/generateb50.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
 Future<List<Widget>> buildBrandProgressWidgets({
@@ -122,13 +123,22 @@ Future<List<Widget>> buildBrandProgressWidgets({
               padding: EdgeInsets.all(5),
               child: Stack(
                 children: [
-                  CachedNetworkImage(
-                    width: 75,
-                    height: 75,
-                    imageUrl:
-                        'https://assets2.lxns.net/chunithm/jacket/${j['id']}.png',
-                    errorWidget: (context, error, stackTrace) => Text('图片加载失败'),
-                  ),
+                  kIsWeb
+                      ? Image.network(
+                          'https://assets2.lxns.net/chunithm/jacket/${j['id']}.png',
+                          width: 75,
+                          height: 75,
+                          errorBuilder: (context, error, stackTrace) =>
+                              Text('图片加载失败'),
+                        )
+                      : CachedNetworkImage(
+                          width: 75,
+                          height: 75,
+                          imageUrl:
+                              'https://assets2.lxns.net/chunithm/jacket/${j['id']}.png',
+                          errorWidget: (context, error, stackTrace) =>
+                              Text('图片加载失败'),
+                        ),
 
                   rank,
                   Positioned(

@@ -92,9 +92,7 @@ class Dataupdate {
     // }
 
     //收藏文件
-    if (!(await (await ReadData.create()).readFavoriteSongs()).containsKey(
-      'FavoriteSongs',
-    )) {
+    if ((await (await ReadData.create()).readFavoriteSongs()).isEmpty) {
       try {
         await (await WriteData.create()).writeFavoriteSongs({"favorite": []});
         onProgress('完成');
@@ -494,6 +492,8 @@ Widget returnSongCard({
   required BuildContext context,
   VoidCallback? onReturn,
   Map<int, dynamic>? searchinfo,
+  bool issearch = true,
+  Future<void> Function(int)? chartsharepagefun,
 }) {
   int originid = songbasedata['id'];
   String versionname = '';
@@ -567,11 +567,14 @@ Widget returnSongCard({
   return InkWell(
     // key: ValueKey(songItem['id']),
     onTap: () async {
-      await interSongInfo(
-        songbasedata: songbasedata,
-        context: context,
-        songsData: songsData,
-      );
+      issearch
+          ? await interSongInfo(
+              songbasedata: songbasedata,
+              context: context,
+              songsData: songsData,
+            )
+          : null;
+      chartsharepagefun?.call(songbasedata['id']);
       onReturn?.call();
     },
     child: Card(
@@ -583,13 +586,20 @@ Widget returnSongCard({
           children: [
             Padding(
               padding: EdgeInsetsGeometry.only(right: 10),
-              child: CachedNetworkImage(
-                imageUrl:
-                    'https://assets2.lxns.net/chunithm/jacket/$originid.png',
-                width: 105,
-                height: 105,
-                errorWidget: (context, url, error) => Text('加载失败'),
-              ),
+              child: kIsWeb
+                  ? Image.network(
+                      'https://assets2.lxns.net/chunithm/jacket/$originid.png',
+                      width: 105,
+                      height: 105,
+                      errorBuilder: (context, url, error) => Text('加载失败'),
+                    )
+                  : CachedNetworkImage(
+                      imageUrl:
+                          'https://assets2.lxns.net/chunithm/jacket/$originid.png',
+                      width: 105,
+                      height: 105,
+                      errorWidget: (context, url, error) => Text('加载失败'),
+                    ),
             ),
             Expanded(
               child: Column(

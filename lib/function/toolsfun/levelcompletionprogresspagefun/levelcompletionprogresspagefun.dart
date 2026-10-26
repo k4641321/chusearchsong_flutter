@@ -1,5 +1,6 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:chusearchsong_flutter/function/toolsfun/viewallgradespagefun.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'dart:developer';
 import '../../commonfun.dart';
@@ -181,13 +182,22 @@ Widget buildsongList({
                   children: [
                     Padding(
                       padding: EdgeInsetsGeometry.only(right: 0),
-                      child: CachedNetworkImage(
-                        imageUrl:
-                            'https://assets2.lxns.net/chunithm/jacket/$songid.png',
-                        width: 95,
-                        height: 95,
-                        errorWidget: (context, url, error) => Text('加载失败'),
-                      ),
+                      child: kIsWeb
+                          ? Image.network(
+                              'https://assets2.lxns.net/chunithm/jacket/$songid.png',
+                              width: 95,
+                              height: 95,
+                              errorBuilder: (context, error, stackTrace) =>
+                                  Text('加载失败'),
+                            )
+                          : CachedNetworkImage(
+                              imageUrl:
+                                  'https://assets2.lxns.net/chunithm/jacket/$songid.png',
+                              width: 95,
+                              height: 95,
+                              errorWidget: (context, url, error) =>
+                                  Text('加载失败'),
+                            ),
                     ),
                     Wrap(children: songInfoDiffs),
                   ],

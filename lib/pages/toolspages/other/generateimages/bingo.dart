@@ -10,14 +10,14 @@ import 'dart:ui' as ui;
 import 'package:flutter_colorpicker/flutter_colorpicker.dart';
 import 'package:image/image.dart' as img;
 
-class Generateimage extends StatefulWidget {
-  const Generateimage({super.key});
+class Bingo extends StatefulWidget {
+  const Bingo({super.key});
 
   @override
-  State<Generateimage> createState() => _GenerateimageState();
+  State<Bingo> createState() => _BingoState();
 }
 
-class _GenerateimageState extends State<Generateimage> {
+class _BingoState extends State<Bingo> {
   final ScrollController _scrollController = ScrollController();
   final GlobalKey _globalKey = GlobalKey();
 
@@ -46,6 +46,19 @@ class _GenerateimageState extends State<Generateimage> {
     Colors.black.toARGB32(),
     Colors.black.toARGB32(),
   ];
+
+  late final TextEditingController _titleController;
+  late final TextEditingController _subtitleController;
+  late final TextEditingController _tabulatorController;
+  late final TextEditingController _formfillerController;
+  late final TextEditingController _rowController;
+  late final TextEditingController _columnController;
+  late final TextEditingController _containerWidthController;
+  late final TextEditingController _containerHeightController;
+  late final TextEditingController _paddingLeftController;
+  late final TextEditingController _paddingRightController;
+  late final TextEditingController _paddingTopController;
+  late final TextEditingController _paddingBottomController;
 
   Future<ui.Image?> captureWidget(GlobalKey key) async {
     final boundary =
@@ -376,7 +389,46 @@ class _GenerateimageState extends State<Generateimage> {
   @override
   void initState() {
     super.initState();
+    _titleController = TextEditingController(text: title);
+    _subtitleController = TextEditingController(text: subtitle);
+    _tabulatorController = TextEditingController(text: tabulator);
+    _formfillerController = TextEditingController(text: formfiller);
+    _rowController = TextEditingController(text: row.toString());
+    _columnController = TextEditingController(text: column.toString());
+    _containerWidthController = TextEditingController(
+      text: containerWidth.toString(),
+    );
+    _containerHeightController = TextEditingController(
+      text: containerHeight.toString(),
+    );
+    _paddingLeftController = TextEditingController(
+      text: paddingLeft.toString(),
+    );
+    _paddingRightController = TextEditingController(
+      text: paddingRight.toString(),
+    );
+    _paddingTopController = TextEditingController(text: paddingTop.toString());
+    _paddingBottomController = TextEditingController(
+      text: paddingBottom.toString(),
+    );
     _update();
+  }
+
+  @override
+  void dispose() {
+    _titleController.dispose();
+    _subtitleController.dispose();
+    _tabulatorController.dispose();
+    _formfillerController.dispose();
+    _rowController.dispose();
+    _columnController.dispose();
+    _containerWidthController.dispose();
+    _containerHeightController.dispose();
+    _paddingLeftController.dispose();
+    _paddingRightController.dispose();
+    _paddingTopController.dispose();
+    _paddingBottomController.dispose();
+    super.dispose();
   }
 
   @override
@@ -554,7 +606,7 @@ class _GenerateimageState extends State<Generateimage> {
                   Text('标题'),
                   Expanded(
                     child: TextFormField(
-                      initialValue: title,
+                      controller: _titleController,
                       onChanged: (value) {
                         title = value;
                         _update();
@@ -570,7 +622,7 @@ class _GenerateimageState extends State<Generateimage> {
                   Text('副标题'),
                   Expanded(
                     child: TextFormField(
-                      initialValue: subtitle,
+                      controller: _subtitleController,
                       onChanged: (value) {
                         subtitle = value;
                         _update();
@@ -587,10 +639,10 @@ class _GenerateimageState extends State<Generateimage> {
               ),
               Row(
                 children: [
-                  Text('填表人'),
+                  Text('制表人'),
                   Expanded(
                     child: TextFormField(
-                      initialValue: tabulator,
+                      controller: _tabulatorController,
                       onChanged: (value) {
                         tabulator = value;
                         _update();
@@ -603,10 +655,10 @@ class _GenerateimageState extends State<Generateimage> {
                     titleColorList,
                     2,
                   ),
-                  Text('制表人'),
+                  Text('填表人'),
                   Expanded(
                     child: TextFormField(
-                      initialValue: formfiller,
+                      controller: _formfillerController,
                       onChanged: (value) {
                         formfiller = value;
                         _update();
@@ -626,7 +678,7 @@ class _GenerateimageState extends State<Generateimage> {
                   Text('表格宽（格）'),
                   Expanded(
                     child: TextFormField(
-                      initialValue: row.toString(),
+                      controller: _rowController,
                       onChanged: (value) {
                         if (int.tryParse(value) != null) {
                           row = int.parse(value);
@@ -638,7 +690,7 @@ class _GenerateimageState extends State<Generateimage> {
                   Text('表格高（格）'),
                   Expanded(
                     child: TextFormField(
-                      initialValue: column.toString(),
+                      controller: _columnController,
                       onChanged: (value) {
                         if (int.tryParse(value) != null) {
                           column = int.parse(value);
@@ -654,7 +706,7 @@ class _GenerateimageState extends State<Generateimage> {
                   Text('格子宽'),
                   Expanded(
                     child: TextFormField(
-                      initialValue: containerWidth.toString(),
+                      controller: _containerWidthController,
                       onChanged: (value) {
                         if (double.tryParse(value) != null) {
                           containerWidth = double.parse(value);
@@ -666,7 +718,7 @@ class _GenerateimageState extends State<Generateimage> {
                   Text('格子高'),
                   Expanded(
                     child: TextFormField(
-                      initialValue: containerHeight.toString(),
+                      controller: _containerHeightController,
                       onChanged: (value) {
                         if (double.tryParse(value) != null) {
                           containerHeight = double.parse(value);
@@ -682,7 +734,7 @@ class _GenerateimageState extends State<Generateimage> {
                   Text('左边距'),
                   Expanded(
                     child: TextFormField(
-                      initialValue: paddingLeft.toString(),
+                      controller: _paddingLeftController,
                       onChanged: (value) {
                         if (double.tryParse(value) != null) {
                           paddingLeft = double.parse(value);
@@ -694,7 +746,7 @@ class _GenerateimageState extends State<Generateimage> {
                   Text('右边距'),
                   Expanded(
                     child: TextFormField(
-                      initialValue: paddingRight.toString(),
+                      controller: _paddingRightController,
                       onChanged: (value) {
                         if (double.tryParse(value) != null) {
                           paddingRight = double.parse(value);
@@ -706,7 +758,7 @@ class _GenerateimageState extends State<Generateimage> {
                   Text('上边距'),
                   Expanded(
                     child: TextFormField(
-                      initialValue: paddingTop.toString(),
+                      controller: _paddingTopController,
                       onChanged: (value) {
                         if (double.tryParse(value) != null) {
                           paddingTop = double.parse(value);
@@ -718,7 +770,7 @@ class _GenerateimageState extends State<Generateimage> {
                   Text('下边距'),
                   Expanded(
                     child: TextFormField(
-                      initialValue: paddingBottom.toString(),
+                      controller: _paddingBottomController,
                       onChanged: (value) {
                         if (double.tryParse(value) != null) {
                           paddingBottom = double.parse(value);
@@ -807,6 +859,25 @@ class _GenerateimageState extends State<Generateimage> {
                             row = (data['row'] as num?)?.toInt() ?? row;
                             column =
                                 (data['column'] as num?)?.toInt() ?? column;
+
+                            // 同步到输入框
+                            _titleController.text = title;
+                            _subtitleController.text = subtitle;
+                            _tabulatorController.text = tabulator;
+                            _formfillerController.text = formfiller;
+                            _rowController.text = row.toString();
+                            _columnController.text = column.toString();
+                            _containerWidthController.text = containerWidth
+                                .toString();
+                            _containerHeightController.text = containerHeight
+                                .toString();
+                            _paddingLeftController.text = paddingLeft
+                                .toString();
+                            _paddingRightController.text = paddingRight
+                                .toString();
+                            _paddingTopController.text = paddingTop.toString();
+                            _paddingBottomController.text = paddingBottom
+                                .toString();
                           });
 
                           if (!mounted) return;

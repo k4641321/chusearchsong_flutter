@@ -71,7 +71,7 @@ class _InfoState extends State<Info> {
     super.didChangeDependencies();
     if (!_adCardsReady) {
       _adCardsReady = true;
-      adCards = buildAdCards(theme: Theme.of(context));
+      adCards = buildAdCards(theme: Theme.of(context), context: context);
     }
   }
 
@@ -273,6 +273,7 @@ class _InfoState extends State<Info> {
                   }
                 },
               ),
+              _buildDivider(),
               _buildMenuItem(
                 icon: Icons.people,
                 title: '制作人员',

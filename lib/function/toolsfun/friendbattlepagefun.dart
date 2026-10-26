@@ -1,6 +1,7 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:chusearchsong_flutter/function/commonfun.dart';
 import 'package:chusearchsong_flutter/function/toolsfun/viewallgradespagefun.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
 import 'generateb50fun/generateb50.dart';
@@ -105,13 +106,22 @@ List<Widget> returnvsresultwidget({
                 child: Row(
                   // mainAxisAlignment: MainAxisAlignment.end,
                   children: [
-                    CachedNetworkImage(
-                      height: 75,
-                      width: 75,
-                      imageUrl:
-                          'https://assets2.lxns.net/chunithm/jacket/$songid.png',
-                      errorWidget: (context, url, error) => Icon(Icons.error),
-                    ),
+                    kIsWeb
+                        ? Image.network(
+                            'https://assets2.lxns.net/chunithm/jacket/$songid.png',
+                            height: 75,
+                            width: 75,
+                            errorBuilder: (context, error, stackTrace) =>
+                                Icon(Icons.error),
+                          )
+                        : CachedNetworkImage(
+                            height: 75,
+                            width: 75,
+                            imageUrl:
+                                'https://assets2.lxns.net/chunithm/jacket/$songid.png',
+                            errorWidget: (context, url, error) =>
+                                Icon(Icons.error),
+                          ),
                     Expanded(
                       child: Text.rich(
                         TextSpan(

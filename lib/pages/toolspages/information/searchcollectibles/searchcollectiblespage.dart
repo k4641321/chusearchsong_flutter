@@ -13,7 +13,6 @@ class _SearchCollectiblesState extends State<SearchCollectiblesPage> {
   List<Widget> result = [];
   String initialSelection = 'all';
   String color = 'all';
-  bool onlysearchtrophty = false;
   final ScrollController _scrollController = ScrollController();
 
   @override
@@ -64,7 +63,6 @@ class _SearchCollectiblesState extends State<SearchCollectiblesPage> {
                         searchtype: initialSelection,
                         isSonginfo: false,
                         color: color,
-                        onlysearchtrophty: onlysearchtrophty,
                       );
                       if (!mounted) return;
                       setState(() {
@@ -99,9 +97,6 @@ class _SearchCollectiblesState extends State<SearchCollectiblesPage> {
                     onSelected: (value) async {
                       List<Widget> result2 = [];
                       initialSelection = value ?? 'all';
-                      if (value != 'all') {
-                        onlysearchtrophty = true;
-                      }
 
                       result2 = await searchCollectibles(
                         context: context,
@@ -109,7 +104,6 @@ class _SearchCollectiblesState extends State<SearchCollectiblesPage> {
                         searchtype: initialSelection,
                         isSonginfo: false,
                         color: color,
-                        onlysearchtrophty: onlysearchtrophty,
                       );
                       if (!mounted) return;
                       setState(() {
@@ -135,18 +129,12 @@ class _SearchCollectiblesState extends State<SearchCollectiblesPage> {
                     onSelected: (value) async {
                       List<Widget> result2 = [];
                       color = value ?? 'all';
-                      if (value != 'all') {
-                        onlysearchtrophty = true;
-                      } else {
-                        onlysearchtrophty = false;
-                      }
                       result2 = await searchCollectibles(
                         context: context,
                         searchtext: _controller.text,
                         searchtype: initialSelection,
                         isSonginfo: false,
                         color: color,
-                        onlysearchtrophty: onlysearchtrophty,
                       );
                       if (!mounted) return;
                       setState(() {

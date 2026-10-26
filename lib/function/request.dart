@@ -1,7 +1,20 @@
+import 'dart:typed_data';
+
 import 'package:chusearchsong_flutter/function/writeandreadfun.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart';
 import 'dart:convert';
+
+//曲绘请求
+Future<Uint8List> requestSongJacket(int id) async {
+  final uri = Uri.parse('https://assets2.lxns.net/chunithm/jacket/$id.png');
+  final response = await get(uri);
+  if (response.statusCode != 200) {
+    throw Exception('请求失败，状态码：${response.statusCode}');
+  }
+
+  return response.bodyBytes;
+}
 
 //热门歌曲
 Future<String> requestHotSong(String type) async {

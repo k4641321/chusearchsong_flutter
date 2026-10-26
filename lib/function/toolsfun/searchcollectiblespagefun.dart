@@ -1,7 +1,10 @@
+import 'dart:developer';
+
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:chusearchsong_flutter/function/toolsfun/playerinfopagefun.dart';
 import 'package:chusearchsong_flutter/function/writeandreadfun.dart';
 import 'package:chusearchsong_flutter/pages/toolspages/information/searchcollectibles/collectibleinfopage.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
 //收藏品搜索
@@ -11,7 +14,6 @@ Future<List<Widget>> searchCollectibles({
   required String searchtype,
   required bool isSonginfo,
   String? color,
-  bool? onlysearchtrophty,
 }) async {
   List<Widget> collectibles = [];
   Map<String, dynamic> iconJson = SongDataStore.instance.collectionIcons;
@@ -19,6 +21,8 @@ Future<List<Widget>> searchCollectibles({
   Map<String, dynamic> trophyJson = SongDataStore.instance.collectionTrophies;
   Map<String, dynamic> characterJson =
       SongDataStore.instance.collectionCharacters;
+
+  log("$searchtext $searchtype $isSonginfo $color");
 
   Widget returnWidget({
     required Map<String, dynamic> data,
@@ -69,12 +73,18 @@ Future<List<Widget>> searchCollectibles({
         if (entype == 'plate') {
           width = 150;
         }
-        image = CachedNetworkImage(
-          width: width,
-          imageUrl:
-              'https://assets2.lxns.net/chunithm/$entype/${data['id']}.png',
-          errorWidget: (context, url, error) => SizedBox.shrink(),
-        );
+        image = kIsWeb
+            ? Image.network(
+                'https://assets2.lxns.net/chunithm/$entype/${data['id']}.png',
+                width: width,
+                errorBuilder: (context, error, stackTrace) => SizedBox.shrink(),
+              )
+            : CachedNetworkImage(
+                width: width,
+                imageUrl:
+                    'https://assets2.lxns.net/chunithm/$entype/${data['id']}.png',
+                errorWidget: (context, url, error) => SizedBox.shrink(),
+              );
       }
       return Row(
         children: [
@@ -157,8 +167,7 @@ Future<List<Widget>> searchCollectibles({
   if ((searchtype == 'icon' ||
           searchtype == 'all' ||
           searchtype == 'required') &&
-      isSonginfo == false &&
-      onlysearchtrophty == false) {
+      isSonginfo == false) {
     for (var i in iconJson['icons']) {
       if (i['name'].toLowerCase().contains(searchtext.toLowerCase()) ||
           i['description'].toLowerCase().contains(searchtext.toLowerCase()) ||
@@ -182,8 +191,7 @@ Future<List<Widget>> searchCollectibles({
   if ((searchtype == 'plate' ||
           searchtype == 'all' ||
           searchtype == 'required') &&
-      isSonginfo == false &&
-      onlysearchtrophty == false) {
+      isSonginfo == false) {
     for (var i in plateJson['plates']) {
       if (i['name'].toLowerCase().contains(searchtext.toLowerCase()) ||
           i['description'].toLowerCase().contains(searchtext.toLowerCase()) ||
@@ -201,6 +209,8 @@ Future<List<Widget>> searchCollectibles({
         collectibles.add(returnWidget(data: i, type: '名牌版'));
       }
     }
+  } else {
+    log("跳过名牌版");
   }
 
   //称号搜索
@@ -244,8 +254,7 @@ Future<List<Widget>> searchCollectibles({
   if ((searchtype == 'character' ||
           searchtype == 'all' ||
           searchtype == 'required') &&
-      isSonginfo == false &&
-      onlysearchtrophty == false) {
+      isSonginfo == false) {
     for (var i in characterJson['characters']) {
       if (i['name'].toLowerCase().contains(searchtext.toLowerCase()) ||
           i['id'].toString().contains(searchtext) ||
@@ -265,7 +274,7 @@ Future<List<Widget>> searchCollectibles({
     }
   }
 
-  // print(collectibles.length);
+  print(collectibles.length);
   // print(plateJson);
   return collectibles;
 }

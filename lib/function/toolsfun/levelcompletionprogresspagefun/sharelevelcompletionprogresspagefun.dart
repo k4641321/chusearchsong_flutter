@@ -1,6 +1,7 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:chusearchsong_flutter/function/commonfun.dart';
 import 'package:chusearchsong_flutter/function/writeandreadfun.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
 String returnlevelString({required List level}) {
@@ -283,21 +284,42 @@ Future<Widget> returnShareLevelCompletionProgressPageFun({
                         child: Stack(
                           fit: StackFit.passthrough,
                           children: [
-                            CachedNetworkImage(
-                              imageUrl:
-                                  'https://assets2.lxns.net/chunithm/jacket/${i['id']}.png',
-                              width: 100,
-                              height: 100,
-                              errorWidget: (context, url, error) =>
-                                  CachedNetworkImage(
+                            kIsWeb
+                                ? Image.network(
+                                    'https://assets2.lxns.net/chunithm/jacket/${i['id']}.png',
+                                    width: 100,
+                                    height: 100,
+                                    errorBuilder:
+                                        (
+                                          context,
+                                          error,
+                                          stackTrace,
+                                        ) => Image.network(
+                                          width: 100,
+                                          height: 100,
+                                          'https://assets2.lxns.net/chunithm/jacket/${((i['difficulties'] as List).last as Map)['origin_id']}.png',
+                                          errorBuilder:
+                                              (context, error, stackTrace) =>
+                                                  Text(
+                                                    '错误：${error.toString()}',
+                                                  ),
+                                        ),
+                                  )
+                                : CachedNetworkImage(
                                     imageUrl:
-                                        'https://assets2.lxns.net/chunithm/jacket/${((i['difficulties'] as List).last as Map)['origin_id']}.png',
+                                        'https://assets2.lxns.net/chunithm/jacket/${i['id']}.png',
                                     width: 100,
                                     height: 100,
                                     errorWidget: (context, url, error) =>
-                                        Text('错误：${error.toString()}'),
+                                        CachedNetworkImage(
+                                          imageUrl:
+                                              'https://assets2.lxns.net/chunithm/jacket/${((i['difficulties'] as List).last as Map)['origin_id']}.png',
+                                          width: 100,
+                                          height: 100,
+                                          errorWidget: (context, url, error) =>
+                                              Text('错误：${error.toString()}'),
+                                        ),
                                   ),
-                            ),
                             // Image.network(
                             //   'https://assets2.lxns.net/chunithm/jacket/${i['id']}.png',
                             //   width: 100,

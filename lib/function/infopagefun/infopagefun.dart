@@ -133,6 +133,7 @@ Widget buildAdCard({
   required ThemeData theme,
   required String url,
   required String text,
+  required BuildContext context,
 }) {
   return Card(
     elevation: 0,
@@ -142,6 +143,21 @@ Widget buildAdCard({
     child: InkWell(
       borderRadius: BorderRadius.circular(15),
       onTap: () async {
+        if (url !=
+            'myqqapi://card/show_pslcard?src_type=internal&version=1&card_type=group&uin=309546141') {
+          await showDialog(
+            context: context,
+            builder: (context) => AlertDialog(
+              content: Text('作者无法保证广告内容的安全性，请自行注意分辩'),
+              actions: [
+                TextButton(
+                  onPressed: () => Navigator.pop(context),
+                  child: Text('确定'),
+                ),
+              ],
+            ),
+          );
+        }
         final uri = Uri.parse(url);
         if (await canLaunchUrl(uri)) {
           await launchUrl(uri, mode: LaunchMode.externalApplication);
@@ -170,24 +186,30 @@ Widget buildAdCard({
   );
 }
 
-List<Widget> buildAdCards({required ThemeData theme}) {
+List<Widget> buildAdCards({
+  required ThemeData theme,
+  required BuildContext context,
+}) {
   return [
     buildAdCard(
       theme: theme,
       url:
           'myqqapi://card/show_pslcard?src_type=internal&version=1&card_type=group&uin=309546141',
       text: 'MC皮肤定制，10r一张，进群私聊群主',
+      context: context,
     ),
     buildAdCard(
       theme: theme,
       url: 'https://github.com/ChiffonOwO/ChiffonMai',
       text: '功能最全的舞萌工具，尽在 ChiffonMai !',
+      context: context,
     ),
     buildAdCard(
       theme: theme,
       url:
-          'myqqapi://card/show_pslcard?src_type=internal&version=1&card_type=group&uin=309546141',
+          'myqqapi://card/show_pslcard?src_type=internal&version=1&card_type=group&uin=781038216',
       text: 'MaiScan，离线以图搜歌',
+      context: context,
     ),
   ];
 }

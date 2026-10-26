@@ -3,6 +3,7 @@ import 'package:chusearchsong_flutter/function/commonfun.dart';
 import 'package:chusearchsong_flutter/function/toolsfun/generateb50fun/generateb50.dart';
 import 'package:chusearchsong_flutter/function/toolsfun/searchsongzxzrpagefun/songinfopagefun.dart';
 import 'package:chusearchsong_flutter/pages/toolspages/tools/searchsongzxzrpage/songinfopage.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
 Widget buildDropDownMenu(ValueChanged onSelected) {
@@ -537,13 +538,21 @@ Widget returnSortSongCard({
               children: [
                 Padding(
                   padding: EdgeInsetsGeometry.only(right: 10),
-                  child: CachedNetworkImage(
-                    imageUrl:
-                        'https://assets2.lxns.net/chunithm/jacket/$originid.png',
-                    width: 105,
-                    height: 105,
-                    errorWidget: (context, url, error) => Text('加载失败'),
-                  ),
+                  child: kIsWeb
+                      ? Image.network(
+                          'https://assets2.lxns.net/chunithm/jacket/$originid.png',
+                          width: 95,
+                          height: 95,
+                          errorBuilder: (context, error, stackTrace) =>
+                              Text('加载失败'),
+                        )
+                      : CachedNetworkImage(
+                          imageUrl:
+                              'https://assets2.lxns.net/chunithm/jacket/$originid.png',
+                          width: 95,
+                          height: 95,
+                          errorWidget: (context, url, error) => Text('加载失败'),
+                        ),
                 ),
                 other,
               ],
@@ -673,12 +682,20 @@ Widget returnSortZXZRSongCard({
               children: [
                 Padding(
                   padding: EdgeInsetsGeometry.only(right: 10),
-                  child: CachedNetworkImage(
-                    imageUrl: songbasedata['jacket_url'],
-                    width: 105,
-                    height: 105,
-                    errorWidget: (context, url, error) => Text('加载失败'),
-                  ),
+                  child: kIsWeb
+                      ? Image.network(
+                          songbasedata['jacket_url'],
+                          width: 105,
+                          height: 105,
+                          errorBuilder: (context, error, stackTrace) =>
+                              Text('加载失败'),
+                        )
+                      : CachedNetworkImage(
+                          imageUrl: songbasedata['jacket_url'],
+                          width: 105,
+                          height: 105,
+                          errorWidget: (context, url, error) => Text('加载失败'),
+                        ),
                 ),
                 other,
               ],

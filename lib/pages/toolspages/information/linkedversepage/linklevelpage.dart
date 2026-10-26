@@ -166,7 +166,7 @@ class _LinklevelpageState extends State<Linklevelpage> {
                           DataCell(Text('-100')),
                           DataCell(Text('-200')),
                           DataCell(Text('+200')),
-                          DataCell(requireddiffWidget([2, 3, 4])),
+                          DataCell(requireddiffWidget([2, 3])),
                         ],
                       ),
                       DataRow(
@@ -177,7 +177,7 @@ class _LinklevelpageState extends State<Linklevelpage> {
                           DataCell(Text('-50')),
                           DataCell(Text('-50')),
                           DataCell(Text('+200')),
-                          DataCell(requireddiffWidget([0, 1, 2, 3, 4])),
+                          DataCell(requireddiffWidget([0, 1, 2, 3])),
                         ],
                       ),
                     ],

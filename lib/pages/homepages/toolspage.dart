@@ -1,7 +1,7 @@
 import 'package:chusearchsong_flutter/function/writeandreadfun.dart';
 import 'package:chusearchsong_flutter/pages/toolspages/information/brandprogresspage/brandprogresspage.dart';
 import 'package:chusearchsong_flutter/pages/toolspages/information/linkedversepage/linkedversepage.dart';
-import 'package:chusearchsong_flutter/pages/toolspages/other/generateimage.dart';
+import 'package:chusearchsong_flutter/pages/toolspages/other/generateimages/generateimagesindexpage.dart';
 import 'package:chusearchsong_flutter/pages/toolspages/tools/chuqinturntablepage.dart';
 import 'package:chusearchsong_flutter/pages/toolspages/tools/friendbattlepage.dart';
 import 'package:chusearchsong_flutter/pages/toolspages/tools/overpowercalculationpage.dart';
@@ -235,7 +235,7 @@ class _ToolPageState extends State<ToolPage> {
         _ToolItem(
           title: '图片生成',
           icon: Icons.photo_outlined,
-          pageBuilder: (_) => Generateimage(),
+          pageBuilder: (_) => Generateimagesindexpage(),
         ),
       ],
     ),

@@ -12,6 +12,9 @@ Future<List<Widget>> search({
   required Map<String, dynamic> songresultMap,
   required BuildContext context,
   Map<int, dynamic>? searchinfo,
+  VoidCallback? voidCallbackFunction,
+  bool issearch = true,
+  Future<void> Function(int)? chartsharepagefun,
 }) async {
   //生成组件
   List<Widget> songresultWidget = [];
@@ -61,6 +64,8 @@ Future<List<Widget>> search({
         context: context,
         songsData: songsData,
         searchinfo: searchinfo,
+        issearch: issearch,
+        chartsharepagefun: chartsharepagefun,
       ),
       // InkWell(
       //   // key: ValueKey(i['id']),
@@ -232,6 +237,8 @@ Future<Map<String, dynamic>> filter(
         songresult.add(i['id']);
       }
     }
+  } else {
+    log('跳过Id');
   }
 
   //别名筛选
@@ -248,6 +255,8 @@ Future<Map<String, dynamic>> filter(
         }
       }
     }
+  } else {
+    log("别名");
   }
 
   //多种音符组合筛选
@@ -381,6 +390,8 @@ Future<Map<String, dynamic>> filter(
       if (bpm is! num) return false;
       return bpm >= bpmDown && bpm <= bpmUp;
     }).toList();
+  } else {
+    log("跳过BPM筛选");
   }
 
   //筛选游玩记录
@@ -393,6 +404,8 @@ Future<Map<String, dynamic>> filter(
       final played = playedIds.contains(song['id']);
       return ifplay == '1' ? played : !played;
     }).toList();
+  } else {
+    log("跳过游玩记录筛选");
   }
 
   //筛选流派
@@ -406,6 +419,8 @@ Future<Map<String, dynamic>> filter(
     songresultMap = songresultMap
         .where((song) => genreList.contains(song['genre']))
         .toList();
+  } else {
+    log("跳过流派筛选");
   }
 
   //筛选版本
@@ -413,6 +428,8 @@ Future<Map<String, dynamic>> filter(
     songresultMap = songresultMap
         .where((song) => version.contains(song['version'].toString()))
         .toList();
+  } else {
+    log("跳过版本筛选");
   }
 
   //筛选难度（可与难度类型 difficultyIndex 组合）

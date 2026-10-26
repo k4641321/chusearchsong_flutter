@@ -7,6 +7,7 @@ import 'package:chusearchsong_flutter/function/request.dart';
 import 'package:chusearchsong_flutter/function/toolsfun/levelcompletionprogresspagefun/sharelevelcompletionprogresspagefun.dart';
 import 'package:chusearchsong_flutter/function/toolsfun/playerinfopagefun.dart';
 import 'package:chusearchsong_flutter/function/writeandreadfun.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
 class Indexpage extends StatefulWidget {
@@ -56,13 +57,21 @@ class _IndexpageState extends State<Indexpage> {
             children: [
               Padding(
                 padding: EdgeInsetsGeometry.only(right: 5),
-                child: CachedNetworkImage(
-                  imageUrl:
-                      'https://assets2.lxns.net/chunithm/jacket/$songid.png',
-                  height: 75,
-                  width: 75,
-                  errorWidget: (context, url, error) => Text('图片加载失败'),
-                ),
+                child: kIsWeb
+                    ? Image.network(
+                        'https://assets2.lxns.net/chunithm/jacket/$songid.png',
+                        height: 75,
+                        width: 75,
+                        errorBuilder: (context, error, stackTrace) =>
+                            Text('图片加载失败'),
+                      )
+                    : CachedNetworkImage(
+                        imageUrl:
+                            'https://assets2.lxns.net/chunithm/jacket/$songid.png',
+                        height: 75,
+                        width: 75,
+                        errorWidget: (context, url, error) => Text('图片加载失败'),
+                      ),
               ),
               Expanded(
                 child: Column(
@@ -186,14 +195,24 @@ class _IndexpageState extends State<Indexpage> {
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
                             playerInfoData['character'] != null
-                                ? CachedNetworkImage(
-                                    width: 100,
-                                    height: 100,
-                                    imageUrl:
-                                        'https://assets2.lxns.net/chunithm/character/${playerInfoData['character']['id']}.png',
-                                    errorWidget: (context, error, stackTrace) =>
-                                        Text('图片加载失败'),
-                                  )
+                                ? (kIsWeb
+                                      ? Image.network(
+                                          'https://assets2.lxns.net/chunithm/character/${playerInfoData['character']['id']}.png',
+                                          width: 100,
+                                          height: 100,
+                                          errorBuilder:
+                                              (context, error, stackTrace) =>
+                                                  Text('图片加载失败'),
+                                        )
+                                      : CachedNetworkImage(
+                                          width: 100,
+                                          height: 100,
+                                          imageUrl:
+                                              'https://assets2.lxns.net/chunithm/character/${playerInfoData['character']['id']}.png',
+                                          errorWidget:
+                                              (context, error, stackTrace) =>
+                                                  Text('图片加载失败'),
+                                        ))
                                 : SizedBox(height: 100, width: 100),
                             Expanded(
                               child: Column(

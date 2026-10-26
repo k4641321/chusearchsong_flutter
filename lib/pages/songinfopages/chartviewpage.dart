@@ -172,33 +172,63 @@ class _ChartViewPageState extends State<ChartViewPage> {
           setState(() {
             // final stopwatch = Stopwatch()..start();
             result = [
-              CachedNetworkImage(
-                imageUrl: bgurl.join('/'),
-                // height: MediaQuery.heightOf(context),
-                fit: BoxFit.none,
-                errorWidget: (context, error, stackTrace) => Text(
-                  '错误：$error \n $stackTrace',
-                  style: TextStyle(color: Colors.white),
-                ),
-              ),
-              CachedNetworkImage(
-                imageUrl: barurl.join('/'),
-                // height: MediaQuery.heightOf(context),
-                fit: BoxFit.none,
-                errorWidget: (context, error, stackTrace) => Text(
-                  '错误：$error \n $stackTrace',
-                  style: TextStyle(color: Colors.white),
-                ),
-              ),
-              CachedNetworkImage(
-                imageUrl: chartdataurl.join('/'),
-                // height: MediaQuery.heightOf(context),
-                fit: BoxFit.none,
-                errorWidget: (context, error, stackTrace) => Text(
-                  '错误：$error \n $stackTrace',
-                  style: TextStyle(color: Colors.white),
-                ),
-              ),
+              kIsWeb
+                  ? Image.network(
+                      bgurl.join('/'),
+                      // height: MediaQuery.heightOf(context),
+                      fit: BoxFit.none,
+                      errorBuilder: (context, error, stackTrace) => Text(
+                        '错误：$error \n $stackTrace',
+                        style: TextStyle(color: Colors.white),
+                      ),
+                    )
+                  : CachedNetworkImage(
+                      imageUrl: bgurl.join('/'),
+                      // height: MediaQuery.heightOf(context),
+                      fit: BoxFit.none,
+                      errorWidget: (context, error, stackTrace) => Text(
+                        '错误：$error \n $stackTrace',
+                        style: TextStyle(color: Colors.white),
+                      ),
+                    ),
+              kIsWeb
+                  ? Image.network(
+                      barurl.join('/'),
+                      // height: MediaQuery.heightOf(context),
+                      fit: BoxFit.none,
+                      errorBuilder: (context, error, stackTrace) => Text(
+                        '错误：$error \n $stackTrace',
+                        style: TextStyle(color: Colors.white),
+                      ),
+                    )
+                  : CachedNetworkImage(
+                      imageUrl: barurl.join('/'),
+                      // height: MediaQuery.heightOf(context),
+                      fit: BoxFit.none,
+                      errorWidget: (context, error, stackTrace) => Text(
+                        '错误：$error \n $stackTrace',
+                        style: TextStyle(color: Colors.white),
+                      ),
+                    ),
+              kIsWeb
+                  ? Image.network(
+                      chartdataurl.join('/'),
+                      // height: MediaQuery.heightOf(context),
+                      fit: BoxFit.none,
+                      errorBuilder: (context, error, stackTrace) => Text(
+                        '错误：$error \n $stackTrace',
+                        style: TextStyle(color: Colors.white),
+                      ),
+                    )
+                  : CachedNetworkImage(
+                      imageUrl: chartdataurl.join('/'),
+                      // height: MediaQuery.heightOf(context),
+                      fit: BoxFit.none,
+                      errorWidget: (context, error, stackTrace) => Text(
+                        '错误：$error \n $stackTrace',
+                        style: TextStyle(color: Colors.white),
+                      ),
+                    ),
             ];
             // stopwatch.stop();
             // log('耗时: ${stopwatch.elapsedMilliseconds}ms');

@@ -1,5 +1,6 @@
 import 'dart:developer';
 import 'package:chusearchsong_flutter/pages/toolspages/tools/searchsongzxzrpage/songinfopage.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'dart:math' as math;
 import 'package:cached_network_image/cached_network_image.dart';
@@ -38,15 +39,25 @@ Future<List<Widget>> search({
             child: Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                CachedNetworkImage(
-                  imageUrl: i['jacket_url'],
-                  width: 75,
-                  height: 75,
-                  errorWidget: (context, url, error) {
-                    // log('$url\n$error');
-                    return Text('加载失败');
-                  },
-                ),
+                kIsWeb
+                    ? Image.network(
+                        i['jacket_url'],
+                        width: 75,
+                        height: 75,
+                        errorBuilder: (context, error, stackTrace) {
+                          // log('$url\n$error');
+                          return Text('加载失败');
+                        },
+                      )
+                    : CachedNetworkImage(
+                        imageUrl: i['jacket_url'],
+                        width: 75,
+                        height: 75,
+                        errorWidget: (context, url, error) {
+                          // log('$url\n$error');
+                          return Text('加载失败');
+                        },
+                      ),
                 Expanded(
                   child: Text(
                     '${i['id']} - ${i['title']}      ${i['genre']} - ${i['version']}  \n $songInfoDiffs',

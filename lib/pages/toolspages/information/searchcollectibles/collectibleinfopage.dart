@@ -4,6 +4,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:chusearchsong_flutter/function/aliyunapi/texttranslate.dart';
 import 'package:chusearchsong_flutter/function/toolsfun/collectibleinfopagefun.dart';
 import 'package:chusearchsong_flutter/function/writeandreadfun.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'dart:convert';
 import '../../../../function/commonfun.dart';
@@ -537,14 +538,23 @@ class _CollectibleInfoPageState extends State<CollectibleInfoPage> {
                           children: [
                             Padding(
                               padding: EdgeInsetsGeometry.only(right: 10),
-                              child: CachedNetworkImage(
-                                imageUrl:
-                                    'https://assets2.lxns.net/chunithm/jacket/$originid.png',
-                                width: 95,
-                                height: 95,
-                                errorWidget: (context, url, error) =>
-                                    Text('加载失败'),
-                              ),
+                              child: kIsWeb
+                                  ? Image.network(
+                                      'https://assets2.lxns.net/chunithm/jacket/$originid.png',
+                                      width: 95,
+                                      height: 95,
+                                      errorBuilder:
+                                          (context, error, stackTrace) =>
+                                              Text('加载失败'),
+                                    )
+                                  : CachedNetworkImage(
+                                      imageUrl:
+                                          'https://assets2.lxns.net/chunithm/jacket/$originid.png',
+                                      width: 95,
+                                      height: 95,
+                                      errorWidget: (context, url, error) =>
+                                          Text('加载失败'),
+                                    ),
                             ),
                             Expanded(
                               child: Column(
@@ -643,14 +653,23 @@ class _CollectibleInfoPageState extends State<CollectibleInfoPage> {
                           children: [
                             Padding(
                               padding: EdgeInsetsGeometry.only(right: 10),
-                              child: CachedNetworkImage(
-                                imageUrl:
-                                    'https://assets2.lxns.net/chunithm/jacket/$originid.png',
-                                width: 95,
-                                height: 95,
-                                errorWidget: (context, url, error) =>
-                                    Text('加载失败'),
-                              ),
+                              child: kIsWeb
+                                  ? Image.network(
+                                      'https://assets2.lxns.net/chunithm/jacket/$originid.png',
+                                      width: 95,
+                                      height: 95,
+                                      errorBuilder:
+                                          (context, error, stackTrace) =>
+                                              Text('加载失败'),
+                                    )
+                                  : CachedNetworkImage(
+                                      imageUrl:
+                                          'https://assets2.lxns.net/chunithm/jacket/$originid.png',
+                                      width: 95,
+                                      height: 95,
+                                      errorWidget: (context, url, error) =>
+                                          Text('加载失败'),
+                                    ),
                             ),
                             Expanded(
                               child: Column(

@@ -2,6 +2,7 @@ import 'dart:developer';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:chusearchsong_flutter/function/aliyunapi/texttranslate.dart';
 import 'package:chusearchsong_flutter/function/writeandreadfun.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import '../../function/commonfun.dart';
 import 'musicpage.dart';
@@ -408,20 +409,38 @@ class _SongInfoPageState extends State<SongInfoPage> {
             title: autoMarqueeText(widget.songbasedata['title']),
             flexibleSpace: FlexibleSpaceBar(
               background: InkWell(
-                child: CachedNetworkImage(
-                  height: 350,
-                  width: 350,
-                  color: isDark
-                      ? Colors.black.withValues(alpha: 0.3)
-                      : Colors.white.withValues(alpha: 0.3),
-                  colorBlendMode: isDark ? BlendMode.darken : BlendMode.lighten,
-                  fit: BoxFit.contain,
-                  imageUrl:
-                      'https://assets2.lxns.net/chunithm/jacket/${widget.originid}.png',
-                  errorWidget: (context, error, stackTrace) {
-                    return const Text('图片加载失败');
-                  },
-                ),
+                child: kIsWeb
+                    ? Image.network(
+                        'https://assets2.lxns.net/chunithm/jacket/${widget.originid}.png',
+                        height: 350,
+                        width: 350,
+                        color: isDark
+                            ? Colors.black.withValues(alpha: 0.3)
+                            : Colors.white.withValues(alpha: 0.3),
+                        colorBlendMode: isDark
+                            ? BlendMode.darken
+                            : BlendMode.lighten,
+                        fit: BoxFit.contain,
+                        errorBuilder: (context, error, stackTrace) {
+                          return const Text('图片加载失败');
+                        },
+                      )
+                    : CachedNetworkImage(
+                        height: 350,
+                        width: 350,
+                        color: isDark
+                            ? Colors.black.withValues(alpha: 0.3)
+                            : Colors.white.withValues(alpha: 0.3),
+                        colorBlendMode: isDark
+                            ? BlendMode.darken
+                            : BlendMode.lighten,
+                        fit: BoxFit.contain,
+                        imageUrl:
+                            'https://assets2.lxns.net/chunithm/jacket/${widget.originid}.png',
+                        errorWidget: (context, error, stackTrace) {
+                          return const Text('图片加载失败');
+                        },
+                      ),
                 onTap: () {
                   Navigator.push(
                     context,
