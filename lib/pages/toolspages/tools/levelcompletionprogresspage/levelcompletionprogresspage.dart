@@ -45,6 +45,8 @@ class _LevelCompletionProgressPageState
       level: level,
       context: context,
       scrollController: _scrollController,
+      useOld: false,
+      isshow: true,
     );
     setState(() {
       result = result2;

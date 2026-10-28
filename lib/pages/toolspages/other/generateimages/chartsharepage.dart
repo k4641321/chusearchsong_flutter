@@ -11,6 +11,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter_colorpicker/flutter_colorpicker.dart';
 import 'package:image/image.dart' as img;
+import 'package:file_picker/file_picker.dart';
 
 class Chartsharepage extends StatefulWidget {
   const Chartsharepage({super.key});
@@ -35,6 +36,7 @@ class _ChartsharepageState extends State<Chartsharepage> {
   List tablecontentBackground = [];
   List tablecontentImages = [];
   List tablecontentImagesSize = [];
+  List tablecontentImagesContainerColor = [];
   double containerWidth = 100;
   double containerHeight = 100;
   double paddingLeft = 5;
@@ -42,7 +44,7 @@ class _ChartsharepageState extends State<Chartsharepage> {
   double paddingRight = 5;
   double paddingBottom = 5;
   double borderWidth = 1;
-  String title = '中二节奏Bingo';
+  String title = '谱面分享';
   String subtitle = '';
   String tabulator = '制表人：';
   String formfiller = '';
@@ -109,7 +111,8 @@ class _ChartsharepageState extends State<Chartsharepage> {
           tablecontentFontSize.add(18);
           tablecontentBackground.add(Colors.white.toARGB32());
           tablecontentImages.add(Uint8List(0));
-          tablecontentImagesSize.add((75, 75));
+          tablecontentImagesSize.add([60.0, 60.0]);
+          tablecontentImagesContainerColor.add(Colors.transparent.toARGB32());
         }
       }
       for (var i = 0; i < row * column + 1; i++) {
@@ -164,6 +167,7 @@ class _ChartsharepageState extends State<Chartsharepage> {
                 double fontsize = tablecontentFontSize[idx - 1].toDouble();
                 int backgroundcolor = tablecontentBackground[idx - 1];
                 Uint8List? selectImage = tablecontentImages[idx - 1];
+                int containerColor = tablecontentImagesContainerColor[idx - 1];
                 await showDialog(
                   context: context,
                   builder: (context) => AlertDialog(
@@ -381,22 +385,28 @@ class _ChartsharepageState extends State<Chartsharepage> {
                                                               songresultMap,
                                                           context: context,
                                                           issearch: false,
-                                                          chartsharepagefun:
-                                                              (p0) async {
-                                                                final bytes =
-                                                                    await requestSongJacket(
-                                                                      p0,
-                                                                    );
-                                                                selectImage =
-                                                                    bytes;
-                                                                if (!context
-                                                                    .mounted) {
-                                                                  return;
-                                                                }
-                                                                Navigator.of(
-                                                                  context,
-                                                                ).pop();
-                                                              },
+                                                          chartsharepagefun: (p0) async {
+                                                            showDialog(
+                                                              context: context,
+                                                              builder: (context) =>
+                                                                  CircularProgressIndicator(),
+                                                            );
+                                                            final bytes =
+                                                                await requestSongJacket(
+                                                                  p0,
+                                                                );
+                                                            selectImage = bytes;
+                                                            if (!context
+                                                                .mounted) {
+                                                              return;
+                                                            }
+                                                            Navigator.of(
+                                                              context,
+                                                            ).pop();
+                                                            Navigator.of(
+                                                              context,
+                                                            ).pop();
+                                                          },
                                                         );
                                                         setState(() {
                                                           resultchildren =
@@ -406,6 +416,44 @@ class _ChartsharepageState extends State<Chartsharepage> {
                                                         log("$e");
                                                       }
                                                     },
+                                                  ),
+                                                ),
+                                              ],
+                                            ),
+                                            Row(
+                                              children: [
+                                                Expanded(
+                                                  child: TextButton(
+                                                    onPressed: () async {
+                                                      final result =
+                                                          await FilePicker.pickFiles(
+                                                            dialogTitle:
+                                                                "选择本地图片",
+                                                            withData: true,
+                                                            allowMultiple:
+                                                                false,
+                                                            type:
+                                                                FileType.image,
+                                                          );
+                                                      if (result == null ||
+                                                          result
+                                                              .files
+                                                              .isEmpty) {
+                                                        return;
+                                                      }
+
+                                                      final bytes = result
+                                                          .files
+                                                          .first
+                                                          .bytes;
+                                                      if (bytes == null) return;
+                                                      selectImage = bytes;
+                                                      if (!context.mounted) {
+                                                        return;
+                                                      }
+                                                      Navigator.pop(context);
+                                                    },
+                                                    child: Text('选择本地图片'),
                                                   ),
                                                 ),
                                               ],
@@ -422,9 +470,80 @@ class _ChartsharepageState extends State<Chartsharepage> {
                                   ),
                                 );
                               },
-                              child: Text('背景图选择'),
+                              child: Text('图片选择'),
                             ),
-                            TextButton(onPressed: () {}, child: Text('背景图删除')),
+                            TextButton(
+                              onPressed: () {
+                                tablecontentImages[idx - 1] = Uint8List(0);
+                              },
+                              child: Text('图片删除'),
+                            ),
+                          ],
+                        ),
+                        Row(
+                          children: [
+                            Text("宽"),
+                            Expanded(
+                              child: TextFormField(
+                                initialValue: tablecontentImagesSize[idx - 1][0]
+                                    .toString(),
+                                onChanged: (value) {
+                                  if (double.tryParse(value) != null) {
+                                    tablecontentImagesSize[idx - 1][0] =
+                                        double.parse(value);
+                                  }
+                                },
+                              ),
+                            ),
+                            Text("高"),
+                            Expanded(
+                              child: TextFormField(
+                                initialValue: tablecontentImagesSize[idx - 1][1]
+                                    .toString(),
+                                onChanged: (value) {
+                                  if (double.tryParse(value) != null) {
+                                    tablecontentImagesSize[idx - 1][1] =
+                                        double.parse(value);
+                                  }
+                                },
+                              ),
+                            ),
+                          ],
+                        ),
+                        Row(
+                          children: [
+                            Expanded(
+                              child: TextButton(
+                                onPressed: () async {
+                                  showDialog(
+                                    context: context,
+                                    builder: (context) => AlertDialog(
+                                      title: Text('选择颜色'),
+                                      scrollable: true,
+                                      content: ColorPicker(
+                                        pickerColor: Color(containerColor),
+                                        onColorChanged: (v) =>
+                                            containerColor = v.toARGB32(),
+                                      ),
+                                      actions: [
+                                        TextButton(
+                                          onPressed: () =>
+                                              Navigator.pop(context),
+                                          child: const Text('取消'),
+                                        ),
+                                        TextButton(
+                                          onPressed: () {
+                                            Navigator.pop(context);
+                                          },
+                                          child: const Text('确定'),
+                                        ),
+                                      ],
+                                    ),
+                                  );
+                                },
+                                child: Text("边框颜色"),
+                              ),
+                            ),
                           ],
                         ),
                       ],
@@ -443,7 +562,10 @@ class _ChartsharepageState extends State<Chartsharepage> {
                           tablecontentColors[idx - 1] = colorint;
                           tablecontentFontSize[idx - 1] = fontsize;
                           tablecontentBackground[idx - 1] = backgroundcolor;
-                          tablecontentImages[idx - 1] = selectImage;
+                          tablecontentImages[idx - 1] =
+                              selectImage ?? Uint8List(0);
+                          tablecontentImagesContainerColor[idx - 1] =
+                              containerColor;
                           Navigator.of(context).pop();
                           _update();
                         },
@@ -472,13 +594,20 @@ class _ChartsharepageState extends State<Chartsharepage> {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  tablecontentImages[idx - 1].isEmpty
-                      ? const SizedBox.shrink()
-                      : Image.memory(
-                          tablecontentImages[idx - 1],
-                          width: tablecontentImagesSize[idx - 1].$1.toDouble(),
-                          height: tablecontentImagesSize[idx - 1].$2.toDouble(),
-                        ),
+                  Container(
+                    color: Color(tablecontentImagesContainerColor[idx - 1]),
+                    padding: EdgeInsets.all(3),
+                    child: tablecontentImages[idx - 1].isEmpty
+                        ? const SizedBox.shrink()
+                        : Image.memory(
+                            tablecontentImages[idx - 1],
+                            width: tablecontentImagesSize[idx - 1][0]
+                                .toDouble(),
+                            height: tablecontentImagesSize[idx - 1][1]
+                                .toDouble(),
+                            fit: BoxFit.fill,
+                          ),
+                  ),
                   Text(
                     (tablecontent[idx - 1]).toString(),
                     textAlign: TextAlign.center,
@@ -960,6 +1089,38 @@ class _ChartsharepageState extends State<Chartsharepage> {
                                 data['tablecontentFontSize'] as List? ??
                                 tablecontentFontSize;
 
+                            // 图片（JSON 数组 -> Uint8List）
+                            final rawImages =
+                                data['tablecontentImages'] as List?;
+                            if (rawImages != null) {
+                              tablecontentImages = rawImages
+                                  .map(
+                                    (e) => Uint8List.fromList(
+                                      (e as List).cast<int>(),
+                                    ),
+                                  )
+                                  .toList();
+                            }
+
+                            // 图片尺寸（[[宽, 高], ...]）
+                            final rawImageSizes =
+                                data['tablecontentImagesSize'] as List?;
+                            if (rawImageSizes != null) {
+                              tablecontentImagesSize = rawImageSizes
+                                  .map(
+                                    (e) => (e as List)
+                                        .map((v) => (v as num).toDouble())
+                                        .toList(),
+                                  )
+                                  .toList();
+                            }
+
+                            // 图片容器颜色
+                            tablecontentImagesContainerColor =
+                                data['tablecontentImagesContainerColor']
+                                    as List? ??
+                                tablecontentImagesContainerColor;
+
                             // 尺寸（double）
                             paddingLeft =
                                 (data['paddingLeft'] as num?)?.toDouble() ??
@@ -1021,6 +1182,24 @@ class _ChartsharepageState extends State<Chartsharepage> {
                   Expanded(
                     child: TextButton(
                       onPressed: () async {
+                        bool result = await showDialog(
+                          context: context,
+                          builder: (context) => AlertDialog(
+                            title: Text('是否包含图片'),
+                            actions: [
+                              TextButton(
+                                onPressed: () =>
+                                    Navigator.of(context).pop(false),
+                                child: Text('否'),
+                              ),
+                              TextButton(
+                                onPressed: () =>
+                                    Navigator.of(context).pop(true),
+                                child: Text('是'),
+                              ),
+                            ],
+                          ),
+                        );
                         Map<String, dynamic> data = {
                           "title": title,
                           "titleColor": titleColorList[0],
@@ -1034,7 +1213,12 @@ class _ChartsharepageState extends State<Chartsharepage> {
                           "tablecontentColors": tablecontentColors,
                           "tablecontentBackground": tablecontentBackground,
                           "tablecontentFontSize": tablecontentFontSize,
-
+                          "tablecontentImages": result
+                              ? tablecontentImages
+                              : null,
+                          "tablecontentImagesSize": tablecontentImagesSize,
+                          "tablecontentImagesContainerColor":
+                              tablecontentImagesContainerColor,
                           "paddingLeft": paddingLeft,
                           "paddingRight": paddingRight,
                           "paddingTop": paddingTop,
@@ -1048,7 +1232,7 @@ class _ChartsharepageState extends State<Chartsharepage> {
                         };
                         await FilePicker.saveFile(
                           dialogTitle: '保存配置',
-                          fileName: 'BingoConfig.json',
+                          fileName: 'chartShareConfig.json',
                           type: FileType.custom,
                           allowedExtensions: ['json'],
                           bytes: Utf8Encoder().convert(jsonEncode(data)),

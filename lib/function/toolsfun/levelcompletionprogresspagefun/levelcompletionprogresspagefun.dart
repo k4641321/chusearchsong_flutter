@@ -53,6 +53,8 @@ Widget buildsongList({
   required List level,
   required BuildContext context,
   required ScrollController scrollController,
+  required bool useOld,
+  required bool isshow,
 }) {
   // String playhistory({
   //   required int score,
@@ -65,6 +67,8 @@ Widget buildsongList({
   //     return '\n成绩：$score | Rating：$rating | 评级：${rank.replaceFirst('p', '+')}';
   //   }
   // }
+  //按定数分类
+  Map<double, dynamic> requiredSongsFilter = {};
 
   List songresultMap = [];
   //先筛选难度
@@ -72,9 +76,21 @@ Widget buildsongList({
     for (var j in i['difficulties']) {
       if (j['level_value'] >= level[0] && j['level_value'] <= level[1]) {
         songresultMap.add(i);
+        if (!requiredSongsFilter.containsKey(j['level_value'].toDouble())) {
+          requiredSongsFilter[j['level_value'].toDouble()] = [i];
+        } else {
+          requiredSongsFilter[j['level_value'].toDouble()].add(i);
+        }
       }
     }
   }
+
+  //排个序
+  List sortKeys = [];
+  for (var i in requiredSongsFilter.keys) {
+    sortKeys.add(i);
+  }
+  sortKeys.sort((a, b) => b.compareTo(a));
   // print(songresultMap);
 
   //生成组件
@@ -92,184 +108,326 @@ Widget buildsongList({
   int aaacount = 0;
   int othercount = 0;
   int completecount = 0;
-  for (var i in songresultMap) {
-    List<Widget> songInfoDiffs = [];
-    String versionname = '';
-    int score = 0;
-    double rating = 0;
-    String rank = '';
-    int songid = i['id'];
-    for (var j in songsData['versions']) {
-      if (j['version'] == i['version']) {
-        versionname = j['title'];
+  if (useOld) {
+    for (var i in songresultMap) {
+      List<Widget> songInfoDiffs = [];
+      String versionname = '';
+      int score = 0;
+      double rating = 0;
+      String rank = '';
+      int songid = i['id'];
+      for (var j in songsData['versions']) {
+        if (j['version'] == i['version']) {
+          versionname = j['title'];
+        }
       }
-    }
-    for (var k in i['difficulties']) {
-      if (k['level_value'] >= level[0] && k['level_value'] <= level[1]) {
-        songInfoDiffs.add(
-          Card(
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadiusGeometry.all(Radius.circular(5)),
-            ),
-            color: diffcolor(diffindex: k['difficulty']),
-            child: Padding(
-              padding: EdgeInsetsGeometry.only(
-                left: 8,
-                right: 8,
-                top: 3,
-                bottom: 3,
+      for (var k in i['difficulties']) {
+        if (k['level_value'] >= level[0] && k['level_value'] <= level[1]) {
+          songInfoDiffs.add(
+            Card(
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadiusGeometry.all(Radius.circular(5)),
               ),
-              child: Text(
-                '${returnDiffName(k['difficulty'])} - ${k['level_value']}',
-                style: TextStyle(color: Colors.white),
+              color: diffcolor(diffindex: k['difficulty']),
+              child: Padding(
+                padding: EdgeInsetsGeometry.only(
+                  left: 8,
+                  right: 8,
+                  top: 3,
+                  bottom: 3,
+                ),
+                child: Text(
+                  '${returnDiffName(k['difficulty'])} - ${k['level_value']}',
+                  style: TextStyle(color: Colors.white),
+                ),
               ),
             ),
-          ),
-        );
-        if (allScoreData.isNotEmpty) {
-          for (var l in allScoreData) {
-            if (k['difficulty'] == l['level_index'] && i['id'] == l['id']) {
-              score = l['score'];
-              rating = l['rating'].toDouble();
-              rank = l['rank'];
-              completecount++;
-              if (rank == 'sssp') {
-                ssspcount++;
-              } else if (rank == 'sss') {
-                ssscount++;
-              } else if (rank == 'ssp') {
-                sspcount++;
-              } else if (rank == 'ss') {
-                sscount++;
-              } else if (rank == 'sp') {
-                spcount++;
-              } else if (rank == 's') {
-                scount++;
-              } else if (rank == 'aaa') {
-                aaacount++;
-              } else {
-                othercount++;
+          );
+          if (allScoreData.isNotEmpty) {
+            for (var l in allScoreData) {
+              if (k['difficulty'] == l['level_index'] && i['id'] == l['id']) {
+                score = l['score'];
+                rating = l['rating'].toDouble();
+                rank = l['rank'];
+                completecount++;
+                if (rank == 'sssp') {
+                  ssspcount++;
+                } else if (rank == 'sss') {
+                  ssscount++;
+                } else if (rank == 'ssp') {
+                  sspcount++;
+                } else if (rank == 'ss') {
+                  sscount++;
+                } else if (rank == 'sp') {
+                  spcount++;
+                } else if (rank == 's') {
+                  scount++;
+                } else if (rank == 'aaa') {
+                  aaacount++;
+                } else {
+                  othercount++;
+                }
               }
             }
           }
         }
+        if ((k as Map<String, dynamic>).containsKey('origin_id')) {
+          songid = k['origin_id'];
+        }
       }
-      if ((k as Map<String, dynamic>).containsKey('origin_id')) {
-        songid = k['origin_id'];
-      }
-    }
 
-    songresultWidget.add(
-      InkWell(
-        // key: ValueKey(songItem['id']),
-        onTap: () async {
-          interSongInfo(
-            songbasedata: i,
-            context: context,
-            songsData: songsData,
-          );
-        },
-        child: Card(
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(0.0),
-          ),
-          child: Padding(
-            padding: EdgeInsetsGeometry.all(10.0),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Column(
-                  children: [
-                    Padding(
-                      padding: EdgeInsetsGeometry.only(right: 0),
-                      child: kIsWeb
-                          ? Image.network(
-                              'https://assets2.lxns.net/chunithm/jacket/$songid.png',
-                              width: 95,
-                              height: 95,
-                              errorBuilder: (context, error, stackTrace) =>
-                                  Text('加载失败'),
-                            )
-                          : CachedNetworkImage(
-                              imageUrl:
-                                  'https://assets2.lxns.net/chunithm/jacket/$songid.png',
-                              width: 95,
-                              height: 95,
-                              errorWidget: (context, url, error) =>
-                                  Text('加载失败'),
-                            ),
-                    ),
-                    Wrap(children: songInfoDiffs),
-                  ],
-                ),
-                Expanded(
-                  child: Padding(
-                    padding: EdgeInsetsGeometry.only(left: 10),
-                    child: Column(
-                      children: [
-                        Row(
-                          children: [
-                            Expanded(
-                              child: Text(
-                                '#${i['id']}',
-                                style: TextStyle(
-                                  fontSize: 10,
-                                  color: Colors.grey,
+      songresultWidget.add(
+        InkWell(
+          // key: ValueKey(songItem['id']),
+          onTap: () async {
+            interSongInfo(
+              songbasedata: i,
+              context: context,
+              songsData: songsData,
+            );
+          },
+          child: Card(
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(0.0),
+            ),
+            child: Padding(
+              padding: EdgeInsetsGeometry.all(10.0),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Column(
+                    children: [
+                      Padding(
+                        padding: EdgeInsetsGeometry.only(right: 0),
+                        child: kIsWeb
+                            ? Image.network(
+                                'https://assets2.lxns.net/chunithm/jacket/$songid.png',
+                                width: 95,
+                                height: 95,
+                                errorBuilder: (context, error, stackTrace) =>
+                                    Text('加载失败'),
+                              )
+                            : CachedNetworkImage(
+                                imageUrl:
+                                    'https://assets2.lxns.net/chunithm/jacket/$songid.png',
+                                width: 95,
+                                height: 95,
+                                errorWidget: (context, url, error) =>
+                                    Text('加载失败'),
+                              ),
+                      ),
+                      Wrap(children: songInfoDiffs),
+                    ],
+                  ),
+                  Expanded(
+                    child: Padding(
+                      padding: EdgeInsetsGeometry.only(left: 10),
+                      child: Column(
+                        children: [
+                          Row(
+                            children: [
+                              Expanded(
+                                child: Text(
+                                  '#${i['id']}',
+                                  style: TextStyle(
+                                    fontSize: 10,
+                                    color: Colors.grey,
+                                  ),
                                 ),
                               ),
-                            ),
-                          ],
-                        ),
-                        Row(
-                          children: [
-                            Expanded(
-                              child: Text(
-                                '${i['title']}',
-                                overflow: TextOverflow.ellipsis,
-                                style: TextStyle(
-                                  fontSize: 20,
-                                  fontWeight: FontWeight.bold,
+                            ],
+                          ),
+                          Row(
+                            children: [
+                              Expanded(
+                                child: Text(
+                                  '${i['title']}',
+                                  overflow: TextOverflow.ellipsis,
+                                  style: TextStyle(
+                                    fontSize: 20,
+                                    fontWeight: FontWeight.bold,
+                                  ),
                                 ),
                               ),
-                            ),
-                          ],
-                        ),
-                        Row(
-                          children: [
-                            Expanded(
-                              child: Text(
-                                '${i['artist']}',
-                                overflow: TextOverflow.ellipsis,
+                            ],
+                          ),
+                          Row(
+                            children: [
+                              Expanded(
+                                child: Text(
+                                  '${i['artist']}',
+                                  overflow: TextOverflow.ellipsis,
+                                ),
                               ),
-                            ),
-                          ],
-                        ),
-                        Row(
-                          children: [
-                            Expanded(
-                              child: Text(
-                                '${i['genre']} - $versionname',
-                                overflow: TextOverflow.ellipsis,
+                            ],
+                          ),
+                          Row(
+                            children: [
+                              Expanded(
+                                child: Text(
+                                  '${i['genre']} - $versionname',
+                                  overflow: TextOverflow.ellipsis,
+                                ),
                               ),
-                            ),
-                          ],
-                        ),
-                        score == 0
-                            ? SizedBox.shrink()
-                            : Text(
-                                '成绩：$score | Rating：$rating | 评级：${rank.replaceAll('p', '+')}',
-                                style: TextStyle(color: returnColor(score)),
-                              ),
-                      ],
+                            ],
+                          ),
+                          score == 0
+                              ? SizedBox.shrink()
+                              : Text(
+                                  '成绩：$score | Rating：$rating | 评级：${rank.replaceAll('p', '+')}',
+                                  style: TextStyle(color: returnColor(score)),
+                                ),
+                        ],
+                      ),
                     ),
                   ),
+                ],
+              ),
+            ),
+          ),
+        ),
+      );
+    }
+  } else {
+    for (var i in sortKeys) {
+      List<Widget> cardChildren = [];
+      // int score = 0;
+      // double rating = 0;
+      for (var j in requiredSongsFilter[i]) {
+        String versionname = '';
+        int songid = j['id'];
+        int diffindex = 6;
+        Widget rankWidget = SizedBox.shrink();
+        for (var k in j['difficulties']) {
+          if (k['level_value'] >= level[0] && k['level_value'] <= level[1]) {
+            diffindex = k['difficulty'];
+            if (allScoreData.isNotEmpty) {
+              for (var l in allScoreData) {
+                if (k['difficulty'] == l['level_index'] && j['id'] == l['id']) {
+                  // score = l['score'];
+                  // rating = l['rating'].toDouble();
+                  String rank = l['rank'];
+                  completecount++;
+                  if (rank == 'sssp') {
+                    ssspcount++;
+                  } else if (rank == 'sss') {
+                    ssscount++;
+                  } else if (rank == 'ssp') {
+                    sspcount++;
+                  } else if (rank == 'ss') {
+                    sscount++;
+                  } else if (rank == 'sp') {
+                    spcount++;
+                  } else if (rank == 's') {
+                    scount++;
+                  } else if (rank == 'aaa') {
+                    aaacount++;
+                  } else {
+                    othercount++;
+                  }
+                  rankWidget = SizedBox(
+                    width: 75,
+                    height: 75,
+                    child: Container(
+                      decoration: BoxDecoration(
+                        color: const Color.fromARGB(127, 157, 157, 157),
+                      ),
+                      child: Image.asset(
+                        width: 75,
+                        height: 75,
+                        rankImg(rank: l['rank']),
+                      ),
+                    ),
+                  );
+                }
+              }
+            }
+          }
+          if ((k as Map<String, dynamic>).containsKey('origin_id')) {
+            songid = k['origin_id'];
+          }
+        }
+
+        cardChildren.add(
+          InkWell(
+            onTap: () {
+              interSongInfo(
+                songbasedata: j,
+                context: context,
+                songsData: songsData,
+              );
+            },
+            child: Padding(
+              padding: EdgeInsetsGeometry.all(5),
+              child: Container(
+                decoration: BoxDecoration(
+                  color: diffcolor(diffindex: diffindex),
                 ),
+                padding: EdgeInsets.all(5),
+                child: Stack(
+                  children: [
+                    kIsWeb
+                        ? Image.network(
+                            'https://assets2.lxns.net/chunithm/jacket/$songid.png',
+                            width: 75,
+                            height: 75,
+                            errorBuilder: (context, error, stackTrace) =>
+                                Text('图片加载失败'),
+                          )
+                        : CachedNetworkImage(
+                            width: 75,
+                            height: 75,
+                            imageUrl:
+                                'https://assets2.lxns.net/chunithm/jacket/$songid.png',
+                            errorWidget: (context, error, stackTrace) =>
+                                Text('图片加载失败'),
+                          ),
+
+                    rankWidget,
+                  ],
+                ),
+              ),
+            ),
+          ),
+        );
+      }
+      songresultWidget.add(
+        Card(
+          child: Padding(
+            padding: EdgeInsetsGeometry.all(8),
+            child: Column(
+              children: [
+                Row(
+                  children: [
+                    Text.rich(
+                      TextSpan(
+                        text: 'Lv.${i.toString()}',
+                        children: [
+                          TextSpan(
+                            text:
+                                '\t(${(requiredSongsFilter[i] as List).length} 首)',
+                            style: TextStyle(
+                              color: Colors.grey,
+                              fontSize: 13,
+                              fontWeight: FontWeight.normal,
+                            ),
+                          ),
+                        ],
+                      ),
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        fontSize: 18,
+                      ),
+                    ),
+                  ],
+                ),
+                Wrap(children: cardChildren),
               ],
             ),
           ),
         ),
-      ),
-    );
+      );
+    }
   }
 
   final ScrollController scrollController2 = ScrollController();
