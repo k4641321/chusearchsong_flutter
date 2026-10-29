@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'dart:developer';
+import 'package:chusearchsong_flutter/function/writeandreadfun.dart';
 import 'package:pub_semver/pub_semver.dart';
 import 'package:chusearchsong_flutter/function/request.dart';
 import 'package:flutter/material.dart';
@@ -56,7 +57,9 @@ Future<void> openQQ({required BuildContext context}) async {
 }
 
 Future<bool> checkforupdates() async {
-  Map<String, dynamic> result = jsonDecode(await requestVersion());
+  Map<String, dynamic> result = jsonDecode(
+    await requestVersion(SongDataStore.instance.backendUrl),
+  );
   final packageinfo = await PackageInfo.fromPlatform();
   String oldversion = packageinfo.version;
   // log(oldversion);
@@ -75,7 +78,9 @@ Future<bool> checkforupdates() async {
 Future<void> lanuchdownload({required BuildContext context}) async {
   try {
     try {
-      Uri githuburl = jsonDecode(await requestVersion())['download_url'];
+      Uri githuburl = jsonDecode(
+        await requestVersion(SongDataStore.instance.backendUrl),
+      )['download_url'];
       if (!await launchUrl(githuburl)) {
         if (!context.mounted) return;
         throw Exception('Could not launch $githuburl');

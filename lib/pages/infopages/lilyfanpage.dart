@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:chusearchsong_flutter/function/request.dart';
+import 'package:chusearchsong_flutter/function/writeandreadfun.dart';
 import 'package:flutter/material.dart';
 
 class Lilyfanpage extends StatefulWidget {
@@ -15,7 +16,9 @@ class _LilyfanpageState extends State<Lilyfanpage> {
 
   Future<void> _loadData() async {
     try {
-      final result = jsonDecode(await requestLilyFan()) as List;
+      final result =
+          jsonDecode(await requestLilyFan(SongDataStore.instance.backendUrl))
+              as List;
       final names = result.map((e) => e['character'].toString()).toList();
       setState(() => _lilyfan = names);
     } catch (e) {

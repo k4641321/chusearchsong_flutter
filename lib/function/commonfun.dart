@@ -46,6 +46,7 @@ class Dataupdate {
           "announcement": {"date": '0000-01-01', "read": false, "value": 0},
           "chartproxy": false,
           "changeslogread": false,
+          "backendUrl": "chusearchsong.devintom.top",
         };
         await (await WriteData.create()).writeConfig(config);
         // showtext.value = '完成';

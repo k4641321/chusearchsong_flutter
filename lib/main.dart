@@ -6,7 +6,6 @@ import 'package:chusearchsong_flutter/function/request.dart';
 import 'package:chusearchsong_flutter/function/writeandreadfun.dart';
 import 'package:chusearchsong_flutter/pages/homepages/indexpage.dart';
 import 'package:flutter/foundation.dart';
-import 'package:flutter/rendering.dart';
 import 'package:flutter_local_db/flutter_local_db.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:path_provider/path_provider.dart';
@@ -183,7 +182,7 @@ class _MyHomePageState extends State<MyHomePage> {
 
   Future<void> postusecount() async {
     try {
-      String result = await requestuscount();
+      String result = await requestuscount(SongDataStore.instance.backendUrl);
       log(result);
     } catch (e, strack) {
       log('$e\n$strack');
@@ -194,7 +193,9 @@ class _MyHomePageState extends State<MyHomePage> {
     try {
       Map<String, dynamic> config = await (await ReadData.create())
           .readConfig();
-      List announcement = jsonDecode(await requestAnnouncement());
+      List announcement = jsonDecode(
+        await requestAnnouncement(SongDataStore.instance.backendUrl),
+      );
       int value;
       if (!config.containsKey('announcement')) {
         value = 0;
@@ -287,7 +288,9 @@ class _MyHomePageState extends State<MyHomePage> {
           .readConfig();
       if (config['version'] == packageinfo.version &&
           config['changeslogread'] == false) {
-        List requestresult = jsonDecode(await requestChangeslog());
+        List requestresult = jsonDecode(
+          await requestChangeslog(SongDataStore.instance.backendUrl),
+        );
         Map<String, dynamic> changeslog = requestresult[0];
         if (!mounted) return;
         showDialog(

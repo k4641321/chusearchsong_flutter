@@ -271,7 +271,14 @@ class _IndexpageState extends State<Indexpage> {
                                       Expanded(
                                         child: Text(
                                           '${playerInfoData.isNotEmpty ? playerInfoData['rating'] : null}',
-                                          style: TextStyle(fontSize: 30),
+                                          style: TextStyle(
+                                            fontSize: 30,
+                                            color: ratingColor(
+                                              rating:
+                                                  playerInfoData['rating'] ??
+                                                  -1,
+                                            ),
+                                          ),
                                         ),
                                       ),
                                       SizedBox(width: 10),

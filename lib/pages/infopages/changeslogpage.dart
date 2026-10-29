@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:chusearchsong_flutter/function/commonfun.dart';
 import 'package:chusearchsong_flutter/function/request.dart';
+import 'package:chusearchsong_flutter/function/writeandreadfun.dart';
 import 'package:flutter/material.dart';
 
 class Changeslogpage extends StatefulWidget {
@@ -20,8 +21,12 @@ class _ChangeslogpageState extends State<Changeslogpage> {
 
   Future<void> init() async {
     try {
-      List changeslog = await jsonDecode(await requestChangeslog());
-      List announcement = await jsonDecode(await requestAnnouncement());
+      List changeslog = await jsonDecode(
+        await requestChangeslog(SongDataStore.instance.backendUrl),
+      );
+      List announcement = await jsonDecode(
+        await requestAnnouncement(SongDataStore.instance.backendUrl),
+      );
 
       for (var i in changeslog) {
         List changes = [];

@@ -303,6 +303,66 @@ class _SettingsPageState extends State<SettingsPage> {
                 },
               ),
               _buildDivider(),
+              _buildNavItem(
+                icon: Icons.link,
+                title: '后端地址',
+                subtitle: '配置作者后端的地址',
+                onTap: () async {
+                  final TextEditingController scrollableController =
+                      TextEditingController();
+                  showDialog(
+                    context: context,
+                    builder: (context) => AlertDialog(
+                      title: Text('配置地址'),
+                      scrollable: true,
+                      content: Column(
+                        children: [
+                          TextField(controller: scrollableController),
+                          Text('稳定后端地址加群获取'),
+                          Row(
+                            children: [
+                              Expanded(
+                                child: TextButton(
+                                  onPressed: () {
+                                    scrollableController.text =
+                                        "chusearchsong.devintom.top";
+                                  },
+                                  child: Text('使用默认地址'),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ],
+                      ),
+                      actions: [
+                        TextButton(
+                          onPressed: () {
+                            Navigator.pop(context);
+                          },
+                          child: Text('取消'),
+                        ),
+                        TextButton(
+                          onPressed: () async {
+                            Map<String, dynamic> config =
+                                await (await ReadData.create()).readConfig();
+                            config['backendUrl'] = scrollableController.text;
+                            await (await WriteData.create()).writeConfig(
+                              config,
+                            );
+                            if (!context.mounted) return;
+                            SongDataStore.instance.loadAll(context);
+                            Navigator.pop(context);
+                          },
+                          child: Text('确定'),
+                        ),
+                      ],
+                    ),
+                  );
+                },
+                isFirst: false,
+                isLast: false,
+              ),
+              _buildDivider(),
               _buildSwitchItem(
                 icon: Icons.update_outlined,
                 title: '自动检查更新',

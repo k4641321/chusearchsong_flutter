@@ -149,6 +149,7 @@ class _LxnsSettingsPageState extends State<LxnsSettingsPage> {
                           Map<String, dynamic> result = jsonDecode(
                             await requestOAuthCallbackToken(
                               _textEditingController.text,
+                              SongDataStore.instance.backendUrl,
                             ),
                           );
                           if (!mounted) return;

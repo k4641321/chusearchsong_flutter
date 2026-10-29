@@ -12,7 +12,9 @@ class WriteData {
   }
 
   Future<void> writeLinkedVerseData() async {
-    String result = await requestLinkedVerseData();
+    String result = await requestLinkedVerseData(
+      SongDataStore.instance.backendUrl,
+    );
     await LocalDB.Post('LinkedVerseData', jsonDecode(result));
     log('LinkedVerse完成');
   }
@@ -63,7 +65,9 @@ class WriteData {
 
   Future<void> writezxzrSongsData() async {
     log('请求reiwaf5sisongs');
-    List zxzrsongslist = await requestreiwaf5sisongs();
+    List zxzrsongslist = await requestreiwaf5sisongs(
+      SongDataStore.instance.backendUrl,
+    );
     List chunirecall = jsonDecode(zxzrsongslist[1]);
     List chunithmrecord = jsonDecode(zxzrsongslist[0]);
     log('请求beerpsisongs');
@@ -217,7 +221,9 @@ class WriteData {
   }
 
   Future<void> writeLatestVersion() async {
-    String result = await requestLatestVersion();
+    String result = await requestLatestVersion(
+      SongDataStore.instance.backendUrl,
+    );
     await LocalDB.Post('LatestVersion', jsonDecode(result));
     log('最新版本号获取完成');
   }
@@ -414,6 +420,7 @@ class SongDataStore {
   List zxzrSongsData = [];
   List segaCharacters = [];
   bool loaded = false;
+  String backendUrl = "chusearchsong.devintom.top";
 
   Future<void> loadAll(BuildContext context) async {
     final read = await ReadData.create();
@@ -474,6 +481,11 @@ class SongDataStore {
       }),
       safeLoad('playerRatingTrendData', () async {
         playerRatingTrendData = await read.readPlayerRatingTrendData();
+      }),
+      safeLoad('Config', () async {
+        backendUrl =
+            (await read.readConfig())['backendUrl'] ??
+            "chusearchsong.devintom.top";
       }),
     ]);
 

@@ -107,6 +107,7 @@ class _ChartViewPageState extends State<ChartViewPage> {
             await requestproxychartdata(
               charturl: charturl,
               levelindex: widget.diffindex,
+              headerlink: SongDataStore.instance.backendUrl,
             ),
           );
           // print(chartproxyresult);

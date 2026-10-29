@@ -17,6 +17,7 @@ class _LevelCompletionProgressPageState
   final ScrollController _scrollController = ScrollController();
   late Map<String, dynamic> songsData;
   late List allScoreData;
+  bool useOld = false;
 
   //初始化数据，避免每次筛选都要重新读取，会慢似的
   Future<void> init() async {
@@ -45,7 +46,7 @@ class _LevelCompletionProgressPageState
       level: level,
       context: context,
       scrollController: _scrollController,
-      useOld: false,
+      useOld: useOld,
       isshow: true,
     );
     setState(() {
@@ -76,6 +77,18 @@ class _LevelCompletionProgressPageState
       appBar: AppBar(
         title: Text('等级完成进度'),
         actions: [
+          IconButton(
+            onPressed: () {
+              setState(() {
+                useOld = !useOld;
+              });
+              ScaffoldMessenger.of(
+                context,
+              ).showSnackBar(SnackBar(content: Text('使用旧版：$useOld')));
+              update();
+            },
+            icon: Icon(useOld ? Icons.view_list : Icons.grid_view),
+          ),
           IconButton(
             onPressed: () => Navigator.push(
               context,

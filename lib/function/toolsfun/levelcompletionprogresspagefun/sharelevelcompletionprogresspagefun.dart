@@ -30,24 +30,26 @@ Color diffcolor({required int diffindex}) {
 Color ratingColor({required double rating}) {
   if (rating >= 0 && rating < 4) {
     return Colors.green; // 绿  0.00~3.99
-  } else if (rating < 7) {
+  } else if (rating < 7 && rating > 0) {
     return Colors.orange; // 橙  4.00~6.99
-  } else if (rating < 10) {
+  } else if (rating < 10 && rating > 0) {
     return Colors.red; // 红  7.00~9.99
-  } else if (rating < 12) {
+  } else if (rating < 12 && rating > 0) {
     return Colors.deepPurple; // 紫  10.00~11.99
-  } else if (rating < 13.25) {
+  } else if (rating < 13.25 && rating > 0) {
     return Colors.deepOrange; // 铜  12.00~13.24
-  } else if (rating < 14.5) {
+  } else if (rating < 14.5 && rating > 0) {
     return Colors.grey; // 银  13.25~14.49
-  } else if (rating < 15.25) {
+  } else if (rating < 15.25 && rating > 0) {
     return Colors.yellow; // 金  14.50~15.24
-  } else if (rating < 16) {
+  } else if (rating < 16 && rating > 0) {
     return Colors.amber; // 铂金 15.25~15.99
-  } else if (rating < 17) {
+  } else if (rating < 17 && rating > 0) {
     return Colors.purple; // 彩虹 16.00~16.99
-  } else {
+  } else if (rating >= 17) {
     return Colors.purpleAccent; // 彩虹(极) 17.00~
+  } else {
+    return Colors.black;
   }
 }
 

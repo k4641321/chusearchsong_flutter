@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:chusearchsong_flutter/function/request.dart';
+import 'package:chusearchsong_flutter/function/writeandreadfun.dart';
 import 'package:flutter/material.dart';
 
 class Sponsorshiprankingpage extends StatefulWidget {
@@ -15,7 +16,9 @@ class _SponsorshiprankingpageState extends State<Sponsorshiprankingpage> {
 
   Future<void> init() async {
     try {
-      List result = jsonDecode(await requestSponsorshipRanking());
+      List result = jsonDecode(
+        await requestSponsorshipRanking(SongDataStore.instance.backendUrl),
+      );
       result.sort((a, b) => b['value'].compareTo(a['value']));
       List<Widget> list2 = [];
       for (var i in result) {

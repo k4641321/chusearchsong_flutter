@@ -294,10 +294,11 @@ Widget buildsongList({
       // int score = 0;
       // double rating = 0;
       for (var j in requiredSongsFilter[i]) {
-        String versionname = '';
         int songid = j['id'];
         int diffindex = 6;
         Widget rankWidget = SizedBox.shrink();
+        Widget scoreWidget = SizedBox.shrink();
+        Widget fcWidget = SizedBox.shrink();
         for (var k in j['difficulties']) {
           if (k['level_value'] >= level[0] && k['level_value'] <= level[1]) {
             diffindex = k['difficulty'];
@@ -307,6 +308,7 @@ Widget buildsongList({
                   // score = l['score'];
                   // rating = l['rating'].toDouble();
                   String rank = l['rank'];
+                  String? fcstr = l['full_combo'];
                   completecount++;
                   if (rank == 'sssp') {
                     ssspcount++;
@@ -325,6 +327,24 @@ Widget buildsongList({
                   } else {
                     othercount++;
                   }
+                  switch (fcstr) {
+                    case "fullcombo":
+                      fcstr = "FC";
+                      break;
+                    case "alljusticecritical":
+                      fcstr = "AJC";
+                      break;
+                    case "alljustice":
+                      fcstr = "AJ";
+                      break;
+                  }
+                  fcWidget = Text(
+                    fcstr ?? '',
+                    style: TextStyle(
+                      color: Colors.orange,
+                      shadows: [Shadow(color: Colors.black, blurRadius: 1)],
+                    ),
+                  );
                   rankWidget = SizedBox(
                     width: 75,
                     height: 75,
@@ -337,6 +357,13 @@ Widget buildsongList({
                         height: 75,
                         rankImg(rank: l['rank']),
                       ),
+                    ),
+                  );
+                  scoreWidget = Text(
+                    '${l['score']}',
+                    style: TextStyle(
+                      color: Colors.orange,
+                      shadows: [Shadow(color: Colors.black, blurRadius: 1)],
                     ),
                   );
                 }
@@ -365,6 +392,7 @@ Widget buildsongList({
                 ),
                 padding: EdgeInsets.all(5),
                 child: Stack(
+                  alignment: AlignmentGeometry.bottomCenter,
                   children: [
                     kIsWeb
                         ? Image.network(
@@ -382,8 +410,10 @@ Widget buildsongList({
                             errorWidget: (context, error, stackTrace) =>
                                 Text('图片加载失败'),
                           ),
-
                     rankWidget,
+                    Column(
+                      children: [fcWidget, SizedBox(height: 35), scoreWidget],
+                    ),
                   ],
                 ),
               ),

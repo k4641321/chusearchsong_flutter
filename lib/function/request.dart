@@ -41,8 +41,8 @@ Future<String> requestChunirecSongInfoPage(String chunirecid) async {
 }
 
 //百合番
-Future<String> requestLilyFan() async {
-  final uri = Uri.parse('https://chusearchsong.devintom.top/api/lilyfan');
+Future<String> requestLilyFan(String headerlink) async {
+  final uri = Uri.parse('https://$headerlink/api/lilyfan');
   final response = await get(uri);
   if (response.statusCode != 200) {
     throw Exception('请求失败，状态码：${response.statusCode}');
@@ -52,10 +52,8 @@ Future<String> requestLilyFan() async {
 }
 
 //Linked Verse
-Future<String> requestLinkedVerseData() async {
-  final uri = Uri.parse(
-    'https://chusearchsong.devintom.top/api/linkedversedata',
-  );
+Future<String> requestLinkedVerseData(String headerlink) async {
+  final uri = Uri.parse('https://$headerlink/api/linkedversedata');
   final response = await get(uri);
   if (response.statusCode != 200) {
     throw Exception('请求失败，状态码：${response.statusCode}');
@@ -65,8 +63,8 @@ Future<String> requestLinkedVerseData() async {
 }
 
 //赞助排行榜
-Future<String> requestSponsorshipRanking() async {
-  final uri = Uri.parse('https://chusearchsong.devintom.top/api/zxphb');
+Future<String> requestSponsorshipRanking(String headerlink) async {
+  final uri = Uri.parse('https://$headerlink/api/zxphb');
   final response = await get(uri);
   if (response.statusCode != 200) {
     throw Exception('请求失败，状态码：${response.statusCode}');
@@ -76,17 +74,13 @@ Future<String> requestSponsorshipRanking() async {
 }
 
 //请求reiwa.f5.si歌曲数据
-Future<List> requestreiwaf5sisongs() async {
+Future<List> requestreiwaf5sisongs(String headerlink) async {
   late final Uri chunithmrecorduri;
   late final Uri chunirecalluri;
   Map<String, dynamic> config = await (await ReadData.create()).readConfig();
   if (config['chartproxy']) {
-    chunithmrecorduri = Uri.parse(
-      'https://chusearchsong.devintom.top/api/chunithmrecord',
-    );
-    chunirecalluri = Uri.parse(
-      'https://chusearchsong.devintom.top/api/chunirecall',
-    );
+    chunithmrecorduri = Uri.parse('https://$headerlink/api/chunithmrecord');
+    chunirecalluri = Uri.parse('https://$headerlink/api/chunirecall');
   } else {
     chunithmrecorduri = Uri.parse('https://reiwa.f5.si/chunithm_record.json');
     chunirecalluri = Uri.parse('https://reiwa.f5.si/chunirec_all.json');
@@ -126,10 +120,8 @@ Future<String> requestNearcadeAllShop({required int page}) async {
 }
 
 //请求返回落雪Token
-Future<String> requestOAuthCallbackToken(String code) async {
-  final uri = Uri.parse(
-    'https://chusearchsong.devintom.top/api/oauth/callback?code=$code',
-  );
+Future<String> requestOAuthCallbackToken(String headerlink, String code) async {
+  final uri = Uri.parse('https://$headerlink/api/oauth/callback?code=$code');
   final response = await get(uri);
   if (response.statusCode != 200) {
     throw Exception('请求失败，状态码：${response.statusCode}');
@@ -138,9 +130,9 @@ Future<String> requestOAuthCallbackToken(String code) async {
 }
 
 //请求其他玩家信息
-Future<String> requestotherPlayerInfo(int friendcode) async {
+Future<String> requestotherPlayerInfo(String headerlink, int friendcode) async {
   final uri = Uri.parse(
-    'https://chusearchsong.devintom.top/api/playerinfo?friendcode=$friendcode',
+    'https://$headerlink/api/playerinfo?friendcode=$friendcode',
   );
   final response = await get(uri);
   if (response.statusCode != 200) {
@@ -150,10 +142,8 @@ Future<String> requestotherPlayerInfo(int friendcode) async {
 }
 
 //上传玩家数据
-Future<String> uploadplayerscore() async {
-  final uri = Uri.parse(
-    'https://chusearchsong.devintom.top/api/uploadallscore',
-  );
+Future<String> uploadplayerscore(String headerlink) async {
+  final uri = Uri.parse('https://$headerlink/api/uploadallscore');
   List score = await (await ReadData.create()).readPlayerAllScoreData();
   Map<String, dynamic> playerdata = (await (await ReadData.create())
       .readPlayerInfoData());
@@ -180,10 +170,8 @@ Future<String> requestSegaCharaData() async {
   return response.body;
 }
 
-Future<String> requestuscount() async {
-  final response = await get(
-    Uri.parse('https://chusearchsong.devintom.top/api/usecount'),
-  );
+Future<String> requestuscount(String headerlink) async {
+  final response = await get(Uri.parse('https://$headerlink/api/usecount'));
   if (response.statusCode != 200) {
     throw Exception('请求失败，状态码：${response.statusCode}');
   }
@@ -191,10 +179,8 @@ Future<String> requestuscount() async {
 }
 
 //请求公告
-Future<String> requestAnnouncement() async {
-  final response = await get(
-    Uri.parse('https://chusearchsong.devintom.top/api/announcement'),
-  );
+Future<String> requestAnnouncement(String headerlink) async {
+  final response = await get(Uri.parse('https://$headerlink/api/announcement'));
   if (response.statusCode != 200) {
     throw Exception('请求失败，状态码：${response.statusCode}');
   }
@@ -202,10 +188,8 @@ Future<String> requestAnnouncement() async {
 }
 
 //请求更新日志
-Future<String> requestChangeslog() async {
-  final response = await get(
-    Uri.parse('https://chusearchsong.devintom.top/api/changelog'),
-  );
+Future<String> requestChangeslog(String headerlink) async {
+  final response = await get(Uri.parse('https://$headerlink/api/changelog'));
   if (response.statusCode != 200) {
     throw Exception('请求失败，状态码：${response.statusCode}');
   }
@@ -216,10 +200,11 @@ Future<String> requestChangeslog() async {
 Future<String> requestproxychartdata({
   required String charturl,
   required int levelindex,
+  required String headerlink,
 }) async {
   final body = json.encode({"charturl": charturl, "level_index": levelindex});
   final response = await post(
-    Uri.parse('https://chusearchsong.devintom.top/api/chart/'),
+    Uri.parse('https://$headerlink/api/chart/'),
     headers: {'Content-Type': 'application/json'},
     body: body,
   );
@@ -233,10 +218,8 @@ Future<String> requestproxychartdata({
 }
 
 //获取版本号
-Future<String> requestVersion() async {
-  final response = await get(
-    Uri.parse('https://chusearchsong.devintom.top/api/version'),
-  );
+Future<String> requestVersion(String headerlink) async {
+  final response = await get(Uri.parse('https://$headerlink/api/version'));
   if (response.statusCode != 200) {
     throw Exception('请求失败，状态码：${response.statusCode}');
   }
@@ -253,10 +236,10 @@ Future<String> requestbeerpsisongs() async {
 }
 
 //获取最新版本号
-Future<String> requestLatestVersion() async {
+Future<String> requestLatestVersion(String headerlink) async {
   try {
     final response = await get(
-      Uri.parse('https://chusearchsong.devintom.top/api/latest_version'),
+      Uri.parse('https://$headerlink/api/latest_version'),
     );
     if (response.statusCode != 200) {
       final response1 = await get(
@@ -512,9 +495,9 @@ double getNavBarHeight(BuildContext context) {
 }
 
 //请求玩家信息
-Future<String> finduploadallscore(int friendcode) async {
+Future<String> finduploadallscore(String headerlink, int friendcode) async {
   final uri = Uri.parse(
-    'https://chusearchsong.devintom.top/api/finduploadallscore/$friendcode',
+    'https://$headerlink/api/finduploadallscore/$friendcode',
   );
   final response = await get(uri);
   if (response.statusCode != 200) {
