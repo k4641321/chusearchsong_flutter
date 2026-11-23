@@ -4,6 +4,19 @@ import 'package:flutter/material.dart';
 import 'package:flutter_local_db/flutter_local_db.dart';
 import 'request.dart';
 
+/// 递归规整 JSON 数据：
+/// Web(DDC) 上 jsonDecode/LocalDB 读出的 Map 键类型是 Object?，
+/// 传给 Map<String, dynamic> 参数会抛 TypeError，这里统一转为键为 String 的 Map
+dynamic normalizeJson(dynamic value) {
+  if (value is Map) {
+    return value.map((k, v) => MapEntry(k.toString(), normalizeJson(v)));
+  }
+  if (value is List) {
+    return value.map(normalizeJson).toList();
+  }
+  return value;
+}
+
 class WriteData {
   WriteData._();
 
@@ -444,43 +457,69 @@ class SongDataStore {
 
     await Future.wait([
       safeLoad('songsData', () async {
-        songsData = await read.readSongsData();
+        songsData = Map<String, dynamic>.from(
+          normalizeJson(await read.readSongsData()),
+        );
       }),
       safeLoad('aliasData', () async {
-        aliasData = await read.readAliasData();
+        aliasData = Map<String, dynamic>.from(
+          normalizeJson(await read.readAliasData()),
+        );
       }),
       safeLoad('zxzrSongsData', () async {
-        zxzrSongsData = await read.readzxzrSongsData();
+        zxzrSongsData = List.from(
+          normalizeJson(await read.readzxzrSongsData()),
+        );
       }),
       safeLoad('playerAllScore', () async {
-        playerAllScore = await read.readPlayerAllScoreData();
+        playerAllScore = List.from(
+          normalizeJson(await read.readPlayerAllScoreData()),
+        );
       }),
       safeLoad('collectionTrophies', () async {
-        collectionTrophies = await read.readTrophiesData();
+        collectionTrophies = Map<String, dynamic>.from(
+          normalizeJson(await read.readTrophiesData()),
+        );
       }),
       safeLoad('collectionCharacters', () async {
-        collectionCharacters = await read.readCharactersData();
+        collectionCharacters = Map<String, dynamic>.from(
+          normalizeJson(await read.readCharactersData()),
+        );
       }),
       safeLoad('collectionPlate', () async {
-        collectionPlate = await read.readPlateData();
+        collectionPlate = Map<String, dynamic>.from(
+          normalizeJson(await read.readPlateData()),
+        );
       }),
       safeLoad('collectionIcons', () async {
-        collectionIcons = await read.readIconsData();
+        collectionIcons = Map<String, dynamic>.from(
+          normalizeJson(await read.readIconsData()),
+        );
       }),
       safeLoad('segaCharacters', () async {
-        segaCharacters = await read.readSegaCharaData();
+        segaCharacters = List.from(
+          normalizeJson(await read.readSegaCharaData()),
+        );
       }),
       safeLoad('playerInfoData', () async {
-        playerInfoData = await read.readPlayerInfoData();
+        playerInfoData = Map<String, dynamic>.from(
+          normalizeJson(await read.readPlayerInfoData()),
+        );
       }),
       safeLoad('playerB50Data', () async {
-        playerB50Data = await read.readPlayerB50Data();
+        playerB50Data = Map<String, dynamic>.from(
+          normalizeJson(await read.readPlayerB50Data()),
+        );
       }),
       safeLoad('latestVersion', () async {
-        latestVersion = await read.readLatestVersion();
+        latestVersion = Map<String, dynamic>.from(
+          normalizeJson(await read.readLatestVersion()),
+        );
       }),
       safeLoad('playerRatingTrendData', () async {
-        playerRatingTrendData = await read.readPlayerRatingTrendData();
+        playerRatingTrendData = List.from(
+          normalizeJson(await read.readPlayerRatingTrendData()),
+        );
       }),
       safeLoad('Config', () async {
         backendUrl =

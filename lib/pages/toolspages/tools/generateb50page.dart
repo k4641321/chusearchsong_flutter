@@ -487,12 +487,12 @@ class _GenerateB50PageState extends State<GenerateB50Page> {
                 child: TextButton(
                   onPressed: () async {
                     try {
-                      if (kIsWeb) {
-                        ScaffoldMessenger.of(
-                          context,
-                        ).showSnackBar(SnackBar(content: Text('网页不支持分享')));
-                        return;
-                      }
+                      // if (kIsWeb) {
+                      //   ScaffoldMessenger.of(
+                      //     context,
+                      //   ).showSnackBar(SnackBar(content: Text('网页不支持分享')));
+                      //   return;
+                      // }
                       showDialog(
                         context: context,
                         builder: (context) => SizedBox(
@@ -558,7 +558,7 @@ class _GenerateB50PageState extends State<GenerateB50Page> {
                       Navigator.pop(context);
                     }
                   },
-                  child: Text('保存B50'),
+                  child: Text('保存图片'),
                 ),
               ),
             ],

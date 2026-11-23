@@ -7,6 +7,7 @@ import 'package:chusearchsong_flutter/pages/toolspages/tools/friendbattlepage.da
 import 'package:chusearchsong_flutter/pages/toolspages/tools/overpowercalculationpage.dart';
 import 'package:chusearchsong_flutter/pages/toolspages/information/ratingcalculationmethodpage.dart';
 import 'package:chusearchsong_flutter/pages/toolspages/information/nearcademap.dart';
+import 'package:chusearchsong_flutter/pages/toolspages/tools/overpowerprogress.dart';
 import 'package:chusearchsong_flutter/pages/toolspages/tools/searchsongzxzrpage/searchsongzxzrpage.dart';
 import 'package:chusearchsong_flutter/pages/toolspages/tools/songrecommendationpage.dart';
 import 'package:chusearchsong_flutter/pages/toolspages/tools/variousrankingspage.dart';
@@ -226,6 +227,11 @@ class _ToolPageState extends State<ToolPage> {
           title: '各种排行榜',
           icon: Icons.leaderboard_outlined,
           pageBuilder: (_) => const Variousrankingspage(),
+        ),
+        _ToolItem(
+          title: 'OP进度',
+          icon: Icons.leaderboard_outlined,
+          pageBuilder: (_) => const Overpowerprogress(),
         ),
       ],
     ),

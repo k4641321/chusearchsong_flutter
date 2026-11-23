@@ -148,11 +148,11 @@ class _IndexpageState extends State<Indexpage> {
     if (isLoading == true) {
       List<Widget> weekWidgetsResult = [];
       for (var i in weekData['songs']) {
-        weekWidgetsResult.add(_buildWeekSongCard(i));
+        weekWidgetsResult.add(_buildWeekSongCard(Map<String, dynamic>.from(i)));
       }
       List<Widget> weekWonthResult = [];
       for (var i in monthData['songs']) {
-        weekWonthResult.add(_buildWeekSongCard(i));
+        weekWonthResult.add(_buildWeekSongCard(Map<String, dynamic>.from(i)));
       }
       weekWidgets = weekWidgetsResult;
       monthWidgets = weekWonthResult;

@@ -501,6 +501,7 @@ Widget returnSongCard({
   for (var i in songsData['versions']) {
     if (i['version'] == songbasedata['version']) {
       versionname = i['title'];
+      break;
     }
   }
   //难度组件
@@ -783,4 +784,35 @@ Future<void> updateconfig() async {
   // }
 
   await (await WriteData.create()).writeConfig(config);
+}
+
+Widget buildImageWidget({
+  required String url,
+  double? width,
+  double? height,
+  BoxFit? fit,
+}) {
+  if (kIsWeb) {
+    return Image.network(
+      url,
+      width: width,
+      height: height,
+      errorBuilder: (context, error, stackTrace) {
+        log('$error\n$stackTrace');
+        return Text('$error');
+      },
+      fit: fit,
+    );
+  } else {
+    return CachedNetworkImage(
+      imageUrl: url,
+      width: width,
+      height: height,
+      errorWidget: (context, url, error) {
+        log('$error');
+        return Text('$error');
+      },
+      fit: fit,
+    );
+  }
 }
