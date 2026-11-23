@@ -776,12 +776,12 @@ class _ChartsharepageState extends State<Chartsharepage> {
                     child: TextButton(
                       onPressed: () async {
                         try {
-                          if (kIsWeb) {
-                            ScaffoldMessenger.of(
-                              context,
-                            ).showSnackBar(SnackBar(content: Text('网页不支持分享')));
-                            return;
-                          }
+                          // if (kIsWeb) {
+                          //   ScaffoldMessenger.of(
+                          //     context,
+                          //   ).showSnackBar(SnackBar(content: Text('网页不支持分享')));
+                          //   return;
+                          // }
                           showDialog(
                             context: context,
                             builder: (context) => SizedBox(

@@ -324,7 +324,7 @@ class ReadData {
   Future<List> readWahlapLobbyData() async {
     final result = await LocalDB.GetById('WahlapLobbyData');
     final model = result.getOrDefault(null);
-    return (model?.data['WahlapLobbyData'] as List?) ?? [];
+    return List.from(normalizeJson(model?.data['WahlapLobbyData']) ?? []);
   }
 
   Future<Map<String, dynamic>> readAliasData() async {
@@ -336,25 +336,25 @@ class ReadData {
   Future<List> readzxzrSongsData() async {
     final result = await LocalDB.GetById('zxzrSongsData');
     final model = result.getOrDefault(null);
-    return (model?.data['zxzrsongs'] as List?) ?? [];
+    return List.from(normalizeJson(model?.data['zxzrsongs']) ?? []);
   }
 
   Future<List> readNearcadeAllShop() async {
     final result = await LocalDB.GetById('NearcadeAllShop');
     final model = result.getOrDefault(null);
-    return (model?.data['NearcadeAllShopData'] as List?) ?? [];
+    return List.from(normalizeJson(model?.data['NearcadeAllShopData']) ?? []);
   }
 
   Future<Map<String, dynamic>> readNearcadeGamesMapData() async {
     final result = await LocalDB.GetById('NearcadeGamesData');
     final model = result.getOrDefault(null);
-    return model?.data ?? {};
+    return Map<String, dynamic>.from(normalizeJson(model?.data) ?? {});
   }
 
   Future<List> readSegaCharaData() async {
     final result = await LocalDB.GetById('SegaCharaData');
     final model = result.getOrDefault(null);
-    return (model?.data['SegaCharaData'] as List?) ?? [];
+    return List.from(normalizeJson(model?.data['SegaCharaData']) ?? []);
   }
 
   Future<Map<String, dynamic>> readConfig() async {
@@ -373,44 +373,44 @@ class ReadData {
   Future<Map<String, dynamic>> readPlayerB50Data() async {
     final result = await LocalDB.GetById('PlayerB50Data');
     final model = result.getOrDefault(null);
-    return model?.data['data'] ?? {};
+    return Map<String, dynamic>.from(normalizeJson(model?.data['data']) ?? {});
   }
 
   Future<Map<String, dynamic>> readPlayerInfoData() async {
     final result = await LocalDB.GetById('PlayerInfoData');
     final model = result.getOrDefault(null);
-    return (model?.data['data'] as Map<String, dynamic>?) ?? {};
+    return Map<String, dynamic>.from(normalizeJson(model?.data['data']) ?? {});
   }
 
   Future<List> readPlayerRatingTrendData() async {
     final result = await LocalDB.GetById('PlayerRatingTrendData');
     final model = result.getOrDefault(null);
     // print(model?.data['data']);
-    return (model?.data['data'] as List?) ?? [];
+    return List.from(normalizeJson(model?.data['data']) ?? []);
   }
 
   Future<List> readPlayerAllScoreData() async {
     final result = await LocalDB.GetById('PlayerAllScoreData');
     final model = result.getOrDefault(null);
-    return (model?.data['data'] as List?) ?? [];
+    return List.from(normalizeJson(model?.data['data']) ?? []);
   }
 
   Future<Map<String, dynamic>> readFavoriteSongs() async {
     final result = await LocalDB.GetById('FavoriteSongs');
     final model = result.getOrDefault(null);
-    return model?.data ?? {};
+    return Map<String, dynamic>.from(normalizeJson(model?.data) ?? {});
   }
 
   Future<List> readRandomMusicHistory() async {
     final result = await LocalDB.GetById('RandomMusicHistory');
     final model = result.getOrDefault(null);
-    return (model?.data['RandomMusicHistory'] as List?) ?? [];
+    return List.from(normalizeJson(model?.data['RandomMusicHistory']) ?? []);
   }
 
   Future<Map<String, dynamic>> readB50History() async {
     final result = await LocalDB.GetById('B50History');
     final model = result.getOrDefault(null);
-    return model?.data ?? {};
+    return Map<String, dynamic>.from(normalizeJson(model?.data) ?? {});
   }
 }
 

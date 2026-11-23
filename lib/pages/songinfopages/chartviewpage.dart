@@ -281,12 +281,12 @@ class _ChartViewPageState extends State<ChartViewPage> {
             icon: Icon(Icons.share),
             onPressed: () async {
               try {
-                if (kIsWeb) {
-                  ScaffoldMessenger.of(
-                    context,
-                  ).showSnackBar(SnackBar(content: Text('网页不支持分享')));
-                  return;
-                }
+                // if (kIsWeb) {
+                //   ScaffoldMessenger.of(
+                //     context,
+                //   ).showSnackBar(SnackBar(content: Text('网页不支持分享')));
+                //   return;
+                // }
                 ScaffoldMessenger.of(
                   context,
                 ).showSnackBar(SnackBar(content: Text('正在生成，请不要重复点击')));

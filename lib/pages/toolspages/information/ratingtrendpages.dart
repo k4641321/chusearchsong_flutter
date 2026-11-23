@@ -172,12 +172,12 @@ class _RatingTrendPagesState extends State<RatingTrendPages> {
           IconButton(
             onPressed: () async {
               try {
-                if (kIsWeb) {
-                  ScaffoldMessenger.of(
-                    context,
-                  ).showSnackBar(SnackBar(content: Text('网页不支持分享')));
-                  return;
-                }
+                // if (kIsWeb) {
+                //   ScaffoldMessenger.of(
+                //     context,
+                //   ).showSnackBar(SnackBar(content: Text('网页不支持分享')));
+                //   return;
+                // }
                 setState(() {
                   color = const ui.Color.fromARGB(250, 255, 255, 255);
                 });
