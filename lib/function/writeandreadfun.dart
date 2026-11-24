@@ -225,7 +225,7 @@ class WriteData {
 
   Future<void> writeSegaCharaData() async {
     String result = await requestSegaCharaData();
-    await LocalDB.Post('SegaCharaData', jsonDecode(result));
+    await LocalDB.Post('SegaCharaData', {"SegaCharaData": jsonDecode(result)});
     log('Sega角色完成');
   }
 

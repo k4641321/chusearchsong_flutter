@@ -112,6 +112,11 @@ class ThankYouListPage extends StatelessWidget {
             name: 'YOUMY',
             description: '雷霆50提出者（对，就是他干的\n各种排行榜提出支持最新最热，鸟率查看提出',
           ),
+          _buildThanksItem(
+            context,
+            name: 'Roid',
+            description: '发现了未配置落雪Token进入 玩家信息 页面的bug',
+          ),
 
           const Divider(),
           // 尾部

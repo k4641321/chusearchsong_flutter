@@ -118,6 +118,12 @@ class _ToolPageState extends State<ToolPage> {
           onTap: (ctx) async {
             try {
               final playerdata = SongDataStore.instance.playerInfoData;
+              if (playerdata.isEmpty) {
+                ScaffoldMessenger.of(ctx).showSnackBar(
+                  const SnackBar(content: Text('获取玩家信息失败，请尝试在关于页面更新数据')),
+                );
+                return;
+              }
               if (!ctx.mounted) return;
               Navigator.push(
                 ctx,

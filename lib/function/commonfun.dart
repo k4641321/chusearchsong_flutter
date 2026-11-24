@@ -423,6 +423,7 @@ class Dataupdate {
           (await WriteData.create()).writeLatestVersion(),
           (await WriteData.create()).writeLinkedVerseData(),
           (await WriteData.create()).writeWahlapLobbyData(),
+          (await WriteData.create()).writeSegaCharaData(),
         ]),
       );
       await operation.value;

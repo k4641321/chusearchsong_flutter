@@ -149,7 +149,7 @@ Widget buildAdCard({
       borderRadius: BorderRadius.circular(15),
       onTap: () async {
         if (url !=
-            'myqqapi://card/show_pslcard?src_type=internal&version=1&card_type=group&uin=309546141') {
+            'mqq://card/show_pslcard?src_type=internal&version=1&card_type=group&uin=309546141') {
           await showDialog(
             context: context,
             builder: (context) => AlertDialog(
@@ -199,7 +199,7 @@ List<Widget> buildAdCards({
     buildAdCard(
       theme: theme,
       url:
-          'myqqapi://card/show_pslcard?src_type=internal&version=1&card_type=group&uin=309546141',
+          'mqq://card/show_pslcard?src_type=internal&version=1&card_type=group&uin=309546141',
       text: 'MC皮肤定制，10r一张，进群私聊群主',
       context: context,
     ),
@@ -212,7 +212,7 @@ List<Widget> buildAdCards({
     buildAdCard(
       theme: theme,
       url:
-          'myqqapi://card/show_pslcard?src_type=internal&version=1&card_type=group&uin=781038216',
+          'mqq://card/show_pslcard?src_type=internal&version=1&card_type=group&uin=781038216',
       text: 'MaiScan，离线以图搜歌',
       context: context,
     ),

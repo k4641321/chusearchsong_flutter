@@ -54,7 +54,6 @@ class _CollectibleInfoPageState extends State<CollectibleInfoPage> {
 
   //加载其余信息
   Future<void> otherinfo({required String type}) async {
-    newdata = widget.data;
     //检侧是不是称号
     if (type == 'trophy') {
       try {
@@ -807,7 +806,10 @@ class _CollectibleInfoPageState extends State<CollectibleInfoPage> {
   @override
   void initState() {
     super.initState();
-    otherinfo(type: widget.type);
+    newdata = widget.data;
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (mounted) otherinfo(type: widget.type);
+    });
   }
 
   @override
@@ -831,37 +833,55 @@ class _CollectibleInfoPageState extends State<CollectibleInfoPage> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                Image.network(
-                  'https://assets2.lxns.net/chunithm/${widget.type}/${newdata['id']}.png',
-                  errorBuilder: (context, error, stackTrace) {
-                    if (widget.type == 'trophy') {
-                      return InkWell(
-                        child: Container(
-                          color: returnTrophyBackgroundColor(newdata['color']),
-                          padding: EdgeInsets.all(8),
-                          child: Text(
-                            newdata['name'],
-                            style: TextStyle(
-                              shadows: [
-                                Shadow(
-                                  color: returnTrophyColor(newdata['color']),
+                widget.type == 'trophy'
+                    ? widget.data['color'] == "image"
+                          ? Image.network(
+                              'https://assets2.lxns.net/chunithm/${widget.type}/${newdata['id']}.png',
+                              errorBuilder: (context, error, stackTrace) {
+                                return Text(
+                                  '图片加载失败',
+                                  style: TextStyle(
+                                    color: Theme.of(
+                                      context,
+                                    ).colorScheme.onSurface,
+                                  ),
+                                );
+                              },
+                            )
+                          : InkWell(
+                              child: Container(
+                                color: returnTrophyBackgroundColor(
+                                  newdata['color'],
                                 ),
-                              ],
-                              color: returnTrophyColor(newdata['color']),
-                              fontSize: 20,
+                                padding: EdgeInsets.all(8),
+                                child: Text(
+                                  newdata['name'],
+                                  style: TextStyle(
+                                    shadows: [
+                                      Shadow(
+                                        color: returnTrophyColor(
+                                          newdata['color'],
+                                        ),
+                                      ),
+                                    ],
+                                    color: returnTrophyColor(newdata['color']),
+                                    fontSize: 20,
+                                  ),
+                                ),
+                              ),
+                            )
+                    : Image.network(
+                        'https://assets2.lxns.net/chunithm/${widget.type}/${newdata['id']}.png',
+                        errorBuilder: (context, error, stackTrace) {
+                          return Text(
+                            '图片加载失败',
+                            style: TextStyle(
+                              color: Theme.of(context).colorScheme.onSurface,
                             ),
-                          ),
-                        ),
-                      );
-                    }
-                    return Text(
-                      '图片加载失败',
-                      style: TextStyle(
-                        color: Theme.of(context).colorScheme.onSurface,
+                          );
+                        },
                       ),
-                    );
-                  },
-                ),
+
                 Padding(
                   padding: EdgeInsetsGeometry.all(10),
                   child: Card(

@@ -3,7 +3,6 @@ import 'dart:developer';
 import 'package:chusearchsong_flutter/function/commonfun.dart';
 import 'package:chusearchsong_flutter/function/toolsfun/generateb50fun/generateb50.dart';
 import 'package:chusearchsong_flutter/function/toolsfun/ratingcalculatorpagefun.dart';
-import 'package:chusearchsong_flutter/function/writeandreadfun.dart';
 import 'package:flutter/material.dart';
 
 List<Widget> buildOverPowerProgressDifficultyWrapChildren({
@@ -11,7 +10,7 @@ List<Widget> buildOverPowerProgressDifficultyWrapChildren({
   required List difflist,
   required List selectedDiffList,
   required VoidCallback onChange,
-  required ValueChanged onVersionSelected,
+  required ValueChanged onDiffSelected,
 }) {
   List<Widget> wrapList = [];
   for (var i in difflist) {
@@ -19,11 +18,41 @@ List<Widget> buildOverPowerProgressDifficultyWrapChildren({
       FilterChip(
         label: Text(i.toString().replaceAll(".0", '').replaceAll(".5", "+")),
         onSelected: (_) {
-          onVersionSelected(i);
+          onDiffSelected(i);
           onChange();
           // print(selectedDiffList);
         },
         selected: selectedDiffList.contains(i),
+      ),
+    );
+  }
+
+  return wrapList;
+}
+
+List<Widget> buildOverPowerProgressChartColorWrapChildren({
+  required List selectedchartColorList,
+  required VoidCallback onChange,
+  required ValueChanged onChartColorSelected,
+}) {
+  List<Widget> wrapList = [];
+  Map<dynamic, dynamic> chartColorMap = {
+    0: "Basic",
+    1: "Advanced",
+    2: "Expert",
+    3: "Master",
+    4: "Ultima",
+  };
+  for (var i in [0, 1, 2, 3, 4]) {
+    wrapList.add(
+      FilterChip(
+        label: Text(chartColorMap[i]),
+        onSelected: (_) {
+          onChartColorSelected(i);
+          onChange();
+          // print(selectedDiffList);
+        },
+        selected: selectedchartColorList.contains(i),
       ),
     );
   }
@@ -113,14 +142,23 @@ List<Widget> buildOverPowerProgressResultChildren({
   required List selectedDiffList,
   required List selectedVersionList,
   required List selectedGenreList,
+  required List selectedchartColorList,
   required Map overPowerData,
   required List playerAllScore,
-  required Map<String, dynamic> songsData,
+  required int selectedifPlay,
   required bool specificNumber,
+  required Map<String, dynamic> songsData,
+
   required BuildContext context,
 }) {
   // log('${overPowerData}');
   selectedDiffList.sort(((a, b) => b.compareTo(a)));
+  Set finalselectGenreList = {};
+  for (var j in songsData['genres']) {
+    if (selectedGenreList.contains(j['id'].toString())) {
+      finalselectGenreList.add(j['genre']);
+    }
+  }
   List<Widget> resultchildren = [];
   for (var i in selectedDiffList) {
     List<Widget> cardWrapList = [];
@@ -139,7 +177,11 @@ List<Widget> buildOverPowerProgressResultChildren({
                   k['songbasedata']['version'].toString(),
                 )) ||
             (!selectedGenreList.contains('-1') &&
-                !selectedGenreList.contains(k['songbasedata']['genre']))) {
+                !finalselectGenreList.toList().contains(
+                  k['songbasedata']['genre'],
+                )) ||
+            (selectedchartColorList.isNotEmpty &&
+                !selectedchartColorList.contains(k['difficulty']))) {
           continue;
         }
         List playerOverPowerList = [];
@@ -150,6 +192,12 @@ List<Widget> buildOverPowerProgressResultChildren({
               "over_power": l['over_power'],
             });
           }
+        }
+        if (selectedifPlay == 1 && playerOverPowerList.isEmpty) {
+          continue;
+        }
+        if (selectedifPlay == 0 && playerOverPowerList.isNotEmpty) {
+          continue;
         }
         playerOverPowerList.sort((a, b) {
           if (a['over_power'] > b['over_power']) {
@@ -210,36 +258,74 @@ List<Widget> buildOverPowerProgressResultChildren({
           ),
         );
       }
-    }
-    resultchildren.add(
-      Padding(
-        padding: EdgeInsetsGeometry.all(8),
-        child: Card(
-          child: Padding(
+      if (specificNumber == true) {
+        resultchildren.add(
+          Padding(
             padding: EdgeInsetsGeometry.all(8),
-            child: Column(
-              children: [
-                Text(
-                  'Lv.${i.toString().replaceAll('.0', '').replaceAll('.5', '+')} | $totalChart张谱面',
-                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
+            child: Card(
+              child: Padding(
+                padding: EdgeInsetsGeometry.all(8),
+                child: Column(
+                  children: [
+                    Text(
+                      'Lv.$diffvalue | $totalChart张谱面',
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        fontSize: 18,
+                      ),
+                    ),
+                    const Divider(),
+                    Text(
+                      '当前 ${playerTotalOverPower.toStringAsFixed(2)} / ${totalOverPower.toStringAsFixed(2)}',
+                    ),
+                    const Divider(),
+                    Wrap(
+                      alignment: WrapAlignment.center,
+                      spacing: 3,
+                      runSpacing: 3,
+                      children: cardWrapList,
+                    ),
+                  ],
                 ),
-                const Divider(),
-                Text(
-                  '当前 ${playerTotalOverPower.toStringAsFixed(2)} / ${totalOverPower.toStringAsFixed(2)}',
-                ),
-                const Divider(),
-                Wrap(
-                  alignment: WrapAlignment.center,
-                  spacing: 3,
-                  runSpacing: 3,
-                  children: cardWrapList,
-                ),
-              ],
+              ),
+            ),
+          ),
+        );
+        cardWrapList = [];
+      }
+    }
+    if (specificNumber == false) {
+      resultchildren.add(
+        Padding(
+          padding: EdgeInsetsGeometry.all(8),
+          child: Card(
+            child: Padding(
+              padding: EdgeInsetsGeometry.all(8),
+              child: Column(
+                children: [
+                  Text(
+                    'Lv.${i.toString().replaceAll('.0', '').replaceAll('.5', '+')} | $totalChart张谱面',
+                    style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
+                  ),
+                  const Divider(),
+                  Text(
+                    '当前 ${playerTotalOverPower.toStringAsFixed(2)} / ${totalOverPower.toStringAsFixed(2)}',
+                  ),
+                  const Divider(),
+                  Wrap(
+                    alignment: WrapAlignment.center,
+                    spacing: 3,
+                    runSpacing: 3,
+                    children: cardWrapList,
+                  ),
+                ],
+              ),
             ),
           ),
         ),
-      ),
-    );
+      );
+    }
+
     totalOverPower = 0;
     playerTotalOverPower = 0;
     totalChart = 0;
