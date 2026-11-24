@@ -6,7 +6,7 @@ import 'request.dart';
 
 /// 递归规整 JSON 数据：
 /// Web(DDC) 上 jsonDecode/LocalDB 读出的 Map 键类型是 Object?，
-/// 传给 Map<String, dynamic> 参数会抛 TypeError，这里统一转为键为 String 的 Map
+/// 传给 Map String, dynamic 参数会抛 TypeError，这里统一转为键为 String 的 Map
 dynamic normalizeJson(dynamic value) {
   if (value is Map) {
     return value.map((k, v) => MapEntry(k.toString(), normalizeJson(v)));

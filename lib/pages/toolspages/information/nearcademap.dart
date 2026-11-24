@@ -61,7 +61,7 @@ class _NearcademapState extends State<Nearcademap> {
         shopList = await (await ReadData.create()).readNearcadeAllShop();
         gameList = await (await ReadData.create()).readNearcadeGamesMapData();
       }
-
+      // log('${gameList.runtimeType}');
       if (!mounted) return;
       markersList = createMarkers(
         shopList: shopList,

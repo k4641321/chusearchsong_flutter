@@ -38,7 +38,9 @@ class _InfoState extends State<Info> {
       final packageinfo = await PackageInfo.fromPlatform();
       if (!mounted) return;
       setState(() {
-        version = packageinfo.version;
+        setState(() {
+          version = '${packageinfo.version}+${packageinfo.buildNumber}';
+        });
       });
     } catch (e) {
       if (!mounted) return;

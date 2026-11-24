@@ -4,10 +4,9 @@ import 'package:chusearchsong_flutter/function/commonfun.dart';
 import 'package:chusearchsong_flutter/function/toolsfun/generateb50fun/generateb50.dart';
 import 'package:chusearchsong_flutter/function/toolsfun/ratingcalculatorpagefun.dart';
 import 'package:chusearchsong_flutter/function/writeandreadfun.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
-List<Widget> buildOverPowerProgressVersionWrapChildren({
+List<Widget> buildOverPowerProgressDifficultyWrapChildren({
   required Map<String, dynamic> songsData,
   required List difflist,
   required List selectedDiffList,
@@ -112,20 +111,37 @@ double calculationOverPower({
 
 List<Widget> buildOverPowerProgressResultChildren({
   required List selectedDiffList,
+  required List selectedVersionList,
+  required List selectedGenreList,
   required Map overPowerData,
   required List playerAllScore,
   required Map<String, dynamic> songsData,
   required bool specificNumber,
   required BuildContext context,
 }) {
-  // log('${selectedDiffList}');
+  // log('${overPowerData}');
+  selectedDiffList.sort(((a, b) => b.compareTo(a)));
   List<Widget> resultchildren = [];
   for (var i in selectedDiffList) {
     List<Widget> cardWrapList = [];
-    for (var j = 0; j < 5; j++) {
+    double totalOverPower = 0;
+    double playerTotalOverPower = 0;
+    double totalChart = 0;
+    for (double j = 0; j < 0.5; j = j + 0.1) {
       double diffvalue = i + j;
+
       if (!overPowerData.keys.contains(diffvalue)) continue;
+      totalOverPower = totalOverPower + overPowerData[diffvalue]['total'];
+      totalChart = totalChart + overPowerData[diffvalue]['songs'].length;
       for (var k in overPowerData[(i + j).toDouble()]['songs']) {
+        if ((!selectedVersionList.contains('-1') &&
+                !selectedVersionList.contains(
+                  k['songbasedata']['version'].toString(),
+                )) ||
+            (!selectedGenreList.contains('-1') &&
+                !selectedGenreList.contains(k['songbasedata']['genre']))) {
+          continue;
+        }
         List playerOverPowerList = [];
         for (var l in playerAllScore) {
           if (l['id'] == k['id']) {
@@ -150,6 +166,7 @@ List<Widget> buildOverPowerProgressResultChildren({
               k['difficulty']) {
             playerOverPower = ((playerOverPowerList.first as Map)['over_power']
                 .toDouble());
+            playerTotalOverPower = playerTotalOverPower + playerOverPower;
           }
         }
 
@@ -202,17 +219,15 @@ List<Widget> buildOverPowerProgressResultChildren({
             padding: EdgeInsetsGeometry.all(8),
             child: Column(
               children: [
-                Row(
-                  children: [
-                    Text(
-                      'Lv.${i.toString().replaceAll('.0', '').replaceAll('.5', '+')}',
-                      style: TextStyle(
-                        fontWeight: FontWeight.bold,
-                        fontSize: 18,
-                      ),
-                    ),
-                  ],
+                Text(
+                  'Lv.${i.toString().replaceAll('.0', '').replaceAll('.5', '+')} | $totalChart张谱面',
+                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
                 ),
+                const Divider(),
+                Text(
+                  '当前 ${playerTotalOverPower.toStringAsFixed(2)} / ${totalOverPower.toStringAsFixed(2)}',
+                ),
+                const Divider(),
                 Wrap(
                   alignment: WrapAlignment.center,
                   spacing: 3,
@@ -225,6 +240,9 @@ List<Widget> buildOverPowerProgressResultChildren({
         ),
       ),
     );
+    totalOverPower = 0;
+    playerTotalOverPower = 0;
+    totalChart = 0;
   }
   // log('${resultchildren.length}');
   return resultchildren;
